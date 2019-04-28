@@ -1,0 +1,115 @@
+<ion-header no-border>
+  <ion-toolbar color="primary">
+  	<ion-buttons slot="start">
+      <ion-back-button defaultHref="live-group-training"></ion-back-button>
+    </ion-buttons>
+		<ion-title>Live Group Training Detail</ion-title>
+		
+		<ion-buttons slot="end">
+			<ion-button fill="outline" (click)="gotoSession()" *ngIf="allowedAction === 'start'">
+				Open
+			</ion-button>
+
+			<ion-button (click)="gotoSession()" *ngIf="allowedAction === 'join'">
+				Join
+			</ion-button>
+
+			<ion-button color="medium" disabled="true" *ngIf="allowedAction === 'locked'">
+				Private
+				<ion-icon name="lock" mode="ios" slot="end"></ion-icon>
+			</ion-button>
+
+			<ion-button strong="true" (click)="presentPageAction()" *ngIf="item?.speakerId === sessionData.user.id">
+				<ion-icon slot="icon-only" name="more"></ion-icon>
+			</ion-button>
+		</ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+	<ion-list>
+
+		<ion-item>
+			<ion-label>
+				<ion-text color="primary">
+					{{item?.title}}
+				</ion-text>
+				<p>{{item?.description}}</p>
+			</ion-label>
+		</ion-item>
+
+		<ion-item>
+			<ion-icon slot="start" name="information-circle-outline"></ion-icon>
+			<ion-label>
+				<p>Details</p>
+				<h3 text-wrap>{{item?.detail}}</h3>
+			</ion-label>
+		</ion-item>
+
+	</ion-list>
+
+	<ion-list>
+		<ion-item>
+			<ion-icon slot="start" name="contact" mode="ios"></ion-icon>
+			<ion-label>
+				<p>Speaker</p>
+				{{item?.speaker?.firstName}} {{item?.speaker?.lastName}}
+			</ion-label>
+		</ion-item>
+
+		<ion-item>
+			<ion-icon slot="start" name="calendar" mode="md"></ion-icon>
+			<ion-label>
+				<p>Date</p>
+				{{beautifyDate(item?.date, 'ddd, MMM. DD, YYYY')}}
+			</ion-label>
+		</ion-item>
+
+		<ion-item>
+			<ion-icon slot="start" name="time" mode="md"></ion-icon>
+			<ion-label>
+				<p>Time</p>
+				{{beautifyDate(item?.date + ' ' + item?.time, 'h:mm a')}}
+			</ion-label>
+		</ion-item>
+
+		<ion-item *ngIf="item?.public === true">
+			<ion-icon slot="start" name="unlock" mode="ios"></ion-icon>
+			<ion-label>
+				Public
+				<p>Everyone can participate</p>
+			</ion-label>
+		</ion-item>
+
+		<ion-item *ngIf="item?.public === false">
+			<ion-icon slot="start" name="lock" mode="ios"></ion-icon>
+			<ion-label>
+				Private
+				<p>Only participants can join</p>
+			</ion-label>
+		</ion-item>
+
+	</ion-list>
+
+
+	<ion-list *ngIf="item?.public === false">
+
+		<ion-list-header mode="ios">
+			<ion-label>Paticipants</ion-label>
+		</ion-list-header>
+
+		<ion-item lines="none" *ngIf="item?.participants?.length < 1">
+				<ion-label><p>No participants added</p></ion-label>
+			</ion-item>
+
+		<ion-item *ngFor="let participant of item?.participants;">
+			<ion-icon slot="start" name="person" mode="ios"></ion-icon>
+			<ion-label>
+				{{participant?.firstName}} {{participant?.lastName}}
+			</ion-label>
+		</ion-item>
+
+	</ion-list>
+
+</ion-content>

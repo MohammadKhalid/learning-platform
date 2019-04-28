@@ -1,0 +1,35 @@
+<ion-header no-border>
+  <ion-toolbar color="primary">
+  	<ion-buttons slot="start">
+      <ion-back-button defaultHref="category"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title text-capitalize>{{action}} Category</ion-title>
+
+    <ion-buttons slot="end">
+    	<ion-button type="button" *ngIf="form.valid && submitted === false" (click)="save()">Save</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+	<form [formGroup]="form">
+
+		<ion-list>
+			<ion-item lines="inset">
+				<ion-label position="stacked">Name <ion-text color="danger">*</ion-text></ion-label>
+				<ion-input
+					formControlName="title"
+					placeholder="Enter category name"
+				></ion-input>
+			</ion-item>
+
+			<ion-item lines="inset">
+				<ion-label position="stacked">Description</ion-label>
+				<ion-textarea formControlName="description" rows="5" placeholder="Enter description"></ion-textarea>
+			</ion-item>
+		</ion-list>
+
+	</form>
+
+</ion-content>

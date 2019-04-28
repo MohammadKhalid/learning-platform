@@ -1,0 +1,13 @@
+<ion-header no-border>
+  	<ion-toolbar color="primary">
+		<ion-buttons slot="start">
+			<ion-back-button defaultHref="{{appUrl}}" *ngIf="item?.status !== 'started'"></ion-back-button>
+		</ion-buttons>
+
+		<ion-title>Live Group Training Session</ion-title>
+	</ion-toolbar>
+</ion-header>
+
+<ion-content #content>
+	<conference [id]="id" [user]="user" [publicRoomIdentifier]="publicRoomIdentifier" [appUrl]="appUrl" [apiEndPoint]="apiEndPoint"></conference>
+</ion-content>

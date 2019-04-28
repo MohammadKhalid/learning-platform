@@ -1,0 +1,34 @@
+<ion-header no-border>
+  <ion-toolbar color="primary">
+  	<ion-buttons slot="start">
+    	<ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title text-capitalize>{{routeData.plural}}</ion-title>
+
+    <ion-buttons slot="end" *ngIf="canAdd()">
+		<ion-button strong="true" href="/{{routeData.appUrl}}/add"><ion-icon slot="icon-only" name="add"></ion-icon></ion-button>
+	</ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+	<ion-list>
+
+		<ion-item lines="none" *ngIf="items?.length < 1">
+			<ion-label><p>No {{routeData.singular}} found</p></ion-label>
+		</ion-item>
+
+		<ion-item detail="false" button="true" *ngFor="let item of items;" routerDirection="root" routerLink="/{{routeData.appUrl}}/detail/{{item?.id}}">
+			<ion-avatar slot="start" *ngIf="routeData?.type === 'student' || routeData?.type === 'coach'">
+				<img src="assets/img/user/{{routeData.type}}-avatar.png">
+			</ion-avatar>
+
+			<ion-icon slot="start" name="business" *ngIf="routeData?.type === 'company'"></ion-icon>
+			<ion-label>
+				{{item?.firstName}} {{item?.lastName}}
+			</ion-label>
+		</ion-item>
+
+	</ion-list>
+</ion-content>

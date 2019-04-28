@@ -1,0 +1,303 @@
+<ion-fab vertical="top" horizontal="start" slot="fixed" *ngIf="isSpeaker">
+    <ion-fab-button (click)="presentParticipantSetting()" color="warning" size="small">
+      <ion-icon name="people" mode="ios"></ion-icon>
+    </ion-fab-button>
+</ion-fab>
+
+<ion-fab vertical="bottom" horizontal="center" slot="fixed" activated="true">
+  <ion-fab-button disabled="true"></ion-fab-button>
+
+  <ion-fab-list side="end">
+    <ion-fab-button show="true" size="small" [color]="panelModal === 'message' ? 'medium' : 'dark'" (click)="showPanelModal('message')"><ion-icon name="chatboxes" [color]="newMessage ? 'warning': ''"></ion-icon></ion-fab-button>
+    <ion-fab-button show="true" size="small" [color]="panelModal === 'info' ? 'medium' : 'dark'" (click)="showPanelModal('info')"><ion-icon name="information"></ion-icon></ion-fab-button>
+  </ion-fab-list>
+
+  <ion-fab-list side="start">
+    <ion-fab-button show="true" (click)="streamMuteUnmute('video')" color="dark" size="small">
+      <ion-icon name="videocam" [size]="connection?.extra?.video ? '' : 'small'"></ion-icon>
+      <ion-icon name="remove" size="large" color="dark" style="position: absolute; transform: rotate(45deg) perspective(0); bottom: 5px;" [hidden]="!connection?.extra?.video"></ion-icon>
+      <ion-icon name="remove" size="large" color="dark" style="position: absolute; transform: rotate(45deg) perspective(0); top: 5px;" [hidden]="!connection?.extra?.video"></ion-icon>
+      <ion-icon name="remove" size="large" style="position: absolute; transform: rotate(45deg) perspective(0);" [hidden]="!connection?.extra?.video"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-button show="true" (click)="streamMuteUnmute('audio')" color="dark" size="small">
+      <ion-icon [name]="connection?.extra?.audio ? 'mic' : 'mic-off'"></ion-icon>
+    </ion-fab-button>
+  </ion-fab-list>
+</ion-fab>
+
+<ion-fab vertical="bottom" horizontal="center" slot="fixed">
+  <div *ngIf="isSpeaker">
+    <ion-fab-button size="small" color="danger" (click)="pdfViewerStopShare()" *ngIf="pdfViewerFile"><ion-icon name="easel"></ion-icon></ion-fab-button>
+    <ion-fab-button size="small" [color]="panel === 'screen' ? 'medium' : 'dark'" (click)="showPanel('screen')" *ngIf="!pdfViewerFile"><ion-icon name="easel"></ion-icon></ion-fab-button>
+
+    <ion-fab-button (click)="presentConfirmStart()" color="primary" text-uppercase *ngIf="item?.status === 'stop'"><small>Start</small></ion-fab-button>
+    <ion-fab-button (click)="presentConfirmStop()" color="danger" text-uppercase *ngIf="item?.status === 'started'"><small>Done</small></ion-fab-button>
+  </div>
+
+  <div *ngIf="!isSpeaker">
+    <ion-fab-button (click)="presentConfirmLeave()" color="danger" text-uppercase><small>Exit</small></ion-fab-button>
+  </div>
+</ion-fab>
+
+<div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; overflow: hidden;">
+  <ion-grid class="fixed-content">
+    <ion-row class="fixed-content ion-justify-content-end">
+      <ion-col size="12" size-sm="6" size-md="5" size-lg="4" class="ion-align-self-stretch" style="z-index: 9999;" [hidden]="panelModal !== 'message'">
+        <ion-card color="clean" style="position: absolute; bottom: 0; right: 0; left: 0; top: 0;">
+          <ion-item lines="full" color="medium" style="z-index:1;">
+            <ion-label>Group Message</ion-label>
+            <ion-button slot="end" fill="clear" color="light" (click)="showPanelModal('')">
+              <ion-icon name="close" slot="icon-only"></ion-icon>
+            </ion-button>
+          </ion-item>
+
+          <ion-grid class="ion-no-padding" style="position: absolute; bottom: 192px; right: 0; left: 0; top: 50px; overflow-y: scroll;">
+            <ion-row class="fixed-content">
+              <ion-col size="12" class="ion-no-padding" *ngIf="messages.length < 1">
+                <ion-item lines="none">
+                  <ion-label color="medium"><p>No message</p></ion-label>
+                </ion-item>
+              </ion-col>
+              <ion-col size="12" class="ion-no-padding ion-align-self-end">
+                <ion-list lines="none">
+                  <ion-item *ngFor="let message of messages">
+                    <ion-icon name="contact" slot="start" align-self-start></ion-icon>
+  
+                    <ion-label text-wrap>
+                      <ion-note>{{message.firstName}} {{message.lastName}}</ion-note>
+                      <p><ion-note>{{message.dateCreated}}</ion-note></p>
+                      <p>{{message.text}}</p>
+                    </ion-label>
+  
+                    <ion-note slot="end" mode="md" text-lowercase>{{message.userType}}</ion-note>
+                  </ion-item>
+                </ion-list>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+
+          <ion-item-group style="position: absolute; left: 0; right: 0; bottom: 0;">
+            <ion-item-divider color="clean"></ion-item-divider>
+            <ion-item lines="none">
+              <ion-label position="stacked">Write a message</ion-label>
+              <ion-textarea
+                (keyup.enter)="sendMessage()"
+                [(ngModel)]="message"
+                placeholder="..."
+                rows="4"
+              ></ion-textarea>
+            </ion-item>
+
+            <ion-item color="light" lines="none">
+              <ion-button color="dark" type="button" slot="end" shape="round" [disabled]="!message" (click)="sendMessage()">&nbsp;&nbsp;Send&nbsp;&nbsp;</ion-button>
+            </ion-item>
+          </ion-item-group>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="12" size-sm="6" size-md="5" size-lg="4" class="ion-align-self-stretch" style="z-index: 9999;" [hidden]="panelModal !== 'info'">
+        <ion-card color="clean" style="position: absolute; top: 0; right: 0; bottom: 0; left: 0;">
+          <ion-item lines="full" color="medium">
+            {{item?.title}}
+            <ion-button slot="end" fill="clear" color="light" (click)="showPanelModal('')">
+              <ion-icon name="close" slot="icon-only"></ion-icon>
+            </ion-button>
+          </ion-item>
+
+          <div style="position: absolute; top: 50px; right: 0; bottom: 0; left: 0; overflow-y: scroll;">
+            <ion-item>
+              <ion-icon slot="start" name="information-circle-outline" mode="ios"></ion-icon>
+              
+              <ion-label *ngIf="!item?.started">
+                <ion-badge color="dark">Not yet started</ion-badge>
+              </ion-label>
+
+              <ion-label *ngIf="item?.started">
+                <ion-badge color="warning" *ngIf="item?.status === 'open'">On-going</ion-badge>
+                <ion-badge color="danger" *ngIf="item?.status === 'close'">Closed</ion-badge>
+              </ion-label>
+
+              <ion-note slot="end" mode="md" text-uppercase>Status</ion-note>
+            </ion-item>
+
+            <ion-item>
+              <ion-icon slot="start" name="contact" mode="ios"></ion-icon>
+              <ion-label>
+                {{item?.speaker?.firstName}} {{item?.speaker?.lastName}}
+              </ion-label>
+              <ion-note slot="end" mode="md" text-uppercase>Speaker</ion-note>
+            </ion-item>
+        
+            <ion-item>
+              <ion-icon slot="start" name="calendar" mode="md"></ion-icon>
+              <ion-label>
+                {{item?.date ? beautifyDate(item?.date, 'ddd, MMM. DD, YYYY') : '-'}}
+              </ion-label>
+              <ion-note slot="end" mode="md" text-uppercase>Date</ion-note>
+            </ion-item>
+        
+            <ion-item>
+              <ion-icon slot="start" name="time" mode="md"></ion-icon>
+              <ion-label>
+                {{item?.date ? beautifyDate(item?.date + ' ' + item?.time, 'h:mm a') : '-'}}
+              </ion-label>
+              <ion-note slot="end" mode="md" text-uppercase>Time</ion-note>
+            </ion-item>
+        
+            <ion-item lines="none" *ngIf="item?.public === true">
+              <ion-icon slot="start" name="unlock" mode="ios"></ion-icon>
+              <ion-label>
+                Public
+              </ion-label>
+              <ion-note slot="end" mode="md" text-uppercase>Everyone can participate</ion-note>
+            </ion-item>
+        
+            <ion-item lines="none" *ngIf="item?.public === false">
+              <ion-icon slot="start" name="lock" mode="ios"></ion-icon>
+              <ion-label text-wrap>
+                Private
+                <p>Only participants in the list can join</p>
+              </ion-label>
+            </ion-item>
+
+            <div *ngIf="item?.public === false">
+              <ion-card-header>
+                <ion-card-subtitle>
+                  <ion-text color="dark">Paticipants</ion-text>
+                </ion-card-subtitle>
+              </ion-card-header>
+          
+              <ion-item lines="none" *ngIf="item?.participants?.length < 1">
+                  <ion-label><p>No participants added</p></ion-label>
+                </ion-item>
+          
+              <ion-item *ngFor="let participant of item?.participants;">
+                <ion-icon slot="start" name="person" [color]="participant?.present === true ? 'success' : 'medium'" mode="ios"></ion-icon>
+                <ion-label>
+                  {{participant?.firstName}} {{participant?.lastName}}
+                </ion-label>
+              </ion-item>
+            </div>
+
+            <ion-card-header>
+              <ion-card-subtitle>
+                <ion-text color="dark">Details</ion-text>
+              </ion-card-subtitle>
+            </ion-card-header>
+        
+            <ion-card-content>
+              <h3>{{item?.description || '-'}}</h3>
+              {{item?.detail}}
+            </ion-card-content>
+
+            <ion-item *ngIf="isSpeaker">
+                <ion-button slot="start" fill="outline" href="/{{appUrl}}/edit/{{item?.id}}"><ion-icon name="create" slot="start"></ion-icon> Edit</ion-button>
+                <ion-button slot="end" fill="clear" color="danger" (click)="confirmDelete()"><ion-icon name="trash"></ion-icon></ion-button>
+            </ion-item>
+          </div>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</div>
+
+<div #videosContainer class="fixed-content" text-center style="background-color: var(--ion-color-dark)" [hidden]="panel !== 'speaker'">
+  <ion-badge color="danger" style="position: absolute; top: 1rem; left: 1rem; z-index: 1;" *ngIf="connection?.isLowBandwidth">low connection</ion-badge>
+
+  <div class="fixed-content speaker-video-container">
+    <video #speakerVideo></video>
+
+    <ion-grid class="fixed-content" *ngIf="!connection?.attachStreams[0]?.isVideo">
+      <ion-row class="fixed-content">
+        <ion-col class="ion-align-self-center ion-text-center">
+          <ion-icon name="contact" mode="ios" color="medium" size="large"></ion-icon>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+  
+  <div style="position: absolute; top:0; right:0; bottom:0; left:0; z-index: 1;">
+    <ion-grid class="fixed-content">
+      <ion-row class="fixed-content ion-justify-content-end" style="overflow-y: scroll;">
+        <ion-col #participantsContainer size="2" class="ion-align-self-stretch"></ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+</div>
+
+<div class="fixed-content" style="position:relative;" [hidden]="panel !== 'screen'">
+  <ion-input #pdfViewerInput type="file" accept=".pdf" hidden="true" (change)="pdfViewerInputUpload($event.target.files)" *ngIf="isSpeaker"></ion-input>
+
+  <div *ngIf="pdfViewerFile">
+    <div *ngIf="isSpeaker">
+      <!-- <ion-fab vertical="top" horizontal="start" slot="fixed" *ngIf="!pdfViewer.isDocumentLoaded()">
+        <ion-fab-button (click)="pdfViewerUpload()" color="dark" size="small"><ion-icon name="attach"></ion-icon></ion-fab-button>
+      </ion-fab> -->
+
+      <div *ngIf="pdfViewer.isDocumentLoaded()">
+        <ion-fab vertical="top" horizontal="start" slot="fixed">
+          <ion-fab-button size="small" color="dark">
+            <ion-icon name="more"></ion-icon>
+          </ion-fab-button>
+          <ion-fab-list side="bottom">
+              <ion-fab-button (click)="pdfViewerUpload()" color="medium"><ion-icon name="attach"></ion-icon></ion-fab-button>
+          </ion-fab-list>
+
+          <ion-fab-list side="end">
+            <ion-fab-button (click)="pdfViewerAction('turnRight')" color="medium"><ion-icon name="refresh"></ion-icon></ion-fab-button>
+            <ion-fab-button (click)="pdfViewerAction('zoomPageWidth')" color="medium"><ion-icon name="expand"></ion-icon></ion-fab-button>
+          </ion-fab-list>
+        </ion-fab>
+
+        <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+          <ion-fab-button size="small" color="dark" (click)="pdfViewerAction('prevPage')">
+            <ion-icon name="arrow-up"></ion-icon>
+          </ion-fab-button>
+
+          <ion-fab-button size="small" color="dark" (click)="pdfViewerAction('nextPage')">
+            <ion-icon name="arrow-down"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
+      </div>
+    </div>
+
+    <div *ngIf="pdfViewer.isDocumentLoaded()">
+      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button size="small" (click)="pdfViewerAction('zoomIn')" color="dark">
+          <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+
+        <ion-fab-button size="small" (click)="pdfViewerAction('zoomOut')" color="dark">
+          <ion-icon name="remove"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+    </div>
+
+    <div margin style="position: absolute; right: 0; top:0; z-index: 1; width: 200px;">
+      <div style="position: -webkit-sticky; position:sticky; top:0;">
+        <video #miniSpeakerVideo></video>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="fixed-content" *ngIf="!isSpeaker">
+    <simple-pdf-viewer #pdfViewer (onLoadComplete)="pdfViewerLoaded()" *ngIf="pdfViewerIsLoaded === true"></simple-pdf-viewer>
+    <p *ngIf="pdfViewerIsLoaded !== true" margin>No presentation slide</p>
+  </div> -->
+  <!-- <simple-pdf-viewer #pdfViewer (onLoadComplete)="pdfViewerLoaded(true)" *ngIf="isSpeaker && (panel === 'screen' || pdfViewerIsLoaded)"></simple-pdf-viewer> -->
+
+  <ion-grid class="fixed-content" *ngIf="!pdfViewer.isDocumentLoaded() || !pdfViewerFile">
+    <ion-row class="fixed-content">
+      <ion-col size="12" text-center align-self-center>
+        <p *ngIf="!isSpeaker">No slideshow</p>
+
+        <div *ngIf="isSpeaker">
+          <p>Share Slideshow Presentation</p>
+          <ion-button shape="round" (click)="pdfViewerUpload()" color="medium">Open PDF</ion-button>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <simple-pdf-viewer #pdfViewer (onLoadComplete)="pdfViewerLoaded()" (onProgress)="pdfViewerProgress($event)" (onError)="pdfViewerError($event)" [hidden]="!pdfViewerFile" class="fixed-content"></simple-pdf-viewer>
+</div>

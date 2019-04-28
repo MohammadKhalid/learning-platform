@@ -1,0 +1,88 @@
+<ion-header no-border>
+  <ion-toolbar color="primary">
+  	<ion-buttons slot="start">
+      <ion-back-button defaultHref="{{topic ? 'topic/detail/' + topic.id : 'topic'}}"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title *ngIf="!topic?.id" text-capitalize>{{action}} Question</ion-title>
+    <ion-title *ngIf="topic?.id" text-capitalize>{{topic?.title}}</ion-title>
+
+    <ion-buttons slot="end">
+    	<ion-button type="button" [disabled]="!form.valid" color="dark" fill="solid" (click)="save()"><small>Save</small></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+	<form [formGroup]="form">
+
+		<ion-list>
+
+			<ion-list-header mode="ios" text-uppercase *ngIf="topic?.id">
+				<ion-label color="primary">{{action}} Question</ion-label>
+			</ion-list-header>
+
+			<ion-item>
+				<ion-label position="stacked">Question / Challenge</ion-label>
+				<ion-textarea
+					formControlName="question"
+					placeholder="Enter question or challenge"
+					rows="6"
+				></ion-textarea>
+			</ion-item>
+
+			<ion-item>
+				<ion-label position="stacked">Script</ion-label>
+				<ion-textarea
+					formControlName="script"
+					placeholder="Write a script to follow"
+					rows="6"
+				></ion-textarea>
+			</ion-item>
+
+		</ion-list>
+
+		<ion-list>
+
+			<ion-list-header mode="ios" text-uppercase>
+				<ion-label color="primary">Answering Time Limit</ion-label>
+			</ion-list-header>
+
+			<ion-item>
+				<ion-label>Enable</ion-label>
+				<ion-checkbox slot="end" formControlName="answerLimit" checked></ion-checkbox>
+			</ion-item>
+
+			<ion-item>
+				<ion-label>Limit in seconds</ion-label>
+				<ion-input
+					formControlName="answerLimitTime"
+					text-right
+					type="number"
+					placeholder="0"
+				></ion-input>
+			</ion-item>
+
+		</ion-list>
+
+		<ion-list>
+
+			<ion-list-header mode="ios" text-uppercase>
+				<ion-label color="primary">Video, Audio, PDF etc.</ion-label>
+				<ion-button size="small" fill="outline" shape="round" (click)="addMedia()">Add <ion-icon name="attach" slot="end"></ion-icon></ion-button>
+			</ion-list-header>
+
+			<ion-item *ngIf="medias.length < 1">
+				<ion-label><ion-note>Nothing is added yet.</ion-note></ion-label>
+			</ion-item>
+
+			<ion-item *ngFor="let media of medias">
+				<ion-label><h3>{{media.filename}}</h3></ion-label>
+				<ion-button fill="clear" (click)="removeMedia(media)"><ion-icon name="trash" color="danger"></ion-icon></ion-button>
+			</ion-item>			
+
+		</ion-list>
+
+	</form>
+</ion-content>

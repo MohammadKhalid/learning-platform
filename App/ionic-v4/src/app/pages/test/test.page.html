@@ -1,0 +1,35 @@
+<ion-header no-border>
+  <ion-toolbar color="primary">
+    <ion-title>Test Page</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button fill="outline" (click)="connect()">Connect</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <ion-list-header>
+      <ion-label>My ID: {{mypeerid}}</ion-label>
+    </ion-list-header>
+
+    <ion-item>
+      <ion-label>Another ID</ion-label>
+      <ion-input type="text" [(ngModel)]="anotherid"></ion-input>
+    </ion-item>
+  </ion-list>
+  
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col size="6">
+          <h2>Other Cam</h2>
+        <video #videoElement></video>
+      </ion-col>
+      <ion-col size="6">
+        <h2>My Cam</h2>
+        <video #myvideo></video>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

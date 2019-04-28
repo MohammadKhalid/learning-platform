@@ -1,0 +1,156 @@
+<ion-header no-border>
+  <ion-toolbar color="primary">
+  	<ion-buttons slot="start">
+      <ion-back-button [defaultHref]="!item ? 'topic' : 'topic/detail/' + item.id"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title text-capitalize>{{action}} Topic</ion-title>
+
+    <ion-buttons slot="end">
+    	<ion-button type="button" *ngIf="form.valid && submitted === false" (click)="save()">Save</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+	<form [formGroup]="form">
+
+		<ion-list>
+			<ion-item lines="inset">
+				<ion-label position="stacked">Title <ion-text color="danger">*</ion-text></ion-label>
+				<ion-input
+					formControlName="title"
+					placeholder="Enter topic title"
+				></ion-input>
+			</ion-item>
+
+			<ion-item lines="inset">
+				<ion-label position="stacked">Description <ion-text color="danger">*</ion-text></ion-label>
+				<ion-textarea
+					 formControlName="description"
+					placeholder="Write short topic overview"
+				></ion-textarea>
+			</ion-item>
+
+			<ion-item lines="inset">
+				<ion-label position="stacked">
+					Category <ion-text color="medium">(optional)</ion-text>
+				</ion-label>
+				<ionic-selectable
+					placeholder="Nothing Selected"
+
+					headerColor="primary"
+					[isMultiple]="true"
+					[searchFailText]="'No categories found'"
+					[canSearch]="true"
+					[hasConfirmButton]="true"
+
+					[items]="categories"
+					itemValueField="id"
+					itemTextField="title"
+					formControlName="categories"
+
+					(onChange)="selectableTopicChange($event)">
+					<ng-template ionicSelectableTitleTemplate>
+						Select Multiple
+					</ng-template>
+
+					<ng-template ionicSelectableCloseButtonTemplate>
+						<ion-icon name="close-circle"></ion-icon>
+					</ng-template>
+				</ionic-selectable>
+			</ion-item>
+
+			<ion-item lines="inset">
+				<ion-label>Private <p>Only admin can view</p></ion-label>
+				<ion-toggle formControlName="isPrivate"></ion-toggle>
+			</ion-item>
+
+			<ion-item lines="none" margin-top>
+				<ion-icon name="crop" slot="start"></ion-icon>
+				<ion-label>
+					<h3>Challenges</h3>
+					<p *ngIf="questionForms.controls.length < 1">No challenges added</p>
+				</ion-label>
+
+				<ion-chip color="secondary" outline="true" (click)="addQuestion()">
+					<ion-label>Add</ion-label>
+					<ion-icon name="add"></ion-icon>
+				</ion-chip>
+			</ion-item>
+
+		</ion-list>
+
+		<section padding-horizontal>
+			<div #questionElem formArrayName="questions" margin-bottom *ngFor="let question of questionForms.controls; let qIndex = index;">
+				<ion-card no-margin [formGroupName]="qIndex">
+					<ion-input type="hidden" formControlName="number"></ion-input>
+
+					<div formGroupName="question">
+						<ion-item-group>
+							<ion-item color="light" lines="none">
+								<ion-label>
+									<ion-text color="secondary"><h2><strong>#{{qIndex + 1}}</strong></h2></ion-text>
+									<h3>Question / Challenge <ion-text color="danger">*</ion-text></h3>
+								</ion-label>
+								<ion-button slot="end" fill="clear" color="danger" (click)="removeQuestion(qIndex)"><ion-icon name="trash"></ion-icon></ion-button>
+							</ion-item>
+
+							<ion-item lines="inset">
+								<ion-textarea
+									formControlName="question"
+									placeholder="Enter question or challenge"
+									rows="6"
+								></ion-textarea>
+							</ion-item>
+
+							<ion-item lines="inset">
+								<ion-label position="stacked">Work-track / Script</ion-label>
+								<ion-textarea
+									formControlName="script"
+									placeholder="Write a sample work-track / script"
+									rows="6"
+								></ion-textarea>
+							</ion-item>			
+						
+							<ion-item lines="none">
+								<ion-label>
+									<h3>Answering Time Limit</h3>
+									<ion-badge mode="ios" color="warning" [hidden]="question.controls.question.controls.answerLimit.value">No Limit</ion-badge>
+								</ion-label>
+								<ion-toggle slot="end" formControlName="answerLimit" color="dark"></ion-toggle>
+							</ion-item>
+
+							<ion-item lines="none" [hidden]="!question.controls.question.controls.answerLimit.value">
+								<ion-range no-margin no-padding step="1" min="15" max="180" color="dark" formControlName="answerLimitTime">
+									<ion-icon slot="start" name="timer" mode="ios" color="medium"></ion-icon>
+									<ion-badge slot="end" color="medium" mode="ios">{{question.controls.question.controls.answerLimitTime.value}} secs</ion-badge>
+								</ion-range>
+							</ion-item>
+						
+							<ion-item lines="none">
+								<ion-label>
+									<h3>Video, Audio, PDF etc.</h3>
+									<p *ngIf="question.controls.question.get('medias')?.controls.length < 1">No media added</p>
+								</ion-label>
+								<ion-chip slot="end" color="dark" size="small" (click)="addMedia(question.controls.question.get('medias'))">
+									<ion-label>Attach</ion-label>
+									<ion-icon name="images"></ion-icon>
+								</ion-chip>
+							</ion-item>
+						</ion-item-group>
+
+						<ion-item-group formArrayName="medias" *ngFor="let media of question.controls.question.get('medias')?.controls; let mediaIndex = index">
+							<ion-item [formGroupName]="mediaIndex">
+								<ion-button slot="start" fill="clear" (click)="removeMedia(question, mediaIndex)"><ion-icon name="remove-circle-outline" color="danger"></ion-icon></ion-button>
+								<ion-label><h3>{{media.value.filename}}</h3></ion-label>
+							</ion-item>
+						</ion-item-group>
+					</div>
+
+				</ion-card>
+			</div>
+		</section>
+	</form>
+
+</ion-content>

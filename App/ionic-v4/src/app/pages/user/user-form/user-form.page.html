@@ -1,0 +1,88 @@
+<ion-header no-border>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-back-button [defaultHref]="!item ? this.routeData.appUrl : this.routeData.appUrl + '/detail/' + item.id"></ion-back-button>
+      </ion-buttons>
+  
+      <ion-title text-capitalize>{{action}} {{this.routeData.singular}}</ion-title>
+  
+      <ion-buttons slot="end">
+        <ion-button type="button" *ngIf="form.valid && submitted === false" (click)="save()">Save</ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content>
+    <form [formGroup]="form">
+      <ion-input type="hidden" formControlName="id" ></ion-input>
+
+      <ion-list>
+        <ion-item lines="inset">
+          <ion-label position="stacked">First Name <ion-text color="danger">*</ion-text></ion-label>
+          <ion-input
+            formControlName="firstName"
+            placeholder="Enter first name"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item lines="inset">
+          <ion-label position="stacked">Last Name <ion-text color="danger">*</ion-text></ion-label>
+          <ion-input
+            formControlName="lastName"
+            placeholder="Enter last name"
+          ></ion-input>
+        </ion-item>
+  
+        <ion-item lines="inset">
+          <ion-label position="stacked">Description</ion-label>
+          <ion-textarea
+             formControlName="description"
+            placeholder="Write description"
+            rows="5"
+          ></ion-textarea>
+        </ion-item>
+  
+      </ion-list>
+
+      <ion-list *ngIf="!item">
+        <ion-list-header mode="ios">
+          <ion-label color="primary">Login Credential</ion-label>
+        </ion-list-header>
+
+        <ion-item lines="inset">
+          <ion-icon name="contact" slot="start"></ion-icon>
+          <ion-label position="stacked">Email <ion-text color="danger">*</ion-text></ion-label>
+          <ion-input
+            formControlName="email"
+            placeholder="Enter email"
+            type="email"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item lines="inset">
+          <ion-icon name="lock" slot="start"></ion-icon>
+          <ion-note slot="end">Min. 8 chars</ion-note>
+          <ion-label position="stacked">
+            Password <ion-text color="danger">*</ion-text>
+          </ion-label>
+          <ion-input
+            type="password"
+            formControlName="password"
+            placeholder="Enter password"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item lines="inset">
+            <ion-icon name="lock" slot="start" color="light"></ion-icon>
+            <ion-label position="stacked">Repeat Password <ion-text color="danger">*</ion-text></ion-label>
+            <ion-input
+              type="password"
+              formControlName="passwordRepeat"
+              placeholder="Enter password again"
+            ></ion-input>
+          </ion-item>
+      </ion-list>
+  
+    </form>
+  
+  </ion-content>

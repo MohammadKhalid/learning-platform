@@ -1,0 +1,2 @@
+#RewriteEngine on
+# RewriteRule  (.*)  http://api.coachme.local:3000/$1  [P,L]

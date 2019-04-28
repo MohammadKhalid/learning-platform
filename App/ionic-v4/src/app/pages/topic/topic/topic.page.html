@@ -1,0 +1,40 @@
+<ion-header no-border>
+  <ion-toolbar color="primary">
+  	<ion-buttons slot="start">
+    	<ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title>Topics</ion-title>
+
+    <ion-buttons slot="end" *ngIf="canAdd()">
+		<ion-button strong="true" routerDirection="root" routerLink="/topic/add"><ion-icon slot="icon-only" name="add"></ion-icon></ion-button>
+	</ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+	<ion-list>
+
+		<ion-item *ngIf="items?.length < 1">
+			<ion-label><p>No topics yet</p></ion-label>
+		</ion-item>
+
+		<ion-item-sliding *ngFor="let item of items;">
+			<ion-item detail="false" button="true" routerDirection="root" routerLink="/topic/detail/{{item?.id}}">
+				<ion-label>
+					<p *ngIf="item?.categories?.length > 0">
+						<span *ngFor="let category of item?.categories; let i = index">{{i > 0 ? ', ' : ''}}{{category.title}}</span>
+					</p>
+					{{item?.title}}
+					<p>{{item?.description}}</p>
+				</ion-label>
+				<ion-icon slot="end" name="lock" *ngIf="item.isPrivate"></ion-icon>
+			</ion-item>
+
+			<ion-item-options side="end">
+				<ion-item-option color="medium" (click)="presentActions(item)"><ion-icon name="more" slot="end" mode="ios"></ion-icon></ion-item-option>
+			</ion-item-options>
+		</ion-item-sliding>
+
+	</ion-list>
+</ion-content>

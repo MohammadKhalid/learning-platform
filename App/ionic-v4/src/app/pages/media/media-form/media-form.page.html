@@ -1,0 +1,108 @@
+<ion-header no-border>
+  <ion-toolbar color="primary">
+  	<ion-buttons slot="start">
+      <ion-back-button defaultHref="media"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title text-capitalize>Question</ion-title>
+
+    <!-- <ion-buttons slot="end">
+    	<ion-button type="button" [disabled]="!form.valid" shape="round" color="dark" fill="solid" (click)="save()"><small>Save</small></ion-button>
+    </ion-buttons> -->
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+	<!-- <form [formGroup]="form">
+
+		<ion-list>
+
+			<ion-item>
+				<ion-label position="stacked">
+					Parent Topic
+					<ion-note>(Optional)</ion-note>
+				</ion-label>
+				<ionic-selectable
+					placeholder="Nothing Selected"
+
+					headerColor="primary"
+					[searchFailText]="'No topics found'"
+					[canSearch]="true"
+					[hasConfirmButton]="true"
+
+					[items]="topics"
+					itemValueField="id"
+					itemTextField="title"
+
+					(onChange)="selectableTopicChange($event)">
+					<ng-template ionicSelectableTitleTemplate>
+						Select One
+					</ng-template>
+
+					<ng-template ionicSelectableCloseButtonTemplate>
+						<ion-icon name="close-circle"></ion-icon>
+					</ng-template>
+				</ionic-selectable>
+			</ion-item>
+
+			<ion-list-header mode="ios" text-uppercase *ngIf="topic?.id">
+				<ion-label color="primary">{{action}} Question</ion-label>
+			</ion-list-header>
+
+			<ion-item>
+				<ion-label position="stacked">Question / Challenge</ion-label>
+				<ion-input
+					formControlName="question"
+					placeholder="Enter question or challenge"
+				></ion-input>
+			</ion-item>
+
+			<ion-item>
+				<ion-label position="stacked">Script</ion-label>
+				<ion-textarea
+					formControlName="script"
+					placeholder="Write a script to follow"
+				></ion-textarea>
+			</ion-item>
+
+		</ion-list>
+
+		<ion-list>
+
+			<ion-list-header mode="ios" text-uppercase>
+				<ion-label color="primary">Answering Time Limit</ion-label>
+			</ion-list-header>
+
+			<ion-item>
+				<ion-label>Enable</ion-label>
+				<ion-checkbox slot="end" formControlName="answerLimit" checked></ion-checkbox>
+			</ion-item>
+
+			<ion-item>
+				<ion-label>Limit in seconds</ion-label>
+				<ion-input
+					formControlName="answerLimitTime"
+					text-right
+					type="number"
+					placeholder="0"
+				></ion-input>
+			</ion-item>
+
+		</ion-list>
+
+		<ion-list>
+
+			<ion-list-header mode="ios" text-uppercase>
+				<ion-label color="primary">Video, Audio, PDF etc.</ion-label>
+				<ion-button size="small" fill="outline" shape="round" (click)="addMedia()">Add <ion-icon name="attach" slot="end"></ion-icon></ion-button>
+			</ion-list-header>
+
+			<ion-item *ngIf="form.controls.medias.value">
+				<ion-label><ion-note>Nothing is added yet.</ion-note></ion-label>
+			</ion-item>
+
+		</ion-list>
+
+	</form> -->
+</ion-content>

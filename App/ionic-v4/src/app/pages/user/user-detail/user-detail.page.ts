@@ -1,0 +1,142 @@
+import { Component, OnInit } from '@angular/core';
+import { NavController, ActionSheetController, AlertController } from '@ionic/angular';
+import { ActivatedRoute } from '@angular/router';
+
+import { RestApiService } from '../../../services/http/rest-api.service';
+import { AuthenticationService } from '../../../services/user/authentication.service';
+
+@Component({
+  selector: 'app-user-detail',
+  templateUrl: './user-detail.page.html',
+  styleUrls: ['./user-detail.page.scss'],
+})
+export class UserDetailPage implements OnInit {
+	sessionData: any;
+	item: any;
+	paramData: any;
+	routeData: any;
+	mediaBaseUrl: string;
+
+	constructor(
+		private restApi: RestApiService,
+		private authService: AuthenticationService,
+		private activatedRoute: ActivatedRoute,
+		private navCtrl: NavController,
+		private actionSheetCtrl: ActionSheetController,
+		private alertCtrl: AlertController
+	) {
+		console.log('USER DETAIL CONSTRUCT');
+
+		// set media base url
+      	this.mediaBaseUrl = this.restApi.url;
+
+		this.sessionData = this.authService.getSessionData();
+	}
+
+	ngOnInit() {
+		console.log('USER DETAIL INIT');
+
+		this.activatedRoute.data.subscribe((data) => {
+			this.routeData = data;
+
+			this.activatedRoute.params.subscribe((data) => {
+				this.paramData = data;
+	
+				// set id
+				const id = this.routeData.type === 'profile' ? '/' : '/' + this.paramData.id;
+
+				if(id) {
+					this.restApi.get(this.routeData.apiEndPoint + id, {}).then((res: any) => {
+						if(res.success === true) {
+							this.item = res.item;
+						} else {
+							// navigate back to list
+							this.restApi.showMsg(this.routeData.singular + ' not found!').then(() => {
+								this.navCtrl.navigateRoot('/' + this.routeData.appUrl);
+							});
+						}
+					});
+				} else {
+					// navigate back to list
+					this.restApi.showMsg(this.routeData.singular + ' not found!').then(() => {
+	
+					});
+				}
+			});
+		});
+	}
+
+	presentPageAction() {
+		const id = this.routeData.type === 'profile' ? '' : '/' + this.item.id;
+
+		let actions: any = [
+			{
+				text: 'Edit',
+				icon: 'create',
+				handler: () => {
+					console.log('ROUTE DATA ID', '/' + this.routeData.appUrl + '/edit' + id);
+					this.navCtrl.navigateRoot('/' + this.routeData.appUrl + '/edit' + id);
+				}
+			}
+		];
+
+		if(this.routeData.type !== 'profile') {
+			actions.push({
+				text: 'Delete',
+				role: 'destructive',
+				icon: 'trash',
+				handler: () => {
+					this.alertCtrl.create({
+						header: 'Delete Confirmation',
+						subHeader: this.item.title,
+						message: 'Are you sure you want to delete this ' + this.routeData.singular + '?',
+						buttons: [
+							{
+								text: 'Cancel',
+								role: 'cancel'
+							},
+							{
+								text: 'Yes',
+								handler: () => {
+									this.restApi.showMsg('Deleting...', 0).then((toast: any) => {
+										this.restApi.delete(this.routeData.apiEndPoint + '/' + this.item.id).then((res: any) => {
+											this.restApi.toast.dismiss();
+			
+											if(res.success === true) {
+												this.restApi.showMsg(this.routeData.singular + ' ' + this.item.firstName + ' ' + this.item.lastName + ' has been deleted!').then(() => {
+													this.navCtrl.navigateRoot(this.routeData.appUrl);
+												});
+											} else {
+												this.restApi.showMsg(res.error);
+											}
+										});
+									});
+								}
+							}
+						]
+					}).then((alert) => {
+						alert.present();
+					});
+				}
+			});
+		}
+
+		// cancel
+		actions.push({
+			text: 'Cancel',
+			icon: 'close',
+			role: 'cancel',
+			handler: () => {
+				console.log('Cancel clicked');
+			}
+		});
+
+		this.actionSheetCtrl.create({
+			header: this.item.title,
+			buttons: actions
+		}).then((action) => {
+			action.present();
+		});
+	}
+
+}

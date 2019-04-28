@@ -1,0 +1,495 @@
+<ion-header no-border>
+  <ion-toolbar color="primary">
+  	<ion-buttons slot="start">
+      <ion-back-button defaultHref="{{data?.url?.path}}"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title text-capitalize>{{data?.route?.type}} Time</ion-title>
+
+    <ion-buttons slot="end" *ngIf="recordRTC && !isPractice">
+		<ion-button fill="clear" color="light" *ngIf="videoStatus === 'stop'" (click)="startRecording()"> <ion-icon color="success" name="radio-button-on" mode="ios" slot="start"></ion-icon> Start</ion-button>
+		<ion-button fill="clear" color="light" *ngIf="videoStatus === 'recording'" (click)="stopRecording()"> <ion-icon color="danger" name="radio-button-on" mode="ios" slot="start"></ion-icon> Done</ion-button>
+	</ion-buttons>
+
+	<ion-buttons slot="end" *ngIf="recordRTC && isPractice">
+		<ion-button fill="clear" color="light" *ngIf="videoStatus === 'stop'" (click)="startRecording()"> <ion-icon color="success" name="radio-button-on" mode="ios" slot="start"></ion-icon> Start</ion-button>
+		<ion-button fill="clear" color="light" *ngIf="videoStatus === 'recording'" (click)="stopRecording()"> <ion-icon color="danger" name="radio-button-on" mode="ios" slot="start"></ion-icon> Stop</ion-button>
+	</ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content color="light">
+	<div>
+		<section padding-bottom [hidden]="step !== 1">
+			<ion-grid no-padding>
+				<ion-row justify-content-center>
+					<ion-col size="12" size-md="6" no-padding>
+						<div padding-top>
+							<ion-card-header color="light" text-center *ngIf="!isPractice">
+								<ion-card-title text-capitalize color="primary">It's Show Time</ion-card-title>
+								<ion-card-subtitle>Don't make things too complicated. Try to relax, enjoy every moment, get used to everything</ion-card-subtitle>
+							</ion-card-header>
+
+							<ion-card-header color="light" text-center *ngIf="isPractice">
+								<ion-card-title text-capitalize color="primary">Practice Makes Perfect</ion-card-title>
+								<ion-card-subtitle>Don't make things too complicated. Take your time!</ion-card-subtitle>
+							</ion-card-header>
+						</div>
+
+						<ion-segment padding-horizontal [(ngModel)]="segment">
+							<ion-segment-button layout="icon-bottom" value="topic" (ionSelect)="segmentButtonClicked($event)">
+								<ion-label><small>Step 1</small></ion-label>
+							  	<ion-icon name="book"></ion-icon>
+							</ion-segment-button>
+
+							<ion-segment-button layout="icon-bottom" value="coach" [disabled]="!form.title" (ionSelect)="segmentButtonClicked($event)">
+								<ion-label><small>Step 2</small></ion-label>
+							  	<ion-icon name="person"></ion-icon>
+							</ion-segment-button>
+
+							<ion-segment-button layout="icon-bottom" value="share" [disabled]="!form.title || (!isPractice && !form.coach)" (ionSelect)="segmentButtonClicked($event)">
+								<ion-label><small>Step 3</small></ion-label>
+							  	<ion-icon name="share"></ion-icon>
+							</ion-segment-button>
+
+							<ion-segment-button layout="icon-bottom" value="review" [disabled]="!form.title || (!isPractice && !form.coach)" (ionSelect)="segmentButtonClicked($event)">
+								<ion-label><small>Step 4</small></ion-label>
+								<ion-icon name="checkmark"></ion-icon>
+							</ion-segment-button>
+						</ion-segment>
+
+						<ion-card margin-vertical>
+							<div [hidden]="segment !== 'topic'">
+								<ion-card-header color="clean">
+									<ion-card-title color="primary">Topic</ion-card-title>
+								</ion-card-header>
+
+								<ion-item>
+									<ion-label><h3>Custom</h3></ion-label>
+									<ion-toggle slot="end" (ionChange)="customTopicToggle($event)"></ion-toggle>
+								</ion-item>
+
+								<div *ngIf="!isCustomTopic">
+									<ion-item lines="inset">
+										<ion-label position="stacked">Select One <ion-text color="danger">*</ion-text></ion-label>
+										<ionic-selectable
+											placeholder="Nothing selected"
+											headerColor="primary"
+
+											itemValueField="id"
+											itemTextField="title"
+
+											groupValueField="category.id"
+											groupTextField="category.title"
+
+											[items]="topics"
+
+											[searchFailText]="'No records found'"
+											[canSearch]="true"
+											[hasConfirmButton]="true"
+
+											(onChange)="selectableChange($event)">
+											<ng-template ionicSelectableTitleTemplate>
+												Select One
+											</ng-template>
+
+											<ng-template ionicSelectableGroupTemplate let-group="group">
+												{{group.text}}
+											</ng-template>
+
+											<ng-template ionicSelectableCloseButtonTemplate>
+												<ion-icon name="close-circle"></ion-icon>
+											</ng-template>
+										</ionic-selectable>
+									</ion-item>
+
+									<ion-item *ngIf="form?.questions && !isCustomTopic">
+										<ion-label text-capitalize>
+											<p>Challenges / Questions</p>
+											<ion-text color="danger" *ngIf="form?.questions?.length < 1"><small>Topic has no challenge / question. Please choose other topic.</small></ion-text>
+										</ion-label>
+										<ion-badge mode="ios" slot="end" color="dark">{{form?.questions?.length || 0}}</ion-badge>
+									</ion-item>
+
+									<ion-item lines="none" *ngIf="form?.description">
+										<ion-label text-capitalize>
+											<p>Description</p>
+											<h3 text-wrap>{{form?.description || '-'}}</h3>
+										</ion-label>
+									</ion-item>
+								</div>
+
+								<div *ngIf="isCustomTopic">
+									<ion-item lines="inset">
+										<ion-label position="stacked">Title <ion-text color="danger">*</ion-text></ion-label>
+										<ion-input type="text" [(ngModel)]="form.title" placeholder="Enter title"></ion-input>
+									</ion-item>
+
+									<ion-item lines="none">
+										<ion-label position="stacked">Description</ion-label>
+										<ion-textarea rows="5" [(ngModel)]="form.description" placeholder="Enter description"></ion-textarea>
+									</ion-item>
+								</div>
+							</div>
+
+							<div [hidden]="segment !== 'coach'">
+								<ion-card-header color="clean">
+									<ion-card-title color="primary">Coach</ion-card-title>
+								</ion-card-header>
+
+								<ion-item lines="none">
+									<ion-label position="stacked">
+										Select One 
+										 <ion-text color="danger" *ngIf="!isPractice">*</ion-text>
+									</ion-label>
+									<ionic-selectable
+										placeholder="{{isPractice ? 'You can select later' : 'Nothing selected'}}"
+
+										headerColor="primary"
+										[searchFailText]="'No records found'"
+										[canSearch]="true"
+										[hasConfirmButton]="true"
+
+										[items]="coaches"
+										itemValueField="id"
+										itemTextField="name"
+
+										(onChange)="selectableCoachChange($event)">
+										<ng-template ionicSelectableTitleTemplate>
+											Select Coach
+										</ng-template>
+
+										<ng-template ionicSelectableCloseButtonTemplate>
+											<ion-icon name="close-circle"></ion-icon>
+										</ng-template>
+									</ionic-selectable>
+								</ion-item>
+							</div>
+
+							<div [hidden]="segment !== 'share'">
+								<ion-card-header color="clean">
+									<ion-card-title color="primary">Email To</ion-card-title>
+									<ion-card-subtitle>E.g. john@gmail.com, doe@mail.com</ion-card-subtitle>
+								</ion-card-header>
+
+								<ion-item lines="none">
+									<ion-label position="stacked" text-wrap>Optional</ion-label>
+									<ion-textarea [(ngModel)]="form.sendTo" rows="5" spellcheck="true" placeholder="Enter email adress here"></ion-textarea>
+								</ion-item>
+							</div>
+
+							<div [hidden]="segment !== 'review'">
+								<ion-card-header color="clean">
+									<ion-card-title color="primary">Review</ion-card-title>
+								</ion-card-header>
+
+								<ion-item>
+									<ion-label>
+										<p>Topic <ion-text color="danger">*</ion-text></p>
+										{{form.title || '-'}}
+									</ion-label>
+								</ion-item>
+
+								<ion-item *ngIf="form?.questions && !isCustomTopic">
+									<ion-label>
+										<p>Challenges / Questions</p>
+									</ion-label>
+									<ion-badge mode="ios" slot="end" color="dark">{{form?.questions?.length || 0}}</ion-badge>
+								</ion-item>
+
+								<ion-item>
+									<ion-label>
+										<p>Description</p>
+										<h3 text-wrap>{{form?.description || '-'}}</h3>
+									</ion-label>
+								</ion-item>
+
+								<ion-item>
+									<ion-label>
+										<p>Coach <ion-text color="danger" *ngIf="!isPractice">*</ion-text></p>
+										<h3 text-wrap *ngIf="!isPractice">{{form?.coach || '-'}}</h3>
+										<h3 *ngIf="isPractice">{{form?.coach || 'You can select later'}}</h3>
+									</ion-label>
+								</ion-item>
+
+								<ion-item lines="none">
+									<ion-label>
+										<p>Email To</p>
+										<h3 text-wrap>{{form?.sendTo || '-'}}</h3>
+									</ion-label>
+								</ion-item>
+							</div>
+						</ion-card>
+
+						<div padding-horizontal>
+							<ion-button float-start shape="round" color="medium" (click)="goToSegment('prev')" *ngIf="segmentPrev?.previousSibling"><ion-icon name="arrow-back" slot="start"></ion-icon> Back</ion-button>
+							<ion-button float-end shape="round" color="dark" (click)="goToSegment('next')" *ngIf="segmentNext?.nextSibling && form?.title && (((!isPractice && form?.coach) || !segmentPrev?.previousSibling) || isPractice)">Next <ion-icon name="arrow-forward" slot="end"></ion-icon></ion-button>
+
+							<div *ngIf="!segmentNext?.nextSibling && form.title && (form.questions?.length > 0 || isCustomTopic)">
+								<ion-button float-end shape="round" (click)="slideNext()" *ngIf="(!isPractice && (form.submittedTo || form.sendTo)) || isPractice">
+									OK! let's go
+									<ion-icon name="arrow-round-forward" slot="end"></ion-icon>
+								</ion-button>
+							</div>
+						</div>
+					</ion-col>
+				</ion-row>
+			</ion-grid>
+
+		</section>
+
+		<section [hidden]="step !== 2">
+			<ion-grid fixed="true" no-padding>
+				<ion-row *ngIf="showRecordingCompatMessage === true">
+					<ion-col size="12" no-padding>
+						<ion-item lines="none">
+							<ion-label text-center text-wrap>
+								<ion-text color="danger">
+									<h1 style="font-weight: 300;">Your browser does not support video recording!</h1>
+								</ion-text>
+								<p>You may install and use</p>
+							</ion-label>
+						</ion-item>
+
+						<div text-center>
+							<ion-chip (click)="openUrl('https://www.google.com/chrome/')">
+								<ion-avatar>
+									<img src="assets/img/browser/chrome.png">
+								</ion-avatar>
+								<ion-label>Chrome</ion-label>
+							</ion-chip>
+
+							<ion-chip (click)="openUrl('https://www.mozilla.org/')">
+								<ion-avatar>
+									<img src="assets/img/browser/firefox.png">
+								</ion-avatar>
+								<ion-label>Firefox</ion-label>
+							</ion-chip>
+
+							<ion-chip (click)="openUrl('https://www.opera.com/download/')">
+								<ion-avatar>
+									<img src="assets/img/browser/opera.png">
+								</ion-avatar>
+								<ion-label>Opera</ion-label>
+							</ion-chip>
+						</div>
+						
+					</ion-col>
+				</ion-row>
+
+				<ion-row>
+
+					<ion-col size="12" size-md="8">
+						<ion-row class="fixed-content" *ngIf="isShowTutorial">
+							<ion-col size="12" align-self-center no-padding class="fixed-content">
+								<ion-card>
+									<ion-item lines="none">
+										<ion-label>Tutorial / Demo</ion-label>
+										<ion-button color="danger" (click)="showTutorial()" slot="end">Close</ion-button>
+									</ion-item>
+
+									<ion-item lines="none" *ngIf="question?.question?.medias?.length < 1">
+										<ion-label>
+			                            	<p>No tutorial / demo provided</p>
+			                        	</ion-label>
+			                        </ion-item>
+
+									<div *ngFor="let media of question?.question?.medias;">
+		                                <div class="video-box" style="overflow: hidden;" *ngIf="media?.type === 'video/webm' || media?.type === 'video/mp4' || media?.type === 'application/octet-stream'">
+		                                    <video class="video" controls preload="auto">
+		                                        <source src="{{mediaPath?.path}}" type='{{mediaPath?.type}}' *ngFor="let mediaPath of media?.paths">
+		                                    </video>
+		                                </div>
+
+		                                <ion-img src="{{media?.paths[0]?.path}}" *ngIf="media?.type === 'image/jpeg' || media?.type === 'image/jpg' || media?.type === 'image/png' || media?.type === 'image/gif'"></ion-img>
+		                            </div>
+		                        </ion-card>
+							</ion-col>
+						</ion-row>
+
+						<ion-card [hidden]="isShowTutorial">
+							<div class="video-box">
+								<div style="position: absolute; width: 100%;">
+									<ion-item lines="none" style="--background: rgb(0, 0, 0, 0.75);">
+										<ion-icon name="timer" mode="ios" slot="start" color="danger"></ion-icon>
+										<ion-label color="danger">{{textDuration || 0}} / {{recordingDuration / 1000}} <ion-text>secs</ion-text></ion-label>
+										<ion-badge text-capitalize mode="ios" slot="end" [color]="statusColor[videoStatus]">
+											{{textStatus}}
+										</ion-badge>
+									</ion-item>
+								</div>
+
+								<div #teleprompterContainer class="teleprompterContainer" [hidden]="!teleprompterPlaying">
+									<div #teleprompt class="teleprompter" contenteditable>
+										<div padding>{{telepromptWorkTrack || question?.question?.script || 'No script provided!'}}</div>
+									</div>
+								</div>
+
+								<ion-row text-center class="fixed-content" [hidden]="!showChallenge" style="position: absolute; background-color: #222;">
+									<ion-col size="12" align-self-center text-center>
+										<ion-text color="danger">
+											<h1 no-margin style="font-size: 300%;">{{countDownTimeLeft || showChallengeCountDownTime}}</h1>
+										</ion-text>
+
+										<div *ngIf="question?.question?.question">
+											<ion-card-header>
+												<ion-card-title color="secondary">Challenge #{{questionNumber}}</ion-card-title>
+											</ion-card-header>
+											<ion-card-subtitle text-uppercase padding-horizontal color="light">{{question?.question?.question}}</ion-card-subtitle>
+										</div>
+									</ion-col>
+								</ion-row>
+
+								<video #videoRecorder class="video"></video>
+							</div>
+						</ion-card>
+					</ion-col>
+
+					<ion-col size="12" size-md="4">
+						<ion-list color="light" *ngIf="isPractice">
+							<ion-item>
+								<ion-label>
+									<ion-text color="primary"><strong>{{form?.title}}</strong></ion-text>
+									<p>{{form?.description || 'No description'}}</p>
+								</ion-label>
+							</ion-item>
+							
+							<div *ngIf="videoStatus === 'stop' || question?.question?.script || telepromptWorkTrack">
+								<ion-item lines="none">
+									<ion-label><h3>Teleprompter</h3></ion-label>
+								</ion-item>
+
+								<div *ngIf="videoStatus === 'stop'">
+									<ion-item lines="none">
+										<ion-label><p>Preview</p></ion-label>
+										<ion-toggle color="dark" (ionChange)="telepromptPreview()"></ion-toggle>
+									</ion-item>
+
+									<ion-item lines="none">
+										<ion-label><p>Word-track</p></ion-label>
+										<ion-button fill="outline" shape="round" color="dark" (click)="presentAlertWordTrack()">Edit</ion-button>	
+									</ion-item>
+								</div>
+
+								<ion-item lines="none">
+									<ion-label><p slot="start">Speed</p></ion-label>
+									<ion-range min="1" max="100" step="1" [(ngModel)]="initTelepromptSpeed" no-padding color="dark"></ion-range>
+								</ion-item>
+
+								<ion-item lines="none">
+									<ion-label><p slot="start">Font Size</p></ion-label>
+									<ion-range min="0" max="6" step="1" (ionChange)="teleprompterChangeFontSize($event)" value="5" no-padding color="dark" snaps="true"></ion-range>
+								</ion-item>
+							</div>
+						</ion-list>
+
+						<ion-list *ngIf="!isPractice">
+							<ion-item lines="none">
+								<ion-label>
+									<ion-text color="primary">{{form?.title}}</ion-text>
+									<p>{{form?.description}}</p>
+								</ion-label>
+							</ion-item>
+
+							<ion-item>
+								<ion-label>
+									<h3>{{form?.coach}}</h3>
+									<p>Coach</p>
+								</ion-label>
+							</ion-item>
+						</ion-list>
+
+						<ion-list *ngIf="videoStatus === 'uploading'">
+							<ion-list-header>
+								<ion-label>
+									<ion-text color="primary" *ngIf="videoUploaded < 100">{{videoUploaded}} %</ion-text>
+								</ion-label>
+							</ion-list-header>
+
+							<ion-progress-bar margin-horizontal *ngIf="videoUploaded < 100" value="{{(videoUploaded / 100) || 0}}"></ion-progress-bar>
+							<ion-progress-bar margin-horizontal *ngIf="videoUploaded >= 100" type="indeterminate"></ion-progress-bar>
+						</ion-list>
+
+						<div *ngIf="isPractice">
+							<div *ngIf="videoStatus === 'done'">
+								<ion-item-group margin-bottom padding-bottom>
+									<ion-item>
+										<ion-label>Dissatisfied?</ion-label>
+										<ion-button shape="round" color="dark" (click)="resetRecording()">
+											<ion-icon name="refresh" mode="ios" slot="start"></ion-icon>
+											Try Again
+										</ion-button>
+									</ion-item>
+								</ion-item-group>
+
+								<div text-center>
+									<ion-button color="secondary" size="large" fill="outline" shape="round" (click)="save()">
+										Next
+										<ion-icon name="arrow-round-forward" mode="ios" slot="end"></ion-icon>
+									</ion-button>
+								</div>
+							</div>
+
+							<div text-center>
+								<ion-button margin-top *ngIf="videoStatus === 'stop'" (click)="startRecording()" color="success" size="large" fill="outline" shape="round">
+									<ion-icon name="radio-button-on" mode="ios" slot="start"></ion-icon>
+									Start
+								</ion-button>
+
+								<ion-button margin-top *ngIf="videoStatus === 'recording'" (click)="stopRecording()" color="danger" size="large" fill="outline" shape="round">
+									<ion-icon name="radio-button-on" mode="ios" slot="start"></ion-icon>
+									Stop
+								</ion-button>
+							</div>
+
+							<ion-item lines="none" text-center *ngIf="videoStatus === 'stop' && !isShowTutorial && question?.question?.medias">
+								<ion-label>
+									<h3 padding-top>Before you start, you may</h3>
+									<ion-button size="small" color="medium" (click)="showTutorial()">View Tutorial</ion-button>
+								</ion-label>
+							</ion-item>
+						</div>
+
+						<div text-center *ngIf="!isPractice">
+							<ion-button margin-top *ngIf="videoStatus === 'stop'" (click)="startRecording()" color="success" size="large" fill="outline" shape="round">
+								<ion-icon name="radio-button-on" mode="ios" slot="start"></ion-icon>
+								Start
+							</ion-button>
+
+							<ion-button margin-top *ngIf="videoStatus === 'recording'" (click)="stopRecording()" color="danger" size="large" fill="outline" shape="round">
+								<ion-icon name="radio-button-on" mode="ios" slot="start"></ion-icon>
+								Done
+							</ion-button>
+
+							<div margin-top padding-top *ngIf="videoStatus === 'stop'">
+								<ion-chip (click)="alertInstruction()">
+									<ion-label>Instructions</ion-label>
+									<ion-icon name="information-circle-outline"></ion-icon>
+								</ion-chip>
+							</div>
+						</div>
+					</ion-col>
+
+				</ion-row>
+
+				<ion-row *ngIf="isPractice">
+					<ion-col size="12">
+						<ion-list color="light">
+							<ion-list-header color="light" mode="ios" text-uppercase>
+								<ion-label color="primary">Topic Description</ion-label>
+							</ion-list-header>
+
+							<ion-item color="light">
+								<ion-label text-wrap>
+									<p text-wrap>{{form?.description || '-'}}</p>
+								</ion-label>
+							</ion-item>
+						</ion-list>
+					</ion-col>
+				</ion-row>
+			</ion-grid>
+
+		</section>
+	</div>
+
+</ion-content>

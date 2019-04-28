@@ -1,0 +1,99 @@
+<ion-header no-border>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="topic"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title text-capitalize>Topic Detail</ion-title>
+
+    <ion-buttons slot="end" *ngIf="sessionData.user.type !== 'student'">
+      <ion-button strong="true" (click)="presentPageAction()"><ion-icon slot="icon-only" name="more"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-list>
+        <ion-item lines="none">
+            <ion-label>
+                <ion-text color="primary"><h1>{{item?.title || '-'}}</h1></ion-text>
+                <p>{{item?.description || 'No description'}}</p>
+            </ion-label>
+        </ion-item>
+    </ion-list>
+
+    <ion-list>
+        <ion-item lines="none">
+            <ion-icon name="list" slot="start"></ion-icon>
+            <ion-label>
+                Categories
+                <p *ngIf="item?.categories?.length < 1">No category</p>
+            </ion-label>
+        </ion-item>
+        
+        <ion-item lines="inset" *ngFor="let category of item?.categories">
+            <ion-label>
+                <h3>{{category?.title}}</h3>
+            </ion-label>
+        </ion-item>
+    </ion-list>
+
+    <ion-list>
+        <ion-item lines="none">
+            <ion-icon name="crop" slot="start"></ion-icon>
+            <ion-label>
+                Challenges
+                <p *ngIf="item?.questions?.length < 1">No challenges for this topic</p>
+            </ion-label>
+        </ion-item>
+    </ion-list>
+
+    <ion-card *ngFor="let challenge of item?.questions;">
+        <ion-card-header color="light">
+            <ion-card-title>#{{challenge?.number}}</ion-card-title>
+        </ion-card-header>
+
+        <ion-grid>
+            <ion-row>
+                <ion-col size="12" size-md="6">
+                    <ion-item>
+                        <ion-label>
+                            <h3>Challenge / Question</h3>
+                            <p text-wrap>{{challenge?.question?.question}}</p>
+                        </ion-label>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-label>
+                            <h3>Work-track / Script</h3>
+                            <p text-wrap>{{challenge?.question?.script || 'No Work-track / script provided'}}</p>
+                        </ion-label>
+                    </ion-item>        
+
+                    <ion-item lines="none">
+                        <ion-label>
+                            <h3>Time Limit</h3>
+                            <p>{{challenge?.question?.answerLimit === true ? challenge?.question?.answerLimitTime : 'No limit'}} seconds</p>                            
+                        </ion-label>
+                        <ion-icon slot="end" name="timer" mode="ios"></ion-icon>
+                    </ion-item>
+
+                </ion-col>
+
+                <ion-col size="12" size-md="6">
+                    <div padding-horizontal *ngFor="let media of challenge?.question?.medias;">
+                        <div class="video-box" style="overflow: hidden;" *ngIf="media?.type === 'video/webm' || media?.type === 'video/mp4' || media?.type === 'application/octet-stream'">
+                            <video class="video" controls preload="auto">
+                                <source src="{{mediaPath?.path}}" type='{{mediaPath?.type}}' *ngFor="let mediaPath of media?.paths">
+                            </video>
+                        </div>
+
+                        <ion-img src="{{media?.paths[0]?.path}}" *ngIf="media?.type === 'image/jpeg' || media?.type === 'image/jpg' || media?.type === 'image/png' || media?.type === 'image/gif'"></ion-img>
+                    </div>
+                </ion-col>
+
+            </ion-row>
+        </ion-grid>
+    </ion-card>
+
+</ion-content>

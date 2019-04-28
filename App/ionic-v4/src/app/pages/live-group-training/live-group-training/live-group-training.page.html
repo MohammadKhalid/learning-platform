@@ -1,0 +1,118 @@
+<ion-header no-border>
+  <ion-toolbar color="primary">
+  	<ion-buttons slot="start">
+    	<ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title>Live Group Training</ion-title>
+
+    <ion-buttons slot="end">
+		<ion-button (click)="showHideSearchBox()" [hidden]="!searchBoxToolbarHidden"><ion-icon name="search"></ion-icon></ion-button>
+		<ion-button strong="true" routerDirection="root" routerLink="/live-group-training/add" *ngIf="canAdd()"><ion-icon slot="icon-only" name="add"></ion-icon></ion-button>
+	</ion-buttons>
+  </ion-toolbar>
+
+  	<ion-toolbar [hidden]="searchBoxToolbarHidden">
+		<ion-searchbar debounce="1000" mode="ios" clearIcon="backspace" (ionChange)="startSearch($event)"></ion-searchbar>
+
+		<ion-buttons slot="end">
+			<ion-button (click)="closeSearch($event)"><ion-icon name="close-circle"></ion-icon></ion-button>
+		</ion-buttons>
+	</ion-toolbar>
+
+  	<!-- <ion-toolbar color="light">
+		<ion-segment color="dark" [(ngModel)]="segmentFilter">
+			<ion-segment-button layout="icon-start" value="today">
+				<ion-icon name="calendar" mode="ios"></ion-icon>
+				<ion-label><small>Today</small></ion-label>
+			</ion-segment-button>
+			<ion-segment-button layout="icon-start" value="upcoming">
+				<ion-icon name="calendar" mode="md"></ion-icon>
+				<ion-label><small>Upcoming</small></ion-label>
+			</ion-segment-button>
+			<ion-segment-button layout="icon-start" value="other">
+				<ion-icon name="calendar" mode="ios"></ion-icon>
+				<ion-label><small>Other</small></ion-label>
+			</ion-segment-button>
+		</ion-segment>
+	</ion-toolbar> -->
+
+</ion-header>
+<!-- {{setTimer(i, item.date + ' ' + item.time)}} -->
+<ion-content class="ion-padding-top">
+	<ion-list *ngFor="let item of items; let i = index;">
+		<ion-item lines="none">
+			<ion-label>
+				<ion-text text-capitalize><strong>{{item?.title}}</strong></ion-text>
+				<p>{{item?.description || 'No description'}}</p>
+			</ion-label>
+			
+			<!-- <ion-chip slot="end" color="primary">
+				<ion-label>Enter Room</ion-label>
+				<ion-icon name="people" mode="ios"></ion-icon>
+			</ion-chip> -->
+
+			<ion-button color="{{item?.status === 'open' ? 'dark' : 'warning'}}" (click)="gotoSession(item.id)" *ngIf="item?.status !== 'close' && canJoin(item) && (sessionData.user.id === item?.speakerId || item?.isSpeakerJoin)">Enter Room</ion-button>
+		</ion-item>
+
+		<ion-item>
+			<ion-icon size="small" slot="start" name="calendar" mode="ios"></ion-icon>
+			<ion-label><h3>{{beautifyDate(item?.date + ' ' + item?.time, 'ddd, MMM. DD, YYYY', item?.timezone || null)}}</h3></ion-label>
+			<ion-note slot="end" mode="md">Date</ion-note>
+		</ion-item>
+
+		<ion-item>
+			<ion-icon size="small" slot="start" name="time" mode="md"></ion-icon>
+			<ion-label><h3>{{beautifyDate(item?.date + ' ' + item?.time, 'h:mm A', item?.timezone || null)}}</h3></ion-label>
+			<ion-note slot="end" mode="md">Time</ion-note>
+		</ion-item>
+	
+		<ion-item>
+			<ion-icon size="small" slot="start" name="person"></ion-icon>
+			<ion-label><h3>{{item?.speaker?.firstName}} {{item?.speaker?.lastName}}</h3></ion-label>
+			<ion-note slot="end" mode="md">Speaker</ion-note>
+		</ion-item>
+	
+		<ion-item lines="full" class="ion-padding-bottom">
+			<ion-icon size="small" slot="start" name="information-circle-outline"></ion-icon>
+			<ion-label *ngIf="item?.status === 'open'">
+				<h3 *ngIf="!item?.public && !canJoin(item)">Locked</h3>
+
+				<div *ngIf="item?.public || canJoin(item)">
+					<ion-badge color="warning" *ngIf="item?.started"><ion-text color="dark">On going</ion-text></ion-badge>
+
+					<div *ngIf="!item?.started">
+						<ion-badge color="success" *ngIf="item?.isSpeakerJoin">Open</ion-badge>
+						<span *ngIf="!item?.isSpeakerJoin">
+							<ion-badge color="{{timeLeft.text[0] === 'a' ? 'light' : 'dark'}}" *ngIf="item.timeLeft | async as timeLeft">{{timeLeft.text}} {{timeLeft.text[0] === 'a' ? 'ago' : 'left'}}</ion-badge>
+						</span>
+					</div>
+				</div>
+			</ion-label>
+
+			<ion-label *ngIf="item?.status === 'close'">
+				<ion-badge color="danger">Closed</ion-badge>
+			</ion-label>
+			<ion-note slot="end" mode="md">Status</ion-note>
+		</ion-item>
+	</ion-list>
+
+	<ion-list>
+		<ion-item lines="none" *ngIf="items?.length < 1">
+			<ion-label>
+				<p>No record!</p>
+			</ion-label>
+		</ion-item>
+	</ion-list>
+
+	<ion-infinite-scroll [disabled]="isInfiniteScrollDisabled" margin-top (ionInfinite)="loadData($event)">
+		<ion-infinite-scroll-content
+			style="min-height: 1px;"
+			loadingSpinner="bubbles">
+		</ion-infinite-scroll-content>
+	</ion-infinite-scroll>
+
+	<!-- <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+		<ion-refresher-content></ion-refresher-content>
+	</ion-refresher> -->
+</ion-content>

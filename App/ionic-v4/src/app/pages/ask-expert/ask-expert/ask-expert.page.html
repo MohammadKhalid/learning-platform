@@ -1,0 +1,52 @@
+<ion-header no-border>
+  <ion-toolbar color="primary">
+  	<ion-buttons slot="start">
+    	<ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+	    
+    <ion-title>Ask The Expert</ion-title>
+
+    <ion-buttons slot="end" *ngIf="canAdd()">
+		<ion-button routerDirection="root" routerLink="/{{urlEndPoint}}/add"><ion-icon slot="icon-only" strong="true" name="add"></ion-icon></ion-button>
+	</ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+	<ion-list *ngIf="items?.length < 1">
+		<ion-item>
+			<ion-label><p>No {{canAdd() ? 'record found' : 'submitted yet'}}</p></ion-label>
+		</ion-item>
+	</ion-list>
+
+	<ion-card *ngFor="let item of items;">
+		<ion-item>
+			<ion-label>
+				<p>{{beautifyDate(item?.submittedAt, 'MMM. D, YYYY')}}</p>
+				{{item?.subject}}
+			</ion-label>
+			<ion-button slot="end" shape="round" fill="outline" routerDirection="root" routerLink="/{{urlEndPoint}}/detail/{{item?.id}}">View Details</ion-button>
+		</ion-item>
+
+		<ion-card-content>
+			{{item?.question}}
+		</ion-card-content>
+
+		<ion-item *ngIf="sessionData.user.type !== 'student'">
+			<ion-label>{{item?.user?.firstName}} {{item?.user?.lastName}}</ion-label>
+			<ion-note mode="md" slot="end" text-uppercase>Student</ion-note>
+		</ion-item>
+
+		<ion-item *ngIf="sessionData.user.type !== 'coach'">
+			<ion-label>{{item?.coach?.firstName}} {{item?.coach?.lastName}}</ion-label>
+			<ion-note mode="md" slot="end" text-uppercase>Coach</ion-note>
+		</ion-item>
+		
+		<ion-item>
+			<ion-label text-capitalize>
+				<ion-badge mode="ios" [color]="item?.status === 'open' ? 'success' : 'medium'">{{item?.status}}</ion-badge>
+			</ion-label>
+			<ion-note mode="md" slot="end" text-uppercase>Status</ion-note>
+		</ion-item>
+	</ion-card>
+</ion-content>

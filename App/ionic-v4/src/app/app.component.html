@@ -1,0 +1,55 @@
+<ion-app>
+  <ion-split-pane>
+    <ion-menu id="app-main-menu" menuId="mainMenu">
+      <ion-header no-border>
+        <ion-toolbar color="tertiary">
+          <ion-title margin-end>
+            <ion-img src="assets/img/logo-light.png" margin-horizontal></ion-img>
+          </ion-title>
+        </ion-toolbar>
+        <ion-toolbar id="app-main-menu-user-info" class="ion-no-padding">
+          <ion-item lines="full" color="light">
+            <ion-label>
+              <h3 text-capitalize>{{userData?.user?.firstName}} {{userData?.user?.lastName}}</h3>
+              <ion-note color="medium" text-uppercase>
+                <small>{{userData?.user?.type}}</small>
+              </ion-note>
+            </ion-label>
+          </ion-item>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content color="light">
+        <ion-item-group *ngFor="let p of appPages">
+          
+          <ion-item-divider color="light" *ngIf="p.header !== false">
+            <ion-label color="medium">{{p.header.title}}</ion-label>
+          </ion-item-divider>
+
+          <ion-menu-toggle auto-hide="false" *ngFor="let m of p.menu">
+            <ion-item color="light" lines="none" button="true" detail="false" routerDirection="root" [routerLink]="[m.url]">
+              <ion-icon slot="start" [color]="isActive(m.url)" [mode]="m.icon_mode" [name]="m.icon"></ion-icon>
+              <ion-label [color]="isActiveLabel(m.url)">
+                {{m.title}}
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        
+        </ion-item-group>
+
+        <ion-item-group>
+          <ion-menu-toggle auto-hide="false">
+            <ion-item color="light" lines="none" detail="false" button="true" (click)="logout()">
+              <ion-icon slot="start" mode="ios" name="unlock" color="dark"></ion-icon>
+              <ion-label>
+                Logout
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-item-group>
+
+      </ion-content>
+    </ion-menu>
+    <ion-router-outlet main></ion-router-outlet>
+  </ion-split-pane>
+</ion-app>

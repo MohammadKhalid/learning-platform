@@ -1,0 +1,17 @@
+<ion-header no-border>
+  	<ion-toolbar color="primary">
+		<ion-buttons slot="start">
+			<ion-menu-button color="light"></ion-menu-button>
+		</ion-buttons>
+
+		<ion-title text-capitalize>{{componentProp?.data?.route?.type}} Time</ion-title>
+
+		<ion-buttons slot="end" *ngIf="componentProp.data.session.user.type === 'student'">
+			<ion-button strong="true" routerDirection="root" routerLink="/{{componentProp?.url?.path}}/add"><ion-icon slot="icon-only" name="add"></ion-icon></ion-button>
+		</ion-buttons>
+  	</ion-toolbar>
+</ion-header>
+
+<ion-content>
+	<show-time></show-time>
+</ion-content>

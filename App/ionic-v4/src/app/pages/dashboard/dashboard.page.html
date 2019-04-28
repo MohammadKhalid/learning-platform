@@ -1,0 +1,238 @@
+<ion-header no-border>
+  <ion-toolbar color="primary">
+  	<ion-buttons slot="start">
+    	<ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title>Dashboard</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+	<ion-grid fixed class="fixed-content" *ngIf="loading">
+		<ion-row justify-content-center class="fixed-content">
+			<ion-col size="6" align-self-center>
+				<ion-progress-bar type="indeterminate"></ion-progress-bar>
+			</ion-col>
+		</ion-row>
+	</ion-grid>
+
+	<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+		<ion-fab-button color="dark">
+			<ion-icon name="add"></ion-icon>
+		</ion-fab-button>
+
+		<ion-fab-list side="top">
+			<ion-fab-button color="secondary"><ion-icon name="fitness" mode="ios"></ion-icon></ion-fab-button>
+			<ion-fab-button color="secondary"><ion-icon name="glasses" mode="ios"></ion-icon></ion-fab-button>
+			<ion-fab-button color="secondary"><ion-icon name="book" mode="ios"></ion-icon></ion-fab-button>
+		</ion-fab-list>
+	</ion-fab>
+	
+	<div *ngIf="!loading">
+
+		<ion-grid class="grid-outlined" no-padding>
+			<ion-row>
+				<ion-col size="12" size-md="12">
+					<!-- <ion-list-header mode="ios">
+						<ion-label color="primary">Assessment Summary</ion-label>
+					</ion-list-header> -->
+
+					<ion-row>
+						<ion-col size="6" size-md="2" no-padding>
+							<ion-item lines="none">
+								<ion-label>
+									<h2 class="text-box-lg">{{data?.showTimeCount || 23}}</h2>
+									<p><small text-uppercase>Show Time</small></p>
+								</ion-label>
+							</ion-item>
+						</ion-col>
+
+						<ion-col size="6" size-md="2" no-padding>
+							<ion-item lines="none">
+								<ion-label>
+									<h2 class="text-box-lg">{{data?.practiceTimeCount || 58}}</h2>
+									<p><small text-uppercase>Practice Time</small></p>
+								</ion-label>
+							</ion-item>
+						</ion-col>
+
+						<ion-col size="6" size-md="2" no-padding>
+							<ion-item lines="none">
+								<ion-label>
+									<h2 class="text-box-lg">{{data?.certificationCount || 1}}</h2>
+									<p><small text-uppercase>Certification</small></p>
+								</ion-label>
+							</ion-item>
+						</ion-col>
+					<!-- </ion-row>
+				</ion-list>
+			</ion-col>
+
+			<ion-col size="12" size-md="6">
+				<ion-list>
+					<ion-list-header mode="ios">
+						<ion-label color="primary">Interaction Summary</ion-label>
+					</ion-list-header>
+
+					<ion-row> -->
+						<ion-col size="6" size-md="2" no-padding>
+							<ion-item lines="none">
+								<ion-label>
+									<h2 class="text-box-lg">{{data?.liveGroupTrainingCount || 10}}</h2>
+									<p><small text-uppercase>Live Group Training</small></p>
+								</ion-label>
+							</ion-item>
+						</ion-col>
+
+						<ion-col size="6" size-md="2" no-padding>
+							<ion-item lines="none">
+								<ion-label>
+									<h2 class="text-box-lg">{{data?.askExpertCount || 4}}</h2>
+									<p><small text-uppercase>Ask The Expert</small></p>
+								</ion-label>
+							</ion-item>
+						</ion-col>
+
+						<ion-col size="6" size-md="2" no-padding>
+							<ion-item lines="none">
+								<ion-label>
+									<h2 class="text-box-lg">{{data?.personalCoachingCount || 2}}</h2>
+									<p><small text-uppercase>Personal Coaching</small></p>
+								</ion-label>
+							</ion-item>
+						</ion-col>
+					</ion-row>
+				</ion-col>
+			</ion-row>
+			<ion-row>
+				<ion-col size="12" size-md="6" class="ion-no-padding">
+					<ion-card-header>
+						<ion-card-title>Assessments</ion-card-title>
+					</ion-card-header>
+					<ion-list lines="none" class="ion-no-padding ion-margin-bottom">
+						<ion-item>
+							<ion-button slot="end" size="small" fill="outline" color="dark" class="ion-align-self-start ion-margin-top">
+								Review
+							</ion-button>
+							<ion-label>
+								<p>Practice Time | Apr. 5, 2019</p>
+								Practice Time 101
+								<p>The float CSS property specifies that an element should be placed along the left or right side of its container, where text and inline elements will wrap around it.</p>
+								<h3><ion-icon name="school" size="small" class="ion-float-left ion-margin-end"></ion-icon> Mark Arroyo</h3>
+							</ion-label>
+						</ion-item>
+
+						<ion-item>
+							<ion-label><ion-badge color="dark" mode="ios">1 / 5</ion-badge></ion-label>
+							<ion-buttons slot="end">
+								<ion-button size="small">
+									<ion-icon name="arrow-dropleft-circle" slot="icon-only" mode="ios"></ion-icon>
+								</ion-button>
+								<ion-button size="small">
+									<ion-icon name="arrow-dropright-circle" slot="icon-only" mode="ios"></ion-icon>
+								</ion-button>
+							</ion-buttons>
+						</ion-item>
+					</ion-list>
+				</ion-col>
+				<ion-col size="12" size-md="6" class="ion-no-padding">
+					<ion-card-header>
+						<ion-card-title>Live Group Training Events</ion-card-title>
+					</ion-card-header>
+
+					<ion-list lines="none" class="ion-no-padding ion-margin-bottom">
+						<ion-item detail="false" button="true" routerDirection="root" routerLink="/">
+							<ion-badge slot="end" mode="md" color="warning" class="ion-align-self-start ion-text-uppercase ion-margin-top"><small>Ongoing</small></ion-badge>
+							<ion-label>
+								<p>Apr. 5, 2019 / 9:00 AM</p>
+								Training 101
+								<p>The float CSS property specifies that an element should be placed along the left or right side of its container, where text and inline elements will wrap around it.</p>
+								<h3><ion-icon name="microphone" size="small" class="ion-float-left ion-margin-end"></ion-icon> Mark Arroyo</h3>
+							</ion-label>
+						</ion-item>
+						<!-- <ion-item detail="false" button="true" routerDirection="root" routerLink="/">
+							<ion-badge slot="end" mode="md" color="warning" class="ion-align-self-start ion-text-uppercase ion-margin-top"><small>Ongoing</small></ion-badge>
+							<ion-label>
+								<p>Apr. 5, 2019 / 9:00 AM</p>
+								Training 102
+								<p>The float CSS property specifies that an element should be placed along the left or right side of its container, where text and inline elements will wrap around it.</p>
+								<h3><ion-icon name="microphone" size="small" class="ion-float-left ion-margin-end"></ion-icon> Mark Arroyo</h3>
+							</ion-label>
+						</ion-item>
+						<ion-item>
+							<ion-note slot="end" mode="md" class="ion-align-self-start ion-text-uppercase">Upcoming</ion-note>
+							<ion-label>
+								<p>Apr. 5, 2019 / 9:00 AM</p>
+								Training 103
+								<p>The float CSS property specifies that an element should be placed along the left or right side of its container, where text and inline elements will wrap around it.</p>
+								<h3><ion-icon name="microphone" size="small" class="ion-float-left ion-margin-end"></ion-icon> Mark Arroyo</h3>
+							</ion-label>
+						</ion-item>
+						<ion-item>
+							<ion-note slot="end" mode="md" class="ion-align-self-start ion-text-uppercase">Upcoming</ion-note>
+							<ion-label>
+								<p>Apr. 5, 2019, 9:00 am</p>
+								Training 104
+								<p>The float CSS property specifies that an element should be placed along the left or right side of its container, where text and inline elements will wrap around it.</p>
+								<h3><ion-icon name="microphone" size="small" class="ion-float-left ion-margin-end"></ion-icon> Mark Arroyo</h3>
+							</ion-label>
+						</ion-item>
+						<ion-item>
+							<ion-note slot="end" mode="md" class="ion-align-self-start ion-text-uppercase">Upcoming</ion-note>
+							<ion-label>
+								<p>Apr. 5, 2019, 9:00 am</p>
+								Training 105
+								<p>The float CSS property specifies that an element should be placed along the left or right side of its container, where text and inline elements will wrap around it.</p>
+								<h3><ion-icon name="microphone" size="small" class="ion-float-left ion-margin-end"></ion-icon> Mark Arroyo</h3>
+							</ion-label>
+						</ion-item> -->
+						
+						<ion-item>
+							<ion-label><ion-badge color="dark" mode="ios">1 / 3</ion-badge></ion-label>
+							<ion-buttons slot="end">
+								<ion-button size="small">
+									<ion-icon name="arrow-dropleft-circle" slot="icon-only" mode="ios"></ion-icon>
+								</ion-button>
+								<ion-button size="small">
+									<ion-icon name="arrow-dropright-circle" slot="icon-only" mode="ios"></ion-icon>
+								</ion-button>
+							</ion-buttons>
+						</ion-item>
+					</ion-list>
+				</ion-col>
+
+			</ion-row>
+		</ion-grid>
+
+		<div class="d3 ion-padding-vertical">
+			<ion-card-header>
+				<ion-card-title>Activities Timeline</ion-card-title>
+			</ion-card-header>
+
+			<ion-item>
+				<ion-label>
+					<h3>
+						<ion-icon name="radio-button-on" mode="ios" color="secondary" class="ion-float-left ion-margin-end"></ion-icon>
+						Show Time
+					</h3>
+				</ion-label>
+				<ion-label>
+					<h3>
+						<ion-icon name="radio-button-on" mode="ios" color="primary" class="ion-float-left ion-margin-end"></ion-icon>
+						Practice Time
+					</h3>
+				</ion-label>
+				<ion-label>
+					<h3>
+						<ion-icon name="radio-button-on" mode="ios" color="dark" class="ion-float-left ion-margin-end"></ion-icon>
+						Live Group Training
+					</h3>
+				</ion-label>
+			</ion-item>
+
+			<div id="activityGraph" class="timeScale"></div>
+		</div>
+	</div>
+</ion-content>

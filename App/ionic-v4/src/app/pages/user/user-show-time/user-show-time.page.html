@@ -1,0 +1,23 @@
+<ion-header no-border>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="defaultUrl"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title>{{routeData?.title}}</ion-title>
+  </ion-toolbar>
+
+  <ion-toolbar color="light">
+    <ion-title><small>{{item?.firstName}} {{item?.lastName}}</small></ion-title>
+
+    <ion-avatar slot="start" *ngIf="routeData?.appUrl === 'student' || routeData?.appUrl === 'coach'">
+      <img src="assets/img/user/{{routeData.appUrl}}-avatar.png">
+    </ion-avatar>
+
+    <ion-icon slot="start" name="business" *ngIf="routeData?.appUrl === 'company'"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <show-time [queryParams]="queryParams" *ngIf="item"></show-time>
+</ion-content>

@@ -1,0 +1,21 @@
+<ion-header no-border>
+  <ion-toolbar color="primary">
+    <ion-img src="assets/img/logo-light.png" style="width:150px; margin:0 auto"></ion-img>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content text-center color="medium">
+    <ion-grid fixed class="fixed-content">
+      <ion-row class="fixed-content">
+        <ion-col size="12" align-self-center>
+          <ion-card color="light" style="display:inline-block;">
+              <vg-player *ngIf="mediaSrc">
+                  <video [vgMedia]="media" poster="{{mediaPoster}}" #media id="singleVideo" preload="auto" playsinline controls class="video" style="height:100%;">
+                      <source src="{{mediaSrc}}" type="video/mp4">
+                  </video>
+              </vg-player>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+</ion-content>

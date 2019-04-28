@@ -1,0 +1,86 @@
+<ion-content>
+    <ion-grid class="fixed-content" text-center *ngIf="loading === true">
+        <ion-row class="fixed-content" class="fixed-content" justify-content-center align-items-center>
+          <ion-col>
+            <ion-spinner color="light"></ion-spinner>
+          </ion-col>
+        </ion-row>
+    </ion-grid>
+
+    <ion-grid class="fixed-content" no-padding *ngIf="loading === false">
+        <ion-row class="fixed-content">
+            <ion-col size="12" size-md="6" push-md="6" no-padding align-self-stretch style="background-color: var(--ion-color-light)">
+                <ion-row class="fixed-content">
+                    <ion-col size="12" size-sm="10" push-sm="1" size-md="8" push-md="2" size-xl="6" push-xl="3" no-padding align-self-center>
+                        <form [formGroup]="loginForm" (ngSubmit)="login()">
+                            <ion-card style="background-color: #fff;">
+                                <ion-card-content><ion-img src="assets/img/logo.png"></ion-img></ion-card-content>
+                                <ion-card-header>
+                                    <ion-card-title text-center>Login and start learning</ion-card-title>
+                                    <ion-card-subtitle color="danger" *ngIf="showLoginMessage === true">{{loginErrorString}}</ion-card-subtitle>
+                                </ion-card-header>
+
+                                
+                                <ion-item lines="inset">
+                                    <ion-icon slot="start" color="dark" name="contact"></ion-icon>
+                                    <ion-input autofocus="true" type="text" autofocus="false" (keyup.enter)="login()" formControlName="username" placeholder="Email"></ion-input>
+                                </ion-item>
+
+                                <ion-item lines="none">
+                                    <ion-icon slot="start" color="dark" name="lock"></ion-icon>
+                                  <ion-input type="password" autofocus="false" (keyup.enter)="login()" formControlName="password" placeholder="Password"></ion-input>
+                                </ion-item>
+
+                                <div text-center margin padding-vertical>
+                                    <ion-button type="submit" color="dark" shape="round" size="default" expand="block">LOG IN</ion-button>
+                                </div>
+                            </ion-card>
+                        </form>
+                    </ion-col>
+                </ion-row>
+            </ion-col>
+            <ion-col size="12" size-md="6" pull-md="6" align-self-stretch no-padding style="overflow:hidden">
+                <ion-slides pager="true" [options]="slideOpts" class="fixed-content">
+                    <ion-slide style="background-color: var(--ion-color-primary)">
+                        <div padding>
+                            <ion-text color="light">
+                                <h2>Live Group Training</h2>
+                                <h3 style="font-weight: 300;">
+                                    Want motivated staff?
+                                </h3>
+                                <p>With this technology and the power of the internet, we can now deliver individual or group motivational sessions remotely.</p>
+                            </ion-text>
+
+                            <div padding margin><ion-img src="assets/img/slides/video-conference.png" style="max-width: 50%; margin: 0 auto;"></ion-img></div>
+                        </div>
+                    </ion-slide>
+
+                    <ion-slide style="background-color: var(--ion-color-dark)">
+                        <div padding>
+                            <ion-text color="light">
+                                <h2>Practice Time / Show Time</h2>
+                                <p>The fastest and very best way to get your staff up to speed and competent in what they present to your customers.</p>
+                                <p>Have your staff practice the right word-tracks via live video. In real time they get to record it as many times as they want and see their own body language, hear their tonality and feel if what they are saying is effective or not.</p>
+                                <p>Then they can submit their practiced work for critiquing, all within the system.</p>
+                            </ion-text>
+
+                            <div padding margin><ion-img src="assets/img/slides/show-time.png" style="max-width: 50%; margin: 0 auto;"></ion-img></div>
+                        </div>
+                    </ion-slide>
+
+                    <ion-slide style="background-color: var(--ion-color-medium)">
+                        <div padding>
+                            <ion-text color="light">
+                                <h2>And more...</h2>
+                                <p>Within Thrive19.com, your staff can watch short, cutting edge training videos, use a teleprompter to practice if they choose, ask our experts any question that they need help with, request personal coaching,  get certified on performance & results + a whole lot more.</p>
+                            </ion-text>
+
+                            <div padding margin><ion-img src="assets/img/slides/more.png" style="max-width: 50%; margin: 0 auto;"></ion-img></div>
+                        </div>
+                    </ion-slide>
+                </ion-slides>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+</ion-content>
