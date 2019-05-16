@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { RtcService } from '../../services/rtc/rtc.service';
+// import { RtcService } from '../../services/rtc/rtc.service';
+
+// import Peer from 'peerjs';
 
 @Component({
 	selector: 'app-test',
@@ -15,7 +17,7 @@ import { RtcService } from '../../services/rtc/rtc.service';
 	mypeerid: any;
 	localStream: any;
   
-	constructor(private rtcService: RtcService) {
+	constructor() {
 		// this.peer = this.rtcService.getPeer();
 
 		// this.peerjs.getPeer().then((peerjs: any) => {
@@ -26,66 +28,75 @@ import { RtcService } from '../../services/rtc/rtc.service';
 	}
   
   	ngOnInit() {
-		this.peer.on('open', (id) => {
-			this.mypeerid = id;
-			console.log('My peer ID is: ' + id);
-		});
-		
-		this.peer.on('connection', (dataConnection) => {
-			console.log('DATA CONNECTION', dataConnection);
-		// this.peer.on('connection', (conn: { on: (arg0: string, arg1: (data: any) => void) => void; }) => {
-			// conn.on('data', (data: any) => {
-			// 	// Will print 'hi!'
-			// 	console.log(data);
-			// });
-		});
+		// 	const sessionId = 'LGT-123';
+		// 	this.peer = new Peer(sessionId);
 
-		this.peer.on('call', (mediaConnection) => {
-			// Answer the call, providing our mediaStream
-			console.log('LOCAL STREAM... ', this.localStream);
-			console.log('ON CALL ', mediaConnection);
+		// 	this.peer.on('open', (id) => {
+		// 		this.mypeerid = id;
 
-			mediaConnection.answer(this.localStream);
+		// 		console.log('My peer ID is: ' + id);
+		// 		console.log('PEER CONN: ', this.peer.peerConnection);
+		// 	});
 
-			mediaConnection.on('stream', (remotestream: any) => {
-				console.log('REMOTE STREAM... ', remotestream);
-				// video.src = URL.createObjectURL(remotestream);
-				// video.play();
-			})
-		});
+		// 	this.peer.on('error', (e) => {
+		// 		console.log('peer error: ', e.type);
+		// 	});
+			
+		// // 	this.peer.on('connection', (dataConnection) => {
+		// // 		console.log('DATA CONNECTION', dataConnection);
+		// // 	// this.peer.on('connection', (conn: { on: (arg0: string, arg1: (data: any) => void) => void; }) => {
+		// // 		// conn.on('data', (data: any) => {
+		// // 		// 	// Will print 'hi!'
+		// // 		// 	console.log(data);
+		// // 		// });
+		// // 	});
 
-		let video = this.myVideo.nativeElement;
-		const mediaConstraints = {
-            video: true,
-            audio: true
-        };
+		// // 	this.peer.on('call', (mediaConnection) => {
+		// // 		// Answer the call, providing our mediaStream
+		// // 		console.log('LOCAL STREAM... ', this.localStream);
+		// // 		console.log('ON CALL ', mediaConnection);
 
-		navigator.mediaDevices.getUserMedia(mediaConstraints)
-			.then((stream) => {
-				/* use the stream */
-				this.localStream = stream;
+		// // 		mediaConnection.answer(this.localStream);
 
-				try {
-					video.srcObject = this.localStream;
-				} catch (error) {
-					video.src = window.URL.createObjectURL(this.localStream);
-				}
+		// // 		mediaConnection.on('stream', (remotestream: any) => {
+		// // 			console.log('REMOTE STREAM... ', remotestream);
+		// // 			// video.src = URL.createObjectURL(remotestream);
+		// // 			// video.play();
+		// // 	})
+		// // });
 
-				console.log('GET NAVIGATOR STREAM ', this.localStream);
+		// // let video = this.myVideo.nativeElement;
+		// // const mediaConstraints = {
+		// // 		video: true,
+		// // 		audio: true
+		// // };
 
-				video.autoplay = true;
-				video.playsinline = true;
-				video.volume = 0;
-				video.muted = true;
+		// // navigator.mediaDevices.getUserMedia(mediaConstraints)
+		// // 	.then((stream) => {
+		// // 		/* use the stream */
+		// // 		this.localStream = stream;
 
-				setTimeout(() => {
-					video.play();
-				}, 3000);
-			})
-			.catch((err) => {
-				/* handle the error */
-				console.log('GET STREAM ERROR ', err);
-			});
+		// // 		try {
+		// // 			video.srcObject = this.localStream;
+		// // 		} catch (error) {
+		// // 			video.src = window.URL.createObjectURL(this.localStream);
+		// // 		}
+
+		// // 		console.log('GET NAVIGATOR STREAM ', this.localStream);
+
+		// // 		video.autoplay = true;
+		// // 		video.playsinline = true;
+		// // 		video.volume = 0;
+		// // 		video.muted = true;
+
+		// // 		setTimeout(() => {
+		// // 			video.play();
+		// // 		}, 3000);
+		// // 	})
+		// // 	.catch((err) => {
+		// // 		/* handle the error */
+		// // 		console.log('GET STREAM ERROR ', err);
+		// // 	});
 	}
 	
 	connect(){

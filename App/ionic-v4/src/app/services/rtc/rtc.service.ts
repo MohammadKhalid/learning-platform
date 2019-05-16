@@ -6,7 +6,7 @@ import { SOCKET_URL } from '../../../environments/environment';
 import RTCMultiConnection from 'rtcmulticonnection';
 import adapter from 'webrtc-adapter';
 import io from 'socket.io-client';
-import { forEach } from '@angular/router/src/utils/collection';
+// import { forEach } from '@angular/router/src/utils/collection';
 import 'rxjs/add/operator/map';
 
 (<any>window).io = io;
@@ -16,87 +16,118 @@ import 'rxjs/add/operator/map';
 })
 export class RtcService {
 
-	connection: RTCMultiConnection;
-	socketConnection: any;
+	connectionSocket: io;
 	socketUrl: string = SOCKET_URL;
 	channel: string = 'thrive19';
+	log: boolean = true;
 	iceServers: any = {
-		stun: { 
-			urls: 'stun:stun.l.google.com:19302'
-		},
-		turn: {
-			urls: 'turn:homeo@turn.bistri.com:80',
-    	credential: 'homeo'
-		}
+		stuns: [
+			// { urls: 'stun:numb.viagenie.ca' },
+			{ urls: 'stun:stun.l.google.com:19302' },
+			{ url:'stun:stun1.l.google.com:19302' },
+			{ url:'stun:stun2.l.google.com:19302' },
+			{ url:'stun:stun3.l.google.com:19302' },
+			{ url:'stun:stun4.l.google.com:19302' }
+		],
+		// turn: {
+		// 	urls: 'turn:numb.viagenie.ca',
+		// 	credential: 'fadqyv-nijwu8-Tubnyc',
+		// 	username: 'manvillt.developer@gmail.com'
+		// },
+		turns: [
+			{
+				urls: 'turn:thrive19.com:3478',
+				credential: 'fadqyvnijwu8Tubnyc',
+				username: 'thrive19'
+			},
+			{
+				urls: 'turn:thrive19.com:5349',
+				credential: 'fadqyvnijwu8Tubnyc',
+				username: 'thrive19'
+			}
+		]
 	};
-	connectionConfigMergeKey = ['extra'];
-
+// fadqyvnijwu8Tubnyc
 	constructor(
 		private toastCtrl: ToastController
 	) {}
 
-	initConnection(userData: any) {
-		let connection = new RTCMultiConnection();
-
-		connection.channel = this.channel;
-		connection.socketURL = this.socketUrl;
-
-		// STUN+TURN servers
-		connection.iceServers = [];
-		connection.iceServers.push(this.iceServers.stun);
-		connection.iceServers.push(this.iceServers.turn);
-
-		// extra data
-		connection.extra = userData;
-		connection.extra.userFullName = userData.firstName + ' ' + userData.lastName;
-		
-		// connect socket
-		connection.connectSocket();
-
-		this.connection = connection;
-
-		// set socket
-		this.connection.getSocket((socket) => {
-			this.socketConnection = socket;
+	initConnection() {
+		this.createConnection().then((connection) => {
+			connection.connectSocket((socket) => {
+				this.connectionSocket = socket;
+			});
 		});
-
-		console.log('CONNECTIONNNN INIT', connection);
 	}
 
-	async create(params: any = {}) {
-		// if(this.connection) return this.connection;
-
+	async createConnection() {
 		let connection = new RTCMultiConnection();
 
-		// default channel
+		// log event
+		connection.enableLogs = this.log;
+
+		// set channel
 		connection.channel = this.channel;
 
-		// socket url
+		// ice
+		connection.candidates = { turn: true };
+		connection.iceTransportPolicy = 'relay';
+
+		// connect socket
 		connection.socketURL = this.socketUrl;
 
 		// STUN+TURN servers
 		connection.iceServers = [];
-		connection.iceServers.push(this.iceServers.stun);
-		connection.iceServers.push(this.iceServers.turn);
 
-		// default extra
-		connection.extra = this.connection ? this.connection.extra : {};
+		for (let index = 0; index < this.iceServers.stuns.length; index++) {
+			connection.iceServers.push(this.iceServers.stuns[index]);
+		}
 
-		// set params
-		for (const key in params) {
-			if (params.hasOwnProperty(key)) {
-				if(this.connectionConfigMergeKey.includes(key)) {
-					connection[key] = { ...connection[key], ...params[key] };
-				} else {
-					connection[key] = params[key];
-				}
-			} else {
-				connection[key] = params[key];
-			}
+		for (let index = 0; index < this.iceServers.turns.length; index++) {
+			connection.iceServers.push(this.iceServers.turns[index]);
 		}
 
 		return connection;
 	}
+
+	getConnectionSocket() {
+		return this.connectionSocket;
+	}
+
+	// async create(params: any = {}) {
+	// 	// if(this.connection) return this.connection;
+
+	// 	let connection = new RTCMultiConnection();
+
+	// 	// default channel
+	// 	connection.channel = this.channel;
+
+	// 	// socket url
+	// 	connection.socketURL = this.socketUrl;
+
+	// 	// STUN+TURN servers
+	// 	connection.iceServers = [];
+	// 	connection.iceServers.push(this.iceServers.stun);
+	// 	connection.iceServers.push(this.iceServers.turn);
+
+	// 	// default extra
+	// 	connection.extra = this.connection ? this.connection.extra : {};
+
+	// 	// set params
+	// 	for (const key in params) {
+	// 		if (params.hasOwnProperty(key)) {
+	// 			if(this.connectionConfigMergeKey.includes(key)) {
+	// 				connection[key] = { ...connection[key], ...params[key] };
+	// 			} else {
+	// 				connection[key] = params[key];
+	// 			}
+	// 		} else {
+	// 			connection[key] = params[key];
+	// 		}
+	// 	}
+
+	// 	return connection;
+	// }
 
 	connectSocket(): void {
 		// this.connection.connectSocket((socket) => {
@@ -152,18 +183,19 @@ export class RtcService {
 		// this.connection.socket.emit('test', message);
 	}
 
-	async getSocketConnection() {
-		return this.socketConnection;
-	}
+	// async getSocketConnection() {
+	// 	return this.socketConnection;
+	// }
 
-	getConnection() {
-		if(!this.connection) this.create().then((connection) => { return connection; });
-		else return this.connection;
-	}
+	// async getConnection() {
+	// 	console.log('GET CONN', this.connection);
 
-	setSocketConnectionCustomEvent(eventName: string) {
-		this.connection.setCustomSocketEvent(eventName);
-	}
+	// 	return this.connection;
+	// }
+
+	// setSocketConnectionCustomEvent(eventName: string) {
+	// 	this.connection.setCustomSocketEvent(eventName);
+	// }
 
 	async showToastMsg(msg: string) {
 		const toast = await this.toastCtrl.create({
@@ -176,8 +208,8 @@ export class RtcService {
 		toast.present();
 	}
 
-	disconnect(): void {
-		this.connection.disconnect();
-		console.log('RTC CONNECTION DISCONNECTED', this.connection);
-	}
+	// disconnect(): void {
+	// 	this.connection.disconnect();
+	// 	console.log('RTC CONNECTION DISCONNECTED', this.connection);
+	// }
 }

@@ -276,6 +276,10 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
         };
         
         navigator.mediaDevices.getUserMedia(mediaConstraints).then((camera) => {
+            this.video.setAttribute('autoplay', '');
+            this.video.setAttribute('playsinline', '');
+            this.video.setAttribute('muted', '');
+
             try {
                 this.video.srcObject = camera;
             } catch (error) {

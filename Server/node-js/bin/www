@@ -7,9 +7,6 @@ const app = require('../app');
 const debug = require('debug')('server:server');
 const http = require('http');
 
-const ioServer = require('socket.io');
-const RTCMultiConnectionServer = require('rtcmulticonnection-server');
-
 const CONFIG = require('../config/config');
 /**
  * Get port from environment and store in Express.
@@ -94,14 +91,3 @@ function onListening() {
   console.log('Server listenning on port:', addr.port);
 
 }
-
-// rtc
-ioServer(server).on('connection', function(socket) {
-  RTCMultiConnectionServer.addSocket(socket, {
-    config: {
-      "socketMessageEvent": "thrive19-message",
-      "socketCustomEvent": "thrive19-custom-message",
-      "port": port
-    }
-  });
-});

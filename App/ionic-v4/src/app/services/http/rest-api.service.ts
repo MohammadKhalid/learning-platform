@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ToastController, NavController } from '@ionic/angular';
 import { HttpClient, HttpParams, HttpRequest, HttpHeaders } from '@angular/common/http';
+import { AuthenticationService } from '../user/authentication.service';
 
 import { SERVER_URL } from '../../../environments/environment';
 
@@ -14,10 +15,15 @@ export class RestApiService {
 	url: string = SERVER_URL;
 
 	constructor(
+		private authService: AuthenticationService,
 		private http: HttpClient, 
 		private toastController: ToastController,
 		private navCtrl: NavController
-	) {}
+	) {
+		this.authService.authenticationState.subscribe((state) => {
+			this.sessionData = state ? this.authService.getSessionData() : null;
+		});
+	}
 
 	get(endpoint: string, params?: any, reqOpts?: any) {
 		if(!reqOpts) reqOpts = { headers: {} };

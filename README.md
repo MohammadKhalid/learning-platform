@@ -1,1 +1,0 @@
-# thrive19.com

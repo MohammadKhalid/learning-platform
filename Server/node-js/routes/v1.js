@@ -113,6 +113,7 @@ router.post(    '/ask-expert/question-answer/:item_id', passport.authenticate('j
 router.get(     '/ask-expert',           	 			passport.authenticate('jwt', {session:false}), AskExpertController.getAll);     						// R
 router.get(     '/ask-expert/:item_id',  				passport.authenticate('jwt', {session:false}), askExpert.item, AskExpertController.get);        		// R
 router.put(     '/ask-expert/:item_id',  				passport.authenticate('jwt', {session:false}), askExpert.item, AskExpertController.update);   			// U
+router.delete(     '/ask-expert/:item_id',  				passport.authenticate('jwt', {session:false}), askExpert.item, AskExpertController.remove);   			// U
 
 // router.post(    '/companies',             passport.authenticate('jwt', {session:false}), CompanyController.create);                  // C
 // router.get(     '/companies',             passport.authenticate('jwt', {session:false}), CompanyController.getAll);                  // R

@@ -32,9 +32,9 @@ Object.keys(db).forEach((modelName) => {
 db.sync = function() {
   // default
   // sequelize.sync({ alter: true, force: false }).then((res) => {
-  //   console.log('SYNC RESULT ', res);
+  //   // console.log('SYNC RESULT ', res);
   // }).catch((e) => {
-  //   console.log('ERROR SYNC', e);
+  //   console.log('ERROR SYNC');
   // });
   // sequelize.sync({ alter: true, force: true });
   sequelize.sync();

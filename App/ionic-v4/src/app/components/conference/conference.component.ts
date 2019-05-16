@@ -35,7 +35,8 @@ export class ConferenceComponent implements OnInit {
 	@ViewChild('pdfViewerInput') pdfViewerInput: IonInput;
 
     item: any = {};
-    connection: any;
+	connection: any;
+	socket: any;
 
 	pdfViewerFile: Blob;
 	pdfViewerCurrentPage: number;
@@ -55,12 +56,7 @@ export class ConferenceComponent implements OnInit {
 	newScreenShare: boolean;
 
 	streams: any = {};
-	// localStream: any = {
-	// 	audio: { muted: false },
-	// 	video: { muted: false },
-	// 	play: false,
-	// 	stream: null
-	// };
+	localStream: any;
 
 	constructor(
 		private rtcService: RtcService,
@@ -73,434 +69,437 @@ export class ConferenceComponent implements OnInit {
 	) {
 		// nav data
 		const navigation = this.router.getCurrentNavigation();
-        if(navigation.extras && navigation.extras.state) this.id = navigation.extras.state.id;
+		if(navigation.extras && navigation.extras.state) this.id = navigation.extras.state.id;
+
+		console.log('NAVIGATION DATA', navigation);
 	}
 
 	ngOnInit() {
-        // load data
-        this.restApi.get(this.apiEndPoint + '/' + this.id, {}).then((resp: any) => {
-            if(resp.success === true) { 
-                this.item = resp.item;
+		// rtc connection
+		this.rtcService.createConnection().then((connection) => {
+			// connect and set socket
+			connection.connectSocket((socket) => {
+				this.socket = socket;
+			});
 
-                // status
-                if(this.item.started) this.item.status = 'started';
-                
-                // participant type
-                if(this.user.id === this.item.speakerId) this.isSpeaker = true;
-                
-                // check participant
-                if(!this.isSpeaker && this.item.public !== true) {
-                    this.isParticipant().then((res: boolean) => {
-                        if(res) {
-                            this.initConnection();
-                        } else {
-                            this.restApi.showMsg('You are not in participants list!').then(() => {
-                                this.navCtrl.navigateRoot(this.appUrl);
-                            });
-                        }
-                    });
-                } else {
-                    this.initConnection();
-                }
-            } else {
-                this.navCtrl.navigateForward(this.appUrl);
-            }
-        });
-    }
+			// set connection
+			this.connection = connection;
+
+			console.log('CONNECTION', this.connection);
+
+			// load data
+			this.restApi.get(this.apiEndPoint + '/' + this.id, {}).then((resp: any) => {
+				if(resp.success === true) { 
+					this.item = resp.item;
+	
+					// status
+					if(this.item.started) this.item.status = 'started';
+					
+					// participant type
+					if(this.user.id === this.item.speakerId) this.isSpeaker = true;
+
+					// validate session
+					this.connection.checkPresence(this.id, (isRoomExist) => {
+						if(!isRoomExist && !this.isSpeaker) {
+							this.navCtrl.navigateRoot('/' + this.appUrl).then(() => {
+								this.restApi.showMsg('Room is not yet open!');
+							});
+						} else if(!this.isSpeaker && this.item.public !== true) {
+							this.isParticipant().then((res: boolean) => {
+								if(res) {
+									this.initConnection();
+								} else {
+									this.restApi.showMsg('You are not in participants list!').then(() => {
+										this.navCtrl.navigateRoot(this.appUrl);
+									});
+								}
+							});
+						} else {
+							this.initConnection();
+						}
+					});
+				} else {
+					this.navCtrl.navigateForward(this.appUrl);
+				}
+			});
+		});
+	}
 
 	initConnection() {
-		// rtc connection options
-		let connectionOptions: any = {
-			publicRoomIdentifier: this.publicRoomIdentifier,
-            autoCloseEntireSession: false,
-			videosContainer: this.videosContainer.nativeElement,
-			extra: {
-				initiator: this.isSpeaker
-			},
-			enableLogs: false
-		}
-		if(this.item.started) connectionOptions.autoCloseEntireSession = true;
+		// set connection options
+		this.connection.publicRoomIdentifier = this.publicRoomIdentifier;
+		this.connection.autoCloseEntireSession = false;
+		this.connection.videosContainer = this.videosContainer.nativeElement;
 		
 		// set speaker flag
 		if(this.isSpeaker) {
 			this.user.pdfViewer = {};
-			connectionOptions.extra.sessionStream = { video: true, audio: true };
+
+			this.connection.extra.initiator = true;
+			this.connection.extra.sessionStream = { video: true, audio: true };
 
 			if(!this.user.initiatedSessions) this.user.initiatedSessions = {};
 		}
 
-        this.rtcService.create(connectionOptions).then((connection: any) => {
-			connection.setCustomSocketEvent(this.publicRoomIdentifier);
-			connection.autoCreateMediaElement = false;
+		this.connection.setCustomSocketEvent(this.publicRoomIdentifier);
+		this.connection.autoCreateMediaElement = false;
 
-			connection.session = { 
-				audio: true,
-				video: true,
-				data: true
-			};
+		this.connection.session = { 
+			audio: true,
+			video: true,
+			data: true
+		};
 
-            connection.sdpConstraints.mandatory = {
-                OfferToReceiveAudio: true,
-                OfferToReceiveVideo: true
-			};
+		this.connection.sdpConstraints = {
+			mandatory: {
+				OfferToReceiveAudio: true,
+				OfferToReceiveVideo: true
+			}
+		};
 
-			connection.onmessage = (event) => {
-				switch (event.data.type) {
-					case 'chat':
-						this.messages.push(event.data);
+		// extra session data
+		if(!this.connection.extra.hasOwnProperty('sessions')) this.connection.extra.sessions = {};
+		if(!this.connection.extra.sessions.hasOwnProperty(this.item.id)) this.connection.extra.sessions[this.item.id] = {};
 
-						if(this.panelModal !== 'message') {
-							this.newMessage = true;
+		this.connection.extra = { ...this.connection.extra, ...this.user };
+		this.connection.updateExtraData();
 
-							// toast message
-							this.restApi.showMsg(event.data.firstName + ' say "' + event.data.text + '"');
-						}
-						break;
-					case 'session':
-						if(event.data.status === 'started') {
-							this.item.status = 'started';
-							this.item.started = event.data.started;
-						} else if(event.data.status === 'done') {
-							this.item.status = 'done';
-							this.item.status = 'close';
+		this.connection.onmessage = (event) => {
+			switch (event.data.type) {
+				case 'chat':
+					this.messages.push(event.data);
 
-							this.restApi.showMsg('Session closed!');
-						}
-						break;
-					case 'pdfViewer':
-						if(event.data.userid && event.data.userid !== connection.userid) return false;
+					if(this.panelModal !== 'message') {
+						this.newMessage = true;
 
-						if(event.data.action === 'loadFile') {
-							// switch to screen panel
-							this.panel = 'screen';
+						// toast message
+						this.restApi.showMsg(event.data.firstName + ' say "' + event.data.text + '"');
+					}
+					break;
+				case 'session':
+					if(event.data.status === 'started') {
+						this.item.status = 'started';
+						this.item.started = event.data.started;
+					} else if(event.data.status === 'done') {
+						this.item.status = 'done';
+						this.item.status = 'close';
 
-							// page start
-							if(event.data.pageStart) this.pdfViewerCurrentPage = event.data.pageStart;
+						this.restApi.showMsg('Session closed!');
+					}
+					break;
+				case 'pdfViewer':
+					if(event.data.userid && event.data.userid !== this.connection.userid) return false;
 
-							// load file to pdfViewer
-							setTimeout(() => {
-								this.pdfViewerLoadFile(event.data.file);
+					if(event.data.action === 'loadFile') {
+						// switch to screen panel
+						this.panel = 'screen';
+
+						// page start
+						if(event.data.pageStart) this.pdfViewerCurrentPage = event.data.pageStart;
+
+						// load file to pdfViewer
+						setTimeout(() => {
+							this.pdfViewerLoadFile(event.data.file);
+						});
+					} else if(event.data.action === 'gotoPage') {
+						this.pdfViewer.navigateToPage(event.data.number);
+					} else if(event.data.action === 'stop') {
+						this.pdfViewerFile = null;
+						this.panel = 'speaker';
+					}
+
+					if(this.panel !== 'screen') this.newScreenShare = true;
+					break;
+				case 'speaking':
+					this.streams[event.data.streamid].audioIconElem.setAttribute('color', event.data.value === true ? 'success' : 'light');
+					break;
+				case 'toast':
+					this.restApi.showMsg(event.data.message);
+					break;
+				case 'join':
+					this.restApi.showMsg(event.data.message);
+
+					// send load to pdfViewer new participant
+					if(this.pdfViewerFile) {
+						if(this.isSpeaker && this.connection.extra.pdfViewer.file) {
+							this.connection.send({
+								type: 'pdfViewer',
+								action: 'loadFile',
+								pageStart: this.pdfViewerCurrentPage,
+								file: this.connection.extra.pdfViewer.file
 							});
-						} else if(event.data.action === 'gotoPage') {
-							this.pdfViewer.navigateToPage(event.data.number);
-						} else if(event.data.action === 'stop') {
-							this.pdfViewerFile = null;
-							this.panel = 'speaker';
 						}
+					}
+					break;
+				case 'remoteStream':
+					// if(event.data.all) {
+					// 	this.streamMuteUnmute(event.data.action);
+					// } else if(event.data.id) {
+					// 	// this.participantStreamOnOff(event.data.id, event.data.action);
+					// }
 
-						if(this.panel !== 'screen') this.newScreenShare = true;
-						break;
-					case 'speaking':
-						this.streams[event.data.streamid].audioIconElem.setAttribute('color', event.data.value === true ? 'success' : 'light');
-						break;
-					case 'toast':
-						this.restApi.showMsg(event.data.message);
-						break;
-					case 'join':
-						this.restApi.showMsg(event.data.message);
+					switch (event.data.action) {
+						case 'muteUnmute':
+							this.streamMuteUnmute(event.data.stream);
+							break;
+					
+						default:
+							break;
+					}
 
-						// send load to pdfViewer new participant
-						if(this.pdfViewerFile) {
-							if(this.isSpeaker && connection.extra.pdfViewer.file) {
-								this.connection.send({
-									type: 'pdfViewer',
-									action: 'loadFile',
-									pageStart: this.pdfViewerCurrentPage,
-									file: connection.extra.pdfViewer.file
-								});
-							}
-						}
-						break;
-					case 'stream':
-						// if(event.data.all) {
-						// 	this.streamMuteUnmute(event.data.action);
-						// } else if(event.data.id) {
-						// 	// this.participantStreamOnOff(event.data.id, event.data.action);
-						// }
+					break;
+				default:
+					break;
+			}
+		};
 
-						switch (event.data.action) {
-							case 'muteUnmute':
-								this.streamMuteUnmute(event.data.stream);
-								break;
-						
-							default:
-								break;
-						}
-
-						break;
-					default:
-						break;
-				}
+		this.connection.onmute = (e: any) => {
+			console.log('ON-MUTE', e);
 			};
 
-			connection.onmute = (e: any) => {
-				console.log('ON-MUTE', e);
-			 };
-
-			connection.onunmute = (e: any) => {
-				console.log('ON-UNMUTE', e);
-				// e.stream[e.unmuteType + 'Muted'] = false;
-			 };
-			 
-            connection.onstream = (event) => {
-				console.log('ON STREAM EVENT ', event);
-
-				// remove duplicate elem
-				let participantsContainerElem = this.participantsContainer.nativeElement.querySelectorAll('[participant-streamid="' + event.streamid + '"]')
-				if(participantsContainerElem) {
-					for (let index = 0; index < participantsContainerElem.length; index++) {
-						participantsContainerElem[index].remove();
-					}
-				}
-
-				// add stream
-				this.streams[event.streamid] = event.stream;
-
-				// video
-				let video = event.extra.initiator ? this.speakerVideo.nativeElement : this.elementRenderer.createElement('video');
-				
-				video.autoplay = true;
-				video.playsinline = true;
-
-				if(event.type === 'local') {
-					video.volume = 0;
-					video.muted = true;
-
-					// speech event
-					if(!event.extra.initiator) this.captureUserSpeechEvents(event.stream);
-
-					// // set local stream
-					// connection.extra.localStreams[connection.sessionid] = {
-					// 	stream: event.stream,
-					// 	video: {
-					// 		muted: false,
-					// 		mutedBy: null
-					// 	},
-					// 	audio: {
-					// 		muted: false,
-					// 		mutedBy: null
-					// 	}
-					// };
-					// connection.updateExtraData();
-
-					// console.log('ON STREAM EXTRA ', connection.extra);
-				}
-				video.srcObject = event.stream;
-
-				if(event.extra.initiator) {
-					if(!this.isSpeaker) {
-						if(!event.extra.video) this.streamMuteUnmute('video');
-						if(!event.extra.audio) this.streamMuteUnmute('audio');
-					}
-
-					// mini video
-					// let miniVideo = this.elementRenderer.createElement('video');
-					// miniVideo.setAttribute('autoplay', 'true');
-					// miniVideo.setAttribute('playsinline', 'true');
-					
-					// if(event.type === 'local') {
-					// 	miniVideo.volume = 0;
-					// 	miniVideo.setAttribute('muted', 'true');
-					// }
-					// miniVideo.srcObject = event.stream;
-					// miniVideo.setAttribute('class', 'participant-video');
-					
-					// while (this.miniSpeakerVideo.nativeElement.firstChild) {
-					// 	this.miniSpeakerVideo.nativeElement.removeChild(this.miniSpeakerVideo.nativeElement.firstChild);
-					// }
-
-					// this.miniSpeakerVideo.nativeElement.appendChild(miniVideo);
-					// this.miniVideoElem = miniVideo;
-				} else {
-					// video container
-					let videoContainer = this.elementRenderer.createElement('div');
-					
-					this.elementRenderer.addClass(videoContainer, 'participant-video-container');
-					this.elementRenderer.addClass(video, 'participant-video');
-
-					videoContainer.appendChild(video);
-
-					// video label mic icon
-					let videoLabelElem = this.elementRenderer.createElement('ion-chip');
-						videoLabelElem.outline = true;
-						videoLabelElem.color = 'light';
-
-						// add on/off stream control
-						
-
-					let videoLabelIconElem = this.elementRenderer.createElement('ion-icon');
-						videoLabelIconElem.name = 'mic';
-						videoLabelIconElem.size = 'small';
-						videoLabelIconElem.color = 'light';
-						this.streams[event.streamid].audioIconElem = videoLabelIconElem;
-					
-						videoLabelElem.append(videoLabelIconElem);
-
-					let videoLabelLabelElem = this.elementRenderer.createElement('ion-label');
-						videoLabelLabelElem.color = 'light';
-						videoLabelLabelElem.innerHTML = '<small>' + event.extra.firstName + ' ' + event.extra.lastName + '</small>';
-					
-						videoLabelElem.append(videoLabelLabelElem);
-
-					let videoLabelContainer = this.elementRenderer.createElement('div');
-					this.elementRenderer.addClass(videoLabelContainer, 'participant-video-label-container');
-
-					// videoLabelContainer.innerHTML = videoLabelHtml;
-					videoLabelContainer.append(videoLabelElem);
-					videoContainer.appendChild(videoLabelContainer);
-
-					// elem container
-					//let elemContainer = this.elementRenderer.createElement('ion-col');
-					let elemContainer = this.elementRenderer.createElement('div');
-					    elemContainer.id = 'participant-video-container-' + event.streamid;
-						
-					this.elementRenderer.setAttribute(elemContainer, 'data-userid', event.userid);
-					this.elementRenderer.setAttribute(elemContainer, 'participant-streamid', event.streamid);
-					this.elementRenderer.setAttribute(elemContainer, 'size', '12');
-
-					elemContainer.appendChild(videoContainer);
-
-					// append to connection container
-					this.participantsContainer.nativeElement.appendChild(elemContainer);
-
-					// count participant
-					this.participantsCount++;
-				}
-
-				setTimeout(() => {
-					video.play();
-				}, 5000);
+		this.connection.onunmute = (e: any) => {
+			console.log('ON-UNMUTE', e);
+			// e.stream[e.unmuteType + 'Muted'] = false;
 			};
 			
-			connection.onstreamended = (event) => {
-				console.log('STREAM ENDED', event);
+		this.connection.onstream = (event) => {
+			console.log('ON STREAM EVENT ', event);
 
-				// remove media element
-				this.participantElemExists('#' + event.stream.id).then((elem: any) => {
-					if(elem) elem.remove();
-				});
+			// remove duplicate elem
+			// let participantsContainerElem = this.participantsContainer.nativeElement.querySelectorAll('[participant-streamid="' + event.streamid + '"]')
+			// console.log('ON STREAM ELEMS', participantsContainerElem);
 
-				if(!event.extra.speaker) {
-					// count participant
-					this.participantsCount--;
+			// if(participantsContainerElem && participantsContainerElem.length > 0) {
+			// 		participantsContainerElem[0].remove();
+			// }
+
+			// if(participantsContainerElem) {
+			// 	for (let index = 0; index < participantsContainerElem.length; index++) {
+			// 		participantsContainerElem[index].remove();
+			// 	}
+			// }
+
+			// skip
+			if(this.streams[event.streamid]) return;
+
+			// add stream
+			this.streams[event.streamid] = event.stream;
+
+			// video
+			let video = event.extra.initiator ? this.speakerVideo.nativeElement : this.elementRenderer.createElement('video');
+
+			// video.playsinline = true;
+			// video.autoplay = true;
+
+			if(event.type === 'local') {
+				video.volume = 0;
+
+				try {
+          video.setAttributeNode(document.createAttribute('muted'));
+				} catch (e) {
+						video.setAttribute('muted', 'true');
+				}
+			
+				// video.muted = true;
+				// video.setAttribute('muted', '');
+
+				// speech event
+				if(!event.extra.initiator) this.captureUserSpeechEvents(event.stream);
+
+				// local stream
+				if(event.extra.sessions[this.item.id].hasOwnProperty('localStream')) {
+					// mute
+					if(this.connection.extra.sessions[this.item.id].localStream.video.muted) {
+						event.stream.mute('video');
+						this.localStream.video.muted = true;
+					}
+					if(this.connection.extra.sessions[this.item.id].localStream.audio.muted) {
+						event.stream.mute('audio');
+						this.localStream.audio.muted = true;
+					}
+				} else {
+					this.connection.extra.sessions[this.item.id].localStream = {
+						id: event.streamid,
+						audio: { muted: false, control: true },
+						video: { muted: false, control: true }
+					}
+					this.connection.updateExtraData();
+
+					this.localStream = this.connection.extra.sessions[this.item.id].localStream;
 				}
 			}
+			video.srcObject = event.stream;
 
-			connection.onleave = (event) => {
-				console.log('USER LEAVE', event);
+			// setup participant video html
+			if(!event.extra.initiator) {
+				console.log('EVENT INITIATORRR');
 
-				// notify
-				this.restApi.showMsg(event.extra.firstName + ' ' + event.extra.lastName + ' left!');
+				// set attributes
+				// video.setAttribute('autoplay', '');
+				video.setAttribute('playsinline', '');
 
-				if(event.extra.speaker) {
-					// while (this.speakerVideo.nativeElement.firstChild) {
-					// 	this.speakerVideo.nativeElement.removeChild(this.speakerVideo.nativeElement.firstChild);
-					// }
+				// video container
+				let videoContainer = this.elementRenderer.createElement('div');
+				
+				this.elementRenderer.addClass(videoContainer, 'participant-video-container');
+				this.elementRenderer.addClass(video, 'participant-video');
 
-					// while (this.miniSpeakerVideo.nativeElement.firstChild) {
-					// 	this.miniSpeakerVideo.nativeElement.removeChild(this.miniSpeakerVideo.nativeElement.firstChild);
-					// }
-				} else {
-					let participantsContainerElem = this.participantsContainer.nativeElement.querySelectorAll('[data-userid="' + event.userid + '"]')
-					if(participantsContainerElem) {
-						console.log('USER LEAVE ELEMS', participantsContainerElem);
+				videoContainer.appendChild(video);
 
-						participantsContainerElem.forEach((elem) => {
-							elem.remove();
-						});
-					}
-				}
-			};
+				// video label mic icon
+				let videoLabelElem = this.elementRenderer.createElement('ion-chip');
+					videoLabelElem.outline = true;
+					videoLabelElem.color = 'light';
 
-			connection.onMediaError = (e) => {
-				console.log('MEDIA ERROR', e);
+				let videoLabelIconElem = this.elementRenderer.createElement('ion-icon');
+					videoLabelIconElem.name = 'mic';
+					videoLabelIconElem.size = 'small';
+					videoLabelIconElem.color = 'light';
+					this.streams[event.streamid].audioIconElem = videoLabelIconElem;
+				
+					videoLabelElem.append(videoLabelIconElem);
 
-				if (e.message === 'Concurrent mic process limit.') {
-					if (connection.DetectRTC.audioInputDevices.length <= 1) {
-						console.log('Please select external microphone. Check github issue number 483.');
-						return;
-					}
-			
-					let secondaryMic = connection.DetectRTC.audioInputDevices[1].deviceId;
-					connection.mediaConstraints.audio = {
-						deviceId: secondaryMic
-					};
-			
-					connection.join(connection.sessionid);
-				}
-			};
+				let videoLabelLabelElem = this.elementRenderer.createElement('ion-label');
+					videoLabelLabelElem.color = 'light';
+					videoLabelLabelElem.innerHTML = '<small>' + event.extra.firstName + ' ' + event.extra.lastName + '</small>';
+				
+					videoLabelElem.append(videoLabelLabelElem);
 
-			connection.onEntireSessionClosed = (event: any) => {
-				console.info('Entire session is closed: ', event.sessionid, event.extra);
-			};
+				let videoLabelContainer = this.elementRenderer.createElement('div');
+				this.elementRenderer.addClass(videoLabelContainer, 'participant-video-label-container');
 
-            this.connection = connection;
-		}).then(() => {
-			console.log('FINALLYYY CONNNNNNN', this.connection);
+				// videoLabelContainer.innerHTML = videoLabelHtml;
+				videoLabelContainer.append(videoLabelElem);
+				videoContainer.appendChild(videoLabelContainer);
 
-			this.connection.checkPresence(this.item.id, (isRoomExist, roomid) => {
-				if(this.isSpeaker) {
-					if (isRoomExist === true && !this.user.initiatedSessions[this.item.id]) {
-						this.navCtrl.navigateRoot('/' + this.appUrl).then(() => {
-							this.restApi.showMsg('Speaker is already present. Logout and sign a different account.');
-						});
-					} else {
-						this.connection.openOrJoin(this.item.id, (isRoomCreated, roomid) => {
-							if(isRoomCreated) {
-								setTimeout(() => {
-									// send message to session
-									this.connection.send({
-										type: 'join',
-										message: 'Speaker is online!'
-									});
+				// elem container
+				let elemContainer = this.elementRenderer.createElement('div');
+					elemContainer.id = 'participant-video-container-' + event.streamid;
+					
+				this.elementRenderer.setAttribute(elemContainer, 'data-userid', event.userid);
+				this.elementRenderer.setAttribute(elemContainer, 'participant-streamid', event.streamid);
+				this.elementRenderer.setAttribute(elemContainer, 'size', '12');
+
+				elemContainer.appendChild(videoContainer);
+
+				// append to connection container
+				this.participantsContainer.nativeElement.appendChild(elemContainer);
+
+				// count participant
+				this.participantsCount++;
+			}
+
+			setTimeout(() => {
+				video.play();
+			}, 5000);
+		};
 		
-									// send message to public room
-									this.rtcService.getSocketConnection().then((socket) => {
-										socket.emit(this.publicRoomIdentifier, {
-											type: 'join',
-											speaker: true,
-											roomid: roomid
-										});
-									});
-								}, 3000);
-							}
+		this.connection.onstreamended = (event) => {
+			console.log('STREAM ENDED', event);
+
+			// remove media element
+			this.participantElemExists('#' + event.stream.id).then((elem: any) => {
+				if(elem) elem.remove();
+			});
+
+			if(!event.extra.speaker) {
+				// count participant
+				this.participantsCount--;
+			}
+		}
+
+		this.connection.onleave = (event) => {
+			console.log('USER LEAVE', event);
+
+			// backup extra data
+			this.connection.peersBackup[event.userid];
+
+			// notify
+			this.restApi.showMsg(event.extra.firstName + ' ' + event.extra.lastName + ' left!');
+
+			// remove participant video element
+			if(!event.extra.speaker) {
+				let participantsContainerElem = this.participantsContainer.nativeElement.querySelectorAll('[data-userid="' + event.userid + '"]')
+				if(participantsContainerElem) {
+					console.log('USER LEAVE ELEMS', participantsContainerElem);
+
+					participantsContainerElem.forEach((elem) => {
+						elem.remove();
+					});
+				}
+			}
+		};
+
+		this.connection.onMediaError = (e) => {
+			console.log('MEDIA ERROR', e);
+
+			if (e.message === 'Concurrent mic process limit.') {
+				if (this.connection.DetectRTC.audioInputDevices.length <= 1) {
+					console.log('Please select external microphone. Check github issue number 483.');
+					return;
+				}
+		
+				let secondaryMic = this.connection.DetectRTC.audioInputDevices[1].deviceId;
+				this.connection.mediaConstraints.audio = {
+					deviceId: secondaryMic
+				};
+		
+				this.connection.join(this.connection.sessionid);
+			}
+		};
+
+		this.connection.onEntireSessionClosed = (event: any) => {
+			console.info('Entire session is closed: ', event.sessionid, event.extra);
+		};
+
+		// enter room
+		this.openJoin();
+	}
+
+	openJoin() {
+		// join
+		if(this.isSpeaker) {
+			this.connection.openOrJoin(this.item.id, (isRoomCreated, roomid) => {
+				if(isRoomCreated) {
+					setTimeout(() => {
+						// send message to session
+						this.connection.send({
+							type: 'join',
+							message: 'Speaker is online!'
 						});
 
-						// save initiated session
-						this.user.initiatedSessions[this.item.id] = true;
-					}
-				} else {
-					if (isRoomExist === true) {
-						this.connection.join(roomid, (isJoined, roomid) => {
-							if(isJoined) {
-								setTimeout(() => {
-									// send message to session
-									this.connection.send({
-										type: 'join',
-										message: this.connection.extra.firstName + ' ' + this.connection.extra.lastName + ' joined!'
-									});
-
-									// send message to public room
-									this.rtcService.getSocketConnection().then((socket) => {
-										socket.emit(this.publicRoomIdentifier, {
-											type: 'join',
-											speaker: false,
-											roomid: roomid
-										});
-									});
-								}, 3000);
-							}
+						// send message to public room
+						this.socket.emit(this.publicRoomIdentifier, {
+							type: 'join',
+							speaker: true,
+							roomid: roomid
 						});
-					} else {
-						this.restApi.showMsg('Room is not yet open!').then(() => {
-							this.navCtrl.navigateForward('live-group-training');
-						});
-					}
+					}, 3000);
 				}
 			});
-		}).catch((e) => {
-            console.log('CONNNNNNN ERR', e);
-        });
+
+			// save initiated session
+			this.user.initiatedSessions[this.item.id] = true;
+		} else {
+			this.connection.join(this.item.id, (isJoined, roomid) => {
+				if(isJoined) {
+					setTimeout(() => {
+						// send message to session
+						this.connection.send({
+							type: 'join',
+							message: this.connection.extra.firstName + ' ' + this.connection.extra.lastName + ' joined!'
+						});
+
+						// send message to public room
+						this.socket.emit(this.publicRoomIdentifier, {
+							type: 'join',
+							speaker: false,
+							roomid: roomid
+						});
+					}, 3000);
+				}
+			});
+		}
 	}
 
 	captureUserSpeechEvents(stream: MediaStream) {
@@ -710,39 +709,21 @@ export class ConferenceComponent implements OnInit {
 		// connection.setDefaultEventsForMediaElement = false;
 
 		let localStream = this.connection.attachStreams[0];
-		let action: boolean;
+		let muted: boolean;
 
-		if(!this.connection.extra[type]) this.connection.extra[type] = action;
-
-		// console.log('localStreams ', this.localStream);
 		console.log('localStream ', localStream);
 		console.log('Stream TYPE ', type);
 
-		if(this.connection.extra[type]) {
-			localStream.mute(type);
-			action = false;
-		} else {
+		if(this.connection.extra.sessions[this.item.id].localStream[type].muted) {
 			localStream.unmute(type);
-			action = true;
+			muted = false;
+		} else {
+			localStream.mute(type);
+			muted = true;
 		}
 
-		this.connection.extra[type] = action;
-		this.connection.updateExtraData();		
-
-		// if(this.connection.extra[stream]) {
-		// 	localStream.mute(stream);
-		// 	this.connection.extra[stream] = false;
-		// } else {
-		// 	localStream.unmute(stream);
-		// 	this.connection.extra[stream] = true;
-		// }
-
-		// this.connection.updateExtraData();
-
-		// if(this.connection.session[stream]) this.connection.session[stream] = false;
-		// else this.connection.session[stream] = true;
-
-		// localStream.excludeUser = 'speaker';
+		this.connection.extra.sessions[this.item.id].localStream[type].muted = muted;
+		this.connection.updateExtraData();
 	}
 
 	presentParticipantSetting() {
@@ -786,7 +767,8 @@ export class ConferenceComponent implements OnInit {
 						if(participants.length > 0 && this.connection.extra.sessionStream[type] !== streamTypes.includes(type)) {
 							// send participants to turn off/on their stream
 							this.connection.send({
-								type: 'muteUnmute',
+								type: 'remoteStream',
+								action: 'muteUnmute',
 								stream: type
 							});
 						}
@@ -841,56 +823,57 @@ export class ConferenceComponent implements OnInit {
 		this.navCtrl.navigateRoot('/' + this.appUrl);
 	}
 
-	ionViewWillLeave() {
+	ngOnDestroy() {
 		console.log('VIEW WILL UNLOAD', this.connection);
+		console.log('VIEW WILL UNLOAD SESSION', this.item.id);
 
-		// if(this.connection && this.connection.sessionid) {
-		// 	if(this.isSpeaker) {
-		// 		// remove initiated session
-		// 		if(this.sessionData.user.initiatedSessions && this.sessionData.user.initiatedSessions[this.item.id]) delete this.sessionData.user.initiatedSessions[this.item.id];
-		// 	} else {
-		// 		// send message to public room
-		// 		this.rtcService.getSocketConnection().then((socket) => {
-		// 			socket.emit(this.publicRoomIdentifier, {
-		// 				type: 'leave',
-		// 				speaker: false,
-		// 				roomid: this.connection.sessionid
-		// 			});
-		// 		});
-		// 	}
+		if(this.socket) {
+			// send message to public room
+			this.socket.emit(this.publicRoomIdentifier, {
+				type: 'leave',
+				status: this.item.status,
+				speaker: this.isSpeaker,
+				roomid: this.connection.sessionid
+			});
 
-		// 	// if(this.status !== 'started') this.disconnectConnection();
-		// 	this.disconnectConnection();
-		// }
+			// if(this.status !== 'started') this.disconnectConnection();
+			if(this.connection) this.disconnectConnection();
+		}
 	}
 
 	disconnectConnection() {
 		console.log('LEAVING PAGE', this.connection.sessionid);
 
-		// this.connection.getAllParticipants().forEach((participantId) => {
-		// 	this.connection.multiPeersHandler.onNegotiationNeeded({
-		// 		userLeft: true
-		// 	}, participantId);
+		this.connection.getAllParticipants().forEach((participantId) => {
+			// this.connection.multiPeersHandler.onNegotiationNeeded({
+			// 	userLeft: true
+			// }, participantId);
 	
-		// 	if (this.connection.peers[participantId] && this.connection.peers[participantId].peer) {
-		// 		this.connection.peers[participantId].peer.close();
-		// 	}
+			// if (this.connection.peers[participantId] && this.connection.peers[participantId].peer) {
+			// 	this.connection.peers[participantId].peer.close();
+			// }
 	
-		// 	delete this.connection.peers[participantId];
+			// delete this.connection.peers[participantId];
 
-		// 	this.connection.disconnectWith(participantId);
-		// });
+			this.connection.disconnectWith(participantId);
+		});
 	
-		// // stop all local cameras
-		// this.connection.attachStreams.forEach((localStream) => {
-		// 	localStream.stop();
-		// });
+		// stop all local cameras
+		this.connection.attachStreams.forEach((localStream) => {
+			localStream.stop();
+		});
 
-		// setTimeout(() => {
-		// 	// close socket.io connection
-		// 	this.connection.closeSocket();
-		// 	this.connection.isInitiator = false;
-		// }, 3000);
+		// close session
+		// this.connection.closeSocket();
+
+		setTimeout(() => {
+			// close socket.io connection
+			// this.connection.resetScreen();
+			this.connection.closeSocket();
+			// if(this.connection.extra.sessions[this.item.id]) this.connection.removeStream(this.connection.extra.sessions[this.item.id].localStream.id);
+			this.connection.isInitiator = false;
+			// this.rtcService.initConnection(this.connection.extra);
+		}, 3000);
 	}
 
 	// ionViewDidLeave() {

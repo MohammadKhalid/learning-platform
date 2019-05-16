@@ -15,6 +15,7 @@ import { FileDropModule } from 'ngx-file-drop';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 import { ComponentsModule } from './components/components.module';
+import { RtcService } from './services/rtc/rtc.service';
  
 @NgModule({
   declarations: [
@@ -42,4 +43,9 @@ import { ComponentsModule } from './components/components.module';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+
+  constructor(private rtcService: RtcService) {
+    this.rtcService.initConnection();
+  }
+}

@@ -156,7 +156,7 @@ export class AppComponent {
         this.menuCtrl.enable(state);
       });
 
-      if(this.authenticationService.authDidCheck === true) {
+      if(this.authenticationService.authDidCheck) {
         if (state) {
           // set user data
           this.userData = this.authenticationService.sessionData;

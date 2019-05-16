@@ -84,7 +84,7 @@
 					<div *ngIf="!item?.started">
 						<ion-badge color="success" *ngIf="item?.isSpeakerJoin">Open</ion-badge>
 						<span *ngIf="!item?.isSpeakerJoin">
-							<ion-badge color="{{timeLeft.text[0] === 'a' ? 'light' : 'dark'}}" *ngIf="item.timeLeft | async as timeLeft">{{timeLeft.text}} {{timeLeft.text[0] === 'a' ? 'ago' : 'left'}}</ion-badge>
+							<ion-badge color="{{timeLeft.text[0] === 'a' ? 'warning' : 'dark'}}" *ngIf="item.timeLeft | async as timeLeft">{{timeLeft.text}} {{timeLeft.text[0] === 'a' ? 'ago' : 'left'}}</ion-badge>
 						</span>
 					</div>
 				</div>
