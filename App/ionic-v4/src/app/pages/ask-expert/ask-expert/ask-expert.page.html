@@ -1,52 +1,380 @@
 <ion-header no-border>
-  <ion-toolbar color="primary">
-  	<ion-buttons slot="start">
-    	<ion-menu-button color="light"></ion-menu-button>
-    </ion-buttons>
-	    
-    <ion-title>Ask The Expert</ion-title>
+	<ion-toolbar color="primary">
+		<ion-buttons slot="start">
+			<ion-menu-button color="light"></ion-menu-button>
+		</ion-buttons>
 
-    <ion-buttons slot="end" *ngIf="canAdd()">
-		<ion-button routerDirection="root" routerLink="/{{urlEndPoint}}/add"><ion-icon slot="icon-only" strong="true" name="add"></ion-icon></ion-button>
-	</ion-buttons>
-  </ion-toolbar>
+		<ion-title>Ask The Expert</ion-title>
+
+	</ion-toolbar>
 </ion-header>
 
 <ion-content>
-	<ion-list *ngIf="items?.length < 1">
-		<ion-item>
-			<ion-label><p>No {{canAdd() ? 'record found' : 'submitted yet'}}</p></ion-label>
-		</ion-item>
-	</ion-list>
+	<!-- for web -->
+	<ion-grid class="is-web">
+		<ion-row>
+			<ion-col size-md="9" size-lg="9" size-sm="8" size-xs="12" *ngIf="!isStartScreen"
+				[hidden]="chatMessage.length!=0 && isStartScreen">
+				<ion-row>
+					<ion-col class="ion-text-center default-screen ion-padding">
+						<ion-label>
+							<strong class="fs-32">
+								Welcome, {{userName}}</strong>
+						</ion-label>
 
-	<ion-card *ngFor="let item of items;">
-		<ion-item>
-			<ion-label>
-				<p>{{beautifyDate(item?.submittedAt, 'MMM. D, YYYY')}}</p>
-				{{item?.subject}}
-			</ion-label>
-			<ion-button slot="end" shape="round" fill="outline" routerDirection="root" routerLink="/{{urlEndPoint}}/detail/{{item?.id}}">View Details</ion-button>
-		</ion-item>
+					</ion-col>
+				</ion-row>
 
-		<ion-card-content>
-			{{item?.question}}
-		</ion-card-content>
+				<ion-row class="ion-padding ion-text-center">
+					<ion-col>
+						<div class="img ion-padding">
+							<ion-avatar class="image-center" style="position: relative;">
+								<img class="img1" src="./assets/img/askexpert/default-user.svg">
+								<span class="dot"></span>
+							</ion-avatar>
+						</div>
+					</ion-col>
+				</ion-row>
 
-		<ion-item *ngIf="sessionData.user.type !== 'student'">
-			<ion-label>{{item?.user?.firstName}} {{item?.user?.lastName}}</ion-label>
-			<ion-note mode="md" slot="end" text-uppercase>Student</ion-note>
-		</ion-item>
+				<ion-row class="ion-padding ion-text-center">
+					<ion-col>
+						<label>
+							<p class="gray">
+								Add someone to start chatting or go to add Contacts to see who is available
+							</p>
+						</label>
+					</ion-col>
+				</ion-row>
+			</ion-col>
 
-		<ion-item *ngIf="sessionData.user.type !== 'coach'">
-			<ion-label>{{item?.coach?.firstName}} {{item?.coach?.lastName}}</ion-label>
-			<ion-note mode="md" slot="end" text-uppercase>Coach</ion-note>
-		</ion-item>
-		
-		<ion-item>
-			<ion-label text-capitalize>
-				<ion-badge mode="ios" [color]="item?.status === 'open' ? 'success' : 'medium'">{{item?.status}}</ion-badge>
-			</ion-label>
-			<ion-note mode="md" slot="end" text-uppercase>Status</ion-note>
-		</ion-item>
-	</ion-card>
+			<ion-col size-md="9" [hidden]="chatMessage.length==0 && !isStartScreen" size-lg="9" size-sm="8"
+				size-xs="12">
+				<ion-toolbar>
+					<div class="second_header">
+						<ion-row>
+							<ion-col>
+								<span class="user_name">{{contact_name}} </span>
+								<span class="find_span cursor-pointer" (click)="isMsgSearchable=!isMsgSearchable;">
+									<ion-icon name="search" class="header-icon"></ion-icon> Find
+
+								</span>
+								<span *ngIf="headerIsOnline" class="online_span">Online</span>
+								<span *ngIf="headerIsOnline" class="header-dot"></span>
+								<span *ngIf="!headerIsOnline" class="online_span">Offline</span>
+							</ion-col>
+						</ion-row>
+
+						<ion-row [@openClose]="isMsgSearchable ? 'open' : 'closed'" [hidden]="!isMsgSearchable">
+							<ion-col size="9">
+								<ion-searchbar class="chat" type="search" [(ngModel)]="chatTerm" animated="true"
+									placeholder="search" mode="ios"></ion-searchbar>
+							</ion-col>
+							<ion-col size="3">
+								<ion-item class="cancel-btn">
+									<ion-button (click)="isMsgSearchable=false;chatTerm=''">Cancel</ion-button>
+								</ion-item>
+							</ion-col>
+						</ion-row>
+					</div>
+				</ion-toolbar>
+				<div class="chat-lists">
+
+					<ul [immediateCheck]="true" [infiniteScrollDisabled]="IsinfinitScroll" infiniteScroll
+					[infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" (scrolledUp)="loadchat()"
+						[scrollWindow]="false" *ngIf="chatMessage" #chatMessageUl id="chatMessageUl"
+						[ngClass]="{'scroll-list':isMsgSearchable,'scroll-list-dynamic':!isMsgSearchable}">
+						<!-- <li class="ion-text-center" *ngIf="chatSpinner">
+							<ion-spinner name="bubbles"></ion-spinner>
+						</li> -->
+						<li id="chatMessageLi" *ngFor="let chat of chatMessage | filter:chatTerm" #chatItems no-lines>
+
+							<h2 class="bg-line" *ngIf="chat?.timeAgo==true"><span>{{chat.date | timeAgo}}</span></h2>
+
+							<div class="msj macro" *ngIf="chat.senderId != userId && chat?.timeAgo!=true">
+								<div class="text text-l">
+									<p>
+										{{chat.message}}
+									</p>
+									<span class="time">{{chat.date | timeformatHhMm}}</span>
+								</div>
+							</div>
+
+							<div class="msj-rta macro" *ngIf="chat.senderId == userId && chat?.timeAgo!=true">
+								<div class="text text-l">
+									<p>
+										{{chat.message}}
+									</p>
+									<span class="time">{{chat.date | timeformatHhMm}}</span>
+								</div>
+							</div>
+						</li>
+
+					</ul>
+				</div>
+
+				<ion-grid>
+					<ion-row class="box">
+						<ion-col class="sendbox" size-md="8" size-lg="8" size-sm="7" size-xs="11">
+							<ion-item class="chat-box">
+								<ion-input class="send-box" type="text" [(ngModel)]="chat_input"
+									(keyup.enter)="send(chat_input)" placeholder="Type a message here"></ion-input>
+								<img (click)="send(chat_input)" class="send cursor-pointer"
+									src="./assets/img/askexpert/send.svg">
+							</ion-item>
+						</ion-col>
+					</ion-row>
+				</ion-grid>
+			</ion-col>
+
+			<ion-col class="ion-no-padding user-list" size-md="3" size-lg="3" size-sm="4" size-xs="12">
+				<div class="ion-text-center img">
+					<ion-avatar class="image-center">
+						<img class="img1" src="./assets/img/askexpert/default-user.svg">
+						<span class="current-user-dot"></span>
+					</ion-avatar>
+					<ion-label class="user-name">
+						<strong>{{userName}}</strong>
+					</ion-label>
+				</div>
+
+				<ion-row class="user-icons" *ngIf="!isContactsearch">
+					<ion-col size="3" class="ion-text-center cursor-pointer" (click)="currentTab('chat');">
+						<img *ngIf="!chatMouseOver" src="./assets/img/askexpert/chat-gray.svg">
+						<img *ngIf="chatMouseOver" src="./assets/img/askexpert/chat.svg">
+						<p [ngClass]="{'active': chatMouseOver, '': !chatMouseOver}">Chat</p>
+					</ion-col>
+
+					<ion-col size="3" class="ion-text-center cursor-pointer" (click)="currentTab('add');openModal();">
+						<img *ngIf="!addMouseOver" src="./assets/img/askexpert/add-gray.svg">
+						<img *ngIf="addMouseOver" src="./assets/img/askexpert/add.svg">
+						<p [ngClass]="{'active': addMouseOver, '': !addMouseOver}">Add</p>
+					</ion-col>
+
+					<ion-col size="3" class="ion-text-center cursor-pointer"
+						(click)="currentTab('find');isContactsearch=true">
+						<img *ngIf="!findMouseOver" src="./assets/img/askexpert/finder-gray.svg">
+						<img *ngIf="findMouseOver" src="./assets/img/askexpert/find.svg">
+						<p [ngClass]="{'active': findMouseOver, '': !findMouseOver}">Find</p>
+					</ion-col>
+				</ion-row>
+				<div class="small-serach-find" *ngIf="isContactsearch">
+					<ion-row>
+						<ion-col class="search-text">
+							<ion-searchbar class="claer-button" clear-icon="undefined" [(ngModel)]="contactList"
+								aria-placeholder="search" mode="ios"></ion-searchbar>
+						</ion-col>
+						<ion-col size="1">
+							<ion-icon class="cloe-icon" name="close-circle"
+								(click)="isContactsearch=false;currentTab('chat');contactList=''"></ion-icon>
+
+						</ion-col>
+					</ion-row>
+				</div>
+
+				<!-- Skeleton screen start -->
+				<ion-list *ngIf="isSkeliton" class="ion-no-padding scrollable-list">
+					<ion-item *ngFor="let item of createRange(10)">
+						<ion-avatar slot="start" class="pos-relative">
+							<ion-skeleton-text animated></ion-skeleton-text>
+						</ion-avatar>
+						<ion-label>
+							<h3 class="name">
+								<ion-skeleton-text animated ></ion-skeleton-text>
+							</h3>
+							<p class="desc">
+								<ion-skeleton-text animated ></ion-skeleton-text>
+							</p>
+						</ion-label>
+					</ion-item>
+				</ion-list>
+				<!-- Skeleton screen end -->
+
+				<ion-list *ngIf="chatlist.length > 0" class="ion-no-padding"
+					[ngClass]="{'scrollable-list':!isContactsearch,'scrollable-list-dynamic':isContactsearch}">
+					<ion-item routerLink="/ask-expert/{{item.contact_id}}"
+						[ngClass]="{'selected-hightlight':item?.activeChat==1}"
+						*ngFor="let item of chatlist | filter : contactList">
+						<ion-avatar slot="start" class="pos-relative">
+							<img [src]="imagepath+'default-user.svg'">
+							<span *ngIf="item?.isLogin == 1" class="dot"></span>
+						</ion-avatar>
+						<ion-label>
+							<strong class="name">{{item.firstName}}</strong>
+							<p class="date">{{item.lastMessageDate | timeformat}}</p>
+							<p>{{item.lastMessage}}</p>
+						</ion-label>
+					</ion-item>
+				</ion-list>
+
+				<ion-list *ngIf="chatlist.length == 0 && !isSkeliton" class="ion-no-padding scrollable-list">
+					<ion-item>
+						<ion-label>
+							<p>Record not found</p>
+						</ion-label>
+					</ion-item>
+				</ion-list>
+
+			</ion-col>
+		</ion-row>
+	</ion-grid>
+	<!-- for web -->
+
+	<!-- for mobile -->
+	<ion-grid class="is-mobile">
+		<ion-row>
+			<ion-col size-xs="12" *ngIf="chatMob">
+				<ion-toolbar>
+
+					<div class="second_header">
+						<ion-row>
+							<ion-col size="1">
+
+								<ion-icon class="back-button" (click)="chatMob=false" name="arrow-back">
+								</ion-icon>
+							</ion-col>
+
+							<ion-col>
+								<span class="user_name">{{contact_name}} </span>
+								<span class="find_span cursor-pointer"
+									(click)="isMsgSearchableMobile=!isMsgSearchableMobile;">
+									<ion-icon name="search" class="header-icon"></ion-icon> Find
+
+								</span>
+								<span *ngIf="headerIsOnline" class="online_span">Online</span>
+								<span *ngIf="headerIsOnline" class="header-dot"></span>
+								<span *ngIf="!headerIsOnline" class="online_span">Offline</span>
+							</ion-col>
+						</ion-row>
+
+						<ion-row [@openClose]="isMsgSearchableMobile ? 'open' : 'closed'"
+							[hidden]="!isMsgSearchableMobile">
+
+							<ion-col size="8">
+								<ion-searchbar class="chat" type="search" [(ngModel)]="chatTerm" animated="true"
+									placeholder="search" mode="ios"></ion-searchbar>
+							</ion-col>
+							<ion-col size="4">
+								<ion-item class="cancel-btn-mobile">
+									<ion-button (click)="isMsgSearchableMobile=false;chatTerm=''">Cancel</ion-button>
+								</ion-item>
+							</ion-col>
+						</ion-row>
+					</div>
+				</ion-toolbar>
+
+				<div class="scroll-mobile">
+					<ul [immediateCheck]="true" [infiniteScrollDisabled]="IsinfinitScroll" infiniteScroll
+						[infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" (scrolledUp)="loadchat()"
+						[scrollWindow]="false" *ngIf="chatMessage" #chatMessageUlMob id="chatMessageUl"
+						[ngClass]="{'scroll-list-mobile':!isMsgSearchableMobile,'scroll-list-mobile-dynamic':isMsgSearchableMobile}">
+						<!-- <li class="ion-text-center" *ngIf="chatSpinner">
+								<ion-spinner name="bubbles"></ion-spinner>
+							</li> -->
+						<li id="chatMessageLi" *ngFor="let chat of chatMessage | filter:chatTerm" #chatItems no-lines>
+							<h2 class="bg-line" *ngIf="chat?.timeAgo==true"><span>{{chat.date | timeAgo}}</span></h2>
+							<div class="msj macro" *ngIf="chat.senderId != userId && chat?.timeAgo!=true">
+								<div class="text text-l">
+									<p>
+										{{chat.message}}
+									</p>
+									<span class="time">{{chat.date | timeformatHhMm}}</span>
+								</div>
+							</div>
+
+							<div class="msj-rta macro" *ngIf="chat.senderId == userId && chat?.timeAgo!=true">
+								<div class="text text-l">
+									<p>
+										{{chat.message}}
+									</p>
+									<span class="time">{{chat.date | timeformatHhMm}}</span>
+								</div>
+							</div>
+						</li>
+					</ul>
+
+				</div>
+
+				<ion-grid>
+					<ion-row class="box">
+						<ion-col class="sendbox" size-md="8" size-lg="8" size-sm="7" size-xs="11">
+							<ion-item class="chat-box">
+								<ion-input class="send-box" type="text" [(ngModel)]="chat_input"
+									(keyup.enter)="send(chat_input)" placeholder="Type a message here"></ion-input>
+								<img (click)="send(chat_input)" class="send cursor-pointer"
+									src="./assets/img/askexpert/send.svg">
+							</ion-item>
+						</ion-col>
+					</ion-row>
+				</ion-grid>
+			</ion-col>
+
+			<ion-col class="ion-no-padding user-list" size-xs="12" *ngIf="!chatMob">
+				<!-- user basic info -->
+				<ion-item class="item" >
+					<ion-avatar slot="start" class="pos-relative">
+						<img class="img1" src="./assets/img/askexpert/user-image.png">
+					</ion-avatar>
+					<ion-label>
+						<strong class="name">Chat</strong>
+						<span class="ion-text-right">
+							<img *ngIf="!addMouseOver" class="cursor-pointer" style="width: 20px; float: right;"
+								(click)="currentTab('add');openModal();" src="./assets/img/askexpert/add-gray.svg">
+						</span>
+
+					</ion-label>
+				</ion-item>
+				<!-- user basic info -->
+
+				<!-- search bar start -->
+				<ion-searchbar class="chat" type="search" [(ngModel)]="contactList" animated="true" placeholder="search"
+					mode="ios"></ion-searchbar>
+				<!-- search bar end -->
+
+				<!-- Skeleton screen start -->
+				<ion-list *ngIf="isSkeliton" class="ion-padding scrollable-list-mob">
+					<ion-item class="item" *ngFor="let item of createRange(10)">
+						<ion-avatar slot="start" class="pos-relative">
+							<ion-skeleton-text animated></ion-skeleton-text>
+						</ion-avatar>
+						<ion-label>
+							<h3 class="name">
+								<ion-skeleton-text animated ></ion-skeleton-text>
+							</h3>
+							<p class="desc">
+								<ion-skeleton-text animated ></ion-skeleton-text>
+							</p>
+						</ion-label>
+					</ion-item>
+				</ion-list>
+				<!-- Skeleton screen end -->
+
+				<ion-list *ngIf="chatlist.length > 0" class="ion-padding scrollable-list-mob">
+					<ion-item (click)="chatMob=true" routerLink="/ask-expert/{{item.contact_id}}"
+						[ngClass]="{'selected-hightlight':item?.activeChat==1}"
+						*ngFor="let item of chatlist | filter : contactList">
+						<ion-avatar slot="start" class="pos-relative">
+							<img [src]="imagepath+'default-user.svg'">
+							<span *ngIf="item?.isLogin == 1" class="dot"></span>
+						</ion-avatar>
+						<ion-label>
+							<strong class="name">{{item.firstName}}</strong>
+							<p class="date">{{item.lastMessageDate | timeformat}}</p>
+							<p>{{item.lastMessage}}</p>
+						</ion-label>
+					</ion-item>
+				</ion-list>
+
+				<ion-list *ngIf="chatlist.length == 0 && !isSkeliton" class="ion-padding scrollable-list-mob">
+					<ion-item>
+						<ion-label>
+							<p>Record not found</p>
+						</ion-label>
+					</ion-item>
+				</ion-list>
+
+			</ion-col>
+
+		</ion-row>
+	</ion-grid>
+	<!-- for mobile -->
 </ion-content>

@@ -181,3 +181,15 @@ const login = async function(req, res){
     return ReS(res, {token:user.getJWT(), user:user.toWeb()});
 }
 module.exports.login = login;
+
+const changeOnlineStatus = async function (data, status) {
+       await User.update({
+        isLogin: status
+    },
+        {
+            where: {
+                id: data.user_id
+            }
+        })
+}
+module.exports.changeOnlineStatus = changeOnlineStatus;

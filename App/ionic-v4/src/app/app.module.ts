@@ -16,13 +16,16 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 import { ComponentsModule } from './components/components.module';
 import { RtcService } from './services/rtc/rtc.service';
- 
+import { LoaderService } from './services/utility/loader.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 @NgModule({
   declarations: [
     AppComponent
   ],
   entryComponents: [],
   imports: [
+    BrowserAnimationsModule,
     BrowserModule,
     ComponentsModule,
     IonicModule.forRoot(), 
@@ -36,6 +39,7 @@ import { RtcService } from './services/rtc/rtc.service';
     FileDropModule
   ],
   providers: [
+    LoaderService,
     StatusBar,
     SplashScreen,
     InAppBrowser,

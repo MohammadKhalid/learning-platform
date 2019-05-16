@@ -1,14 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 import { Platform, MenuController, NavController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import io from 'socket.io-client';
+
 
 import { AuthenticationService } from './services/user/authentication.service';
 
 import { Observable } from 'rxjs/Observable';
 import { filter } from 'rxjs/operators';
- 
+import { SOCKET_URL } from 'src/environments/environment';
+import { RestApiService } from './services/http/rest-api.service';
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
@@ -22,6 +26,8 @@ export class AppComponent {
   navRouterStartEvent: any;
   loginUrl: string = '/login';
   defaultUrl: string = '/dashboard';
+  public sockets = io(SOCKET_URL);
+
 
   private linksAssessment = {
     header: {
@@ -88,8 +94,16 @@ export class AppComponent {
           { title: 'Companies', url: '/company', icon: 'business', icon_mode: 'md' }
         ]
       },
+      {
+        header: {
+          title: 'Interaction'
+        },
+        menu: [
+          { title: 'Live Group Training', url: '/live-group-training', icon: 'easel', icon_mode: 'ios' },
+          { title: 'Request Personal Coaching', url: '/request-personal-coaching', icon: 'contacts', icon_mode: 'ios' }
+        ]
+      },
       this.linksAssessment,
-      this.linksInteraction,
       this.linksAccount
     ],
     company: [
@@ -184,7 +198,24 @@ export class AppComponent {
 
     this.initializeApp();
   }
- 
+  @HostListener('window:unload', ['$event'])
+  unloadHandler(event: any): void {
+        this.sockets.emit('set-offline', { user_id: this.authenticationService.getSessionData().user.id })
+  }
+  ngAfterViewInit() {
+    this.sockets.on('connect', () => {
+      setTimeout(() => {
+        if (this.authenticationService.getSessionData()) {
+          this.sockets.emit('set-online', { user_id: this.authenticationService.getSessionData().user.id });
+        }
+      }, 500);
+    });
+    this.sockets.on('disconnect', function () {
+    });
+    // window.addEventListener('beforeunload', (e) => {
+    //  alert();
+    // });
+  }
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
@@ -193,6 +224,7 @@ export class AppComponent {
   }
   
   logout() {
+    this.sockets.emit('set-offline', { user_id: this.authenticationService.getSessionData().user.id })
     this.authenticationService.logout();
   }
 

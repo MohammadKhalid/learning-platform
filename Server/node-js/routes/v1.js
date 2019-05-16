@@ -15,6 +15,8 @@ const CategoryController 			= require('../controllers/category.controller');
 const MediaController 				= require('../controllers/media.controller');
 const QuestionController 			= require('../controllers/question.controller');
 const AskExpertController 			= require('../controllers/ask-expert.controller');
+const ContactController = require('../controllers/contact.controller');
+const ChatController = require('../controllers/chat.controller');
 
 const custom 	        = require('./../middleware/custom');
 const role 	        	= require('./../middleware/role');
@@ -120,6 +122,19 @@ router.delete(     '/ask-expert/:item_id',  				passport.authenticate('jwt', {se
 // router.get(     '/companies/:company_id', passport.authenticate('jwt', {session:false}), custom.company, CompanyController.get);     // R
 // router.put(     '/companies/:company_id', passport.authenticate('jwt', {session:false}), custom.company, CompanyController.update);  // U
 // router.delete(  '/companies/:company_id', passport.authenticate('jwt', {session:false}), custom.company, CompanyController.remove);  // D
+
+router.post('/contact', ContactController.create);
+router.get('/contact', ContactController.findAll);
+router.get('/contact/:id', ContactController.find);
+router.get('/getcontactbyid/:id/:type', ContactController.getContactById);
+router.put('/contact', ContactController.update);
+router.delete('/contact/:id', ContactController.remove);
+
+router.post('/chat', ChatController.create);
+router.get('/chat/:userId/:contactId/:date', ChatController.find);
+router.get('/chatDates/:userId/:contactId', ChatController.chatDates);
+router.put('/chat', ChatController.update);
+router.delete('/chat', ChatController.remove);
 
 router.get('/dashboard', passport.authenticate('jwt', {session:false}), HomeController.Dashboard);
 router.get('/form-input-data', passport.authenticate('jwt', {session:false}), FormInputDataController.getAll); // R
