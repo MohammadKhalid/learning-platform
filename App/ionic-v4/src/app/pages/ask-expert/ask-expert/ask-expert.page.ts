@@ -38,7 +38,7 @@ import { SOCKET_URL } from 'src/environments/environment';
 export class AskExpertPage implements OnInit {
 	@ViewChild('chatMessageUl') private myScrollContainer: ElementRef;
 	@ViewChild('chatMessageUlMob') private myScrollContainerMob: ElementRef;
-
+	myObserver = null;
 	urlEndPoint: string = 'ask-expert';
 	isPractice: boolean;
 	value: number = 12;
@@ -136,12 +136,11 @@ export class AskExpertPage implements OnInit {
 				this.bottomScroll();
 			}
 		})
-		this.activatedRoute.paramMap.subscribe(params => {
-			this.contactId = params.get('contactid');
-			if (this.contactId) {
-				this.getAllDate();
-			}
-		})
+		
+		if (this.activatedRoute.snapshot.params.contactid){
+			this.contactId = this.activatedRoute.snapshot.params.contactid;
+			this.getAllDate();
+		}
 		this.getContactList();
 	}
 	getAllDate() {
