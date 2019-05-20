@@ -15,8 +15,8 @@ export const environment = {
  */
 // import 'zone.js/dist/zone-error';  // Included with Angular CLI.
 
-export const SERVER_URL = 'http://192.168.0.126:5000/v1/';
-export const SOCKET_URL = 'http://192.168.0.126:5000/';
+export const SERVER_URL = 'http://104.211.43.154:5000/v1/';
+export const SOCKET_URL = 'http://104.211.43.154:5000/';
 export const PEER_OPTION = {
   host: 'api.thrive19.local',
   port: 3000,
