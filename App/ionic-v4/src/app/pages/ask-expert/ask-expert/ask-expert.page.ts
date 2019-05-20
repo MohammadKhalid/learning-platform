@@ -116,7 +116,7 @@ export class AskExpertPage implements OnInit {
 		})
 		this.sockets.on('send-reply', (data) => {
 					this.chatlist.forEach((el, i) => {
-				if (el.contact_id == data.message.senderId) {
+				if (el.contact_id == data.message.senderId && this.userId == data.message.recieverId) {
 					this.chatlist[i].lastMessage = data.message.message;
 					this.chatlist[i].lastMessageDate = data.message.date;
 				}
