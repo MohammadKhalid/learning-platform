@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, ViewChildren, QueryList } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { ModalController, ToastController, IonContent, IonList } from '@ionic/angular';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 
@@ -13,6 +13,7 @@ import { LoaderService } from 'src/app/services/utility/loader.service';
 import { RtcService } from 'src/app/services/rtc/rtc.service';
 import io from 'socket.io-client';
 import { SOCKET_URL } from 'src/environments/environment';
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-ask-expert',
@@ -73,6 +74,7 @@ export class AskExpertPage implements OnInit {
 	allDates: any = [];
 	firstLoad: boolean = true;
 	chatSpinner: boolean = false;
+	userSubscription: Subscription;
 
 	constructor(
 		private restApi: RestApiService,
@@ -115,7 +117,7 @@ export class AskExpertPage implements OnInit {
 			}
 		})
 		this.sockets.on('send-reply', (data) => {
-					this.chatlist.forEach((el, i) => {
+			this.chatlist.forEach((el, i) => {
 				if (el.contact_id == data.message.senderId && this.userId == data.message.recieverId) {
 					this.chatlist[i].lastMessage = data.message.message;
 					this.chatlist[i].lastMessageDate = data.message.date;
@@ -136,12 +138,20 @@ export class AskExpertPage implements OnInit {
 				this.bottomScroll();
 			}
 		})
+		this.userSubscription = this.activatedRoute.params.subscribe(
+			(params: Params) => {
+				this.chatMessage = [];
+				this.allDates = [];
+				this.chatlist = [];
+				
+				this.contactId = params.contactid;
+				this.getAllDate();
+				this.getContactList();
+			})
 		
-		if (this.activatedRoute.snapshot.params.contactid){
-			this.contactId = this.activatedRoute.snapshot.params.contactid;
-			this.getAllDate();
-		}
-		this.getContactList();
+	}
+	ngOnDestroy(): void {
+		this.userSubscription.unsubscribe();
 	}
 	getAllDate() {
 		let user_id = this.userId;
