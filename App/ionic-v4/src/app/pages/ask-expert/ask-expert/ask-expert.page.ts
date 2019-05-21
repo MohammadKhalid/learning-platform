@@ -64,7 +64,7 @@ export class AskExpertPage implements OnInit {
 	chat_input: string;
 	contact_name: string;
 	isContactsearch: boolean = false;
-	isStartScreen: boolean;
+	isStartScreen: boolean = true;
 	chatlist: any = [];
 	headerIsOnline: boolean = false;
 	sockets = io(SOCKET_URL);
