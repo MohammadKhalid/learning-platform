@@ -1,10 +1,6 @@
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalController, NavController, NavParams, LoadingController } from '@ionic/angular';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
-
-import { load } from '@angular/core/src/render3';
-
-
 @Component({
   selector: 'app-contact-add-model',
   templateUrl: './contact-add-model.component.html',
@@ -25,16 +21,6 @@ export class ContactAddModelComponent implements OnInit {
     this.changeStatus = this.navParams.get("change");
     this.currenttab = this.navParams.get("tab");
   }
-  // async loaderInt() {
-  //   this.loadercontext = await this.loadingCtrl.create({ message: "Loading..." });
-  //    }
-  // async showLoading() {
-  //   this.loadercontext = await this.loadingCtrl.create({ message: "Loading..." });
-  //   this.loadercontext.present();
-  // }
-  // async hideLoading() {
-  //         await this.loadercontext.dismiss();
-  // }
   searchListCopy: any = []
   ionViewDidEnter() {
     this.getUsers();

@@ -13,6 +13,7 @@
 	<!-- for web -->
 	<ion-grid class="is-web">
 		<ion-row>
+			<!-- default screen view start -->
 			<ion-col size-md="9" size-lg="9" size-sm="8" size-xs="12" *ngIf="!isStartScreen"
 				[hidden]="chatMessage.length!=0 && isStartScreen">
 				<ion-row>
@@ -46,7 +47,9 @@
 					</ion-col>
 				</ion-row>
 			</ion-col>
+			<!-- default screen view end -->
 
+			<!-- message screen start -->
 			<ion-col size-md="9" [hidden]="chatMessage.length==0 && !isStartScreen" size-lg="9" size-sm="8"
 				size-xs="12">
 				<ion-toolbar>
@@ -80,16 +83,12 @@
 				<div class="chat-lists">
 
 					<ul [immediateCheck]="true" [infiniteScrollDisabled]="IsinfinitScroll" infiniteScroll
-					[infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" (scrolledUp)="loadchat()"
+						[infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" (scrolledUp)="loadchat()"
 						[scrollWindow]="false" *ngIf="chatMessage" #chatMessageUl id="chatMessageUl"
 						[ngClass]="{'scroll-list':isMsgSearchable,'scroll-list-dynamic':!isMsgSearchable}">
-						<!-- <li class="ion-text-center" *ngIf="chatSpinner">
-							<ion-spinner name="bubbles"></ion-spinner>
-						</li> -->
+
 						<li id="chatMessageLi" *ngFor="let chat of chatMessage | filter:chatTerm" #chatItems no-lines>
-
 							<h2 class="bg-line" *ngIf="chat?.timeAgo==true"><span>{{chat.date | timeAgo}}</span></h2>
-
 							<div class="msj macro" *ngIf="chat.senderId != userId && chat?.timeAgo!=true">
 								<div class="text text-l">
 									<p>
@@ -125,7 +124,9 @@
 					</ion-row>
 				</ion-grid>
 			</ion-col>
+			<!-- message screen end -->
 
+			<!-- contanct list start -->
 			<ion-col class="ion-no-padding user-list" size-md="3" size-lg="3" size-sm="4" size-xs="12">
 				<div class="ion-text-center img">
 					<ion-avatar class="image-center">
@@ -179,10 +180,10 @@
 						</ion-avatar>
 						<ion-label>
 							<h3 class="name">
-								<ion-skeleton-text animated ></ion-skeleton-text>
+								<ion-skeleton-text animated></ion-skeleton-text>
 							</h3>
 							<p class="desc">
-								<ion-skeleton-text animated ></ion-skeleton-text>
+								<ion-skeleton-text animated></ion-skeleton-text>
 							</p>
 						</ion-label>
 					</ion-item>
@@ -196,7 +197,7 @@
 						*ngFor="let item of chatlist | filter : contactList">
 						<ion-avatar slot="start" class="pos-relative">
 							<img [src]="imagepath+'default-user.svg'">
-							<span *ngIf="item?.isLogin == 1" class="dot"></span>
+							<span *ngIf="item?.isLogin == true" class="dot"></span>
 						</ion-avatar>
 						<ion-label>
 							<strong class="name">{{item.firstName}}</strong>
@@ -215,6 +216,7 @@
 				</ion-list>
 
 			</ion-col>
+			<!-- contanct list end -->
 		</ion-row>
 	</ion-grid>
 	<!-- for web -->
@@ -222,13 +224,12 @@
 	<!-- for mobile -->
 	<ion-grid class="is-mobile">
 		<ion-row>
+			<!-- contact list start -->
 			<ion-col size-xs="12" *ngIf="chatMob">
 				<ion-toolbar>
-
 					<div class="second_header">
 						<ion-row>
 							<ion-col size="1">
-
 								<ion-icon class="back-button" (click)="chatMob=false" name="arrow-back">
 								</ion-icon>
 							</ion-col>
@@ -307,10 +308,12 @@
 					</ion-row>
 				</ion-grid>
 			</ion-col>
+			<!-- contact list end -->
 
+			<!-- message screen start -->
 			<ion-col class="ion-no-padding user-list" size-xs="12" *ngIf="!chatMob">
 				<!-- user basic info -->
-				<ion-item class="item" >
+				<ion-item class="item">
 					<ion-avatar slot="start" class="pos-relative">
 						<img class="img1" src="./assets/img/askexpert/user-image.png">
 					</ion-avatar>
@@ -338,10 +341,10 @@
 						</ion-avatar>
 						<ion-label>
 							<h3 class="name">
-								<ion-skeleton-text animated ></ion-skeleton-text>
+								<ion-skeleton-text animated></ion-skeleton-text>
 							</h3>
 							<p class="desc">
-								<ion-skeleton-text animated ></ion-skeleton-text>
+								<ion-skeleton-text animated></ion-skeleton-text>
 							</p>
 						</ion-label>
 					</ion-item>
@@ -354,7 +357,7 @@
 						*ngFor="let item of chatlist | filter : contactList">
 						<ion-avatar slot="start" class="pos-relative">
 							<img [src]="imagepath+'default-user.svg'">
-							<span *ngIf="item?.isLogin == 1" class="dot"></span>
+							<span *ngIf="item?.isLogin == true" class="dot"></span>
 						</ion-avatar>
 						<ion-label>
 							<strong class="name">{{item.firstName}}</strong>
@@ -373,6 +376,7 @@
 				</ion-list>
 
 			</ion-col>
+			<!-- message screen end -->
 
 		</ion-row>
 	</ion-grid>
