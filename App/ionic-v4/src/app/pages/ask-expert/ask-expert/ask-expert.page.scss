@@ -6,7 +6,10 @@
     font-size: 12px;
     display: inline;
 }
-
+.user-list .name-lg {
+    font-size: 20px;
+    display: inline;
+}
 .user-list .date {
     font-size: 12px;
     display: inline;
@@ -534,4 +537,9 @@ ion-searchbar.chat {
 .user-list .item {
     --background: #ffffff;
     --inner-border-width: 0 0 0 0;
+}
+
+.user-list .add{
+    width: 30px; 
+    float: right;
 }

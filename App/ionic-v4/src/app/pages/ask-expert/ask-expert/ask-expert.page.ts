@@ -38,7 +38,7 @@ import { Subscription } from 'rxjs';
 export class AskExpertPage implements OnInit {
 	@ViewChild('chatMessageUl') private myScrollContainer: ElementRef;
 	@ViewChild('chatMessageUlMob') private myScrollContainerMob: ElementRef;
-	myObserver = null;
+
 	urlEndPoint: string = 'ask-expert';
 	isPractice: boolean;
 	value: number = 12;
@@ -64,7 +64,7 @@ export class AskExpertPage implements OnInit {
 	chat_input: string;
 	contact_name: string;
 	isContactsearch: boolean = false;
-	isStartScreen: boolean;
+	isStartScreen: boolean = false;
 	chatlist: any = [];
 	headerIsOnline: boolean = false;
 	sockets = io(SOCKET_URL);
@@ -102,7 +102,7 @@ export class AskExpertPage implements OnInit {
 	}
 
 	ngOnInit() {
-		this.isStartScreen = false;
+		// this.isStartScreen = false;
 		this.sockets.on('contact-online', (data) => {
 			this.setLoginStatus(data, true);
 		})
@@ -136,8 +136,11 @@ export class AskExpertPage implements OnInit {
 				this.chatMessage = []; //default set empty because angular is smart it's not clearing data is id same
 				this.allDates = []; //default set empty because angular is smart it's not clearing data is id same
 				this.chatlist = []; //default set empty because angular is smart it's not clearing data is id same
-
-				this.contactId = params.contactid;
+				this.isSkeliton = true; //default set empty because angular is smart it's not clearing data is id same
+				if (params.contactid) {
+					this.contactId = params.contactid;
+					this.isStartScreen = true;
+				}
 				this.getAllDate();
 				this.getContactList();
 			})
@@ -162,43 +165,43 @@ export class AskExpertPage implements OnInit {
 		this.chatMob = true;
 		let user_id = this.userId;
 		let contact_id = this.contactId;
-		this.isStartScreen = true;
-		debugger;
+		// this.isStartScreen = true;
+
 		if (this.allDates.length > 0) {
 			this.restApi.get(`chat/${user_id}/${contact_id}/${selectedDate}`).then((res) => {
-				debugger;
+
 				setTimeout(() => {
 					this.chatSpinner = false;
 				});
 				this.contact_name = res.firstName;
-				this.isStartScreen = true;
+				// this.isStartScreen = true;
 				this.headerIsOnline = res.isLogin;
 
 				// if (this.allDates.length > 0) {
-					const index = this.allDates.indexOf(this.allDates[0]); ///alway get 0 index 
-					this.allDates.splice(index, 1); //always remove 0 index object
-					this.IsinfinitScroll = false;
-					res.messages.forEach(el => {
-						this.chatMessage.unshift(el);
-					});
-					let obj = {
-						timeAgo: true,
-						date: res.messages[0].date,
-					};
-					this.chatMessage.unshift(obj);
-					this.firstLoad ? this.bottomScroll() : '';
-					this.firstLoad = false;
-					if (this.chatMessage.length < 7) {
+				const index = this.allDates.indexOf(this.allDates[0]); ///alway get 0 index 
+				this.allDates.splice(index, 1); //always remove 0 index object
+				this.IsinfinitScroll = false;
+				res.messages.forEach(el => {
+					this.chatMessage.unshift(el);
+				});
+				let obj = {
+					timeAgo: true,
+					date: res.messages[0].date,
+				};
+				this.chatMessage.unshift(obj);
+				this.firstLoad ? this.bottomScroll() : '';
+				this.firstLoad = false;
+				if (this.chatMessage.length < 7) {
 
-						this.loadchat()
-					}
+					this.loadchat()
+				}
 				// }
 				// else {
 				// 	this.IsinfinitScroll = true;
 				// }
 			});
 		}
-		else{
+		else {
 			this.IsinfinitScroll = true;
 		}
 
