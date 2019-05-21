@@ -45,7 +45,6 @@ export class AskExpertPage implements OnInit {
 	value: number = 12;
 	sessionData: any;
 	items: any = [];
-	public searchTerm: string = "";
 	public chatTerm: string = "";
 	imagepath: string = './assets/img/askexpert/';
 	chatMouseOver: boolean = true;
@@ -53,9 +52,9 @@ export class AskExpertPage implements OnInit {
 	findMouseOver: boolean;
 	chatMob: boolean;
 	queryParams: any;
-	isMsgSearchable: false;
-	isMsgSearchableMobile: false;
-	isContactLst: false;
+	isMsgSearchable: boolean = false;
+	isMsgSearchableMobile: boolean = false;
+	isContactLst: boolean = false;
 	contactTerm: string = "";
 	contactSkeleton: any;
 	isSkeliton: boolean = true;
@@ -143,12 +142,12 @@ export class AskExpertPage implements OnInit {
 				this.chatMessage = [];
 				this.allDates = [];
 				this.chatlist = [];
-				
+
 				this.contactId = params.contactid;
 				this.getAllDate();
 				this.getContactList();
 			})
-		
+
 	}
 	ngOnDestroy(): void {
 		this.userSubscription.unsubscribe();

@@ -1,6 +1,6 @@
 import { Component, OnInit, Output } from '@angular/core';
 import { ModalController, NavController, NavParams, LoadingController } from '@ionic/angular';
-import { RestApiService } from 'src/app/services/http/rest-api.service'; 
+import { RestApiService } from 'src/app/services/http/rest-api.service';
 
 import { load } from '@angular/core/src/render3';
 
@@ -18,6 +18,7 @@ export class ContactAddModelComponent implements OnInit {
   currenttab: any;
   contactSkeleton: any;
   isSkeliton: boolean = true;
+  searchTerm: string = "";
 
   imagepath: string = './assets/img/askexpert/';
   constructor(public cntrl: ModalController, public navct: NavController, private restApi: RestApiService, public loadingCtrl: LoadingController, private navParams: NavParams) {
@@ -95,10 +96,10 @@ export class ContactAddModelComponent implements OnInit {
     this.userList = this.searchListCopy;
   };
 
-  search = (searchTerm) => {
+  search = (search) => {
     this.resetChanges();
     this.userList = this.userList.filter((item) => {
-      return item.firstName.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
+      return item.firstName.toLowerCase().indexOf(search.toLowerCase()) > -1;
     })
   };
 }
