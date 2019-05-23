@@ -49,7 +49,6 @@ export class AskExpertPage implements OnInit {
 	chatMouseOver: boolean = true;
 	addMouseOver: boolean;
 	findMouseOver: boolean;
-	chatMob: boolean;
 	queryParams: any;
 	isMsgSearchable: boolean = false;
 	isMsgSearchableMobile: boolean = false;
@@ -140,6 +139,7 @@ export class AskExpertPage implements OnInit {
 				if (params.contactid) {
 					this.contactId = params.contactid;
 					this.isStartScreen = true;
+
 				}
 				this.getAllDate();
 				this.getContactList();
@@ -162,11 +162,9 @@ export class AskExpertPage implements OnInit {
 	loadchat() {
 		this.chatSpinner = true;
 		let selectedDate = this.allDates.length > 0 ? this.allDates[0].date : 'null';//this.allDates[this.allDates.length - 1];
-		this.chatMob = true;
 		let user_id = this.userId;
 		let contact_id = this.contactId;
-		// this.isStartScreen = true;
-
+	
 		if (this.allDates.length > 0) {
 			this.restApi.get(`chat/${user_id}/${contact_id}/${selectedDate}`).then((res) => {
 

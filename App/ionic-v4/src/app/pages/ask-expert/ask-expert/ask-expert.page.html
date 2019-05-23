@@ -225,7 +225,7 @@
 	<ion-grid class="is-mobile">
 		<ion-row>
 			<!-- contact list start -->
-			<ion-col size-xs="12" *ngIf="chatMob">
+			<ion-col size-xs="12" *ngIf="isStartScreen">
 				<ion-toolbar>
 					<div class="second_header">
 						<ion-row>
@@ -311,7 +311,7 @@
 			<!-- contact list end -->
 
 			<!-- message screen start -->
-			<ion-col class="ion-no-padding user-list" size-xs="12" *ngIf="!chatMob">
+			<ion-col class="ion-no-padding user-list rm-left-border" size-xs="12" *ngIf="!isStartScreen">
 				<!-- user basic info -->
 				<!-- <ion-list class="ion-padding ">
 					</ion-list> -->

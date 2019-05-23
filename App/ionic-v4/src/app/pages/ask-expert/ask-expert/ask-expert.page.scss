@@ -2,14 +2,20 @@
     border-left: 1px solid #d7d8da;
 }
 
+.rm-left-border {
+    border-left: none;
+}
+
 .user-list .name {
     font-size: 12px;
     display: inline;
 }
+
 .user-list .name-lg {
     font-size: 20px;
     display: inline;
 }
+
 .user-list .date {
     font-size: 12px;
     display: inline;
@@ -539,7 +545,7 @@ ion-searchbar.chat {
     --inner-border-width: 0 0 0 0;
 }
 
-.user-list .add{
-    width: 30px; 
+.user-list .add {
+    width: 30px;
     float: right;
 }
