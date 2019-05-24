@@ -1,7 +1,7 @@
 var io = require('socket.io')();
 var RTCMultiConnectionServer = require('rtcmulticonnection-server')
 const UserController = require('./controllers/user.controller')
-const port = normalizePort(CONFIG.port || '3000');
+// const port = normalizePort(CONFIG.port || '3000');
 
 io.on('connection', function (socket) {
     socket.on('set-online', (data) => {
@@ -20,7 +20,7 @@ io.on('connection', function (socket) {
         config: {
             "socketMessageEvent": "thrive19-message",
             "socketCustomEvent": "thrive19-custom-message",
-            "port": port
+            "port": 5000
         }
     })
 });
