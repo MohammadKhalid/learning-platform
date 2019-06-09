@@ -8,27 +8,17 @@ import { Observable } from 'rxjs/Observable';
 })
 export class AuthGuardService implements CanActivate, CanDeactivate<boolean> {
  
-  constructor(public auth: AuthenticationService) {}
- 
-  canActivate(): Promise<boolean> {
-  	return new Promise((res) => {
-  		if(this.auth.authDidCheck === false) {
-  			this.auth.checkToken().then(() => {
-  				res(this.resolve());
-  			});
-  		} else {
-  			res(this.resolve());
-  		}
-  	});
-  }
+  constructor(public authService: AuthenticationService) {}
+	
+	canActivate(): Promise<boolean> {
+		return new Promise((resolve) => {
+  		this.authService.authenticationState.subscribe((state) => {
+				console.log('GUARD STATE', state);
 
-  resolve(): boolean {
-  	let state = this.auth.authenticationState.value;
-
-  	if(state === false) this.auth.authenticationState.next(state);
-
-  	return state;
-  }
+				if(this.authService.authDidCheck) resolve(state);
+			});
+		});
+	}
 
   canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
     return false;

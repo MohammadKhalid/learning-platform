@@ -8,6 +8,118 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content>
+  <section *ngIf="sessionData.user.type !== 'student'">
+    <ion-list>
+      <ion-item>
+        <ion-label><p>No request found!</p></ion-label>
+      </ion-item>
+    </ion-list>
+  </section>
 
+  <section *ngIf="sessionData.user.type === 'student'">
+    <ion-list>
+      <ion-item>
+        <ion-icon name="information-circle-outline" slot="start"></ion-icon>
+        <ion-label><p>You have no personal coaching request yet.</p></ion-label>
+      </ion-item>
+    </ion-list>
+
+    <div padding text-center>
+      <ion-text color="secondary">
+        <h3>Start Your Personal Coaching</h3>
+      </ion-text>
+    </div>
+
+    <ion-grid no-padding>
+      <ion-row>
+        <ion-col size="12" size-sm="6" size-md="4">
+          <ion-card>
+            <ion-item>
+              <ion-icon slot="start" name="contact" mode="ios"></ion-icon>
+              <ion-label color="secondary">
+                Adrian Law
+                <p>
+                  <ion-icon name="star" color="warning"></ion-icon>
+                  <ion-icon name="star" color="warning"></ion-icon>
+                  <ion-icon name="star" color="warning"></ion-icon>
+                  <ion-icon name="star" color="warning"></ion-icon>
+                  <ion-icon name="star" color="warning"></ion-icon>
+                </p>
+              </ion-label>
+            </ion-item>
+
+            <ion-card-content>
+              <p padding-bottom>Adrian is the owner & founder of Thrive19.com & Automotive Stars, and aside from being an author and an authority in the training industry. Over the last 19 years Adrian has personally trained over 150,000 people and delivered over 12,000 training sessions for automotive professionals Australia wide.</p>
+              <p padding-bottom>As a result, many of his clients have won awards and have increased their sales, finance and bottom line profits, while others have seen their motivation levels improve dramatically and their customer satisfaction sky rocket.</p>
+              <p>Having the unique advantage of experiencing a wide mix of manufacturers and dealership, Adrian has taken the very best from individuals and dealers across the country, and also refined his own and his team’s best work into 'The Premium Sales Experience.'</p>
+            </ion-card-content>
+
+            <ion-item>
+              <ion-button color="dark">
+                Request
+              </ion-button>
+            </ion-item>
+          </ion-card>
+        </ion-col>
+        <ion-col size="12" size-sm="6" size-md="4">
+            <ion-card>
+              <ion-item>
+                <ion-icon slot="start" name="contact" mode="ios"></ion-icon>
+                <ion-label color="secondary">
+                  Andrew Keating
+                  <p>
+                    <ion-icon name="star" color="warning"></ion-icon>
+                    <ion-icon name="star" color="warning"></ion-icon>
+                    <ion-icon name="star" color="warning"></ion-icon>
+                    <ion-icon name="star" color="warning"></ion-icon>
+                    <ion-icon name="star" color="warning"></ion-icon>
+                  </p>
+                </ion-label>
+              </ion-item>
+  
+              <ion-card-content>
+                <p padding-bottom>Orignially from the UK, Andrew and his family sold up and he brought his wife and 3 boys to live in the sunshine of Australia.</p>
+                <p padding-bottom>Embarking on a new journey of Automotive Sales, Andrew became a student of Automotive Stars and soon found that his new-found knowledge paid  major dividends. Before being promoted to management and later becoming a trainer for Automotive Stars, Andrew won the salesman of the year, two years running at his dealership and was number one in the entire country for customer satisfaction/sales for his brand.</p>
+                <p>Through Andrew’s experiences, his results and his passion for training and development, he can only enhance your performance & improve your results.</p>
+              </ion-card-content>
+  
+              <ion-item>
+                <ion-button color="dark">
+                  Request
+                </ion-button>
+              </ion-item>
+            </ion-card>
+          </ion-col>
+          <ion-col size="12" size-sm="6" size-md="4">
+              <ion-card>
+                <ion-item>
+                  <ion-icon slot="start" name="contact" mode="ios"></ion-icon>
+                  <ion-label color="secondary">
+                    Simon Price
+                    <p>
+                      <ion-icon name="star" color="warning"></ion-icon>
+                      <ion-icon name="star" color="warning"></ion-icon>
+                      <ion-icon name="star" color="warning"></ion-icon>
+                      <ion-icon name="star" color="warning"></ion-icon>
+                      <ion-icon name="star" color="warning"></ion-icon>
+                    </p>
+                  </ion-label>
+                </ion-item>
+    
+                <ion-card-content>
+                  <p padding-bottom>Simon is a family man who loves his sport and has been in sales for 18 years and achieved numerous achievements and awards during that time. This includes having an average of 60% repeats and referrals for the last 4 years of selling + he was also the number one sales person in the whole country for customer satisfaction/sales for his brand.</p>
+                  <p>Relationship selling is Simon’s expertise and he can add lots of value to you.</p>
+                </ion-card-content>
+    
+                <ion-item>
+                  <ion-button color="dark">
+                    Request
+                  </ion-button>
+                </ion-item>
+              </ion-card>
+            </ion-col>
+      </ion-row>
+    </ion-grid>
+  </section>
 </ion-content>

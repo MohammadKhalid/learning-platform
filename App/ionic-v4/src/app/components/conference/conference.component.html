@@ -13,14 +13,18 @@
   </ion-fab-list>
 
   <ion-fab-list side="start">
-    <ion-fab-button show="true" (click)="streamMuteUnmute('video')" color="dark" size="small">
-      <ion-icon name="videocam" [size]="connection?.extra?.video ? '' : 'small'"></ion-icon>
-      <ion-icon name="remove" size="large" color="dark" style="position: absolute; transform: rotate(45deg) perspective(0); bottom: 5px;" [hidden]="!connection?.extra?.video"></ion-icon>
-      <ion-icon name="remove" size="large" color="dark" style="position: absolute; transform: rotate(45deg) perspective(0); top: 5px;" [hidden]="!connection?.extra?.video"></ion-icon>
-      <ion-icon name="remove" size="large" style="position: absolute; transform: rotate(45deg) perspective(0);" [hidden]="!connection?.extra?.video"></ion-icon>
+    <ion-fab-button show="true" [disabled]="!localStream?.video?.control" [hidden]="!localStream?.video?.muted" (click)="streamMuteUnmute('video')" color="dark" size="small">
+      <ion-icon name="videocam" size="small"></ion-icon>
+      <ion-icon name="remove" size="large" color="dark" style="position: absolute; transform: rotate(45deg) perspective(0); bottom: 5px;"></ion-icon>
+      <ion-icon name="remove" size="large" color="dark" style="position: absolute; transform: rotate(45deg) perspective(0); top: 5px;"></ion-icon>
+      <ion-icon name="remove" size="large" style="position: absolute; transform: rotate(45deg) perspective(0);"></ion-icon>
     </ion-fab-button>
+    <ion-fab-button show="true" [hidden]="localStream?.video?.muted" (click)="streamMuteUnmute('video')" color="dark" size="small">
+      <ion-icon name="videocam"></ion-icon>
+    </ion-fab-button>
+
     <ion-fab-button show="true" (click)="streamMuteUnmute('audio')" color="dark" size="small">
-      <ion-icon [name]="connection?.extra?.audio ? 'mic' : 'mic-off'"></ion-icon>
+      <ion-icon [name]="localStream?.audio?.muted ? 'mic-off' : 'mic'"></ion-icon>
     </ion-fab-button>
   </ion-fab-list>
 </ion-fab>
@@ -30,7 +34,7 @@
     <ion-fab-button size="small" color="danger" (click)="pdfViewerStopShare()" *ngIf="pdfViewerFile"><ion-icon name="easel"></ion-icon></ion-fab-button>
     <ion-fab-button size="small" [color]="panel === 'screen' ? 'medium' : 'dark'" (click)="showPanel('screen')" *ngIf="!pdfViewerFile"><ion-icon name="easel"></ion-icon></ion-fab-button>
 
-    <ion-fab-button (click)="presentConfirmStart()" color="primary" text-uppercase *ngIf="item?.status === 'stop'"><small>Start</small></ion-fab-button>
+    <ion-fab-button (click)="presentConfirmStart()" color="primary" text-uppercase *ngIf="item?.status !== 'started'"><small>Start</small></ion-fab-button>
     <ion-fab-button (click)="presentConfirmStop()" color="danger" text-uppercase *ngIf="item?.status === 'started'"><small>Done</small></ion-fab-button>
   </div>
 
@@ -205,7 +209,7 @@
   <ion-badge color="danger" style="position: absolute; top: 1rem; left: 1rem; z-index: 1;" *ngIf="connection?.isLowBandwidth">low connection</ion-badge>
 
   <div class="fixed-content speaker-video-container">
-    <video #speakerVideo></video>
+    <video #speakerVideo playsinline></video>
 
     <ion-grid class="fixed-content" *ngIf="!connection?.attachStreams[0]?.isVideo">
       <ion-row class="fixed-content">

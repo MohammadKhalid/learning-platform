@@ -38,9 +38,7 @@ const getAll = async function(req, res){
     const rowPerPage = parseInt(req.query.limit) || 25;
     
     // query args
-    let whereArgs = {
-        date: { [Op.gte]: new Date(new Date() - 24 * 60 * 60 * 1000) }
-    };
+    let whereArgs = {};
     let qParams = {
         include: [
             { 
@@ -60,6 +58,7 @@ const getAll = async function(req, res){
 
     // search keyword
     if(req.query.searchQuery) whereArgs.title = { [Op.like]: '%' + req.query.searchQuery + '%' };
+    else whereArgs.date = { [Op.gte]: new Date(new Date()) }; // hide past
 
     // where status
     if(req.query.status && req.query.status !== '') whereArgs.status = req.query.status;

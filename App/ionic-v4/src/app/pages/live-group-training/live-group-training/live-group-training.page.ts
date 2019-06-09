@@ -19,6 +19,8 @@ import 'moment-timezone';
 export class LiveGroupTrainingPage implements OnInit {
 
 	connection: any;
+	socket: any;
+
 	publicRoomIdentifier: string = 'live-group-training';
 	items: any = [];
 	sessionData: any;
@@ -41,53 +43,70 @@ export class LiveGroupTrainingPage implements OnInit {
 
 		// get user data
 		this.sessionData = this.authService.getSessionData();
-
-		this.rtcService.setSocketConnectionCustomEvent(this.publicRoomIdentifier);
-		this.rtcService.getSocketConnection().then((socket) => {
-			socket.on(this.publicRoomIdentifier, (message: any) => {
-				console.log('CUSTOM SOCKET EVENT MESSAGE', message);
-
-				switch (message.type) {
-					case 'opened':
-						this.getRoom(message.roomid).then((roomIndex: any) => {
-							if(roomIndex >= 0) {
-								if(this.items[roomIndex]) {
-									this.items[roomIndex].started = message.started;
-									this.items[roomIndex].status = 'open';
-								}
-							}
-						});
-
-						break;
-					case 'join':
-						this.getRoom(message.roomid).then((roomIndex: any) => {
-							if(roomIndex >= 0) {
-								// speaker is in room flag
-								if(this.items[roomIndex]) this.items[roomIndex].isSpeakerJoin = message.speaker;
-							}
-						});
-						break;
-					case 'leave':
-						this.getRoom(message.roomid).then((roomIndex: any) => {
-							if(roomIndex >= 0) {
-								// speaker is in room flag
-								if(this.items[roomIndex]) this.items[roomIndex].isSpeakerJoin = message.speaker;
-							}
-						});
-						break;
-					default:
-						break;
-				}
-			});
-		});
-
-		// set connection
-		this.connection = this.rtcService.connection;
 	}
 
 	ngOnInit() {
-		// get items
-        this.loadData();
+		// rtc connection
+		this.rtcService.createConnection().then((connection) => {
+			// connect socket
+			connection.connectSocket((socket) => {
+				this.socket = socket;
+
+				// connection socket events
+				this.socketEvent();
+			});
+
+			this.connection = connection;
+
+			// set connection custom event
+			this.connection.setCustomSocketEvent(this.publicRoomIdentifier);
+
+			// load items
+			this.loadData();
+		});
+	}
+
+	socketEvent() {
+		// socket event
+		this.socket.on(this.publicRoomIdentifier, (message: any) => {
+			console.log('CUSTOM SOCKET EVENT MESSAGE', message);
+
+			switch (message.type) {
+				case 'opened':
+					this.getRoom(message.roomid).then((roomIndex: any) => {
+						if(roomIndex >= 0) {
+							if(this.items[roomIndex]) {
+								this.items[roomIndex].started = message.started;
+								this.items[roomIndex].status = 'open';
+							}
+						}
+					});
+
+					break;
+				case 'join':
+					this.getRoom(message.roomid).then((roomIndex: any) => {
+						if(roomIndex >= 0) {
+							if(this.items[roomIndex]) {
+								if(message.speaker) this.items[roomIndex].isSpeakerJoin = true;
+							}
+						}
+					});
+					break;
+				case 'leave':
+					this.getRoom(message.roomid).then((roomIndex: any) => {
+						if(roomIndex >= 0) {
+							// update room status
+							if(this.items[roomIndex]) {
+								this.items[roomIndex].status = message.status;
+								if(message.speaker) this.items[roomIndex].isSpeakerJoin = false;
+							}
+						}
+					});
+					break;
+				default:
+					break;
+			}
+		});
 	}
 
 	setQueryParamsDefault() {
@@ -113,7 +132,7 @@ export class LiveGroupTrainingPage implements OnInit {
 				this.queryParams.pageNumber++;
 
 				// update room options
-				this.connection.socket.emit('get-public-rooms', this.publicRoomIdentifier, (listOfRooms) => {
+				if(this.connection.socket) this.connection.socket.emit('get-public-rooms', this.publicRoomIdentifier, (listOfRooms) => {
 					listOfRooms.forEach((room) => {
 						this.getRoom(room.sessionid).then((roomIndex: any) => {
 							if(roomIndex >= 0) {

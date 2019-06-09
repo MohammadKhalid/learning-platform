@@ -99,7 +99,7 @@ const getAll = async function(req, res){
     let user = req.user;
     let err, items;
     let rowPerPage = 25;
-    let whereArgs = {};
+    let whereArgs = { status: 'open' };
     
     let qParams = {
         // attributes: ['id', 'title', 'submitted', 'submittedAt', 'rating'],

@@ -1,9 +1,11 @@
+const Sequelize             = require('./../models').Sequelize;
 const Company 			    = require('./../models').Company;
 const LiveGroupTraining     = require('./../models').LiveGroupTraining;
 const PracticeTime          = require('./../models').PracticeTime;
 const ShowTime              = require('./../models').ShowTime;
 const Topic                 = require('./../models').Topic;
 const Category              = require('./../models').Category;
+const Op = Sequelize.Op;
 
 const { to, ReE, ReS }      = require('../services/util.service');
 
@@ -192,7 +194,7 @@ let categoriesIn = async function (req, res, next) {
     }
 
     // get categories
-    [err, categories] = await to(Category.findAll({where:{ id: { [sequelize_op.in]: categoryIds } }}));
+    [err, categories] = await to(Category.findAll({where:{ id: { [Op.in]: categoryIds } }}));
     if(err) return ReE(res, err, "err finding categories");  
 
     req.categories = categories;

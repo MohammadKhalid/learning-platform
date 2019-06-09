@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthenticationService } from '../../../services/user/authentication.service';
 
 @Component({
   selector: 'app-request-personal-coaching',
@@ -7,7 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RequestPersonalCoachingPage implements OnInit {
 
-  constructor() { }
+  sessionData: any;
+
+  constructor(
+    private authService: AuthenticationService
+  ) {
+    this.sessionData = this.authService.getSessionData();
+  }
 
   ngOnInit() {
   }

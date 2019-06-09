@@ -355,8 +355,10 @@ const remove = async function(req, res){
     item = req.item;
 
     // validate
-    if(item.userId !== user.id) return ReE(res, 'Permission denied');
-    if(item.submitted === true) return ReE(res, "Cant't delete! Already submitted");
+    if(user.type !== 'admin') {
+        if(item.userId !== user.id) return ReE(res, 'Permission denied');
+        if(item.submitted === true) return ReE(res, "Cant't delete! Already submitted");
+    }
 
     // delete file
     if(item.videoPath) {

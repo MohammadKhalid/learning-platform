@@ -1,0 +1,51 @@
+
+
+
+<ion-header translucent="true" class="header-translucent-ios">
+  <ion-toolbar mode="ios">
+    <ion-buttons slot="start">
+        <ion-button (click)="close()">
+            <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+          </ion-button>
+    </ion-buttons>
+    <ion-title>Add contact</ion-title>
+  </ion-toolbar>
+
+  <ion-toolbar mode="ios">
+    <ion-searchbar class="chat" type="search" [(ngModel)]="searchTerm" animated="true" placeholder="search"
+    mode="ios"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content padding fullscreen>
+  <ion-list>
+    <ion-item *ngFor="let item of userList | filter : searchTerm" >
+        <ion-avatar slot="start" class="pos-relative">
+            <img [src]="imagepath+'default-user.svg'">
+          </ion-avatar>
+      <ion-label>{{item.firstName}}, {{item.lastName}}</ion-label>
+      <ion-button (click)="addContact(item)">
+         Add
+        </ion-button>
+        </ion-item>
+  </ion-list>
+
+  	<!-- Skeleton screen start -->
+    <ion-list *ngIf="isSkeliton">
+        <ion-item *ngFor="let item of createRange(10)">
+          <ion-avatar slot="start" class="pos-relative">
+            <ion-skeleton-text animated></ion-skeleton-text>
+          </ion-avatar>
+          <ion-label>
+            <h3 class="name">
+              <ion-skeleton-text animated style="width: 40%"></ion-skeleton-text>
+            </h3>
+            <p>
+              <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+            </p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+      <!-- Skeleton screen end -->
+ </ion-content>

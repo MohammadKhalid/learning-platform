@@ -1,5 +1,6 @@
-const Media 			    = require('./../models').Media;
+const { Media, Sequelize }  = require('./../models');
 const { to, ReE, ReS }      = require('../services/util.service');
+const Op = Sequelize.Op;
 
 let item = async function (req, res, next) {
     let item_id, err, item;
@@ -20,7 +21,7 @@ let itemsIn = async function (req, res, next) {
     let sequelize_op = Media.sequelize.Op;
     let data_items = req.body.medias;
 
-    [err, items] = await to(Media.findAll({where:{ id: { [sequelize_op.in]: data_items } }}));
+    [err, items] = await to(Media.findAll({where:{ id: { [Op.in]: data_items } }}));
     if(err) return ReE(res, err, "err finding media");
 
     req.medias = items;
@@ -40,7 +41,7 @@ let questionMediasIn = async function (req, res, next) {
     		mediaIds.push(questions[i].question.medias[ii].id);
     	}
 
-    	[err, questions[i].question.medias] = await to(Media.findAll({where:{ id: { [sequelize_op.in]: mediaIds } }}));
+    	[err, questions[i].question.medias] = await to(Media.findAll({where:{ id: { [Op.in]: mediaIds } }}));
     	if(err) return ReE(res, err, "err finding media");	
     }
 

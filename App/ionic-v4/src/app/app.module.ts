@@ -15,13 +15,17 @@ import { FileDropModule } from 'ngx-file-drop';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 import { ComponentsModule } from './components/components.module';
- 
+import { RtcService } from './services/rtc/rtc.service';
+import { LoaderService } from './services/utility/loader.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 @NgModule({
   declarations: [
     AppComponent
   ],
   entryComponents: [],
   imports: [
+    BrowserAnimationsModule,
     BrowserModule,
     ComponentsModule,
     IonicModule.forRoot(), 
@@ -35,6 +39,7 @@ import { ComponentsModule } from './components/components.module';
     FileDropModule
   ],
   providers: [
+    LoaderService,
     StatusBar,
     SplashScreen,
     InAppBrowser,
@@ -42,4 +47,9 @@ import { ComponentsModule } from './components/components.module';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+
+  constructor(private rtcService: RtcService) {
+    this.rtcService.initConnection();
+  }
+}
