@@ -4,6 +4,7 @@ import { FormGroup, FormControl, FormBuilder, Validators, FormArray } from '@ang
 import { ActivatedRoute } from '@angular/router';
 import { IonicSelectableComponent } from 'ionic-selectable';
 import { RestApiService } from '../../../services/http/rest-api.service';
+import { NotificationService } from '../../../services/notification/notification.service';
 
 // modal
 import { MediaComponent } from '../../../components/media/media.component';
@@ -27,6 +28,7 @@ export class TopicFormPage implements OnInit {
 	categories: [];
 
 	constructor(
+		private notificationService: NotificationService,
   		private restApi: RestApiService,
         private formBuilder: FormBuilder,
         private activatedRoute: ActivatedRoute,
@@ -35,7 +37,7 @@ export class TopicFormPage implements OnInit {
         private alertCtrl: AlertController
 	) {
 		// get categories
-		this.restApi.get('categories', {}).then((res: any) => {
+		this.restApi.get('categories', {}).subscribe((res: any) => {
 			this.categories = res.items;
 		});
 	}
@@ -54,7 +56,7 @@ export class TopicFormPage implements OnInit {
 
 			// load item
 			if(this.paramData.id) {
-				this.restApi.get('topics/' + this.paramData.id, {}).then((res: any) => {
+				this.restApi.get('topics/' + this.paramData.id, {}).subscribe((res: any) => {
 					if(res.success === true) {
 						this.item = res.item;
 						// this.challenges = res.item.questions;
@@ -102,7 +104,7 @@ export class TopicFormPage implements OnInit {
 
 					} else {
 						// navigate back to list
-						this.restApi.showMsg('Topic not found!').then(() => {
+						this.notificationService.showMsg('Topic not found!').then(() => {
 							this.navCtrl.navigateRoot('/topic');
 						});
 					}
@@ -148,28 +150,28 @@ export class TopicFormPage implements OnInit {
 		this.submitted = true;
 
 		if(this.form.valid) {
-			this.restApi.showMsg('Saving...', 0).then(() => {
-				if(this.action === 'new') this.restApi.post('topics', this.form.value).then((res: any) => this.saveCallback(res));
-				else this.restApi.put('topics/' + this.item.id, this.form.value).then((res: any) => this.saveCallback(res));
+			this.notificationService.showMsg('Saving...', 0).then(() => {
+				if(this.action === 'new') this.restApi.post('topics', this.form.value).subscribe((res: any) => this.saveCallback(res));
+				else this.restApi.put('topics/' + this.item.id, this.form.value).subscribe((res: any) => this.saveCallback(res));
 			});
 		}
 	}
 
 	saveCallback(res: any) {
-		this.restApi.toast.dismiss();
+		this.notificationService.toast.dismiss();
 
 		if(res.success === true) {
 			// set response data
 			this.item = res.item;
 
 			// navigate to
-			this.restApi.showMsg('Topic ' + this.form.value.title + ' has been saved!').then(() => {
+			this.notificationService.showMsg('Topic ' + this.form.value.title + ' has been saved!').then(() => {
 				// go to detail page
 				this.navCtrl.navigateRoot('/topic/detail/' + this.item.id);
 			});
 		} else {
 			// show error message
-			this.restApi.showMsg(res.error);
+			this.notificationService.showMsg(res.error);
 
 			// reenable button
 			this.submitted = false;

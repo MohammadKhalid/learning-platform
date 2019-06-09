@@ -10,6 +10,7 @@ import { IonicSelectableComponent } from 'ionic-selectable';
 
 import { RtcService } from '../../../services/rtc/rtc.service';
 import { TimerService } from '../../../services/timer/timer.service';
+import { NotificationService } from '../../../services/notification/notification.service';
 
 import * as RecordRTC from 'recordrtc';
 import adapter from 'webrtc-adapter';
@@ -84,6 +85,7 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
     isCustomTopic: boolean = false;
 
     constructor(
+        private notificationService: NotificationService,
         private restService: RestApiService,
         private alertCtrl: AlertController,
         private toastCtrl: ToastController,
@@ -97,7 +99,7 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
         this.mediaBaseUrl = this.restService.url;
 
         // get topics
-        this.restService.get('topics', {}).then((res: any) => {
+        this.restService.get('topics', {}).subscribe((res: any) => {
             let items = [];
 
             for (var i = res.items.length - 1; i >= 0; i--) {
@@ -129,7 +131,7 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
         });
 
         // get coaches
-        this.restService.get('form-input-data', {}).then((resp: any) => {
+        this.restService.get('form-input-data', {}).subscribe((resp: any) => {
             if(resp.data.coaches) this.coaches = resp.data.coaches;
         });
     }
@@ -312,7 +314,7 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
 
             // set duration
             if(this.question.question.answerLimit) this.setRecorderDuration();
-        }).catch((err) => {
+        }, (err) => {
             console.log(err.name + ": " + err.message);
         });
     }
@@ -476,7 +478,7 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
         this.recordRTC.reset();
     }
 
-    initSave() {
+    async initSave() {
         this.videoStatus = 'initializing';
         this.textStatus = this.videoStatus;
 
@@ -486,14 +488,16 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
             sendTo: this.form.sendTo
         };
 
-        return this.restService.post(this.url.api, formData).then((res: any) => {
+        return await this.restService.post(this.url.api, formData).subscribe((res: any) => {
             if(res.success === true) {
                 if(this.isCustomTopic) this.question = res.topic.questions[0];
 
                 this.showTime = res.item;
             } else {
-                this.restService.showMsg(res.error);
+                this.notificationService.showMsg(res.error);
             }
+
+            return res;
         });
     }
 
@@ -568,7 +572,7 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
                         this.viewService.state.next(true);
 
                         // update status
-                        this.restService.put(this.url.api + '/' + this.showTime.id, { status: 'completed' }).then(() => {
+                        this.restService.put(this.url.api + '/' + this.showTime.id, { status: 'completed' }).subscribe(() => {
 
                             // go to detail
                             this.navCtrl.navigateRoot('/' + this.url.api + '/detail/' + this.showTime.id).then(() => {

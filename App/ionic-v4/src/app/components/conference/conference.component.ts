@@ -1,9 +1,10 @@
-import { Component, OnInit, Renderer2, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Renderer2, ViewChild, ElementRef, Input } from '@angular/core';
 import { NavController, ActionSheetController, AlertController, IonInput } from '@ionic/angular';
 import { Router } from '@angular/router';
 
 import { RtcService } from '../../services/rtc/rtc.service';
 import { RestApiService } from '../../services/http/rest-api.service';
+import { NotificationService } from '../../services/notification/notification.service';
 
 import * as moment from 'moment';
 import { SimplePdfViewerComponent, SimpleProgressData } from 'simple-pdf-viewer';
@@ -15,10 +16,10 @@ import hark from 'hark';
     templateUrl: './conference.component.html',
     styleUrls: ['./conference.component.scss'],
 })
-export class ConferenceComponent implements OnInit {
+export class ConferenceComponent implements OnInit, OnDestroy {
 
     @Input('id') id: string;
-    @Input('publicRoomIdentifier') publicRoomIdentifier: string;
+    @Input('publicRoomIdentifier') publicRoomIdentifier: string = 'conference';
     @Input('user') user: any = {};
     
     @Input('appUrl') appUrl: string;
@@ -34,7 +35,7 @@ export class ConferenceComponent implements OnInit {
 	@ViewChild('pdfViewer', { read: ElementRef }) pdfViewerElem: ElementRef;
 	@ViewChild('pdfViewerInput') pdfViewerInput: IonInput;
 
-    item: any = {};
+  item: any = {};
 	connection: any;
 	socket: any;
 
@@ -58,12 +59,15 @@ export class ConferenceComponent implements OnInit {
 	streams: any = {};
 	localStream: any;
 
+	isLoading: boolean = true;
+
 	constructor(
 		private rtcService: RtcService,
 		private restApi: RestApiService,
+		private notificationService: NotificationService,
 		private navCtrl: NavController,
-        private router: Router,
-        private elementRenderer: Renderer2,
+    private router: Router,
+    private elementRenderer: Renderer2,
 		private actionSheetCtrl: ActionSheetController,
 		private alertCtrl: AlertController
 	) {
@@ -76,52 +80,58 @@ export class ConferenceComponent implements OnInit {
 
 	ngOnInit() {
 		// rtc connection
-		this.rtcService.createConnection().then((connection) => {
-			// connect and set socket
-			connection.connectSocket((socket) => {
-				this.socket = socket;
-			});
-
+		this.rtcService.getConnection().then((connection) => {
 			// set connection
 			this.connection = connection;
 
-			console.log('CONNECTION', this.connection);
+			// get set socket
+			this.connection.getSocket((socket) => {
+				console.log('SOCKET GETTTTTTTTTTTTTTT', socket);
+				this.socket = socket;
 
-			// load data
-			this.restApi.get(this.apiEndPoint + '/' + this.id, {}).then((resp: any) => {
-				if(resp.success === true) { 
-					this.item = resp.item;
-	
-					// status
-					if(this.item.started) this.item.status = 'started';
-					
-					// participant type
-					if(this.user.id === this.item.speakerId) this.isSpeaker = true;
-
-					// validate session
-					this.connection.checkPresence(this.id, (isRoomExist) => {
-						if(!isRoomExist && !this.isSpeaker) {
-							this.navCtrl.navigateRoot('/' + this.appUrl).then(() => {
-								this.restApi.showMsg('Room is not yet open!');
-							});
-						} else if(!this.isSpeaker && this.item.public !== true) {
-							this.isParticipant().then((res: boolean) => {
-								if(res) {
-									this.initConnection();
-								} else {
-									this.restApi.showMsg('You are not in participants list!').then(() => {
-										this.navCtrl.navigateRoot(this.appUrl);
-									});
-								}
-							});
-						} else {
-							this.initConnection();
-						}
-					});
-				} else {
-					this.navCtrl.navigateForward(this.appUrl);
-				}
+				this.loadData();
 			});
+
+		});
+	}
+
+	loadData() {
+		console.log('CONNECTION', this.connection);
+
+		// load data
+		this.restApi.get(this.apiEndPoint + '/' + this.id, {}).subscribe((resp: any) => {
+			if(resp.success === true) { 
+				this.item = resp.item;
+
+				// status
+				if(this.item.started) this.item.status = 'started';
+				
+				// participant type
+				if(this.user.id === this.item.speakerId) this.isSpeaker = true;
+
+				// validate session
+				this.connection.checkPresence(this.id, (isRoomExist) => {
+					if(!isRoomExist && !this.isSpeaker) {
+						this.navCtrl.navigateRoot('/' + this.appUrl).then(() => {
+							this.notificationService.showMsg('Room is not yet open!');
+						});
+					} else if(!this.isSpeaker && this.item.public !== true) {
+						this.isParticipant().then((res: boolean) => {
+							if(res) {
+								this.initConnection();
+							} else {
+								this.notificationService.showMsg('You are not in participants list!').then(() => {
+									this.navCtrl.navigateRoot(this.appUrl);
+								});
+							}
+						});
+					} else {
+						this.initConnection();
+					}
+				});
+			} else {
+				this.navCtrl.navigateForward(this.appUrl);
+			}
 		});
 	}
 
@@ -129,7 +139,34 @@ export class ConferenceComponent implements OnInit {
 		// set connection options
 		this.connection.publicRoomIdentifier = this.publicRoomIdentifier;
 		this.connection.autoCloseEntireSession = false;
+		this.connection.autoCreateMediaElement = false;
 		this.connection.videosContainer = this.videosContainer.nativeElement;
+
+		this.connection.session = {
+			audio: true,
+			video: true,
+			data: true
+		};
+
+		// browser codecs support
+		if(this.connection.DetectRTC.browser.isSafari && Number(this.connection.DetectRTC.browser.fullVersion) <= 12.1) this.connection.codecs.video ='H264';
+
+		this.connection.sdpConstraints = {
+			mandatory: {
+				OfferToReceiveAudio: true,
+				OfferToReceiveVideo: true
+			}
+		};
+
+		// on close
+		this.connection.onclose = () => {
+			// reinitialize connection
+			this.rtcService.initConnection();
+		}
+
+		// socket message
+		// this.connection.socketMessageEvent = this.publicRoomIdentifier + '-' + this.item.id;
+		this.connection.setCustomSocketEvent(this.publicRoomIdentifier);
 		
 		// set speaker flag
 		if(this.isSpeaker) {
@@ -141,22 +178,6 @@ export class ConferenceComponent implements OnInit {
 			if(!this.user.initiatedSessions) this.user.initiatedSessions = {};
 		}
 
-		this.connection.setCustomSocketEvent(this.publicRoomIdentifier);
-		this.connection.autoCreateMediaElement = false;
-
-		this.connection.session = { 
-			audio: true,
-			video: true,
-			data: true
-		};
-
-		this.connection.sdpConstraints = {
-			mandatory: {
-				OfferToReceiveAudio: true,
-				OfferToReceiveVideo: true
-			}
-		};
-
 		// extra session data
 		if(!this.connection.extra.hasOwnProperty('sessions')) this.connection.extra.sessions = {};
 		if(!this.connection.extra.sessions.hasOwnProperty(this.item.id)) this.connection.extra.sessions[this.item.id] = {};
@@ -165,6 +186,8 @@ export class ConferenceComponent implements OnInit {
 		this.connection.updateExtraData();
 
 		this.connection.onmessage = (event) => {
+			console.log('CONN ON MESSAGE', event);
+
 			switch (event.data.type) {
 				case 'chat':
 					this.messages.push(event.data);
@@ -173,7 +196,7 @@ export class ConferenceComponent implements OnInit {
 						this.newMessage = true;
 
 						// toast message
-						this.restApi.showMsg(event.data.firstName + ' say "' + event.data.text + '"');
+						this.notificationService.showMsg(event.data.firstName + ' say "' + event.data.text + '"');
 					}
 					break;
 				case 'session':
@@ -184,7 +207,7 @@ export class ConferenceComponent implements OnInit {
 						this.item.status = 'done';
 						this.item.status = 'close';
 
-						this.restApi.showMsg('Session closed!');
+						this.notificationService.showMsg('Session closed!');
 					}
 					break;
 				case 'pdfViewer':
@@ -214,10 +237,10 @@ export class ConferenceComponent implements OnInit {
 					this.streams[event.data.streamid].audioIconElem.setAttribute('color', event.data.value === true ? 'success' : 'light');
 					break;
 				case 'toast':
-					this.restApi.showMsg(event.data.message);
+					this.notificationService.showMsg(event.data.message);
 					break;
 				case 'join':
-					this.restApi.showMsg(event.data.message);
+					this.notificationService.showMsg(event.data.message);
 
 					// send load to pdfViewer new participant
 					if(this.pdfViewerFile) {
@@ -253,14 +276,14 @@ export class ConferenceComponent implements OnInit {
 			}
 		};
 
-		this.connection.onmute = (e: any) => {
-			console.log('ON-MUTE', e);
-			};
+		this.connection.onmute = () => {
+			// console.log('ON-MUTE', e);
+		};
 
-		this.connection.onunmute = (e: any) => {
-			console.log('ON-UNMUTE', e);
+		this.connection.onunmute = () => {
+			// console.log('ON-UNMUTE', e);
 			// e.stream[e.unmuteType + 'Muted'] = false;
-			};
+		};
 			
 		this.connection.onstream = (event) => {
 			console.log('ON STREAM EVENT ', event);
@@ -280,7 +303,10 @@ export class ConferenceComponent implements OnInit {
 			// }
 
 			// skip
-			if(this.streams[event.streamid]) return;
+			if(this.streams[event.streamid]) {
+				console.log('STREAM EXISTSSSS');
+				return;
+			}
 
 			// add stream
 			this.streams[event.streamid] = event.stream;
@@ -288,23 +314,17 @@ export class ConferenceComponent implements OnInit {
 			// video
 			let video = event.extra.initiator ? this.speakerVideo.nativeElement : this.elementRenderer.createElement('video');
 
-			// video.playsinline = true;
-			// video.autoplay = true;
-
 			if(event.type === 'local') {
 				video.volume = 0;
 
 				try {
           video.setAttributeNode(document.createAttribute('muted'));
 				} catch (e) {
-						video.setAttribute('muted', 'true');
+						video.setAttribute('muted', true);
 				}
-			
-				// video.muted = true;
-				// video.setAttribute('muted', '');
 
 				// speech event
-				if(!event.extra.initiator) this.captureUserSpeechEvents(event.stream);
+				// if(!event.extra.initiator) this.captureUserSpeechEvents(event.stream);
 
 				// local stream
 				if(event.extra.sessions[this.item.id].hasOwnProperty('localStream')) {
@@ -335,8 +355,13 @@ export class ConferenceComponent implements OnInit {
 				console.log('EVENT INITIATORRR');
 
 				// set attributes
-				// video.setAttribute('autoplay', '');
-				video.setAttribute('playsinline', '');
+					try {
+						video.setAttributeNode(document.createAttribute('autoplay'));
+						video.setAttributeNode(document.createAttribute('playsinline'));
+				} catch (e) {
+						video.setAttribute('autoplay', true);
+						video.setAttribute('playsinline', true);
+				}
 
 				// video container
 				let videoContainer = this.elementRenderer.createElement('div');
@@ -392,19 +417,31 @@ export class ConferenceComponent implements OnInit {
 			setTimeout(() => {
 				video.play();
 			}, 5000);
+
+			// if(event.type === 'local') {
+			// 	this.connection.socket.on('disconnect', () => {
+			// 		if(!this.connection.getAllParticipants().length) {
+			// 			location.reload();
+			// 		}
+			// 	});
+			// }
 		};
 		
 		this.connection.onstreamended = (event) => {
 			console.log('STREAM ENDED', event);
 
 			// remove media element
-			this.participantElemExists('#' + event.stream.id).then((elem: any) => {
-				if(elem) elem.remove();
-			});
+			// this.participantElemExists('#' + event.streamid).then((elem: any) => {
+			// 	if(elem) elem.remove();
+      // });
+            
+      // remove stream
+			if(this.streams[event.streamid]) {
+				delete this.streams[event.streamid];
 
-			if(!event.extra.speaker) {
-				// count participant
-				this.participantsCount--;
+				console.log('STREAM DELETED');
+			} else {
+				console.log('NO STREAM DELETED');
 			}
 		}
 
@@ -412,13 +449,12 @@ export class ConferenceComponent implements OnInit {
 			console.log('USER LEAVE', event);
 
 			// backup extra data
-			this.connection.peersBackup[event.userid];
-
-			// notify
-			this.restApi.showMsg(event.extra.firstName + ' ' + event.extra.lastName + ' left!');
+			// this.connection.peersBackup[event.userid];
 
 			// remove participant video element
-			if(!event.extra.speaker) {
+			if(event.extra.initiator) {
+				// this.speakerVideo.nativeElement.srcObject = null;
+			} else {
 				let participantsContainerElem = this.participantsContainer.nativeElement.querySelectorAll('[data-userid="' + event.userid + '"]')
 				if(participantsContainerElem) {
 					console.log('USER LEAVE ELEMS', participantsContainerElem);
@@ -427,6 +463,9 @@ export class ConferenceComponent implements OnInit {
 						elem.remove();
 					});
 				}
+
+				// count participant
+				this.participantsCount--;
 			}
 		};
 
@@ -444,7 +483,8 @@ export class ConferenceComponent implements OnInit {
 					deviceId: secondaryMic
 				};
 		
-				this.connection.join(this.connection.sessionid);
+				// reconnect
+				this.openJoin();
 			}
 		};
 
@@ -460,22 +500,25 @@ export class ConferenceComponent implements OnInit {
 		// join
 		if(this.isSpeaker) {
 			this.connection.openOrJoin(this.item.id, (isRoomCreated, roomid) => {
-				if(isRoomCreated) {
+				// if(isRoomCreated) {
+					// send message to public room
+					this.socket.emit(this.publicRoomIdentifier, {
+						type: 'join',
+						speaker: true,
+						roomid: roomid
+					});
+
 					setTimeout(() => {
 						// send message to session
 						this.connection.send({
 							type: 'join',
 							message: 'Speaker is online!'
 						});
+					}, 5000);
 
-						// send message to public room
-						this.socket.emit(this.publicRoomIdentifier, {
-							type: 'join',
-							speaker: true,
-							roomid: roomid
-						});
-					}, 3000);
-				}
+					// show controls
+					this.isLoading = false;
+				// }
 			});
 
 			// save initiated session
@@ -483,58 +526,61 @@ export class ConferenceComponent implements OnInit {
 		} else {
 			this.connection.join(this.item.id, (isJoined, roomid) => {
 				if(isJoined) {
+					// send message to public room
+					this.socket.emit(this.publicRoomIdentifier, {
+						type: 'join',
+						speaker: false,
+						roomid: roomid
+					});
+
 					setTimeout(() => {
 						// send message to session
 						this.connection.send({
 							type: 'join',
 							message: this.connection.extra.firstName + ' ' + this.connection.extra.lastName + ' joined!'
 						});
+					}, 5000);
 
-						// send message to public room
-						this.socket.emit(this.publicRoomIdentifier, {
-							type: 'join',
-							speaker: false,
-							roomid: roomid
-						});
-					}, 3000);
+					// show controls
+					this.isLoading = false;
 				}
 			});
 		}
 	}
 
 	captureUserSpeechEvents(stream: MediaStream) {
-		const options = {};
-		let speechEvents = hark(stream, options);
+		// const options = {};
+		// let speechEvents = hark(stream, options);
 
-		speechEvents.on('speaking', () => {
-			const participants = this.connection.getAllParticipants();
+		// speechEvents.on('speaking', () => {
+		// 	const participants = this.connection.getAllParticipants();
 
-			if (participants && participants.length > 0) {
-				this.connection.send({
-					type: 'speaking',
-					streamid: stream.id,
-					value: true
-				});
-			}
+		// 	if (participants && participants.length > 0) {
+		// 		this.connection.send({
+		// 			type: 'speaking',
+		// 			streamid: stream.id,
+		// 			value: true
+		// 		});
+		// 	}
 
-			// local
-			this.streams[stream.id].audioIconElem.setAttribute('color', 'success');
-		});
+		// 	// local
+		// 	this.streams[stream.id].audioIconElem.setAttribute('color', 'success');
+		// });
 
-		speechEvents.on('stopped_speaking', () => {
-			const participants = this.connection.getAllParticipants();
+		// speechEvents.on('stopped_speaking', () => {
+		// 	const participants = this.connection.getAllParticipants();
 
-			if (participants && participants.length > 0) {
-				this.connection.send({
-					type: 'speaking',
-					streamid: stream.id,
-					value: false
-				});
-			}
+		// 	if (participants && participants.length > 0) {
+		// 		this.connection.send({
+		// 			type: 'speaking',
+		// 			streamid: stream.id,
+		// 			value: false
+		// 		});
+		// 	}
 		
-			// local
-			this.streams[stream.id].audioIconElem.setAttribute('color', 'light');
-		});
+		// 	// local
+		// 	this.streams[stream.id].audioIconElem.setAttribute('color', 'light');
+		// });
 	}
 
 	pdfViewerStopShare() {
@@ -667,7 +713,7 @@ export class ConferenceComponent implements OnInit {
 
 		this.item.started = this.beautifyDate(now, 'MMM. DD, YYYY h:mm a');
 
-		this.restApi.put(this.apiEndPoint + '/start/' + this.item.id, { dateStart: this.item.started }).then((res: any) => {
+		this.restApi.put(this.apiEndPoint + '/start/' + this.item.id, { dateStart: this.item.started }).subscribe((res: any) => {
 			if(res.success === true) {
 				// message public room list
 				this.connection.socket.emit(this.publicRoomIdentifier, {
@@ -685,20 +731,20 @@ export class ConferenceComponent implements OnInit {
 
 				this.item.status = 'started';
 			} else {
-				this.restApi.showMsg(res.error);
+				this.notificationService.showMsg(res.error);
 			}
 		});
 
-		// this.restApi.showMsg('Deleting...', 0).then((toast: any) => {
-		// 	this.restApi.delete(this.urlEndPoint + 's/' + this.item.id).then((res: any) => {
-		// 		this.restApi.toast.dismiss();
+		// this.notificationService.showMsg('Deleting...', 0).then((toast: any) => {
+		// 	this.restApi.delete(this.urlEndPoint + 's/' + this.item.id).subscribe((res: any) => {
+		// 		this.notificationService.toast.dismiss();
 
 		// 		if(res.success === true) {
-		// 			this.restApi.showMsg('Live Group Training ' + this.item.title + ' has been deleted!').then(() => {
+		// 			this.notificationService.showMsg('Live Group Training ' + this.item.title + ' has been deleted!').then(() => {
 		// 				this.navCtrl.navigateRoot('/' + this.urlEndPoint);
 		// 			});
 		// 		} else {
-		// 			this.restApi.showMsg(res.error);
+		// 			this.notificationService.showMsg(res.error);
 		// 		}
 		// 	});
 		// });
@@ -706,7 +752,7 @@ export class ConferenceComponent implements OnInit {
 
 	streamMuteUnmute(type: string = 'both') {
 		// prevent mute/unmute from participants
-		// connection.setDefaultEventsForMediaElement = false;
+		// this.connection.setDefaultEventsForMediaElement = false;
 
 		let localStream = this.connection.attachStreams[0];
 		let muted: boolean;
@@ -785,9 +831,9 @@ export class ConferenceComponent implements OnInit {
 	}
 
 	endSession() {
-		this.restApi.showMsg('Closing...', 0).then((toast: any) => {
-			this.restApi.put(this.apiEndPoint + '/close/' + this.item.id, {}).then((res: any) => {
-				this.restApi.toast.dismiss();
+		this.notificationService.showMsg('Closing...', 0).then((toast: any) => {
+			this.restApi.put(this.apiEndPoint + '/close/' + this.item.id, {}).subscribe((res: any) => {
+				this.notificationService.toast.dismiss();
 
 				if(res.success === true) {
 					// update item
@@ -813,7 +859,7 @@ export class ConferenceComponent implements OnInit {
 						alert.present();
 					});
 				} else {
-					this.restApi.showMsg(res.error);
+					this.notificationService.showMsg(res.error);
 				}
 			});
 		});
@@ -844,6 +890,13 @@ export class ConferenceComponent implements OnInit {
 	disconnectConnection() {
 		console.log('LEAVING PAGE', this.connection.sessionid);
 
+		// send message to session
+		const leaveMsg: string = this.connection.extra.initiator ? 'Speaker left!' : this.connection.extra.firstName + ' ' + this.connection.extra.lastName + ' left!';
+		this.connection.send({
+			type: 'toast',
+			message: leaveMsg
+		});
+
 		this.connection.getAllParticipants().forEach((participantId) => {
 			// this.connection.multiPeersHandler.onNegotiationNeeded({
 			// 	userLeft: true
@@ -863,28 +916,14 @@ export class ConferenceComponent implements OnInit {
 			localStream.stop();
 		});
 
-		// close session
-		// this.connection.closeSocket();
-
 		setTimeout(() => {
-			// close socket.io connection
-			// this.connection.resetScreen();
+			// reinitialize connection
+			this.rtcService.initConnection();
+
+			// close session
 			this.connection.closeSocket();
-			// if(this.connection.extra.sessions[this.item.id]) this.connection.removeStream(this.connection.extra.sessions[this.item.id].localStream.id);
-			this.connection.isInitiator = false;
-			// this.rtcService.initConnection(this.connection.extra);
 		}, 3000);
 	}
-
-	// ionViewDidLeave() {
-	// 	console.log('PAGE LEAVED');
-
-	// 	if(this.connection && this.connection.sessionid) {
-	// 		// close socket.io connection
-	// 		this.connection.closeSocket();
-	// 		// this.connection.isInitiator = false;
-	// 	}
-	// }
 
 	showPanel(name: string) {
 		// activate panel
@@ -984,16 +1023,16 @@ export class ConferenceComponent implements OnInit {
 					{
 				text: 'Yes',
 				handler: () => {
-					this.restApi.showMsg('Deleting...', 0).then((toast: any) => {
-						this.restApi.delete(this.apiEndPoint + '/' + this.item.id).then((res: any) => {
-							this.restApi.toast.dismiss();
+					this.notificationService.showMsg('Deleting...', 0).then((toast: any) => {
+						this.restApi.delete(this.apiEndPoint + '/' + this.item.id).subscribe((res: any) => {
+							this.notificationService.toast.dismiss();
 
 							if(res.success === true) {
-								this.restApi.showMsg('Live Group Training ' + this.item.title + ' has been deleted!').then(() => {
+								this.notificationService.showMsg('Live Group Training ' + this.item.title + ' has been deleted!').then(() => {
 									this.navCtrl.navigateRoot('/' + this.appUrl);
 								});
 							} else {
-								this.restApi.showMsg(res.error);
+								this.notificationService.showMsg(res.error);
 							}
 						});
 					});

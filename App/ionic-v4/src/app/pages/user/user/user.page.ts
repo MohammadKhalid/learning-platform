@@ -40,7 +40,7 @@ export class UserPage implements OnInit {
 	}
 
 	getList() {
-		this.restApi.get(this.routeData.apiEndPoint, this.queryParams).then((res: any) => {
+		this.restApi.get(this.routeData.apiEndPoint, this.queryParams).subscribe((res: any) => {
 			if(res.success === true) {
 				this.items = res.items;
 			} else {

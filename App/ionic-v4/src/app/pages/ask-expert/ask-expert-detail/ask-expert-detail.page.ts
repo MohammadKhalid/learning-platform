@@ -6,6 +6,7 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 import { RestApiService } from '../../../services/http/rest-api.service';
 import { AuthenticationService } from '../../../services/user/authentication.service';
 import { RtcService } from '../../../services/rtc/rtc.service';
+import { NotificationService } from '../../../services/notification/notification.service';
 
 // modal
 import { MediaComponent } from '../../../components/media/media.component';
@@ -29,6 +30,7 @@ export class AskExpertDetailPage implements OnInit {
 	mediaBaseUrl: string;
 
 	constructor(
+		private notificationService: NotificationService,
   		private restApi: RestApiService,
   		private authService: AuthenticationService,
         private activatedRoute: ActivatedRoute,
@@ -63,21 +65,21 @@ export class AskExpertDetailPage implements OnInit {
 
 			// load item
 			if(this.paramData.id) {
-				this.restApi.get('ask-expert/' + this.paramData.id, {}).then((res: any) => {
+				this.restApi.get('ask-expert/' + this.paramData.id, {}).subscribe((res: any) => {
 					if(res.success === true) {
 						this.item = res.item;
 						this.buildMediaPath();
 						this.buildQuestionAnswerMediaPath();
 					} else {
 						// navigate back to list
-						this.restApi.showMsg('Not found!').then(() => {
+						this.notificationService.showMsg('Not found!').then(() => {
 							this.navCtrl.navigateRoot('/ask-expert');
 						});
 					}
 				});
 			} else {
 				// navigate back to list
-				this.restApi.showMsg('Not found!').then(() => {
+				this.notificationService.showMsg('Not found!').then(() => {
 					// this.navCtrl.navigateRoot('/topic');
 				});
 			}
@@ -95,8 +97,8 @@ export class AskExpertDetailPage implements OnInit {
 				this.form.value.medias.push(this.medias[i].id);
 			}
 
-			this.restApi.showMsg('Submitting...', 0).then(() => {
-				this.restApi.post('ask-expert/question-answer/' + this.item.id, this.form.value).then((res: any) => {
+			this.notificationService.showMsg('Submitting...', 0).then(() => {
+				this.restApi.post('ask-expert/question-answer/' + this.item.id, this.form.value).subscribe((res: any) => {
 					this.submitted = false;
 
 					if(res.success === true) {
@@ -115,7 +117,7 @@ export class AskExpertDetailPage implements OnInit {
 					}
 
 					// dismiss message
-					this.restApi.toast.dismiss();
+					this.notificationService.toast.dismiss();
 				});
 			});
 		}

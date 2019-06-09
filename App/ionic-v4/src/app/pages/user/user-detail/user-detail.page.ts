@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { RestApiService } from '../../../services/http/rest-api.service';
 import { AuthenticationService } from '../../../services/user/authentication.service';
+import { NotificationService } from '../../../services/notification/notification.service';
 
 @Component({
   selector: 'app-user-detail',
@@ -18,6 +19,7 @@ export class UserDetailPage implements OnInit {
 	mediaBaseUrl: string;
 
 	constructor(
+		private notificationService: NotificationService,
 		private restApi: RestApiService,
 		private authService: AuthenticationService,
 		private activatedRoute: ActivatedRoute,
@@ -46,19 +48,19 @@ export class UserDetailPage implements OnInit {
 				const id = this.routeData.type === 'profile' ? '/' : '/' + this.paramData.id;
 
 				if(id) {
-					this.restApi.get(this.routeData.apiEndPoint + id, {}).then((res: any) => {
+					this.restApi.get(this.routeData.apiEndPoint + id, {}).subscribe((res: any) => {
 						if(res.success === true) {
 							this.item = res.item;
 						} else {
 							// navigate back to list
-							this.restApi.showMsg(this.routeData.singular + ' not found!').then(() => {
+							this.notificationService.showMsg(this.routeData.singular + ' not found!').then(() => {
 								this.navCtrl.navigateRoot('/' + this.routeData.appUrl);
 							});
 						}
 					});
 				} else {
 					// navigate back to list
-					this.restApi.showMsg(this.routeData.singular + ' not found!').then(() => {
+					this.notificationService.showMsg(this.routeData.singular + ' not found!').then(() => {
 	
 					});
 				}
@@ -98,16 +100,16 @@ export class UserDetailPage implements OnInit {
 							{
 								text: 'Yes',
 								handler: () => {
-									this.restApi.showMsg('Deleting...', 0).then((toast: any) => {
-										this.restApi.delete(this.routeData.apiEndPoint + '/' + this.item.id).then((res: any) => {
-											this.restApi.toast.dismiss();
+									this.notificationService.showMsg('Deleting...', 0).then((toast: any) => {
+										this.restApi.delete(this.routeData.apiEndPoint + '/' + this.item.id).subscribe((res: any) => {
+											this.notificationService.toast.dismiss();
 			
 											if(res.success === true) {
-												this.restApi.showMsg(this.routeData.singular + ' ' + this.item.firstName + ' ' + this.item.lastName + ' has been deleted!').then(() => {
+												this.notificationService.showMsg(this.routeData.singular + ' ' + this.item.firstName + ' ' + this.item.lastName + ' has been deleted!').then(() => {
 													this.navCtrl.navigateRoot(this.routeData.appUrl);
 												});
 											} else {
-												this.restApi.showMsg(res.error);
+												this.notificationService.showMsg(res.error);
 											}
 										});
 									});

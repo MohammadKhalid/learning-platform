@@ -4,6 +4,7 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 import { ActivatedRoute } from '@angular/router';
 import { IonicSelectableComponent } from 'ionic-selectable';
 import { RestApiService } from '../../../services/http/rest-api.service';
+import { NotificationService } from '../../../services/notification/notification.service';
 
 // modal
 import { MediaComponent } from '../../../components/media/media.component';
@@ -25,6 +26,7 @@ export class QuestionFormPage implements OnInit {
 	medias: any = [];
 
 	constructor(
+		private notificationService: NotificationService,
   		private restApi: RestApiService,
         private formBuilder: FormBuilder,
         private activatedRoute: ActivatedRoute,
@@ -46,7 +48,7 @@ export class QuestionFormPage implements OnInit {
 
 			// load topic
 			if(this.paramData.topic_id) {
-				this.restApi.get('topics/' + this.paramData.topic_id, {}).then((res: any) => {
+				this.restApi.get('topics/' + this.paramData.topic_id, {}).subscribe((res: any) => {
 					if(res.success === true) {
 						this.topic = res.item;
 					}
@@ -55,7 +57,7 @@ export class QuestionFormPage implements OnInit {
 
 			// load item
 			if(this.paramData.id) {
-				this.restApi.get('medias/' + this.paramData.id, {}).then((res: any) => {
+				this.restApi.get('medias/' + this.paramData.id, {}).subscribe((res: any) => {
 					if(res.success === true) {
 						this.item = res.item;
 
@@ -70,7 +72,7 @@ export class QuestionFormPage implements OnInit {
 						this.medias = this.item.mediaItems;
 					} else {
 						// navigate back to list
-						this.restApi.showMsg('Not found!').then(() => {
+						this.notificationService.showMsg('Not found!').then(() => {
 							this.navCtrl.navigateRoot('/dashboard');
 						});
 					}
@@ -114,22 +116,22 @@ export class QuestionFormPage implements OnInit {
 				this.form.value.medias.push(this.medias[i].id);
 			}
 
-			this.restApi.showMsg('Saving...', 0).then(() => {
-				if(this.action === 'new') this.restApi.post('questions', this.form.value).then((res: any) => this.saveCallback(res));
-				else this.restApi.put('questions/' + this.item.id, this.form.value).then((res: any) => this.saveCallback(res));
+			this.notificationService.showMsg('Saving...', 0).then(() => {
+				if(this.action === 'new') this.restApi.post('questions', this.form.value).subscribe((res: any) => this.saveCallback(res));
+				else this.restApi.put('questions/' + this.item.id, this.form.value).subscribe((res: any) => this.saveCallback(res));
 			});
 		}
 	}
 
 	saveCallback(res: any) {
-		this.restApi.toast.dismiss();
+		this.notificationService.toast.dismiss();
 
 		if(res.success === true) {
 			// navigate to
-			this.restApi.showMsg('Question / challenge  has been saved!').then(() => {
+			this.notificationService.showMsg('Question / challenge  has been saved!').then(() => {
 				// add this to topic question
 				if(this.topic) {
-					// this.restApi.put('topics-questions/' + this.topic.id, {questionId: res.id}).then((res: any) => {
+					// this.restApi.put('topics-questions/' + this.topic.id, {questionId: res.id}).subscribe((res: any) => {
 						// navigate to topic
 						this.navCtrl.navigateRoot('/topic/detail/' + this.topic.id);
 					// });
@@ -138,7 +140,7 @@ export class QuestionFormPage implements OnInit {
 			});
 		} else {
 			// show error message
-			this.restApi.showMsg(res.error);
+			this.notificationService.showMsg(res.error);
 		}
 	}
 

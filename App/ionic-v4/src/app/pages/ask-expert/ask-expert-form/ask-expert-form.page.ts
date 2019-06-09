@@ -4,6 +4,7 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 import { ActivatedRoute } from '@angular/router';
 import { IonicSelectableComponent } from 'ionic-selectable';
 import { RestApiService } from '../../../services/http/rest-api.service';
+import { NotificationService } from '../../../services/notification/notification.service';
 
 // modal
 import { MediaComponent } from '../../../components/media/media.component';
@@ -26,6 +27,7 @@ export class AskExpertFormPage implements OnInit {
 	coaches: any = [];
 
 	constructor(
+		private notificationService: NotificationService,
   		private restApi: RestApiService,
         private formBuilder: FormBuilder,
         private activatedRoute: ActivatedRoute,
@@ -33,7 +35,7 @@ export class AskExpertFormPage implements OnInit {
         private modalCtrl: ModalController
 	) {
 		// get coaches
-        this.restApi.get('form-input-data', {}).then((resp: any) => {
+        this.restApi.get('form-input-data', {}).subscribe((resp: any) => {
             if(resp.data.coaches) this.coaches = resp.data.coaches;
         });
 	}
@@ -51,7 +53,7 @@ export class AskExpertFormPage implements OnInit {
 
 			// load item
 			if(this.paramData.id) {
-				this.restApi.get('ask-question/' + this.paramData.id, {}).then((res: any) => {
+				this.restApi.get('ask-question/' + this.paramData.id, {}).subscribe((res: any) => {
 					if(res.success === true) {
 						this.item = res.item;
 
@@ -64,7 +66,7 @@ export class AskExpertFormPage implements OnInit {
 						});
 					} else {
 						// navigate back to list
-						this.restApi.showMsg('Not found!').then(() => {
+						this.notificationService.showMsg('Not found!').then(() => {
 							this.navCtrl.navigateRoot('/dashboard');
 						});
 					}
@@ -107,19 +109,19 @@ export class AskExpertFormPage implements OnInit {
 				this.form.value.medias.push(this.medias[i].id);
 			}
 
-			this.restApi.showMsg('Saving...', 0).then(() => {
-				if(this.action === 'new') this.restApi.post('ask-expert', this.form.value).then((res: any) => this.saveCallback(res));
-				else this.restApi.put('ask-expert/' + this.item.id, this.form.value).then((res: any) => this.saveCallback(res));
+			this.notificationService.showMsg('Saving...', 0).then(() => {
+				if(this.action === 'new') this.restApi.post('ask-expert', this.form.value).subscribe((res: any) => this.saveCallback(res));
+				else this.restApi.put('ask-expert/' + this.item.id, this.form.value).subscribe((res: any) => this.saveCallback(res));
 			});
 		}
 	}
 
 	saveCallback(res: any) {
-		this.restApi.toast.dismiss();
+		this.notificationService.toast.dismiss();
 
 		if(res.success === true) {
 			// navigate to
-			this.restApi.showMsg('Question / challenge  has been saved!').then(() => {
+			this.notificationService.showMsg('Question / challenge  has been saved!').then(() => {
 				// add this to topic question
 				this.navCtrl.navigateRoot('/ask-expert');
 			});
@@ -127,7 +129,7 @@ export class AskExpertFormPage implements OnInit {
 			this.submitted = false;
 
 			// show error message
-			this.restApi.showMsg(res.error);
+			this.notificationService.showMsg(res.error);
 		}
 	}
 

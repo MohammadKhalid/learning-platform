@@ -13,7 +13,10 @@ import { ConferenceComponent } from './conference/conference.component';
 import { ShowTimeComponent } from './show-time/show-time/show-time.component';
 import { ShowTimeDetailComponent } from './show-time/show-time-detail/show-time-detail.component';
 import { ChatBoxComponent } from './chat-box/chat-box.component';
+import { ErrorsComponent } from './errors/errors.component';
+
 import { ProfileComponent } from './profile/profile.component';
+import { StudentProfileComponent } from './profile/student-profile/student-profile.component';
 
 @NgModule({
 	imports: [
@@ -27,12 +30,14 @@ import { ProfileComponent } from './profile/profile.component';
 		RouterModule
 	],
 	declarations: [
+		ErrorsComponent,
 		MediaComponent,
 		ConferenceComponent,
 		ShowTimeComponent,
 		ShowTimeDetailComponent,
 		ChatBoxComponent,
-		ProfileComponent
+		ProfileComponent,
+		StudentProfileComponent
 	],
 	entryComponents: [
 		MediaComponent
@@ -41,8 +46,9 @@ import { ProfileComponent } from './profile/profile.component';
 		ConferenceComponent,
 		ShowTimeComponent,
 		ShowTimeDetailComponent,
+		ChatBoxComponent,
 		ProfileComponent,
-		ChatBoxComponent
+		StudentProfileComponent
 	]
 })
 export class ComponentsModule {}

@@ -3,6 +3,7 @@ import { NavController, ToastController, ModalController, AlertController, IonCo
 import { FormGroup, FormControl, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { RestApiService } from '../../../services/http/rest-api.service';
+import { NotificationService } from '../../../services/notification/notification.service';
 
 @Component({
   selector: 'app-category-form',
@@ -24,6 +25,7 @@ export class CategoryFormPage implements OnInit {
 	parentCategory: any;
 
 	constructor(
+		private notificationService: NotificationService,
   		private restApi: RestApiService,
         private formBuilder: FormBuilder,
         private activatedRoute: ActivatedRoute,
@@ -32,7 +34,7 @@ export class CategoryFormPage implements OnInit {
         private alertCtrl: AlertController
 	) {
 		// get categories
-		this.restApi.get('categories', {}).then((res: any) => {
+		this.restApi.get('categories', {}).subscribe((res: any) => {
 			this.categories = res.items;
 		});
 	}
@@ -48,7 +50,7 @@ export class CategoryFormPage implements OnInit {
 
 			// load item
 			if(this.paramData.id) {
-				this.restApi.get('categories/' + this.paramData.id, {}).then((res: any) => {
+				this.restApi.get('categories/' + this.paramData.id, {}).subscribe((res: any) => {
 					if(res.success === true) {
 						this.item = res.item;
 
@@ -57,7 +59,7 @@ export class CategoryFormPage implements OnInit {
 						this.form.controls.description.setValue(this.item.description);
 					} else {
 						// navigate back to list
-						this.restApi.showMsg('Category not found!').then(() => {
+						this.notificationService.showMsg('Category not found!').then(() => {
 							this.navCtrl.navigateRoot('/category');
 						});
 					}
@@ -76,28 +78,28 @@ export class CategoryFormPage implements OnInit {
 		this.submitted = true;
 
 		if(this.form.valid) {
-			this.restApi.showMsg('Saving...', 0).then(() => {
-				if(this.action === 'new') this.restApi.post('categories', this.form.value).then((res: any) => this.saveCallback(res));
-				else this.restApi.put('categories/' + this.item.id, this.form.value).then((res: any) => this.saveCallback(res));
+			this.notificationService.showMsg('Saving...', 0).then(() => {
+				if(this.action === 'new') this.restApi.post('categories', this.form.value).subscribe((res: any) => this.saveCallback(res));
+				else this.restApi.put('categories/' + this.item.id, this.form.value).subscribe((res: any) => this.saveCallback(res));
 			});
 		}
 	}
 
 	saveCallback(res: any) {
-		this.restApi.toast.dismiss();
+		this.notificationService.toast.dismiss();
 
 		if(res.success === true) {
 			// set response data
 			this.item = res.item;
 
 			// navigate to
-			this.restApi.showMsg('Category ' + this.form.value.title + ' has been saved!').then(() => {
+			this.notificationService.showMsg('Category ' + this.form.value.title + ' has been saved!').then(() => {
 				// go to detail page
 				this.navCtrl.navigateRoot('/category');
 			});
 		} else {
 			// show error message
-			this.restApi.showMsg(res.error);
+			this.notificationService.showMsg(res.error);
 
 			// reenable button
 			this.submitted = false;

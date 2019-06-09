@@ -7,6 +7,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { RestApiService } from '../../../services/http/rest-api.service';
 import { AuthenticationService } from '../../../services/user/authentication.service';
+import { NotificationService } from '../../../services/notification/notification.service';
 
 import * as moment from 'moment';
 
@@ -34,6 +35,7 @@ export class LiveGroupTrainingFormPage implements OnInit {
 	modulePermission: boolean;
 
 	constructor(
+		private notificationService: NotificationService,
 		private restApi: RestApiService,
 		private formBuilder: FormBuilder,
 		private navCtrl: NavController,
@@ -62,7 +64,7 @@ export class LiveGroupTrainingFormPage implements OnInit {
 			this.routeParam = param;
 
 			if(this.routeParam.id) {
-				this.restApi.get(this.urlEndPoint + 's/' + this.routeParam.id, {}).then((resp: any) => {
+				this.restApi.get(this.urlEndPoint + 's/' + this.routeParam.id, {}).subscribe((resp: any) => {
 					if(resp.success === true) {
 						this.item = resp.item;
 
@@ -94,7 +96,7 @@ export class LiveGroupTrainingFormPage implements OnInit {
 		});
 
 		// get participants list
-		this.restApi.get('students').then((resp: any) => {
+		this.restApi.get('students').subscribe((resp: any) => {
 			// permission
 			this.modulePermission = resp.success;
 
@@ -121,18 +123,18 @@ export class LiveGroupTrainingFormPage implements OnInit {
 
 	save() {
 		if(this.action === 'new')
-			this.restApi.post(this.urlEndPoint + 's', this.form.value).then((resp: any) => {
+			this.restApi.post(this.urlEndPoint + 's', this.form.value).subscribe((resp: any) => {
 				this.saveCallback(resp);
 			});
 		else if(this.action === 'edit')
-			this.restApi.put(this.urlEndPoint + 's/' + this.item.id, this.form.value).then((resp: any) => {
+			this.restApi.put(this.urlEndPoint + 's/' + this.item.id, this.form.value).subscribe((resp: any) => {
 				this.saveCallback(resp);
 			});
 	}
 
 	saveCallback(resp: any) {
 		// show message
-		this.restApi.showMsg(resp.msg).finally(() => {
+		this.notificationService.showMsg(resp.msg).finally(() => {
 			this.navCtrl.navigateRoot('/' + this.urlEndPoint);
 		});
 	}

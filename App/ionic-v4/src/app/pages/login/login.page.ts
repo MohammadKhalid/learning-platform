@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuController } from '@ionic/angular';
+import { MenuController, NavController } from '@ionic/angular';
 
 import { AuthenticationService } from '../../services/user/authentication.service';
 import { RestApiService } from '../../services/http/rest-api.service';
 
-import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 
 import CryptoJS from 'crypto-js';
 import { SOCKET_URL } from 'src/environments/environment';
@@ -21,11 +21,8 @@ export class LoginPage implements OnInit {
     // sure to add it to the type
     loginForm: FormGroup;
 
-    // Our translated text strings
-    loginErrorString: string;
-
     // Login result
-    showLoginMessage;
+    showLoginMessage: boolean;
 
     // Login status
     loading: boolean = true;
@@ -45,23 +42,26 @@ export class LoginPage implements OnInit {
         private restApi: RestApiService,
         private authService: AuthenticationService,
         private menuCtrl: MenuController,
+        private navCtrl: NavController,
         private formBuilder: FormBuilder
-    ) { }
+    ) {}
 
     ngOnInit() {
         this.loginForm = this.formBuilder.group({
-            username: new FormControl(''),
-            password: new FormControl('')
+            username: new FormControl('', Validators.required),
+            password: new FormControl('', Validators.required)
         });
     }
 
     ionViewDidEnter() {
-        this.menuCtrl.enable(false).finally(() => {
-            this.loading = false;
-        });
+        this.menuCtrl.enable(this.authService.authenticationState.value);
+        if(this.authService.isAuthenticated) this.navCtrl.navigateRoot('/dashboard');
+        this.loading = false;
     }
 
     login() {
+        if(!this.loginForm.valid) return;
+
         // Show status
         this.loading = true;
 
@@ -72,7 +72,7 @@ export class LoginPage implements OnInit {
         //let password = CryptoJS.enc.Hex.stringify(CryptoJS.SHA1(this.account.password));
         let password = this.loginForm.value.password;
 
-        this.restApi.post('login', { username: this.loginForm.value.username, password: password }).then((resp: any) => {
+        this.restApi.post('login', { username: this.loginForm.value.username, password: password }).subscribe((resp: any) => {
             if (resp.success && resp.success === true) {
                this.sockets.emit('set-online', { user_id: resp.user.id });
                 // clear form
@@ -82,12 +82,20 @@ export class LoginPage implements OnInit {
                 this.authService.login(resp).then(() => {
                     // hide loading
                     // this.loginResponse(resp.msg);
-                });
 
+                    // enable menu
+                    this.menuCtrl.enable(true);
+
+                    // navigate to dashboard
+                    this.navCtrl.navigateRoot('/dashboard');
+                });
             } else {
+                this.showLoginMessage = true;
                 this.loginResponse(resp.error.error);
             }
-        }).catch((err) => {
+        }, (err) => {
+            this.showLoginMessage = true;
+            this.loginResponse(err.error);
         });
     }
 

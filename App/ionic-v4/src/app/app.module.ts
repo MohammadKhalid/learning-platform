@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
  
@@ -7,9 +7,12 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
  
 import { AppRoutingModule } from './app-routing.module';
+import { ErrorsService } from './services/errors/errors.service';
+import { ErrorsHandler } from './errors/handler/errors-handler';
+import { ServerErrorsInterceptor } from './errors/interceptor/server-errors.interceptor'; 
 import { AppComponent } from './app.component';
 import { IonicStorageModule } from '@ionic/storage';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { IonicSelectableModule } from 'ionic-selectable';
 import { FileDropModule } from 'ngx-file-drop';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
@@ -18,6 +21,8 @@ import { ComponentsModule } from './components/components.module';
 import { RtcService } from './services/rtc/rtc.service';
 import { LoaderService } from './services/utility/loader.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { NotificationService } from './services/notification/notification.service';
 
 @NgModule({
   declarations: [
@@ -43,7 +48,18 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     StatusBar,
     SplashScreen,
     InAppBrowser,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    NotificationService,
+    ErrorsService,
+    {
+      provide: ErrorHandler,
+      useClass: ErrorsHandler,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ServerErrorsInterceptor,
+      multi: true
+    },
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
   bootstrap: [AppComponent]
 })

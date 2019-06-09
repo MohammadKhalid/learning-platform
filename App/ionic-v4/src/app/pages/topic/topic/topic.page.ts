@@ -36,7 +36,7 @@ export class TopicPage implements OnInit {
 	}
 
 	getList() {
-		this.restApi.get('topics', this.queryParams).then((res: any) => {
+		this.restApi.get('topics', this.queryParams).subscribe((res: any) => {
 			if(res.success === true) {
 				this.items = res.items;
 			}

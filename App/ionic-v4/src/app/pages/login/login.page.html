@@ -1,23 +1,23 @@
 <ion-content>
-    <ion-grid class="fixed-content" text-center *ngIf="loading === true">
+    <ion-grid class="fixed-content" text-center [hidden]="!loading">
         <ion-row class="fixed-content" class="fixed-content" justify-content-center align-items-center>
           <ion-col>
-            <ion-spinner color="light"></ion-spinner>
+            <ion-spinner color="primary"></ion-spinner>
           </ion-col>
         </ion-row>
     </ion-grid>
 
-    <ion-grid class="fixed-content" no-padding *ngIf="loading === false">
+    <ion-grid class="fixed-content" no-padding [hidden]="loading">
         <ion-row class="fixed-content">
             <ion-col size="12" size-md="6" push-md="6" no-padding align-self-stretch style="background-color: var(--ion-color-light)">
                 <ion-row class="fixed-content">
                     <ion-col size="12" size-sm="10" push-sm="1" size-md="8" push-md="2" size-xl="6" push-xl="3" no-padding align-self-center>
-                        <form [formGroup]="loginForm" (ngSubmit)="login()">
+                        <form [formGroup]="loginForm">
                             <ion-card style="background-color: #fff;">
                                 <ion-card-content><ion-img src="assets/img/logo.png"></ion-img></ion-card-content>
                                 <ion-card-header>
                                     <ion-card-title text-center>Login and start learning</ion-card-title>
-                                    <ion-card-subtitle color="danger" *ngIf="showLoginMessage === true">{{loginErrorString}}</ion-card-subtitle>
+                                    <ion-card-subtitle color="danger" text-center *ngIf="showLoginMessage">Wrong username or password</ion-card-subtitle>
                                 </ion-card-header>
 
                                 
@@ -32,7 +32,7 @@
                                 </ion-item>
 
                                 <div text-center margin padding-vertical>
-                                    <ion-button type="submit" color="dark" shape="round" size="default" expand="block">LOG IN</ion-button>
+                                    <ion-button (click)="login()" color="dark" shape="round" size="default" expand="block" [disabled]="!loginForm?.valid">LOG IN</ion-button>
                                 </div>
                             </ion-card>
                         </form>

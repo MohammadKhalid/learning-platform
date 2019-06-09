@@ -1,10 +1,16 @@
-<ion-fab vertical="top" horizontal="start" slot="fixed" *ngIf="isSpeaker">
+<ion-badge color="danger" style="position: absolute; top: 1rem; left: 1rem; z-index: 10;" *ngIf="connection?.isLowBandwidth">low connection</ion-badge>
+
+<ion-fab vertical="center" horizontal="center" slot="fixed" [hidden]="!isLoading">
+  <ion-spinner name="dots" color="secondary"></ion-spinner>
+</ion-fab>
+
+<ion-fab vertical="top" horizontal="start" slot="fixed" *ngIf="isSpeaker" [hidden]="isLoading">
     <ion-fab-button (click)="presentParticipantSetting()" color="warning" size="small">
       <ion-icon name="people" mode="ios"></ion-icon>
     </ion-fab-button>
 </ion-fab>
 
-<ion-fab vertical="bottom" horizontal="center" slot="fixed" activated="true">
+<ion-fab vertical="bottom" horizontal="center" slot="fixed" activated="true" [hidden]="isLoading">
   <ion-fab-button disabled="true"></ion-fab-button>
 
   <ion-fab-list side="end">
@@ -29,7 +35,7 @@
   </ion-fab-list>
 </ion-fab>
 
-<ion-fab vertical="bottom" horizontal="center" slot="fixed">
+<ion-fab vertical="bottom" horizontal="center" slot="fixed" [hidden]="isLoading">
   <div *ngIf="isSpeaker">
     <ion-fab-button size="small" color="danger" (click)="pdfViewerStopShare()" *ngIf="pdfViewerFile"><ion-icon name="easel"></ion-icon></ion-fab-button>
     <ion-fab-button size="small" [color]="panel === 'screen' ? 'medium' : 'dark'" (click)="showPanel('screen')" *ngIf="!pdfViewerFile"><ion-icon name="easel"></ion-icon></ion-fab-button>
@@ -206,12 +212,10 @@
 </div>
 
 <div #videosContainer class="fixed-content" text-center style="background-color: var(--ion-color-dark)" [hidden]="panel !== 'speaker'">
-  <ion-badge color="danger" style="position: absolute; top: 1rem; left: 1rem; z-index: 1;" *ngIf="connection?.isLowBandwidth">low connection</ion-badge>
-
   <div class="fixed-content speaker-video-container">
-    <video #speakerVideo playsinline></video>
+    <video #speakerVideo playsinline autoplay></video>
 
-    <ion-grid class="fixed-content" *ngIf="!connection?.attachStreams[0]?.isVideo">
+    <ion-grid class="fixed-content" *ngIf="!connection?.attachStreams[0]?.isVideo" [hidden]="isLoading">
       <ion-row class="fixed-content">
         <ion-col class="ion-align-self-center ion-text-center">
           <ion-icon name="contact" mode="ios" color="medium" size="large"></ion-icon>

@@ -48,7 +48,7 @@ export class MediaComponent implements OnInit {
 	) {}
 
 	ngOnInit() {
-		this.restService.get('medias', {}).then((res: any) => {
+		this.restService.get('medias', {}).subscribe((res: any) => {
 			if(res.success === true) {
 				this.items = res.items;
 			}

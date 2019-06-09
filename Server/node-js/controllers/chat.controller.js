@@ -2,18 +2,18 @@ const { Chat, Message, User } = require('../models');
 const authService = require('../services/auth.service');
 const userService = require('../services/user.service');
 const { to, ReE, ReS } = require('../services/util.service');
-const sequelize = require('sequelize')
+const sequelize = require('sequelize');
 const Op = sequelize.Op;
 const express = require('express');
 const app = express();
-const io = require('../io')
+const io = require('../io');
 
 const create = async function (req, res) {
     const body = req.body;
     const id = req.body.userId_userId;
     const splitId = id.split('_');
     const reverseId = splitId[1] + '_' + splitId[0];
-    const isChatExist = await Chat.findOne({ where: { [sequelize.Op.or]: [{ userId_userId: id }, { userId_userId: reverseId }] } });
+    const isChatExist = await Chat.findOne({ where: { [Op.or]: [{ userId_userId: id }, { userId_userId: reverseId }] } });
     if (!isChatExist) {
         const chat = await Chat.create({
             userId_userId: id
@@ -39,7 +39,7 @@ const find = async function (req, res) {
     const reverseId = contactId + "_" + userId
     const date = req.params.date;
 
-    const isChatExist = await Chat.findAll({ where: { [sequelize.Op.or]: [{ userId_userId: userId + "_" + contactId }, { userId_userId: reverseId }] } });
+    const isChatExist = await Chat.findAll({ where: { [Op.or]: [{ userId_userId: userId + "_" + contactId }, { userId_userId: reverseId }] } });
     const recieverName = await User.findOne({ where: { id: contactId } })
     if (isChatExist.length > 0) {
         const message = await Message.findAll({
@@ -76,16 +76,14 @@ const chatDates = async function (req, res) {
     const reverseId = contactId + '_' + userId;
 
     
-    const isChatExist = await Chat.findAll({ where: { [sequelize.Op.or]: [{ userId_userId: userId + "_" + contactId }, { userId_userId: reverseId }] } });
+    const isChatExist = await Chat.findAll({ where: { [Op.or]: [{ userId_userId: userId + "_" + contactId }, { userId_userId: reverseId }] } });
     if (isChatExist.length > 0) {
     const messageDates = await Message.findAll({
             // limit: 50,
             // offset: (limit * offset),
-            order: [
-                ['id', 'DESC']
-            ],
+            order: [[sequelize.literal('date'), 'DESC']],
             attributes: [
-                [sequelize.fn('DISTINCT',sequelize.fn('date_format',sequelize.col('Date'),'%Y-%m-%d')),'date']
+                [sequelize.fn('DISTINCT',sequelize.fn('DATE_FORMAT',sequelize.col('Date'),'%Y-%m-%d')),'date']
             ],
             where: {
                 [Op.or]: [{
@@ -114,7 +112,7 @@ const update = async function (req, res) {
     const splitId = id.split('_');
     const reverseId = splitId[1] + '_' + splitId[0];
 
-    const isChatExist = await Chat.findOne({ where: { [sequelize.Op.or]: [{ userId_userId: id }, { userId_userId: reverseId }] } });
+    const isChatExist = await Chat.findOne({ where: { [Op.or]: [{ userId_userId: id }, { userId_userId: reverseId }] } });
     if (isChatExist) {
         await Chat.update({
             lastMessage: message,
@@ -163,7 +161,7 @@ const remove = async function (req, res) {
     const id = req.params.id;
     const splitId = id.split('_');
     const reverseId = splitId[1] + '_' + splitId[0];
-    await Chat.destroy({ where: { [sequelize.Op.or]: [{ userId_userId: id }, { userId_userId: reverseId }] } });
+    await Chat.destroy({ where: { [Op.or]: [{ userId_userId: id }, { userId_userId: reverseId }] } });
     return ReS(res, { message: 'Chat deleted successfully' }, 200);
 }
 

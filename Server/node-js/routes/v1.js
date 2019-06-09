@@ -48,7 +48,7 @@ router.delete(  '/companies/:item_id',  passport.authenticate('jwt', {session:fa
 
 router.post(    '/coaches',           passport.authenticate('jwt', {session:false}), user.coach, user.role, UserController.create);	   // C
 router.get(     '/coaches',           passport.authenticate('jwt', {session:false}), user.coach, UserController.getAll);     // R
-router.get(     '/coaches/:item_id',  passport.authenticate('jwt', {session:false}), user.coach, user.role, user.item, UserController.get);        // R
+router.get(     '/coaches/:item_id',  passport.authenticate('jwt', {session:false}), user.coach, user.item, UserController.get);        // R
 router.put(     '/coaches/:item_id',  passport.authenticate('jwt', {session:false}), user.coach, user.role, user.item, UserController.update);     // U
 router.delete(  '/coaches/:item_id',  passport.authenticate('jwt', {session:false}), user.coach, user.role, user.item, UserController.remove);     // D
 

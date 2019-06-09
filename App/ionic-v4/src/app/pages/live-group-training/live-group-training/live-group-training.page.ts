@@ -47,22 +47,23 @@ export class LiveGroupTrainingPage implements OnInit {
 
 	ngOnInit() {
 		// rtc connection
-		this.rtcService.createConnection().then((connection) => {
-			// connect socket
-			connection.connectSocket((socket) => {
+		this.rtcService.getConnection().then((connection) => {
+			// set connection
+			this.connection = connection;
+
+			// get set socket
+			this.connection.getSocket((socket) => {
 				this.socket = socket;
 
 				// connection socket events
 				this.socketEvent();
+
+				// set connection custom event
+				this.connection.setCustomSocketEvent(this.publicRoomIdentifier);
+
+				// load items
+				this.loadData();
 			});
-
-			this.connection = connection;
-
-			// set connection custom event
-			this.connection.setCustomSocketEvent(this.publicRoomIdentifier);
-
-			// load items
-			this.loadData();
 		});
 	}
 
@@ -117,7 +118,7 @@ export class LiveGroupTrainingPage implements OnInit {
 		console.log('LOAD EVENT ', event);
 		console.log('QPARAMS ', this.queryParams);
 
-		this.restApi.get('live-group-trainings', this.queryParams).then((resp: any) => {
+		this.restApi.get('live-group-trainings', this.queryParams).subscribe((resp: any) => {
 			// set time left timer
 			for(let item of resp.items) {
 				// time left counter

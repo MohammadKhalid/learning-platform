@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Model.associate = function(models){
-    this.belongsToMany(models.User, {as: 'users', through: 'UserCompany', foreignKey: 'companyId', otherKey: 'userId'});
+    this.belongsToMany(models.User, {as: 'users', through: 'CompanyUser', foreignKey: 'companyId', otherKey: 'userId'});
   };
 
   Model.prototype.toWeb = function (pw) {

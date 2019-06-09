@@ -3,6 +3,7 @@ import { ActionSheetController, AlertController, NavController } from '@ionic/an
 
 import { RestApiService } from '../../../services/http/rest-api.service';
 import { AuthenticationService } from '../../../services/user/authentication.service';
+import { NotificationService } from '../../../services/notification/notification.service';
 
 @Component({
   selector: 'app-category',
@@ -18,6 +19,7 @@ export class CategoryPage implements OnInit {
 	queryParams: any;
 
 	constructor(
+		private notificationService: NotificationService,
 		private restApi: RestApiService,
   		private authService: AuthenticationService,
   		private actionSheetCtrl: ActionSheetController,
@@ -37,7 +39,7 @@ export class CategoryPage implements OnInit {
 	}
 
 	getList() {
-		this.restApi.get('categories', this.queryParams).then((res: any) => {
+		this.restApi.get('categories', this.queryParams).subscribe((res: any) => {
 			if(res.success === true) {
 				this.items = res.items;
 			}
@@ -76,18 +78,18 @@ export class CategoryPage implements OnInit {
 								}, {
 									text: 'Yes',
 									handler: () => {
-										this.restApi.showMsg('Deleting...', 0).then((toast: any) => {
-											this.restApi.delete(this.urlEndPoint + '/' + item.id).then((res: any) => {
-												this.restApi.toast.dismiss();
+										this.notificationService.showMsg('Deleting...', 0).then((toast: any) => {
+											this.restApi.delete(this.urlEndPoint + '/' + item.id).subscribe((res: any) => {
+												this.notificationService.toast.dismiss();
 
 												if(res.success === true) {
-													this.restApi.showMsg('Category ' + item.title + ' has been deleted!').then(() => {
+													this.notificationService.showMsg('Category ' + item.title + ' has been deleted!').then(() => {
 
 
 														this.items.splice(i, 1);
 													});
 												} else {
-													this.restApi.showMsg(res.error);
+													this.notificationService.showMsg(res.error);
 												}
 											});
 										});

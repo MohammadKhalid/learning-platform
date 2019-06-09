@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { RestApiService } from '../../../services/http/rest-api.service';
 import { AuthenticationService } from '../../../services/user/authentication.service';
+import { NotificationService } from '../../../services/notification/notification.service';
 
 @Component({
   selector: 'app-topic-detail',
@@ -19,6 +20,7 @@ export class TopicDetailPage implements OnInit {
 	mediaBaseUrl: string;
 
 	constructor(
+			private notificationService: NotificationService,
   		private restApi: RestApiService,
   		private authService: AuthenticationService,
         private activatedRoute: ActivatedRoute,
@@ -38,20 +40,20 @@ export class TopicDetailPage implements OnInit {
 
 			// load item
 			if(this.paramData.id) {
-				this.restApi.get('topics/' + this.paramData.id, {}).then((res: any) => {
+				this.restApi.get('topics/' + this.paramData.id, {}).subscribe((res: any) => {
 					if(res.success === true) {
 						this.item = res.item;
 						this.buildMediaPath();
 					} else {
 						// navigate back to list
-						this.restApi.showMsg('Topic not found!').then(() => {
+						this.notificationService.showMsg('Topic not found!').then(() => {
 							this.navCtrl.navigateRoot('/topic');
 						});
 					}
 				});
 			} else {
 				// navigate back to list
-				this.restApi.showMsg('Topic not found!').then(() => {
+				this.notificationService.showMsg('Topic not found!').then(() => {
 					// this.navCtrl.navigateRoot('/topic');
 				});
 			}
@@ -128,16 +130,16 @@ export class TopicDetailPage implements OnInit {
 								{
 									text: 'Yes',
 									handler: () => {
-										this.restApi.showMsg('Deleting...', 0).then((toast: any) => {
-											this.restApi.delete(this.urlEndPoint + 's/' + this.item.id).then((res: any) => {
-												this.restApi.toast.dismiss();
+										this.notificationService.showMsg('Deleting...', 0).then((toast: any) => {
+											this.restApi.delete(this.urlEndPoint + 's/' + this.item.id).subscribe((res: any) => {
+												this.notificationService.toast.dismiss();
 				
 												if(res.success === true) {
-													this.restApi.showMsg('Topic ' + this.item.title + ' has been deleted!').then(() => {
+													this.notificationService.showMsg('Topic ' + this.item.title + ' has been deleted!').then(() => {
 														this.navCtrl.navigateRoot(this.urlEndPoint);
 													});
 												} else {
-													this.restApi.showMsg(res.error);
+													this.notificationService.showMsg(res.error);
 												}
 											});
 										});

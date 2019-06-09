@@ -92,7 +92,10 @@ const routes: Routes = [
   { path: 'media', canActivate: [AuthGuardService], loadChildren: './pages/media/media/media.module#MediaPageModule' },
   { path: 'media/add', canActivate: [AuthGuardService], loadChildren: './pages/media/media-form/media-form.module#MediaFormPageModule' },
   { path: 'media/edit/:id', canActivate: [AuthGuardService], loadChildren: './pages/media/media-form/media-form.module#MediaFormPageModule' },
-  { path: 'media/detail/:id', canActivate: [AuthGuardService], loadChildren: './pages/media/media-detail/media-detail.module#MediaDetailPageModule' }
+  { path: 'media/detail/:id', canActivate: [AuthGuardService], loadChildren: './pages/media/media-detail/media-detail.module#MediaDetailPageModule' },
+
+  { path: 'error', loadChildren: './pages/public/error/error.module#ErrorPageModule' },
+  { path: '**', loadChildren: './pages/public/error/error.module#ErrorPageModule', data: { error: 404 } }
 ];
 
 @NgModule({

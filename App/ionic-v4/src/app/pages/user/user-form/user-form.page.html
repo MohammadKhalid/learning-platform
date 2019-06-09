@@ -17,11 +17,14 @@
       <ion-input type="hidden" formControlName="id" ></ion-input>
 
       <ion-list>
+        <ion-list-header mode="ios">
+          <ion-label color="primary">Basic Info</ion-label>
+        </ion-list-header>
+
         <ion-item lines="inset">
           <ion-label position="stacked">First Name <ion-text color="danger">*</ion-text></ion-label>
           <ion-input
             formControlName="firstName"
-            placeholder="Enter first name"
           ></ion-input>
         </ion-item>
 
@@ -29,16 +32,13 @@
           <ion-label position="stacked">Last Name <ion-text color="danger">*</ion-text></ion-label>
           <ion-input
             formControlName="lastName"
-            placeholder="Enter last name"
           ></ion-input>
         </ion-item>
   
-        <ion-item lines="inset">
+        <ion-item lines="full">
           <ion-label position="stacked">Description</ion-label>
           <ion-textarea
              formControlName="description"
-            placeholder="Write description"
-            rows="5"
           ></ion-textarea>
         </ion-item>
   
@@ -54,7 +54,6 @@
           <ion-label position="stacked">Email <ion-text color="danger">*</ion-text></ion-label>
           <ion-input
             formControlName="email"
-            placeholder="Enter email"
             type="email"
           ></ion-input>
         </ion-item>
@@ -68,7 +67,6 @@
           <ion-input
             type="password"
             formControlName="password"
-            placeholder="Enter password"
           ></ion-input>
         </ion-item>
 
@@ -78,7 +76,6 @@
             <ion-input
               type="password"
               formControlName="passwordRepeat"
-              placeholder="Enter password again"
             ></ion-input>
           </ion-item>
       </ion-list>

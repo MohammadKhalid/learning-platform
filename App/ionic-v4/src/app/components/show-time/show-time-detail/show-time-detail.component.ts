@@ -7,6 +7,7 @@ import { IonicSelectableComponent } from 'ionic-selectable';
 import { RestApiService } from '../../../services/http/rest-api.service';
 import { AuthenticationService } from '../../../services/user/authentication.service';
 import { RtcService } from '../../../services/rtc/rtc.service';
+import { NotificationService } from '../../../services/notification/notification.service';
 
 import * as moment from 'moment';
 
@@ -34,6 +35,7 @@ export class ShowTimeDetailComponent implements OnInit {
   @ViewChild('submitReviewElem') submitReviewElem: ElementRef;
 
 	constructor(
+		private notificationService: NotificationService,
     private restApi: RestApiService,
     private activatedRoute: ActivatedRoute,
 		private navCtrl: NavController,
@@ -45,7 +47,7 @@ export class ShowTimeDetailComponent implements OnInit {
 		this.sessionData = this.authService.getSessionData();
 
 		// get related data
-    this.restApi.get('form-input-data', {}).then((resp: any) => {
+    this.restApi.get('form-input-data', {}).subscribe((resp: any) => {
         if(resp.data.coaches) this.coaches = resp.data.coaches;
     });		
 	}
@@ -55,7 +57,7 @@ export class ShowTimeDetailComponent implements OnInit {
       this.routeParam = paramData;
 
       // load
-      this.restApi.get(this.url.api + '/' + this.routeParam.id, {}).then((resp: any) => {
+      this.restApi.get(this.url.api + '/' + this.routeParam.id, {}).subscribe((resp: any) => {
         if(resp.success === true) {
           this.item = resp.item;
           
@@ -202,12 +204,12 @@ export class ShowTimeDetailComponent implements OnInit {
 					text: 'Yes',
 					handler: () => {
 						if(this.reviewForm.valid) {
-							this.restApi.showMsg('Submitting...', 0).then((toast: any) => {
-								this.restApi.put(this.url.api + '/review/' + this.item.id, this.reviewForm.value).then((res: any) => {
-									this.restApi.toast.dismiss();
+							this.notificationService.showMsg('Submitting...', 0).then((toast: any) => {
+								this.restApi.put(this.url.api + '/review/' + this.item.id, this.reviewForm.value).subscribe((res: any) => {
+									this.notificationService.toast.dismiss();
 
 									if(res.success === true) {
-										this.restApi.showMsg('Review has been submitted!').then(() => {
+										this.notificationService.showMsg('Review has been submitted!').then(() => {
 											this.navCtrl.navigateRoot(this.url.api);
 										});
 
@@ -219,7 +221,7 @@ export class ShowTimeDetailComponent implements OnInit {
 											type: 'show'
 										});
 									} else {
-										this.restApi.showMsg(res.error);
+										this.notificationService.showMsg(res.error);
 									}
 								});
 							});
@@ -234,12 +236,12 @@ export class ShowTimeDetailComponent implements OnInit {
 
 	submitToCoach() {
 		if(this.submitToCoachForm.valid) {
-			this.restApi.showMsg('Submitting...', 0).then((toast: any) => {
-				this.restApi.put(this.url.api + '/submit/' + this.item.id, this.submitToCoachForm.value).then((res: any) => {
-					this.restApi.toast.dismiss();
+			this.notificationService.showMsg('Submitting...', 0).then((toast: any) => {
+				this.restApi.put(this.url.api + '/submit/' + this.item.id, this.submitToCoachForm.value).subscribe((res: any) => {
+					this.notificationService.toast.dismiss();
 
 					if(res.success === true) {
-						this.restApi.showMsg('Work ' + this.item.topic.title + ' has been submitted!').then(() => {
+						this.notificationService.showMsg('Work ' + this.item.topic.title + ' has been submitted!').then(() => {
 							this.navCtrl.navigateRoot(this.url.api);
 						});
 
@@ -251,7 +253,7 @@ export class ShowTimeDetailComponent implements OnInit {
 							type: 'Show'
 						});
 					} else {
-						this.restApi.showMsg(res.error);
+						this.notificationService.showMsg(res.error);
 					}
 				});
 			});
@@ -282,16 +284,16 @@ export class ShowTimeDetailComponent implements OnInit {
 		        {
 					text: 'Yes',
 					handler: () => {
-						this.restApi.showMsg('Deleting...', 0).then((toast: any) => {
-							this.restApi.delete(this.url.api + '/' + this.item.id).then((res: any) => {
-								this.restApi.toast.dismiss();
+						this.notificationService.showMsg('Deleting...', 0).then((toast: any) => {
+							this.restApi.delete(this.url.api + '/' + this.item.id).subscribe((res: any) => {
+								this.notificationService.toast.dismiss();
 
 								if(res.success === true) {
-									this.restApi.showMsg('Work ' + title + ' has been deleted!').then(() => {
+									this.notificationService.showMsg('Work ' + title + ' has been deleted!').then(() => {
 										this.navCtrl.navigateRoot(this.url.api);
 									});
 								} else {
-									this.restApi.showMsg(res.error);
+									this.notificationService.showMsg(res.error);
 								}
 							});
 						});

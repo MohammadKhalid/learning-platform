@@ -7,8 +7,8 @@ import io from 'socket.io-client';
 
 
 import { AuthenticationService } from './services/user/authentication.service';
+import { RtcService } from './services/rtc/rtc.service';
 
-import { Observable } from 'rxjs/Observable';
 import { filter } from 'rxjs/operators';
 import { SOCKET_URL } from 'src/environments/environment';
 import { RestApiService } from './services/http/rest-api.service';
@@ -140,15 +140,33 @@ export class AppComponent {
     ]
   };
 
-  private userCommonRoutes = ['', 'dashboard', 'topic', 'practice-time', 'show-time', 'certification', 'live-group-training', 'ask-expert', 'request-personal-coaching', 'profile'];
+  private userCommonRoutes = [
+    '', 
+    'error', 
+    'login', 
+    'dashboard', 
+    'topic', 
+    'practice-time', 
+    'show-time', 
+    'certification', 
+    'live-group-training', 
+    'ask-expert', 
+    'request-personal-coaching', 
+    'profile',
+    'coach',
+    // 'report'
+  ];
   private userRoutes = {
-    student: [
-      'coach',
-      'practice-time/add'
+    student: [],
+    coach: [
+      'student'
     ],
-    coach: [],
-    company: []
+    company: [
+      'student'
+    ]
   };
+  private userRouterConfig: Array<object>;
+  private routerConfig: Array<object>;
 
   constructor(
     private platform: Platform,
@@ -157,41 +175,45 @@ export class AppComponent {
     private authenticationService: AuthenticationService,
     private router: Router,
     private menuCtrl: MenuController,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private rtcService: RtcService
   ) {
+    // default router config
+    this.routerConfig = this.getRouterConfig();
+
     // set navigation start url
     this.navRouterStartEvent = this.router.events.pipe(filter(e => e instanceof NavigationStart)).subscribe((event: any) => {
       this.navStart = event.url;
     });
 
     this.authenticationService.authenticationState.subscribe((state) => {
-      // menu state
-      setTimeout(() => {
-        this.menuCtrl.enable(state);
-      });
-
       if(this.authenticationService.authDidCheck) {
-        if (state) {
+        // menu state
+        setTimeout(() => {
+          this.menuCtrl.enable(state);
+        }, 1500);
+
+        // auth success
+        if(state) {
           // set user data
           this.userData = this.authenticationService.sessionData;
 
+          // init user routes
+          this.setUserRoutes();
+
+          // rtc connection
+          this.rtcService.initConnection({ extra: this.userData.user });
+
           // set user menu
           this.appPages = this.links[this.userData.user.type];
-
-          // set route
-          // this.userRoutes[this.userData.user.type] = this.userRoutes[this.userData.user.type].concat(this.userCommonRoutes);
-          // let userRouterConfig = [];
-          
-          // this.router.config.forEach((val: any) => { 
-          //   if(this.userRoutes[this.userData.user.type].includes(val.path)) userRouterConfig.push(val);
-          // });
-          // this.router.resetConfig(userRouterConfig);
 
           // redirect if in login page
           if(this.navStart === this.loginUrl || this.navStart === '/') this.navCtrl.navigateRoot(this.defaultUrl);
         } else {
           // redirect to
-          this.navCtrl.navigateRoot(this.loginUrl);
+          this.navCtrl.navigateRoot(this.loginUrl).then(() => {
+            // this.authenticationService.authDidCheck = false;
+          });
         }
       }
     }).remove(this.navRouterStartEvent); // unsubscribe route event
@@ -238,5 +260,29 @@ export class AppComponent {
     if(this.router.url === url || this.router.url === '/dashboard' && url === '/') return 'medium';
 
     return '';
+  }
+
+  setUserRoutes() {
+    // set route
+    this.userRouterConfig = [];
+
+    if(this.userData.user.type === 'admin') {
+      this.userRouterConfig = this.routerConfig;
+    } else {
+      this.userRoutes[this.userData.user.type] = this.userRoutes[this.userData.user.type].concat(this.userCommonRoutes);
+      this.routerConfig.forEach((val: any) => { 
+        if(this.userRoutes[this.userData.user.type].includes(val.path)) this.userRouterConfig.push(val);
+      });
+
+      // redirect
+      if(!this.userRoutes[this.userData.user.type].includes(this.navStart.split('/')[1])) this.navCtrl.navigateRoot(this.defaultUrl);
+    }
+
+    // reset router config
+    this.router.resetConfig(this.userRouterConfig);
+  }
+
+  getRouterConfig() {
+    return this.router.config;
   }
 }

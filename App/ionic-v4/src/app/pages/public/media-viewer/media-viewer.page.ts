@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MenuController } from '@ionic/angular';
 
 import { RestApiService } from '../../../services/http/rest-api.service';
+import { NotificationService } from '../../../services/notification/notification.service';
 
 @Component({
   selector: 'app-media-viewer',
@@ -17,6 +18,7 @@ export class MediaViewerPage implements OnInit {
   mediaPoster: string;
 
   constructor(
+    private notificationService: NotificationService,
     private restApi: RestApiService,
     private menu: MenuController, 
     private activatedRoute: ActivatedRoute) { }
@@ -27,7 +29,7 @@ export class MediaViewerPage implements OnInit {
 
         // load item
         if(this.paramData.id) {
-          this.restApi.get('media-viewer/' + this.paramData.id, {}).then((res: any) => {
+          this.restApi.get('media-viewer/' + this.paramData.id, {}).subscribe((res: any) => {
             if(res.success === true) {
               this.item = res.item;
 
@@ -49,7 +51,7 @@ export class MediaViewerPage implements OnInit {
               }
             } else {
               // navigate back to list
-              this.restApi.showMsg('Not found!');
+              this.notificationService.showMsg('Not found!');
             }
           });
         }
