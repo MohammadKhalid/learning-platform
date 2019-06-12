@@ -26,7 +26,7 @@ export class AppComponent {
   navRouterStartEvent: any;
   loginUrl: string = '/login';
   defaultUrl: string = '/dashboard';
-  public sockets = io(SOCKET_URL);
+  public sockets: io;
 
 
   private linksAssessment = {
@@ -142,6 +142,7 @@ export class AppComponent {
 
   private userCommonRoutes = [
     '', 
+    'public',
     'error', 
     'login', 
     'dashboard', 
@@ -154,7 +155,8 @@ export class AppComponent {
     'request-personal-coaching', 
     'profile',
     'coach',
-    // 'report'
+    'report',
+    'test'
   ];
   private userRoutes = {
     student: [],
@@ -188,32 +190,41 @@ export class AppComponent {
 
     this.authenticationService.authenticationState.subscribe((state) => {
       if(this.authenticationService.authDidCheck) {
-        // menu state
-        setTimeout(() => {
-          this.menuCtrl.enable(state);
-        }, 1500);
 
-        // auth success
-        if(state) {
-          // set user data
-          this.userData = this.authenticationService.sessionData;
-
-          // init user routes
-          this.setUserRoutes();
-
-          // rtc connection
-          this.rtcService.initConnection({ extra: this.userData.user });
-
-          // set user menu
-          this.appPages = this.links[this.userData.user.type];
-
-          // redirect if in login page
-          if(this.navStart === this.loginUrl || this.navStart === '/') this.navCtrl.navigateRoot(this.defaultUrl);
+        if(this.navStart === '/setup') {
+          // menu state
+          this.menuCtrl.enable(false);
         } else {
-          // redirect to
-          this.navCtrl.navigateRoot(this.loginUrl).then(() => {
-            // this.authenticationService.authDidCheck = false;
-          });
+          // socket io
+          this.sockets = io(SOCKET_URL);
+
+          // menu state
+          setTimeout(() => {
+            this.menuCtrl.enable(state);
+          }, 1500);
+
+          // auth success
+          if(state) {
+            // set user data
+            this.userData = this.authenticationService.sessionData;
+
+            // init user routes
+            this.setUserRoutes();
+
+            // rtc connection
+            this.rtcService.initConnection({ extra: this.userData.user });
+
+            // set user menu
+            this.appPages = this.links[this.userData.user.type];
+
+            // redirect if in login page
+            if(this.navStart === this.loginUrl || this.navStart === '/') this.navCtrl.navigateRoot(this.defaultUrl);
+          } else {
+            // redirect to
+            this.navCtrl.navigateRoot(this.loginUrl).then(() => {
+              // this.authenticationService.authDidCheck = false;
+            });
+          }
         }
       }
     }).remove(this.navRouterStartEvent); // unsubscribe route event
@@ -222,18 +233,20 @@ export class AppComponent {
   }
   @HostListener('window:unload', ['$event'])
   unloadHandler(event: any): void {
-        this.sockets.emit('set-offline', { user_id: this.authenticationService.getSessionData().user.id })
+        if(this.sockets) this.sockets.emit('set-offline', { user_id: this.authenticationService.getSessionData().user.id })
   }
   ngAfterViewInit() {
-    this.sockets.on('connect', () => {
-      setTimeout(() => {
-        if (this.authenticationService.getSessionData()) {
-          this.sockets.emit('set-online', { user_id: this.authenticationService.getSessionData().user.id });
-        }
-      }, 500);
-    });
-    this.sockets.on('disconnect', function () {
-    });
+    if(this.sockets) {
+      this.sockets.on('connect', () => {
+        setTimeout(() => {
+          if (this.authenticationService.getSessionData()) {
+            this.sockets.emit('set-online', { user_id: this.authenticationService.getSessionData().user.id });
+          }
+        }, 500);
+      });
+      this.sockets.on('disconnect', function () {
+      });
+    }
     // window.addEventListener('beforeunload', (e) => {
     //  alert();
     // });
@@ -246,7 +259,7 @@ export class AppComponent {
   }
   
   logout() {
-    this.sockets.emit('set-offline', { user_id: this.authenticationService.getSessionData().user.id })
+    if(this.sockets) this.sockets.emit('set-offline', { user_id: this.authenticationService.getSessionData().user.id })
     this.authenticationService.logout();
   }
 

@@ -1,4 +1,4 @@
-const { User }          = require('../models');
+const { User, UserCompany } = require('../models');
 const authService       = require('../services/auth.service');
 const userService       = require('../services/user.service');
 const { to, ReE, ReS }  = require('../services/util.service');
@@ -28,8 +28,35 @@ module.exports.create = create;
 
 const getAll = async function(req, res){
     let err, items;
+    let loggedUser = req.user;
     let req_query = req.query;
     let rowPerPage = 25;
+
+    let include = [
+        {
+            association: 'subscription',
+            include: [ 'subscriptionPackage' ]
+        }
+    ];
+
+    if(loggedUser.type === 'company') {
+        let companies;
+        [err, companies] = await to(UserCompany.findAll({ where: { isOwner: true, userId: loggedUser.id } }));
+
+        let companyIds = [];
+        for (let index = 0; index < companies.length; index++) {
+            companyIds.push(companies[index].companyId);
+        }
+
+        include.push({
+            association: 'companies',
+            where: {
+                id: { [Op.in]: companyIds }
+            }
+        });
+    } else {
+        include.push('companies');
+    }
     
     let qParams = {
         where: {
@@ -37,7 +64,8 @@ const getAll = async function(req, res){
             isActive: true,
             isDeleted: false,
         },
-        attributes: ['id', 'firstName', 'lastName']
+        attributes: ['id', 'firstName', 'lastName'],
+        include: include
     };
 
     // page number
@@ -67,6 +95,75 @@ const getAll = async function(req, res){
     return ReS(res, {items: items_json, count: items.count});
 }
 module.exports.getAll = getAll;
+
+const getStaff = async function(req, res){
+    let err, items;
+    let req_query = req.query;
+    let rowPerPage = 25;
+
+    let include = [
+        {
+            association: 'subscription',
+            include: [ 'subscriptionPackage' ]
+        }
+    ];
+
+    if(req.body.type === 'company') {
+        let companies;
+        [err, companies] = await to(UserCompany.findAll({ where: { isOwner: true, userId: req.params.item_id } }));
+
+        let companyIds = [];
+        for (let index = 0; index < companies.length; index++) {
+            companyIds.push(companies[index].companyId);
+        }
+
+        include.push({
+            association: 'companies',
+            where: {
+                id: { [Op.in]: companyIds }
+            }
+        });
+    } else {
+        include.push('companies');
+    }
+
+    let qParams = {
+        where: {
+            type: req_query.type,
+            isActive: true,
+            isDeleted: false,
+        },
+        attributes: ['id', 'firstName', 'lastName'],
+        include: include
+    };
+
+    // page number
+    if(req_query.pageNumber && req_query.pageNumber > 0) {
+        qParams.offset = parseInt(req_query.pageNumber) * rowPerPage;
+        qParams.limit = rowPerPage;
+    }
+
+    // status
+    if(req_query.isActive) qParams.where.isActive = req_query.isActive;
+
+    // deleted
+    if(req_query.isDeleted) qParams.where.isDeleted = req_query.isDeleted;
+
+    // search keyword
+    if(req_query.searchQuery) qParams.where.firstName = { [Op.like]: req_query.searchQuery + '%' };
+    [err, items] = await to(User.findAndCountAll(qParams));
+
+    let items_json =[];
+    let item_rows = items.rows;
+
+    for( let i in item_rows){
+        let item = item_rows[i];
+        let item_info = item.toWeb();
+        items_json.push(item_info);
+    }
+    return ReS(res, {items: items_json, count: items.count});
+}
+module.exports.getStaff = getStaff;
 
 const getAllShowTime = async function(req, res){
     let user = req.item;

@@ -2,79 +2,27 @@
   <ion-toolbar color="primary">
   	<ion-buttons slot="start">
 		<ion-menu-button *ngIf="routeData?.type === 'profile'" color="light"></ion-menu-button>
-		<ion-back-button *ngIf="routeData?.type !== 'profile'" defaultHref="{{this.routeData.appUrl}}"></ion-back-button>
+		<ion-back-button *ngIf="routeData?.type !== 'profile'" defaultHref="{{backBtnLink}}"></ion-back-button>
     </ion-buttons>
-		<ion-title text-capitalize>{{this.routeData.singular}} <span *ngIf="routeData?.type !== 'profile'">Detail</span></ion-title>
+	
+	<ion-title text-capitalize>{{routeData.singular}} <span *ngIf="routeData?.type !== 'profile'">Detail</span></ion-title>
 		
-		<ion-buttons slot="end" *ngIf="sessionData.user.type === 'admin' || sessionData.user.id === item?.id">
-				<ion-button strong="true" (click)="presentPageAction()"><ion-icon slot="icon-only" name="more"></ion-icon></ion-button>
-			</ion-buttons>
+	<!-- <ion-buttons slot="end" *ngIf="sessionData.user.type === 'admin' || sessionData.user.id === item?.id">
+		<ion-button strong="true" (click)="presentPageAction()"><ion-icon slot="icon-only" name="more"></ion-icon></ion-button>
+	</ion-buttons> -->
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-	<ion-list>
-		<ion-item>
-			<ion-avatar slot="start" *ngIf="routeData?.type === 'student' || routeData?.type === 'coach'">
-				<img src="assets/img/user/{{routeData.type}}-avatar.png">
-			</ion-avatar>
+<ion-content *ngIf="routeData?.type === 'profile'">
+	<student-profile *ngIf="sessionData?.user?.type === 'student'"></student-profile>
+	<coach-profile *ngIf="sessionData?.user?.type === 'coach'"></coach-profile>
+	<company-profile *ngIf="sessionData?.user?.type === 'company'"></company-profile>
+	<profile *ngIf="sessionData?.user?.type === 'admin'"></profile>
+</ion-content>
 
-			<ion-icon slot="start" name="business" *ngIf="routeData?.type === 'company'"></ion-icon>
-			<ion-label>
-				{{item?.firstName}} {{item?.lastName}}
-				<p>Name</p>
-			</ion-label>
-		</ion-item>
-	</ion-list>
-
-	<ion-list>
-		<ion-list-header>
-			<ion-label color="primary">Assessment</ion-label>
-		</ion-list-header>
-
-		<ion-item type="button" detail="true" routerLink="/{{routeData?.appUrl}}/detail/{{item?.id}}/practice-time">
-			<ion-label>
-				Practice Time
-				<ion-badge [color]="item?.dataCount?.practiceTimeCount > 0 ? 'dark' : 'medium'" mode="ios" slot="end">{{item?.dataCount?.practiceTimeCount || 0}}</ion-badge>
-			</ion-label>
-		</ion-item>
-		<ion-item type="button" detail="true" routerLink="/{{routeData?.appUrl}}/detail/{{item?.id}}/show-time">
-			<ion-label>
-				Show Time
-				<ion-badge [color]="item?.dataCount?.showTimeCount > 0 ? 'dark' : 'medium'" mode="ios" slot="end">{{item?.dataCount?.showTimeCount || 0}}</ion-badge>
-			</ion-label>
-		</ion-item>
-		<ion-item type="button" detail="true" routerLink="/{{routeData?.appUrl}}/detail/{{item?.id}}/certification">
-			<ion-label>
-				Certification
-				<ion-badge [color]="item?.dataCount?.certificationCount > 0 ? 'dark' : 'medium'" mode="ios" slot="end">{{item?.dataCount?.certificationCount || 0}}</ion-badge>
-			</ion-label>
-		</ion-item>
-	</ion-list>
-
-	<ion-list>
-		<ion-list-header>
-			<ion-label color="primary">Interaction</ion-label>
-		</ion-list-header>
-
-		<ion-item type="button" detail="true" routerLink="/{{routeData?.appUrl}}/detail/{{item?.id}}/practice-time">
-			<ion-label>
-				Live Group Training
-				<ion-badge [color]="item?.dataCount?.liveGroupTrainingCount > 0 ? 'dark' : 'medium'" mode="ios" slot="end">{{item?.dataCount?.liveGroupTrainingCount || 0}}</ion-badge>
-			</ion-label>
-		</ion-item>
-		<ion-item type="button" detail="true" routerLink="/{{routeData?.appUrl}}/detail/{{item?.id}}/show-time">
-			<ion-label>
-				Ask The Expert
-				<ion-badge [color]="item?.dataCount?.askTheExpertCount > 0 ? 'dark' : 'medium'" mode="ios" slot="end">{{item?.dataCount?.askTheExpertCount || 0}}</ion-badge>
-			</ion-label>
-		</ion-item>
-		<ion-item type="button" detail="true" routerLink="/{{routeData?.appUrl}}/detail/{{item?.id}}/certification">
-			<ion-label>
-				Personal Coaching
-				<ion-badge [color]="item?.dataCount?.personalCoachingCount > 0 ? 'dark' : 'medium'" mode="ios" slot="end">{{item?.dataCount?.personalCoachingCount || 0}}</ion-badge>
-			</ion-label>
-		</ion-item>
-	</ion-list>
-	
+<ion-content *ngIf="routeData?.type !== 'profile'">
+	<student-profile *ngIf="routeData?.type === 'student'"></student-profile>
+	<coach-profile *ngIf="routeData?.type === 'coach'"></coach-profile>
+	<company-profile *ngIf="routeData?.type === 'company'"></company-profile>
+	<profile *ngIf="routeData?.type === 'admin'"></profile>
 </ion-content>

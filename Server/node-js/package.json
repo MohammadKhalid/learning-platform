@@ -19,6 +19,7 @@
     "express-form-data": "^2.0.7",
     "ffmpeg": "0.0.4",
     "ffmpeg-extract-frames": "^2.0.2",
+    "fluent-ffmpeg": "^2.1.2",
     "handbrake-js": "^3.0.8",
     "jade": "~1.11.0",
     "mandrill-api": "^1.0.45",

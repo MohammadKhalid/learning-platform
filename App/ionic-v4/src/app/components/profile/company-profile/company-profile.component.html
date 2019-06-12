@@ -1,0 +1,70 @@
+<profile></profile>
+
+<ion-list>
+    <ion-list-header>
+      <ion-label color="primary">Staff</ion-label>
+    </ion-list-header>
+  
+    <ion-item type="button" detail="true" routerLink="/{{routeData?.appUrl}}/detail/{{paramData?.id}}/student">
+      <ion-label>
+        Students
+        <ion-badge [color]="item?.dataCount?.studentCount > 0 ? 'dark' : 'medium'" mode="ios" slot="end">{{item?.dataCount?.studentCount || 0}}</ion-badge>
+      </ion-label>
+    </ion-item>
+    <ion-item type="button" detail="true" routerLink="/{{routeData?.appUrl}}/detail/{{paramData?.id}}/coach">
+      <ion-label>
+        Coaches
+        <ion-badge [color]="item?.dataCount?.coachCount > 0 ? 'dark' : 'medium'" mode="ios" slot="end">{{item?.dataCount?.coachCount || 0}}</ion-badge>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+<ion-list>
+  <ion-list-header>
+    <ion-label color="primary">Assessment</ion-label>
+  </ion-list-header>
+
+  <ion-item type="button" detail="true" routerLink="/{{routeData?.appUrl}}/detail/{{item?.id}}/practice-time">
+    <ion-label>
+      Practice Time
+      <ion-badge [color]="item?.dataCount?.practiceTimeCount > 0 ? 'dark' : 'medium'" mode="ios" slot="end">{{item?.dataCount?.practiceTimeCount || 0}}</ion-badge>
+    </ion-label>
+  </ion-item>
+  <ion-item type="button" detail="true" routerLink="/{{routeData?.appUrl}}/detail/{{item?.id}}/show-time">
+    <ion-label>
+      Show Time
+      <ion-badge [color]="item?.dataCount?.showTimeCount > 0 ? 'dark' : 'medium'" mode="ios" slot="end">{{item?.dataCount?.showTimeCount || 0}}</ion-badge>
+    </ion-label>
+  </ion-item>
+  <ion-item type="button" detail="true" routerLink="/{{routeData?.appUrl}}/detail/{{item?.id}}/certification">
+    <ion-label>
+      Certification
+      <ion-badge [color]="item?.dataCount?.certificationCount > 0 ? 'dark' : 'medium'" mode="ios" slot="end">{{item?.dataCount?.certificationCount || 0}}</ion-badge>
+    </ion-label>
+  </ion-item>
+</ion-list>
+
+<ion-list>
+  <ion-list-header>
+    <ion-label color="primary">Interaction</ion-label>
+  </ion-list-header>
+
+  <ion-item type="button" detail="true" routerLink="/{{routeData?.appUrl}}/detail/{{item?.id}}/practice-time">
+    <ion-label>
+      Live Group Training
+      <ion-badge [color]="item?.dataCount?.liveGroupTrainingCount > 0 ? 'dark' : 'medium'" mode="ios" slot="end">{{item?.dataCount?.liveGroupTrainingCount || 0}}</ion-badge>
+    </ion-label>
+  </ion-item>
+  <ion-item type="button" detail="true" routerLink="/{{routeData?.appUrl}}/detail/{{item?.id}}/show-time">
+    <ion-label>
+      Ask The Expert
+      <ion-badge [color]="item?.dataCount?.askTheExpertCount > 0 ? 'dark' : 'medium'" mode="ios" slot="end">{{item?.dataCount?.askTheExpertCount || 0}}</ion-badge>
+    </ion-label>
+  </ion-item>
+  <ion-item type="button" detail="true" routerLink="/{{routeData?.appUrl}}/detail/{{item?.id}}/certification">
+    <ion-label>
+      Personal Coaching
+      <ion-badge [color]="item?.dataCount?.personalCoachingCount > 0 ? 'dark' : 'medium'" mode="ios" slot="end">{{item?.dataCount?.personalCoachingCount || 0}}</ion-badge>
+    </ion-label>
+  </ion-item>
+</ion-list>

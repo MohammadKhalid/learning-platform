@@ -1,13 +1,13 @@
 <ion-header no-border>
     <ion-toolbar color="primary">
       <ion-buttons slot="start">
-        <ion-back-button [defaultHref]="!item ? this.routeData.appUrl : this.routeData.appUrl + '/detail/' + item.id"></ion-back-button>
+        <ion-back-button [defaultHref]="!item ? routeData.appUrl : routeData.appUrl + '/detail/' + item.id"></ion-back-button>
       </ion-buttons>
   
-      <ion-title text-capitalize>{{action}} {{this.routeData.singular}}</ion-title>
+      <ion-title text-capitalize>{{action}} {{routeData.singular}}</ion-title>
   
       <ion-buttons slot="end">
-        <ion-button type="button" *ngIf="form.valid && submitted === false" (click)="save()">Save</ion-button>
+        <ion-button type="button" *ngIf="form.valid && !submitted" (click)="save()">Save</ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
@@ -20,6 +20,19 @@
         <ion-list-header mode="ios">
           <ion-label color="primary">Basic Info</ion-label>
         </ion-list-header>
+
+        <div *ngIf="routeData.type === 'company'">
+          <div formArrayName="companies" *ngFor="let company of companyForms.controls; let companyIndex = index;">
+            <ion-item-group [formGroupName]="companyIndex">
+              <ion-item lines="inset">
+                <ion-label position="stacked">Company <ion-text color="danger">*</ion-text></ion-label>
+                <ion-input
+                  formControlName="name"
+                ></ion-input>
+              </ion-item>  
+            </ion-item-group>
+          </div>
+        </div>
 
         <ion-item lines="inset">
           <ion-label position="stacked">First Name <ion-text color="danger">*</ion-text></ion-label>
@@ -41,12 +54,127 @@
              formControlName="description"
           ></ion-textarea>
         </ion-item>
-  
       </ion-list>
+
+      <ion-list *ngIf="(routeData.type === 'student' || routeData.type === 'coach') && sessionData.user.type !== 'company'">
+        <ion-list-header mode="ios">
+          <ion-label color="primary">Company</ion-label>
+        </ion-list-header>
+
+        <ion-item>
+          <ion-label position="stacked" hidden>Name</ion-label>
+          <ion-select formControlName="companyId" placeholder="Select One">
+            <ion-select-option value="{{company.id}}" *ngFor="let company of formFieldData?.companies">{{company.name}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-list>
+
+      <ion-list>
+          <ion-list-header mode="ios">
+            <ion-label color="primary">Telecom</ion-label>
+          </ion-list-header>
+
+          <div formArrayName="telecoms" *ngFor="let telecom of telecomForms.controls; let telecomIndex = index;">
+            <div [formGroupName]="telecomIndex">
+                <ion-input type="hidden" formControlName="name"></ion-input>
+
+                <ion-item lines="inset">
+                  <ion-label position="stacked">Telephone</ion-label>
+                  <ion-input
+                    formControlName="telephone"
+                  ></ion-input>
+                </ion-item>
+
+                <ion-item lines="inset">
+                  <ion-label position="stacked">Mobile</ion-label>
+                  <ion-input
+                    formControlName="mobile"
+                  ></ion-input>
+                </ion-item>
+
+                <ion-item [lines]="telecomIndex === telecomForms.controls.length ? 'inset' : 'full'">
+                  <ion-label position="stacked">Fax</ion-label>
+                  <ion-input
+                    formControlName="fax"
+                  ></ion-input>
+                </ion-item>
+              </div>
+          </div>
+      </ion-list>
+
+      <ion-list>
+        <ion-list-header mode="ios">
+          <ion-label color="primary">Address</ion-label>
+        </ion-list-header>
+
+        <div formArrayName="addresses" *ngFor="let address of addressForms.controls; let addressIndex = index;">
+          <div [formGroupName]="addressIndex">
+              <ion-input type="hidden" formControlName="name"></ion-input>
+
+              <ion-item lines="inset">
+                <ion-label position="stacked">Street</ion-label>
+                <ion-input
+                  formControlName="street"
+                ></ion-input>
+              </ion-item>
+
+              <ion-item lines="inset">
+                <ion-label position="stacked">City</ion-label>
+                <ion-input
+                  formControlName="cityName"
+                ></ion-input>
+              </ion-item>
+
+              <ion-item lines="inset">
+                  <ion-label position="stacked">State</ion-label>
+                  <ion-input
+                    formControlName="provinceName"
+                  ></ion-input>
+                </ion-item>
+
+              <ion-item lines="inset">
+                <ion-label position="stacked">Zip Code</ion-label>
+                <ion-input
+                  formControlName="zip"
+                ></ion-input>
+              </ion-item>
+
+              <ion-item [lines]="addressIndex === addressForms.controls.length ? 'inset' : 'full'">
+                <ion-label position="stacked">Country</ion-label>
+                <ion-input
+                  formControlName="country"
+                ></ion-input>
+              </ion-item>
+            </div>
+        </div>
+    </ion-list>
+
+    <ion-list formGroupName="subscription" *ngIf="routeData.type === 'company'">
+        <ion-radio-group formControlName="subscriptionPackageId">
+          <ion-list-header mode="ios">
+            <ion-label color="primary">Subscription</ion-label>
+          </ion-list-header>
+      
+          <ion-item [lines]="subscriptionPackageIndex === formFieldData.subsription_packages.length - 1 ? 'none' : 'inset'" *ngFor="let subscriptionPackage of formFieldData?.subsription_packages; let subscriptionPackageIndex = index">
+            <ion-label>
+              <h2>{{subscriptionPackage.name}}</h2>
+              <h3>{{subscriptionPackage.price}} {{subscriptionPackage.priceCurrency}} / {{subscriptionPackage.priceBasis}}</h3>
+              <p>{{subscriptionPackage.description}}</p>
+            </ion-label>
+            <ion-radio slot="start" mode="ios" value="{{subscriptionPackage.id}}"></ion-radio>
+          </ion-item>
+        </ion-radio-group>
+
+        <ion-item>
+          <ion-icon name="calendar" mode="md" slot="start"></ion-icon>
+          <ion-label position="stacked">Date End <ion-badge>Expire in {{expireAt}}</ion-badge></ion-label>
+          <ion-datetime (ionChange)="updateSubscriptionEnd()" formControlName="expireAt" displayFormat="DDD. MMM DD, YYYY" max="{{maxYearPicker}}"></ion-datetime>
+        </ion-item>
+    </ion-list>
 
       <ion-list *ngIf="!item">
         <ion-list-header mode="ios">
-          <ion-label color="primary">Login Credential</ion-label>
+          <ion-label color="primary">Login</ion-label>
         </ion-list-header>
 
         <ion-item lines="inset">
@@ -70,7 +198,7 @@
           ></ion-input>
         </ion-item>
 
-        <ion-item lines="inset">
+        <ion-item lines="none">
             <ion-icon name="lock" slot="start" color="light"></ion-icon>
             <ion-label position="stacked">Repeat Password <ion-text color="danger">*</ion-text></ion-label>
             <ion-input

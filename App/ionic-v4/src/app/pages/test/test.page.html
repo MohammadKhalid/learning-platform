@@ -3,13 +3,35 @@
     <ion-title>Test Page</ion-title>
 
     <ion-buttons slot="end">
-      <ion-button fill="outline" (click)="connect()">Connect</ion-button>
+      <!-- <ion-button fill="outline" (click)="connect()">Connect</ion-button> -->
+      <ion-button fill="outline" (click)="startRecord()">Record</ion-button>
+      <ion-button fill="outline" (click)="stopRecord()">Stop Record</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
   <ion-list>
+    <ion-item>
+      <ion-label>
+        <p>Video</p>
+        {{dataUrl.video}}
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <p>Audio</p>
+        {{dataUrl.audio}}
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <!-- video recording -->
+  <div #videoContainer class="fixed-content speaker-video-container">
+    <video #myvideo playsinline autoplay></video>
+  </div>
+  <!-- <video #myvideoPreview controls autoplay playsinline muted style="width: 100%"></video> -->
+  <!-- <ion-list>
     <ion-list-header>
       <ion-label>My ID: {{mypeerid}}</ion-label>
     </ion-list-header>
@@ -31,5 +53,5 @@
         <video #myvideo></video>
       </ion-col>
     </ion-row>
-  </ion-grid>
+  </ion-grid> -->
 </ion-content>

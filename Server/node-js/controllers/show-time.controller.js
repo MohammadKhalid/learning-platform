@@ -3,7 +3,8 @@ const { to, ReE, ReS } = require('../services/util.service');
 const multiparty = require('multiparty');
 const fs = require('fs');
 const util = require('util');
-const ffmpeg = require('ffmpeg');
+// const ffmpeg = require('ffmpeg');
+const ffmpeg = require('fluent-ffmpeg');
 const mandrill = require('mandrill-api/mandrill');
 const { send_message } = require('../services/mail.service');
 const extractFrames = require('ffmpeg-extract-frames');
@@ -56,7 +57,7 @@ const create = async function(req, res){
             }
         ];
 
-        [err, item] = await to(item.createTopic(item_info, { 
+        [err, topic] = await to(item.createTopic(item_info, { 
             include: [
                 {
                     association: 'questions',
@@ -65,18 +66,6 @@ const create = async function(req, res){
             ]
         }));
         if(err) return ReE(res, err, 422);
-
-        // get topic
-        [err, topic] = await to(item.getTopic({
-            include: [
-                {
-                    association: 'questions',
-                    include: ['question']
-                }
-            ]
-        }));
-        if(err) return ReE(res, err, 422);
-        topic = topic.toWeb();
     }
 
     // save item
@@ -91,17 +80,18 @@ const create = async function(req, res){
     // topic
     item_json.topic = topic;
 
-    return ReS(res, {item: item_json, topic: topic}, 201);
+    return ReS(res, {item: item_json}, 201);
 }
 module.exports.create = create;
 
 const answerQuestion = async function(req, res){
-    let err, item;
+    let err, item, videoFilePath;
     item = req.item;
     
     let item_info = {};
     let files = [];
     let formFiles = [];
+    let mediaConverter = ffmpeg();
 
     // form data
     const uploadDir = './uploads/show-time';
@@ -119,38 +109,21 @@ const answerQuestion = async function(req, res){
         });
 
         form.on('file', function(name, file) {
-            formFiles.push(file);
+            const filePath = file.path;
+            const mediaHeaders = file.headers;
+            const mediaContentType = mediaHeaders['content-type'].split('/')[0];
+
+            // set new file name
+            if(mediaContentType === 'video' || mediaContentType === 'application/octet-stream') {
+                videoFilePath = filePath.split('.')[0] + '.mp4';
+            }
+
+            mediaConverter.addInput(filePath);
         });
 
         // close emitted after form parsed
         form.on('close', function() {
-            let formFilesLength = 0;
-
-            formFiles.forEach(async (file) => {
-                formFilesLength++;
-
-                // extract 1 frame at 1.5s
-                await extractFrames({
-                    input: file.path,
-                    output: file.path.split('.').slice(0, -1).join('.') + '.jpg',
-                    offsets: [
-                        1500
-                    ]
-                }).then((snapshot) => {
-                    // append
-                    files.push({
-                        path      : file.path,
-                        size      : file.size,
-                        type      : file.headers['content-type'],
-                        filename  : file.originalFilename,
-                        snapshot  : snapshot    
-                    });
-                });
-
-                if(formFilesLength === formFiles.length) resolve();
-            });
-
-            if(!formFiles.length) resolve();
+            resolve();
         });
 
         // start parse req
@@ -159,43 +132,88 @@ const answerQuestion = async function(req, res){
 
     // save
     let answer;
-    [err, answer] = await to(item.createAnswer(item_info, { through: { topicQuestionId: item_info.topicQuestionId } }));
-    if(err) return ReE(res, err, 422);
+    // [err, answer] = await to(item.createAnswer(item_info, { through: { topicQuestionId: item_info.topicQuestionId } }));
+    // if(err) return ReE(res, err, 422);
 
     // media
-    setTimeout(function() {
-        for (var i = files.length - 1; i >= 0; i--) {
-            const file = files[i];
+    console.log('FILES ', files);
 
-            // convert if video
-            let videoType = file.type.split('/')[0];
+    mediaConverter.format('mp4');
+    // mediaConverter.videoBitrate('1024k');
+    // mediaConverter.audioBitrate('128k');
+    // mediaConverter.audioChannels(2);
+    // mediaConverter.size('720x?');
+    // mediaConverter.keepDAR();
 
-            if(videoType === 'video' || file.type === 'application/octet-stream') {
-                try {
-                    var process = new ffmpeg(file.path);
-                        process.then(function (video) {
-                            let tempFilePath = file.path.split('.');
-                            let newFilePath = tempFilePath[0] + '.mp4';
+    // console.log('MEDIA CONVERTER ', mediaConverter);
 
-                            video
-                                .setVideoFrameRate(25)
-                                .save(newFilePath, function (error, newFile) {
-                                    if (error) console.log('Error saving encoded file ', newFile);
-                                });
-                        }, function (err) {
-                            console.log('Error encoding ', file);
-                    });
-                } catch (e) {
-                    console.log('Error FFMPEG!');
-                }
-            }
-
-            // save file
-            answer.createMedia(file);
-        }
+    // mediaConverter.output(videoFile)
+    mediaConverter.on('error', function(err) {
+        console.log('An error occurred: ' + err.message);
     });
+    mediaConverter.on('end', function() {
+        console.log('Merging finished !');
 
-    let item_json = item.toWeb();
+        // ffmpeg(videoFilePath).screenshots({
+        //     timemarks: [ 1 ],
+        //     filename: '%b.png',
+        //     folder: uploadDir
+        // });
+    });
+    mediaConverter.on('start', function(commandLine) {
+        console.log('Spawned Ffmpeg with command: ' + commandLine);
+    });
+    mediaConverter.save(videoFilePath);
+
+    // let mergeMedia = ffmpeg_fluent(files[1].path)
+    //     .mergeAdd(files[0].path)
+    //     // .complexFilter([
+    //     //     '[1:0] adelay=2728000|2728000 [delayed]',
+    //     //     '[0:1][delayed] amix=inputs=2',
+    //     // ])
+    //     // .outputOption('-map 0:0')
+    //     // .audioCodec('aac')
+    //     // .videoCodec('copy')
+    //     .save(uploadDir + '/test.mp4');
+
+    // for (var i = files.length - 1; i >= 0; i--) {
+    //     const file = files[i];
+
+    //     console.log('FILE ' + i, file);
+
+    //     // convert if video
+    //     let videoType = file.type.split('/')[0];
+
+    //     if(videoType === 'video' || file.type === 'application/octet-stream') {
+    //         try {
+    //             var process = new ffmpeg(file.path);
+    //                 process.then(function (video) {
+    //                     let tempFilePath = file.path.split('.');
+    //                     let newFilePath = tempFilePath[0] + '.mp4';
+
+    //                     video
+    //                         .addCommand('-i ' + files[1].path)
+    //                         .setVideoFrameRate(30)
+    //                         .save(newFilePath, function (error, newFile) {
+    //                             if (error) console.log('Error saving encoded file ', newFile);
+    //                         });
+    //                 }, function (err) {
+    //                     console.log('Error encoding ', file);
+    //             });
+    //         } catch (e) {
+    //             console.log('Error FFMPEG!');
+    //         }
+    //     }
+
+    //     // save file
+    //     // answer.createMedia(file);
+
+    //     // // In this example will be changed the output to avi format
+    //     // video.addCommand('-f', 'avi');
+    // }
+
+    // let item_json = item.toWeb();
+    let item_json = '';
     return ReS(res, {item:item_json}, 201);
 }
 module.exports.answerQuestion = answerQuestion;

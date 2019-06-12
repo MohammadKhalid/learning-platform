@@ -4,6 +4,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
+  { path: 'setup', loadChildren: './setup/setup.module#SetupPageModule' },
+
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', loadChildren: './pages/login/login.module#LoginPageModule' },
   { path: 'dashboard', canActivate: [AuthGuardService], loadChildren: './pages/dashboard/dashboard.module#DashboardPageModule' },
@@ -22,19 +24,19 @@ const routes: Routes = [
     path: 'company', 
     canActivate: [AuthGuardService],
     loadChildren: './pages/user/user-routing.module#UserRoutingModule',
-    data: { type: 'company', singular: 'company', plural: 'companies', apiEndPoint: 'companies', appUrl: 'company' }
+    data: { type: 'company', singular: 'company', plural: 'companies', apiEndPoint: 'companies', appUrl: 'company', rootUrl: 'company', rootApiEndPoint: 'companies' }
   },
   { 
     path: 'coach', 
     canActivate: [AuthGuardService],
     loadChildren: './pages/user/user-routing.module#UserRoutingModule',
-    data: { type: 'coach', singular: 'coach', plural: 'coaches', apiEndPoint: 'coaches', appUrl: 'coach' }
+    data: { type: 'coach', singular: 'coach', plural: 'coaches', apiEndPoint: 'coaches', appUrl: 'coach', rootUrl: 'coach', rootApiEndPoint: 'coaches' }
   },
   { 
     path: 'student', 
     canActivate: [AuthGuardService],
     loadChildren: './pages/user/user-routing.module#UserRoutingModule',
-    data: { type: 'student', singular: 'student', plural: 'students', apiEndPoint: 'students', appUrl: 'student' }
+    data: { type: 'student', singular: 'student', plural: 'students', apiEndPoint: 'students', appUrl: 'student', rootUrl: 'student', rootApiEndPoint: 'students' }
   },
   { 
     path: 'live-group-training', 

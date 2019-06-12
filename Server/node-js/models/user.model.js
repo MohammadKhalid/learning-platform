@@ -46,13 +46,13 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     Model.associate = function(models) {
-        this.belongsToMany(models.Company, {as: 'companies', through: 'UserCompany', foreignKey: 'userId', otherKey: 'companyId'});
+        this.belongsToMany(models.Company, {as: 'companies', through: models.UserCompany, foreignKey: 'userId', otherKey: 'companyId'});
         this.belongsToMany(models.ShowTime, {as: 'showTimes', through: 'UserShowTime', foreignKey: 'userId', otherKey: 'showTimeId'});
         this.belongsToMany(models.AskExpert, {as: 'askExperts', through: 'UserAskExpert', foreignKey: 'userId', otherKey: 'askExpertId'});
 
-        this.hasOne(models.Subscription, {as: 'subscription', foreignKey: 'userId'});
         this.hasOne(models.UserProfile, {as: 'profile', foreignKey: 'userId'});
 
+        this.belongsTo(models.Subscription, {as: 'subscription', foreignKey: 'subscriptionId'});
         this.belongsTo(models.User, {as: 'createdByUser', foreignKey: 'createdBy'});
         this.belongsTo(models.User, {as: 'updatedByUser', foreignKey: 'updatedBy'});
 

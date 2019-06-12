@@ -2,12 +2,11 @@ const {TE, to} = require('../services/util.service');
 
 module.exports = (sequelize, DataTypes) => {
   var Model = sequelize.define('SubscriptionPackage', {
-    type: {
-        type: DataTypes.ENUM,
-        values: ['elite', 'gold', 'platinum', 'silver', 'trial'],
-        allowNull: true
-    },
-    name: DataTypes.STRING(150)
+    name: DataTypes.STRING(150),
+    description: DataTypes.TEXT,
+    price: DataTypes.DECIMAL(10, 2),
+    priceBasis: DataTypes.STRING(20),
+    priceCurrency: DataTypes.STRING(3)
   });
 
   Model.associate = function(models) {

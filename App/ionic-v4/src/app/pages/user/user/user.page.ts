@@ -15,7 +15,10 @@ export class UserPage implements OnInit {
 	sessionData: any;
 	items: any = [];
 	routeData: any;
+	paramData: any;
 	queryParams: any;
+	detailLink: string;
+	userCanAdd = ['admin', 'company'];
 
 	constructor(
 		private restApi: RestApiService,
@@ -35,12 +38,29 @@ export class UserPage implements OnInit {
 		this.activatedRoute.data.subscribe((data) => {
 			this.routeData = data;
 
-			this.getList();
+			this.activatedRoute.params.subscribe((data) => {
+				this.paramData = data;
+				this.getList();
+			});
 		});
 	}
 
 	getList() {
-		this.restApi.get(this.routeData.apiEndPoint, this.queryParams).subscribe((res: any) => {
+		let apiEndPoint: string;
+
+		console.log('routeData', this.routeData);
+
+		if(this.routeData.rootUrl !== this.routeData.type) {
+			apiEndPoint = this.routeData.rootApiEndPoint + '/' + this.paramData.id + '/' + this.routeData.apiEndPoint;
+			this.queryParams.type = this.routeData.type;
+
+			this.detailLink = '/' + this.routeData.rootUrl + '/detail/' + this.paramData.id + '/' + this.routeData.type + '/';
+		} else {
+			apiEndPoint = this.routeData.apiEndPoint;
+			this.detailLink = '/' + this.routeData.appUrl + '/detail/';
+		}
+
+		this.restApi.get(apiEndPoint, this.queryParams).subscribe((res: any) => {
 			if(res.success === true) {
 				this.items = res.items;
 			} else {
@@ -50,7 +70,6 @@ export class UserPage implements OnInit {
 	}
 
 	canAdd() {
-		return this.sessionData.user.type == 'admin' ? true : false;
+		return this.userCanAdd.includes(this.sessionData.user.type);
 	}
-
 }

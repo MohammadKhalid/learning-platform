@@ -14,6 +14,8 @@ export class ErrorsHandler implements ErrorHandler {
   ) {}
 
   handleError(error: Error | HttpErrorResponse) {
+    console.log('ERROR HANDLER', error);
+
     const notificationService = this.injector.get(NotificationService);
     const errorsService = this.injector.get(ErrorsService);
 

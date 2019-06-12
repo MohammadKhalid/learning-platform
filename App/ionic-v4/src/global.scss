@@ -33,9 +33,18 @@
 .grid-outlined > ion-row { border-bottom: 1px solid var(--ion-color-light-shade, #ddd); }
 .grid-outlined > ion-row > ion-col { border-right: 1px solid var(--ion-color-light-shade, #ddd); }
 
+// typography
+.header-xl {
+	font-size: 4rem;
+	font-weight: 800;
+	line-height: 1;
+	letter-spacing: -1.5px;
+}
+
 // utilities
 .fixed-content { width: 100%; height: 100%; }
 .text-box-lg { font-size: 2rem !important; line-height: 1; font-weight: 300 !important; }
+.item-input-note { --min-height: 12px; padding-top: 3px; }
 
 // video box
 .participant-video-container { position: relative; }

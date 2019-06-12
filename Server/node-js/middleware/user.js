@@ -1,4 +1,4 @@
-const User         = require('./../models').User;
+const { User } = require('./../models');
 const { to, ReE, ReS } = require('../services/util.service');
 
 let profile = async function (req, res, next) {
@@ -40,7 +40,16 @@ let item = async function (req, res, next) {
         include: [
             'profile',
             'addresses',
-            'telecoms'
+            'telecoms',
+            'subscription',
+            {
+                association: 'companies',
+                // where: { isOwner: false }
+                // include: [ 'subscription' ]
+            }
+            // {
+            //     model: 'companies'
+            // }
         ]
     }));
     if(err) return ReE(res, "err finding");
@@ -52,7 +61,29 @@ let item = async function (req, res, next) {
     switch (item.type) {
         case 'student':
         case 'coach':
-            const [err, practiceTimeCount] =   await to(item.getShowTimes({ where: { isPractice: true } }));  
+            // let companies;
+            
+            // let company, companyUser;
+            // [err, company] = await to(item.companies[0].UserCompany.getCompany({
+            //     where: { companyId: 1, isOwner: true }
+            //     // include: [ 'subscription' ]
+            // }));
+            // console.log('COMPANY', company);
+
+            // [err, companyUser] = await to(company[0].getUsers({
+            //     through: { type: 'company' }
+            // }));
+
+            // console.log('COMPANY', companyUser);
+
+            // [err, companies] = await to(item.getCompanyUsers());
+            // if(err) return ReE(res, "err finding user companies");
+            // console.log('COMPENIESS', companies);
+
+
+
+            let practiceTimeCount;
+            [err, practiceTimeCount] = await to(item.getShowTimes({ where: { isPractice: true } }));  
             if(err) return ReE(res, "err finding user practice time");
 
             item.dataCount.practiceTimeCount = practiceTimeCount.length;
@@ -70,6 +101,7 @@ let role = async function (req, res, next) {
     let user = req.user;
     let authorized_user_types_array = [];
 
+    // @TODO. refactor to fix ownership validation
     if(req.body.type) {
         switch (req.body.type) {
             case 'admin':
@@ -78,7 +110,7 @@ let role = async function (req, res, next) {
                 authorized_user_types_array.push('admin');
                 break;
             case 'student':
-                authorized_user_types_array.push('admin', 'coach');
+                authorized_user_types_array.push('admin', 'coach', 'company');
                 break;
             default:
                 break;

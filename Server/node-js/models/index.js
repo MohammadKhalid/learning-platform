@@ -31,16 +31,15 @@ Object.keys(db).forEach((modelName) => {
 
 db.sync = function() {
     // default
-    // sequelize.sync({ alter: true, force: false }).then((res) => {
-    //   // console.log('SYNC RESULT ', res);
-    // }).catch((e) => {
-    //   console.log('ERROR SYNC');
-    // });
-    // sequelize.sync({ alter: true, force: true });
+    sequelize.sync({ alter: true, force: false }).then((res) => {
+      // console.log('SYNC RESULT ', res);
+    }).catch((e) => {
+      console.log('ERROR SYNC');
+    });
     // sequelize.sync();
           
     // deletes all tables then recreates them useful for testing and development purposes
-    deleteAll();
+    // deleteAll();
 }
 
 function deleteAll() {
@@ -82,39 +81,47 @@ function deleteAll() {
     // default subscription packages
     db.SubscriptionPackage.bulkCreate([
         {
-          type: 'elite',
-          name: 'Elite'
+          name: 'Starter',
+          description: 'Up to 10 Individual Licenses',
+          price: 50,
+          priceBasis: 'month',
+          priceCurrency: 'AU'
         },
         {
-          type: 'gold',
-          name: 'Gold'
+          name: 'Business',
+          description: 'Up to 10-100 Individual Licenses',
+          price: 80,
+          priceBasis: 'month',
+          priceCurrency: 'AU'
         },
         {
-          type: 'platinum',
-          name: 'Platinum'
+          name: 'Pro',
+          description: 'Up to 100-500 Individual Licenses',
+          price: 100,
+          priceBasis: 'month',
+          priceCurrency: 'AU'
         },
         {
-          type: 'silver',
-          name: 'Silver'
-        },
-        {
-          type: 'trial',
-          name: 'Trial'
+          name: 'Elite',
+          description: 'Up to 500-5000 Individual Licenses',
+          price: 40,
+          priceBasis: 'month',
+          priceCurrency: 'AU'
         }
       ]
     ).then((packages) => {
       // package modules
       db.Module.bulkCreate([
-        { name: 'user' },
-        { name: 'show-time' },
-        { name: 'live-group-training' },
-        { name: 'ask-expert' },
-        { name: 'certification' }
+        { name: 'user' }
+        // { name: 'show-time' },
+        // { name: 'live-group-training' },
+        // { name: 'ask-expert' },
+        // { name: 'certification' }
         // @TODO. add more modules
       ]).then((modules) => {
         // add modules
         for (let index = 0; index < packages.length; index++) {
-          var subscriptionPackage = {};
+          var subscriptionPackage = { limit: 10 };
           var _package = packages[index];
           subscriptionPackage.subscriptionPackageId = _package.id;
 
@@ -130,60 +137,62 @@ function deleteAll() {
       var year = d.getFullYear();
       var month = d.getMonth();
       var day = d.getDate();
-      var c = new Date(year + 3, month, day)
+      var c = new Date(year + 3, month, day);
 
-      // default client
-      db.User.create({
-        type: 'client',
-        nickName: 'Ford Motors',
-        firstName: 'Henry',
-        lastName: 'Ford',
-        username: 'client123',
-        email: 'client@thrive19.com',
-        password: 'client',
-        isActive: true,
-        subscription: {
+      db.Subscription.create({
           subscriptionPackageId: 1,
           startedAt: d,
           expireAt: c
-        }
-      }, {
-        include: [ 'subscription' ]
-      }).then((user) => {
-        // add company with users
-        db.Company.create({
-          name: 'Ford Motors',
-            users: [
-              {
-              type: 'student',
-              nickName: 'Jason',
-              firstName: 'Jason',
-              lastName: 'Estrada',
-              username: 'student123',
-              email: 'student@thrive19.com',
-              password: 'student',
-              isActive: true
-              },
-              {
+      }).then((subscription) => {
+        // default client
+        db.User.create({
+          type: 'company',
+          nickName: 'Thrive',
+          firstName: 'Thrive',
+          lastName: '19',
+          username: 'company',
+          email: 'client@thrive19.com',
+          password: 'company',
+          isActive: true,
+          subscriptionId: subscription.id
+        }).then((user) => {
+          // add company with users
+          db.Company.create({
+              name: 'Company X',
+              users: [
+                {
                 type: 'student',
-                nickName: 'Jean',
-                firstName: 'Jean',
-                lastName: 'Grey',
-                username: 'student1234',
-                email: 'student2@thrive19.com',
+                nickName: 'Jason',
+                firstName: 'Jason',
+                lastName: 'Estrada',
+                username: 'student123',
+                email: 'student@thrive19.com',
                 password: 'student',
-                isActive: true
-              }
-            ],
-          }, {
-            include: [
-              'users'
-            ]
-          }).then((company) => {
-            user.addCompany(company);
-          });
+                isActive: true,
+                subscriptionId: subscription.id
+                },
+                {
+                  type: 'student',
+                  nickName: 'Jean',
+                  firstName: 'Jean',
+                  lastName: 'Grey',
+                  username: 'student1234',
+                  email: 'student2@thrive19.com',
+                  password: 'student',
+                  isActive: true,
+                  subscriptionId: subscription.id
+                }
+              ],
+            }, {
+              include: [
+                'users'
+              ]
+            }).then((company) => {
+              user.addCompany(company, { through: { isOwner: true } });
+            });
+        });
+      
       });
-    
     });
 
     // Temp add Question

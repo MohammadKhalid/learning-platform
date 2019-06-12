@@ -17,6 +17,7 @@ const QuestionController 			= require('../controllers/question.controller');
 const AskExpertController 			= require('../controllers/ask-expert.controller');
 const ContactController = require('../controllers/contact.controller');
 const ChatController = require('../controllers/chat.controller');
+const SubscriptionPackageController = require('../controllers/subscription-package.controller');
 
 const custom 	        = require('./../middleware/custom');
 const role 	        	= require('./../middleware/role');
@@ -43,6 +44,8 @@ router.put(     '/profile',           passport.authenticate('jwt', {session:fals
 router.post(    '/companies',           passport.authenticate('jwt', {session:false}), user.company, user.role, UserController.create);	   // C
 router.get(     '/companies',           passport.authenticate('jwt', {session:false}), user.company, UserController.getAll);     // R
 router.get(     '/companies/:item_id',  passport.authenticate('jwt', {session:false}), user.company, user.role, user.item, UserController.get);        // R
+router.get(     '/companies/:item_id/students',  passport.authenticate('jwt', {session:false}), user.company, user.role, user.item, UserController.getStaff);        // R
+router.get(     '/companies/:item_id/coaches',  passport.authenticate('jwt', {session:false}), user.company, user.role, user.item, UserController.getStaff);        // R
 router.put(     '/companies/:item_id',  passport.authenticate('jwt', {session:false}), user.company, user.role, user.item, UserController.update);     // U
 router.delete(  '/companies/:item_id',  passport.authenticate('jwt', {session:false}), user.company, user.role, user.item, UserController.remove);     // D
 
@@ -69,7 +72,7 @@ router.put(     '/live-group-trainings/close/:item_id',  passport.authenticate('
 router.delete(  '/live-group-trainings/:item_id',  passport.authenticate('jwt', {session:false}), role.live_group_training, custom.live_group_training, LiveGroupTrainingController.remove);     // D
 
 router.post(    '/practice-time',           		    passport.authenticate('jwt', {session:false}), showTime.practice, ShowTimeController.create);	   						// C
-router.post(    '/practice-time/answer/:item_id',  	passport.authenticate('jwt', {session:false}), showTime.item, ShowTimeController.answerQuestion);	   						// C
+router.post(    '/practice-time/answer/:item_id',  	passport.authenticate('jwt', {session:false}), ShowTimeController.answerQuestion);	   						// C
 router.get(     '/practice-time',           		    passport.authenticate('jwt', {session:false}), showTime.practice, ShowTimeController.getAll);     					 	// R
 router.get(     '/practice-time/:item_id',  		    passport.authenticate('jwt', {session:false}), showTime.item, ShowTimeController.get);       		// R
 router.put(     '/practice-time/:item_id',  		    passport.authenticate('jwt', {session:false}), showTime.item, ShowTimeController.update);   // U
@@ -117,6 +120,12 @@ router.get(     '/ask-expert/:item_id',  				passport.authenticate('jwt', {sessi
 router.put(     '/ask-expert/:item_id',  				passport.authenticate('jwt', {session:false}), askExpert.item, AskExpertController.update);   			// U
 router.delete(     '/ask-expert/:item_id',  				passport.authenticate('jwt', {session:false}), askExpert.item, AskExpertController.remove);   			// U
 
+// router.post(    '/subscription-packages',           passport.authenticate('jwt', {session:false}), user.role, UserController.create);	   // C
+router.get(     '/subscription-packages',           passport.authenticate('jwt', {session:true}), SubscriptionPackageController.getAll);     // R
+// router.get(     '/subscription-packages/:item_id',  passport.authenticate('jwt', {session:false}), user.role, user.item, UserController.get);        // R
+// router.put(     '/subscription-packages/:item_id',  passport.authenticate('jwt', {session:false}), user.role, user.item, UserController.update);     // U
+// router.delete(  '/subscription-packages/:item_id',  passport.authenticate('jwt', {session:false}), user.role, user.item, UserController.remove);     // D
+
 // router.post(    '/companies',             passport.authenticate('jwt', {session:false}), CompanyController.create);                  // C
 // router.get(     '/companies',             passport.authenticate('jwt', {session:false}), CompanyController.getAll);                  // R
 // router.get(     '/companies/:company_id', passport.authenticate('jwt', {session:false}), custom.company, CompanyController.get);     // R
@@ -137,7 +146,9 @@ router.put('/chat', ChatController.update);
 router.delete('/chat', ChatController.remove);
 
 router.get('/dashboard', passport.authenticate('jwt', {session:false}), HomeController.Dashboard);
+
 router.get('/form-input-data', passport.authenticate('jwt', {session:false}), FormInputDataController.getAll); // R
+router.get('/form-input-data/user', passport.authenticate('jwt', {session:false}), FormInputDataController.getUserInputData); // R
 
 router.get('/uploads/:folder/:filename', VideoController.get); // R
 
