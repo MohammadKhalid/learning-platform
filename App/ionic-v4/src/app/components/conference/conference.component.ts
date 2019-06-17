@@ -12,20 +12,21 @@ import { SimplePdfViewerComponent, SimpleProgressData } from 'simple-pdf-viewer'
 import hark from 'hark';
 
 @Component({
-    selector: 'conference',
-    templateUrl: './conference.component.html',
-    styleUrls: ['./conference.component.scss'],
+	selector: 'conference',
+	templateUrl: './conference.component.html',
+	styleUrls: ['./conference.component.scss'],
 })
 export class ConferenceComponent implements OnInit, OnDestroy {
 
-    @Input('id') id: string;
-    @Input('publicRoomIdentifier') publicRoomIdentifier: string = 'conference';
-    @Input('user') user: any = {};
-    
-    @Input('appUrl') appUrl: string;
-    @Input('apiEndPoint') apiEndPoint: string;
+	@Input('id') id: string;
+	@Input('publicRoomIdentifier') publicRoomIdentifier: string = 'conference';
+	@Input('user') user: any = {};
+
+	@Input('appUrl') appUrl: string;
+	@Input('apiEndPoint') apiEndPoint: string;
 
 	@ViewChild('videosContainer') videosContainer: ElementRef;
+	@ViewChild('screenContainer') screenContainer: ElementRef;
 	@ViewChild('participantsContainer', { read: ElementRef }) participantsContainer: ElementRef;
 	@ViewChild('sharedPartOfScreenPreview') sharedPartOfScreenPreview: ElementRef;
 	@ViewChild('speakerVideo') speakerVideo: ElementRef;
@@ -35,7 +36,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	@ViewChild('pdfViewer', { read: ElementRef }) pdfViewerElem: ElementRef;
 	@ViewChild('pdfViewerInput') pdfViewerInput: IonInput;
 
-  item: any = {};
+	item: any = {};
 	connection: any;
 	socket: any;
 
@@ -45,7 +46,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	panel: string = 'speaker';
 	panelModal: string;
 	participantsCount: number = 0;
-	
+
 	messages: any[] = [];
 	message: string;
 
@@ -60,25 +61,29 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	localStream: any;
 
 	isLoading: boolean = true;
+	// getMediaStream: any;
 
 	constructor(
 		private rtcService: RtcService,
 		private restApi: RestApiService,
 		private notificationService: NotificationService,
 		private navCtrl: NavController,
-    private router: Router,
-    private elementRenderer: Renderer2,
+		private router: Router,
+		private elementRenderer: Renderer2,
 		private actionSheetCtrl: ActionSheetController,
 		private alertCtrl: AlertController
 	) {
 		// nav data
 		const navigation = this.router.getCurrentNavigation();
-		if(navigation.extras && navigation.extras.state) this.id = navigation.extras.state.id;
+		if (navigation.extras && navigation.extras.state) this.id = navigation.extras.state.id;
 
 		console.log('NAVIGATION DATA', navigation);
 	}
-
+	// async getDisplayMedia() {
+	// 	return await navigator.getDisplayMedia({ video: true });
+	// }
 	ngOnInit() {
+		// this.getMediaStream = this.getDisplayMedia();
 		// rtc connection
 		this.rtcService.getConnection().then((connection) => {
 			// set connection
@@ -100,24 +105,24 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 
 		// load data
 		this.restApi.get(this.apiEndPoint + '/' + this.id, {}).subscribe((resp: any) => {
-			if(resp.success === true) { 
+			if (resp.success === true) {
 				this.item = resp.item;
 
 				// status
-				if(this.item.started) this.item.status = 'started';
-				
+				if (this.item.started) this.item.status = 'started';
+
 				// participant type
-				if(this.user.id === this.item.speakerId) this.isSpeaker = true;
+				if (this.user.id === this.item.speakerId) this.isSpeaker = true;
 
 				// validate session
 				this.connection.checkPresence(this.id, (isRoomExist) => {
-					if(!isRoomExist && !this.isSpeaker) {
+					if (!isRoomExist && !this.isSpeaker) {
 						this.navCtrl.navigateRoot('/' + this.appUrl).then(() => {
 							this.notificationService.showMsg('Room is not yet open!');
 						});
-					} else if(!this.isSpeaker && this.item.public !== true) {
+					} else if (!this.isSpeaker && this.item.public !== true) {
 						this.isParticipant().then((res: boolean) => {
-							if(res) {
+							if (res) {
 								this.initConnection();
 							} else {
 								this.notificationService.showMsg('You are not in participants list!').then(() => {
@@ -134,22 +139,96 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			}
 		});
 	}
+	// async getScreenStream(callback) {
 
+	// 	if (this.getMediaStream) {
+	// 		navigator.getDisplayMedia({
+	// 			video: true
+	// 		}).then(screenStream => {
+	// 			callback(screenStream);
+	// 		});
+	// 	} else if (this.getMediaStream) {
+	// 		// callback(screenStream);
+	// 		// navigator.mediaDevices.getDisplayMedia({
+	// 		// 	video: true
+	// 		// }).then(screenStream => {
+	// 		// 	callback(screenStream);
+	// 		// });
+	// 	} else {
+	// 		// getScreenId(function(error, sourceId, screen_constraints) {
+	// 		// 	navigator.mediaDevices.getUserMedia(screen_constraints).then(function(screenStream) {
+	// 		// 		callback(screenStream);
+	// 		// 	});
+	// 		// });
+	// 	}
+	// }
+	shareScreen() {
+		debugger;
+		// this.getMediaStream;
+		this.connection.session.audio = 'two-way';
+		this.connection.session.screen = true;
+		this.connection.session.oneway = true;
+		// this.connection.session.video = false;
+
+		// this.connection.onstream = (event) => {
+		// 	debugger;
+		// 	if(event.type === 'remote' && !this.connection.session.video) {
+		// 		// document.getElementById('btn-add-video').disabled = false;
+		// 	}
+		// }
+		// this.openJoin();
+		//  = {
+		// 	audio: 'two-way', // merely audio will be two-way, rest of the streams will be oneway
+		// 	screen: true,
+		// 	oneway: true
+		// };
+
+		// this.connection.mediaConstraints = {
+		// 	audio: true,
+		// 	video:false
+		// };
+
+
+		// this.connection.addStream({
+		// 	screen: true,
+		// 	// oneway: true,
+		// 	// audio: true, // because session.audio==true, now it works
+		// 	video: false, // because session.video==true, now it works
+		// 	oneway: true,
+		// 	streamCallBack: (stream) => {
+		// 		debugger;
+		// 		console.log(stream);
+		// 	}
+		// });
+		// this.connection.getScreenConstraints = function(callback) {
+		// 	this.connection.getScreenConstraints(function(error, screen_constraints) {
+		// 		if (!error) {
+		// 			screen_constraints = this.connection.modifyScreenConstraints(screen_constraints);
+		// 			callback(error, screen_constraints);
+		// 			return;
+		// 		}
+		// 		throw error;
+		// 	});
+		// };
+
+	}
 	initConnection() {
 		// set connection options
 		this.connection.publicRoomIdentifier = this.publicRoomIdentifier;
 		this.connection.autoCloseEntireSession = false;
 		this.connection.autoCreateMediaElement = false;
 		this.connection.videosContainer = this.videosContainer.nativeElement;
+		this.connection.audiosContainer = this.screenContainer.nativeElement;
 
 		this.connection.session = {
 			audio: true,
 			video: true,
-			data: true
+			data: true,
+			oneway: true
 		};
 
 		// browser codecs support
-		if(this.connection.DetectRTC.browser.isSafari && Number(this.connection.DetectRTC.browser.fullVersion) <= 12.1) this.connection.codecs.video ='H264';
+		if (this.connection.DetectRTC.browser.isSafari && Number(this.connection.DetectRTC.browser.fullVersion) <= 12.1) this.connection.codecs.video = 'H264';
 
 		this.connection.sdpConstraints = {
 			mandatory: {
@@ -167,32 +246,32 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		// socket message
 		// this.connection.socketMessageEvent = this.publicRoomIdentifier + '-' + this.item.id;
 		this.connection.setCustomSocketEvent(this.publicRoomIdentifier);
-		
+
 		// set speaker flag
-		if(this.isSpeaker) {
+		if (this.isSpeaker) {
 			this.user.pdfViewer = {};
 
 			this.connection.extra.initiator = true;
 			this.connection.extra.sessionStream = { video: true, audio: true };
 
-			if(!this.user.initiatedSessions) this.user.initiatedSessions = {};
+			if (!this.user.initiatedSessions) this.user.initiatedSessions = {};
 		}
 
 		// extra session data
-		if(!this.connection.extra.hasOwnProperty('sessions')) this.connection.extra.sessions = {};
-		if(!this.connection.extra.sessions.hasOwnProperty(this.item.id)) this.connection.extra.sessions[this.item.id] = {};
+		if (!this.connection.extra.hasOwnProperty('sessions')) this.connection.extra.sessions = {};
+		if (!this.connection.extra.sessions.hasOwnProperty(this.item.id)) this.connection.extra.sessions[this.item.id] = {};
 
 		this.connection.extra = { ...this.connection.extra, ...this.user };
 		this.connection.updateExtraData();
 
 		this.connection.onmessage = (event) => {
 			console.log('CONN ON MESSAGE', event);
-
+			debugger;
 			switch (event.data.type) {
 				case 'chat':
 					this.messages.push(event.data);
 
-					if(this.panelModal !== 'message') {
+					if (this.panelModal !== 'message') {
 						this.newMessage = true;
 
 						// toast message
@@ -200,10 +279,10 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					}
 					break;
 				case 'session':
-					if(event.data.status === 'started') {
+					if (event.data.status === 'started') {
 						this.item.status = 'started';
 						this.item.started = event.data.started;
-					} else if(event.data.status === 'done') {
+					} else if (event.data.status === 'done') {
 						this.item.status = 'done';
 						this.item.status = 'close';
 
@@ -211,27 +290,27 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					}
 					break;
 				case 'pdfViewer':
-					if(event.data.userid && event.data.userid !== this.connection.userid) return false;
+					if (event.data.userid && event.data.userid !== this.connection.userid) return false;
 
-					if(event.data.action === 'loadFile') {
+					if (event.data.action === 'loadFile') {
 						// switch to screen panel
 						this.panel = 'screen';
 
 						// page start
-						if(event.data.pageStart) this.pdfViewerCurrentPage = event.data.pageStart;
+						if (event.data.pageStart) this.pdfViewerCurrentPage = event.data.pageStart;
 
 						// load file to pdfViewer
 						setTimeout(() => {
 							this.pdfViewerLoadFile(event.data.file);
 						});
-					} else if(event.data.action === 'gotoPage') {
+					} else if (event.data.action === 'gotoPage') {
 						this.pdfViewer.navigateToPage(event.data.number);
-					} else if(event.data.action === 'stop') {
+					} else if (event.data.action === 'stop') {
 						this.pdfViewerFile = null;
 						this.panel = 'speaker';
 					}
 
-					if(this.panel !== 'screen') this.newScreenShare = true;
+					if (this.panel !== 'screen') this.newScreenShare = true;
 					break;
 				case 'speaking':
 					this.streams[event.data.streamid].audioIconElem.setAttribute('color', event.data.value === true ? 'success' : 'light');
@@ -243,8 +322,8 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					this.notificationService.showMsg(event.data.message);
 
 					// send load to pdfViewer new participant
-					if(this.pdfViewerFile) {
-						if(this.isSpeaker && this.connection.extra.pdfViewer.file) {
+					if (this.pdfViewerFile) {
+						if (this.isSpeaker && this.connection.extra.pdfViewer.file) {
 							this.connection.send({
 								type: 'pdfViewer',
 								action: 'loadFile',
@@ -265,7 +344,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 						case 'muteUnmute':
 							this.streamMuteUnmute(event.data.stream);
 							break;
-					
+
 						default:
 							break;
 					}
@@ -284,10 +363,17 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			// console.log('ON-UNMUTE', e);
 			// e.stream[e.unmuteType + 'Muted'] = false;
 		};
-			
-		this.connection.onstream = (event) => {
-			console.log('ON STREAM EVENT ', event);
 
+		this.connection.onstream = (event) => {
+			debugger;
+			console.log('ON STREAM EVENT ', event);
+			// var width = event.mediaElement.clientWidth || this.connection.shareScreen.clientWidth;
+			// var mediaElement = getMediaElement(event.mediaElement, {
+			// 	title: event.userid,
+			// 	buttons: ['full-screen'],
+			// 	width: width,
+			// 	showOnMouseEnter: false
+			// });
 			// remove duplicate elem
 			// let participantsContainerElem = this.participantsContainer.nativeElement.querySelectorAll('[participant-streamid="' + event.streamid + '"]')
 			// console.log('ON STREAM ELEMS', participantsContainerElem);
@@ -303,7 +389,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			// }
 
 			// skip
-			if(this.streams[event.streamid]) {
+			if (this.streams[event.streamid]) {
 				console.log('STREAM EXISTSSSS');
 				return;
 			}
@@ -314,26 +400,26 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			// video
 			let video = event.extra.initiator ? this.speakerVideo.nativeElement : this.elementRenderer.createElement('video');
 
-			if(event.type === 'local') {
+			if (event.type === 'local') {
 				video.volume = 0;
 
 				try {
-          video.setAttributeNode(document.createAttribute('muted'));
+					video.setAttributeNode(document.createAttribute('muted'));
 				} catch (e) {
-						video.setAttribute('muted', true);
+					video.setAttribute('muted', true);
 				}
 
 				// speech event
 				// if(!event.extra.initiator) this.captureUserSpeechEvents(event.stream);
 
 				// local stream
-				if(event.extra.sessions[this.item.id].hasOwnProperty('localStream')) {
+				if (event.extra.sessions[this.item.id].hasOwnProperty('localStream')) {
 					// mute
-					if(this.connection.extra.sessions[this.item.id].localStream.video.muted) {
+					if (this.connection.extra.sessions[this.item.id].localStream.video.muted) {
 						event.stream.mute('video');
 						this.localStream.video.muted = true;
 					}
-					if(this.connection.extra.sessions[this.item.id].localStream.audio.muted) {
+					if (this.connection.extra.sessions[this.item.id].localStream.audio.muted) {
 						event.stream.mute('audio');
 						this.localStream.audio.muted = true;
 					}
@@ -351,21 +437,21 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			video.srcObject = event.stream;
 
 			// setup participant video html
-			if(!event.extra.initiator) {
+			if (!event.extra.initiator) {
 				console.log('EVENT INITIATORRR');
 
 				// set attributes
-					try {
-						video.setAttributeNode(document.createAttribute('autoplay'));
-						video.setAttributeNode(document.createAttribute('playsinline'));
+				try {
+					video.setAttributeNode(document.createAttribute('autoplay'));
+					video.setAttributeNode(document.createAttribute('playsinline'));
 				} catch (e) {
-						video.setAttribute('autoplay', true);
-						video.setAttribute('playsinline', true);
+					video.setAttribute('autoplay', true);
+					video.setAttribute('playsinline', true);
 				}
 
 				// video container
 				let videoContainer = this.elementRenderer.createElement('div');
-				
+
 				this.elementRenderer.addClass(videoContainer, 'participant-video-container');
 				this.elementRenderer.addClass(video, 'participant-video');
 
@@ -373,22 +459,22 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 
 				// video label mic icon
 				let videoLabelElem = this.elementRenderer.createElement('ion-chip');
-					videoLabelElem.outline = true;
-					videoLabelElem.color = 'light';
+				videoLabelElem.outline = true;
+				videoLabelElem.color = 'light';
 
 				let videoLabelIconElem = this.elementRenderer.createElement('ion-icon');
-					videoLabelIconElem.name = 'mic';
-					videoLabelIconElem.size = 'small';
-					videoLabelIconElem.color = 'light';
-					this.streams[event.streamid].audioIconElem = videoLabelIconElem;
-				
-					videoLabelElem.append(videoLabelIconElem);
+				videoLabelIconElem.name = 'mic';
+				videoLabelIconElem.size = 'small';
+				videoLabelIconElem.color = 'light';
+				this.streams[event.streamid].audioIconElem = videoLabelIconElem;
+
+				videoLabelElem.append(videoLabelIconElem);
 
 				let videoLabelLabelElem = this.elementRenderer.createElement('ion-label');
-					videoLabelLabelElem.color = 'light';
-					videoLabelLabelElem.innerHTML = '<small>' + event.extra.firstName + ' ' + event.extra.lastName + '</small>';
-				
-					videoLabelElem.append(videoLabelLabelElem);
+				videoLabelLabelElem.color = 'light';
+				videoLabelLabelElem.innerHTML = '<small>' + event.extra.firstName + ' ' + event.extra.lastName + '</small>';
+
+				videoLabelElem.append(videoLabelLabelElem);
 
 				let videoLabelContainer = this.elementRenderer.createElement('div');
 				this.elementRenderer.addClass(videoLabelContainer, 'participant-video-label-container');
@@ -399,8 +485,8 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 
 				// elem container
 				let elemContainer = this.elementRenderer.createElement('div');
-					elemContainer.id = 'participant-video-container-' + event.streamid;
-					
+				elemContainer.id = 'participant-video-container-' + event.streamid;
+
 				this.elementRenderer.setAttribute(elemContainer, 'data-userid', event.userid);
 				this.elementRenderer.setAttribute(elemContainer, 'participant-streamid', event.streamid);
 				this.elementRenderer.setAttribute(elemContainer, 'size', '12');
@@ -426,17 +512,17 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			// 	});
 			// }
 		};
-		
+
 		this.connection.onstreamended = (event) => {
 			console.log('STREAM ENDED', event);
 
 			// remove media element
 			// this.participantElemExists('#' + event.streamid).then((elem: any) => {
 			// 	if(elem) elem.remove();
-      // });
-            
-      // remove stream
-			if(this.streams[event.streamid]) {
+			// });
+
+			// remove stream
+			if (this.streams[event.streamid]) {
 				delete this.streams[event.streamid];
 
 				console.log('STREAM DELETED');
@@ -452,11 +538,11 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			// this.connection.peersBackup[event.userid];
 
 			// remove participant video element
-			if(event.extra.initiator) {
+			if (event.extra.initiator) {
 				// this.speakerVideo.nativeElement.srcObject = null;
 			} else {
 				let participantsContainerElem = this.participantsContainer.nativeElement.querySelectorAll('[data-userid="' + event.userid + '"]')
-				if(participantsContainerElem) {
+				if (participantsContainerElem) {
 					console.log('USER LEAVE ELEMS', participantsContainerElem);
 
 					participantsContainerElem.forEach((elem) => {
@@ -477,12 +563,12 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					console.log('Please select external microphone. Check github issue number 483.');
 					return;
 				}
-		
+
 				let secondaryMic = this.connection.DetectRTC.audioInputDevices[1].deviceId;
 				this.connection.mediaConstraints.audio = {
 					deviceId: secondaryMic
 				};
-		
+
 				// reconnect
 				this.openJoin();
 			}
@@ -498,26 +584,26 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 
 	openJoin() {
 		// join
-		if(this.isSpeaker) {
+		if (this.isSpeaker) {
 			this.connection.openOrJoin(this.item.id, (isRoomCreated, roomid) => {
 				// if(isRoomCreated) {
-					// send message to public room
-					this.socket.emit(this.publicRoomIdentifier, {
+				// send message to public room
+				this.socket.emit(this.publicRoomIdentifier, {
+					type: 'join',
+					speaker: true,
+					roomid: roomid
+				});
+
+				setTimeout(() => {
+					// send message to session
+					this.connection.send({
 						type: 'join',
-						speaker: true,
-						roomid: roomid
+						message: 'Speaker is online!'
 					});
+				}, 5000);
 
-					setTimeout(() => {
-						// send message to session
-						this.connection.send({
-							type: 'join',
-							message: 'Speaker is online!'
-						});
-					}, 5000);
-
-					// show controls
-					this.isLoading = false;
+				// show controls
+				this.isLoading = false;
 				// }
 			});
 
@@ -525,7 +611,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			this.user.initiatedSessions[this.item.id] = true;
 		} else {
 			this.connection.join(this.item.id, (isJoined, roomid) => {
-				if(isJoined) {
+				if (isJoined) {
 					// send message to public room
 					this.socket.emit(this.publicRoomIdentifier, {
 						type: 'join',
@@ -577,7 +663,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		// 			value: false
 		// 		});
 		// 	}
-		
+
 		// 	// local
 		// 	this.streams[stream.id].audioIconElem.setAttribute('color', 'light');
 		// });
@@ -592,10 +678,10 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					text: 'Cancel',
 					role: 'cancel',
 					cssClass: 'secondary',
-					handler: () => {}
-				}, 
+					handler: () => { }
+				},
 				{
-				text: 'Yes',
+					text: 'Yes',
 					handler: () => {
 						this.panel = 'speaker';
 						this.pdfViewerFile = null;
@@ -611,14 +697,14 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 				}
 			]
 		}).then((alert) => {
-			alert.present();	
+			alert.present();
 		});
 	}
 
 	pdfViewerUpload() {
 		this.pdfViewerInput.getInputElement().then((fileInputEl: HTMLInputElement) => {
-            fileInputEl.click();
-        });
+			fileInputEl.click();
+		});
 	}
 
 	pdfViewerInputUpload(files: FileList) {
@@ -665,7 +751,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		console.log('PDF VIEWER LOADED', this.pdfViewer);
 
 		// go to page
-		if(this.pdfViewerCurrentPage) this.pdfViewer.navigateToPage(this.pdfViewerCurrentPage);
+		if (this.pdfViewerCurrentPage) this.pdfViewer.navigateToPage(this.pdfViewerCurrentPage);
 
 		// fit to screen
 		this.pdfViewer.zoomPageWidth();
@@ -683,7 +769,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		setTimeout(() => {
 			const pdfViewerPage = this.pdfViewer.getCurrentPage();
 
-			if(this.pdfViewerCurrentPage !== pdfViewerPage) {
+			if (this.pdfViewerCurrentPage !== pdfViewerPage) {
 				this.connection.send({
 					type: 'pdfViewer',
 					action: 'gotoPage',
@@ -714,7 +800,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		this.item.started = this.beautifyDate(now, 'MMM. DD, YYYY h:mm a');
 
 		this.restApi.put(this.apiEndPoint + '/start/' + this.item.id, { dateStart: this.item.started }).subscribe((res: any) => {
-			if(res.success === true) {
+			if (res.success === true) {
 				// message public room list
 				this.connection.socket.emit(this.publicRoomIdentifier, {
 					type: 'opened',
@@ -760,7 +846,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		console.log('localStream ', localStream);
 		console.log('Stream TYPE ', type);
 
-		if(this.connection.extra.sessions[this.item.id].localStream[type].muted) {
+		if (this.connection.extra.sessions[this.item.id].localStream[type].muted) {
 			localStream.unmute(type);
 			muted = false;
 		} else {
@@ -773,61 +859,61 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	}
 
 	presentParticipantSetting() {
-		if(!this.isParticipant) return false;
+		if (!this.isParticipant) return false;
 
 		this.alertCtrl.create({
-            header: 'On / Off',
-            subHeader: 'Participants Camera',
+			header: 'On / Off',
+			subHeader: 'Participants Camera',
 			inputs: [
-			  {
-				name: 'video',
-				type: 'checkbox',
-                label: 'Video',
-                value: 'video',
-				checked: this.connection.extra.sessionStream.video
-			  },
-	  
-			  {
-				name: 'audio',
-				type: 'checkbox',
-                label: 'Audio',
-                value: 'audio',
-                checked: this.connection.extra.sessionStream.audio
-			  }
+				{
+					name: 'video',
+					type: 'checkbox',
+					label: 'Video',
+					value: 'video',
+					checked: this.connection.extra.sessionStream.video
+				},
+
+				{
+					name: 'audio',
+					type: 'checkbox',
+					label: 'Audio',
+					value: 'audio',
+					checked: this.connection.extra.sessionStream.audio
+				}
 			],
 			buttons: [
-			  {
-				text: 'Cancel',
-				role: 'cancel',
-				cssClass: 'secondary',
-				handler: () => {}
-			  }, {
-				text: 'OK',
-				handler: (streamTypes) => {
-					console.log('PARTCIPANT CAMERA', streamTypes);
+				{
+					text: 'Cancel',
+					role: 'cancel',
+					cssClass: 'secondary',
+					handler: () => { }
+				}, {
+					text: 'OK',
+					handler: (streamTypes) => {
+						console.log('PARTCIPANT CAMERA', streamTypes);
 
-					const participants = this.connection.getAllParticipants();
-					const streamTypes_ = ['video', 'audio'];
+						const participants = this.connection.getAllParticipants();
+						const streamTypes_ = ['video', 'audio'];
 
-					streamTypes_.forEach((type) => {
-						if(participants.length > 0 && this.connection.extra.sessionStream[type] !== streamTypes.includes(type)) {
-							// send participants to turn off/on their stream
-							this.connection.send({
-								type: 'remoteStream',
-								action: 'muteUnmute',
-								stream: type
-							});
-						}
+						streamTypes_.forEach((type) => {
+							if (participants.length > 0 && this.connection.extra.sessionStream[type] !== streamTypes.includes(type)) {
+								// send participants to turn off/on their stream
+								this.connection.send({
+									type: 'remoteStream',
+									action: 'muteUnmute',
+									stream: type
+								});
+							}
 
-						this.connection.extra.sessionStream[type] = streamTypes.includes(type);
-						this.connection.updateExtraData();
-					});
+							this.connection.extra.sessionStream[type] = streamTypes.includes(type);
+							this.connection.updateExtraData();
+						});
+					}
 				}
-			  }
 			]
 		}).then((alert) => {
-            alert.present();
-        });
+			alert.present();
+		});
 	}
 
 	endSession() {
@@ -835,7 +921,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			this.restApi.put(this.apiEndPoint + '/close/' + this.item.id, {}).subscribe((res: any) => {
 				this.notificationService.toast.dismiss();
 
-				if(res.success === true) {
+				if (res.success === true) {
 					// update item
 					this.item = res.item;
 
@@ -873,7 +959,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		console.log('VIEW WILL UNLOAD', this.connection);
 		console.log('VIEW WILL UNLOAD SESSION', this.item.id);
 
-		if(this.socket) {
+		if (this.socket) {
 			// send message to public room
 			this.socket.emit(this.publicRoomIdentifier, {
 				type: 'leave',
@@ -883,7 +969,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			});
 
 			// if(this.status !== 'started') this.disconnectConnection();
-			if(this.connection) this.disconnectConnection();
+			if (this.connection) this.disconnectConnection();
 		}
 	}
 
@@ -901,16 +987,16 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			// this.connection.multiPeersHandler.onNegotiationNeeded({
 			// 	userLeft: true
 			// }, participantId);
-	
+
 			// if (this.connection.peers[participantId] && this.connection.peers[participantId].peer) {
 			// 	this.connection.peers[participantId].peer.close();
 			// }
-	
+
 			// delete this.connection.peers[participantId];
 
 			this.connection.disconnectWith(participantId);
 		});
-	
+
 		// stop all local cameras
 		this.connection.attachStreams.forEach((localStream) => {
 			localStream.stop();
@@ -926,6 +1012,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	}
 
 	showPanel(name: string) {
+		debugger;
 		// activate panel
 		this.panel = this.panel === name ? 'speaker' : name;
 
@@ -960,7 +1047,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	}
 
 	sendMessage() {
-		if(!this.message) return;
+		if (!this.message) return;
 
 		const newMessage = {
 			type: 'chat',
@@ -982,7 +1069,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		this.actionSheetCtrl.create({
 			header: this.item.title,
 			buttons: [
-				{	
+				{
 					text: 'Edit',
 					icon: 'create',
 					handler: () => {
@@ -1001,7 +1088,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					text: 'Cancel',
 					icon: 'close',
 					role: 'cancel',
-					handler: () => {}
+					handler: () => { }
 				}
 			]
 		}).then((action) => {
@@ -1014,33 +1101,33 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			header: 'Delete Confirmation',
 			message: 'Are you sure you want to delete this Live Group Training "' + this.item.title + '"?',
 			buttons: [
-					{
-				text: 'Cancel',
-				role: 'cancel',
-				cssClass: 'secondary',
-				handler: () => {}
-					}, 
-					{
-				text: 'Yes',
-				handler: () => {
-					this.notificationService.showMsg('Deleting...', 0).then((toast: any) => {
-						this.restApi.delete(this.apiEndPoint + '/' + this.item.id).subscribe((res: any) => {
-							this.notificationService.toast.dismiss();
+				{
+					text: 'Cancel',
+					role: 'cancel',
+					cssClass: 'secondary',
+					handler: () => { }
+				},
+				{
+					text: 'Yes',
+					handler: () => {
+						this.notificationService.showMsg('Deleting...', 0).then((toast: any) => {
+							this.restApi.delete(this.apiEndPoint + '/' + this.item.id).subscribe((res: any) => {
+								this.notificationService.toast.dismiss();
 
-							if(res.success === true) {
-								this.notificationService.showMsg('Live Group Training ' + this.item.title + ' has been deleted!').then(() => {
-									this.navCtrl.navigateRoot('/' + this.appUrl);
-								});
-							} else {
-								this.notificationService.showMsg(res.error);
-							}
+								if (res.success === true) {
+									this.notificationService.showMsg('Live Group Training ' + this.item.title + ' has been deleted!').then(() => {
+										this.navCtrl.navigateRoot('/' + this.appUrl);
+									});
+								} else {
+									this.notificationService.showMsg(res.error);
+								}
+							});
 						});
-					});
-				}
 					}
-		]
+				}
+			]
 		}).then((alert) => {
-			alert.present();	
+			alert.present();
 		});
 	}
 
@@ -1053,8 +1140,8 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					text: 'Cancel',
 					role: 'cancel',
 					cssClass: 'secondary',
-					handler: () => {}
-				}, 
+					handler: () => { }
+				},
 				{
 					text: 'Yes',
 					handler: () => {
@@ -1076,8 +1163,8 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					text: 'Cancel',
 					role: 'cancel',
 					cssClass: 'secondary',
-					handler: () => {}
-				}, 
+					handler: () => { }
+				},
 				{
 					text: 'Yes',
 					handler: () => {
@@ -1091,7 +1178,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	}
 
 	presentConfirmLeave() {
-		if(this.item.status !== 'started') {
+		if (this.item.status !== 'started') {
 			this.leaveSession();
 		} else {
 			this.alertCtrl.create({
@@ -1102,8 +1189,8 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 						text: 'Cancel',
 						role: 'cancel',
 						cssClass: 'secondary',
-						handler: () => {}
-					}, 
+						handler: () => { }
+					},
 					{
 						text: 'Yes',
 						handler: () => {
@@ -1118,12 +1205,12 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	}
 
 	beautifyDate(_date: string, _format: string = 'MMMM D, YYYY') {
-        return moment(_date).format(_format);
-    }
-    
+		return moment(_date).format(_format);
+	}
+
 	async isParticipant() {
-	 	for (let i = this.item.participants.length - 1; i >= 0; i--) {
-			if(this.item.participants[i].id == this.user.id) return true;
+		for (let i = this.item.participants.length - 1; i >= 0; i--) {
+			if (this.item.participants[i].id == this.user.id) return true;
 		}
 
 		return false;
