@@ -8,7 +8,7 @@ import { NotificationService } from '../../services/notification/notification.se
 
 import * as moment from 'moment';
 import { SimplePdfViewerComponent, SimpleProgressData } from 'simple-pdf-viewer';
-
+import adapter from 'webrtc-adapter'
 import hark from 'hark';
 
 @Component({
@@ -71,7 +71,8 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		private router: Router,
 		private elementRenderer: Renderer2,
 		private actionSheetCtrl: ActionSheetController,
-		private alertCtrl: AlertController
+		private alertCtrl: AlertController,
+
 	) {
 		// nav data
 		const navigation = this.router.getCurrentNavigation();
@@ -162,12 +163,11 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	// 		// });
 	// 	}
 	// }
-	shareScreen() {
-		debugger;
+	async shareScreen() {
 		// this.getMediaStream;
-		this.connection.session.audio = 'two-way';
-		this.connection.session.screen = true;
-		this.connection.session.oneway = true;
+		// this.connection.session.audio = 'two-way';
+		// this.connection.session.screen = true;
+		// this.connection.session.oneway = true;
 		// this.connection.session.video = false;
 
 		// this.connection.onstream = (event) => {
@@ -188,18 +188,55 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		// 	video:false
 		// };
 
+		var video = document.querySelector('video');
 
-		// this.connection.addStream({
-		// 	screen: true,
-		// 	// oneway: true,
-		// 	// audio: true, // because session.audio==true, now it works
-		// 	video: false, // because session.video==true, now it works
-		// 	oneway: true,
-		// 	streamCallBack: (stream) => {
-		// 		debugger;
-		// 		console.log(stream);
-		// 	}
-		// });
+		adapter.browserShim.shimGetDisplayMedia(window, "window"); // or "screen"
+
+		// (async () => {
+		try {
+			// let screenCaptureIns = await navigator.mediaDevices.getDisplayMedia({ video: true });
+			// video.srcObject = screenCaptureIns;
+			// debugger;
+			// // this.connection.send({
+			// // 	type: 'sharescreen',
+			// // 	message: 'admin screen share',
+			// // 	streamid: screenCaptureIns.id
+			// // });
+			debugger
+			navigator.mediaDevices.getDisplayMedia({
+				video: true
+			}).then(externalStream => {
+				debugger
+				this.connection.addStream({
+					screen: true
+				});
+				
+				video.srcObject = externalStream
+				this.connection.send({
+					type: 'sharescreen',
+					message: 'admin screen share',
+					streamid: externalStream
+				});
+			}, error => {
+				alert(error);
+			});
+			// this.connection.addStream({
+			// 	screen: true,
+			// 	// oneway: true,
+			// 	// audio: true, // because session.audio==true, now it works
+			// 	video: false, // because session.video==true, now it works
+			// 	oneway: true,
+			// 	streamCallBack: (stream) => {
+			// 		debugger;
+			// 		console.log(stream);
+			// 	}
+			// });
+		} catch (e) {
+			console.log(e);
+		}
+		// })();
+
+
 		// this.connection.getScreenConstraints = function(callback) {
 		// 	this.connection.getScreenConstraints(function(error, screen_constraints) {
 		// 		if (!error) {
@@ -268,6 +305,12 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			console.log('CONN ON MESSAGE', event);
 			debugger;
 			switch (event.data.type) {
+				case 'sharescreen':
+					this.streams[event.data.streamid];
+					var video = document.querySelector('video');
+				video.srcObject = event.data.streamid
+					break;
+
 				case 'chat':
 					this.messages.push(event.data);
 
@@ -365,7 +408,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		};
 
 		this.connection.onstream = (event) => {
-			debugger;
+			debugger
 			console.log('ON STREAM EVENT ', event);
 			// var width = event.mediaElement.clientWidth || this.connection.shareScreen.clientWidth;
 			// var mediaElement = getMediaElement(event.mediaElement, {
