@@ -26,7 +26,6 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	@Input('apiEndPoint') apiEndPoint: string;
 
 	@ViewChild('videosContainer') videosContainer: ElementRef;
-	@ViewChild('screenContainer') screenContainer: ElementRef;
 	@ViewChild('participantsContainer', { read: ElementRef }) participantsContainer: ElementRef;
 	@ViewChild('sharedPartOfScreenPreview') sharedPartOfScreenPreview: ElementRef;
 	@ViewChild('speakerVideo') speakerVideo: ElementRef;
@@ -164,96 +163,107 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	// 	}
 	// }
 	async shareScreen() {
-		// this.getMediaStream;
-		// this.connection.session.audio = 'two-way';
-		// this.connection.session.screen = true;
-		// this.connection.session.oneway = true;
-		// this.connection.session.video = false;
+		this.panel = this.panel == "sharescreen" ? "notsharescreen" : "sharescreen";
+		if (this.panel == "sharescreen") {
+			// this.getMediaStream;
+			// this.connection.session.audio = 'two-way';
+			// this.connection.session.screen = true;
+			// this.connection.session.oneway = true;
+			// this.connection.session.video = false;
 
-		// this.connection.onstream = (event) => {
-		// 	debugger;
-		// 	if(event.type === 'remote' && !this.connection.session.video) {
-		// 		// document.getElementById('btn-add-video').disabled = false;
-		// 	}
-		// }
-		// this.openJoin();
-		//  = {
-		// 	audio: 'two-way', // merely audio will be two-way, rest of the streams will be oneway
-		// 	screen: true,
-		// 	oneway: true
-		// };
+			// this.connection.onstream = (event) => {
+			// 	debugger;
+			// 	if(event.type === 'remote' && !this.connection.session.video) {
+			// 		// document.getElementById('btn-add-video').disabled = false;
+			// 	}
+			// }
+			// this.openJoin();
+			//  = {
+			// 	audio: 'two-way', // merely audio will be two-way, rest of the streams will be oneway
+			// 	screen: true,
+			// 	oneway: true
+			// };
 
-		// this.connection.mediaConstraints = {
-		// 	audio: true,
-		// 	video:false
-		// };
+			// this.connection.mediaConstraints = {
+			// 	audio: true,
+			// 	video:false
+			// };
 
-		var video = document.querySelector('video');
+			// var video = document.querySelector('video');
 
-		// adapter.browserShim.shimGetDisplayMedia(window, "window"); // or "screen"
+			// adapter.browserShim.shimGetDisplayMedia(window, "window"); // or "screen"
 
-		// (async () => {
-		try {
-			// let screenCaptureIns = await navigator.mediaDevices.getDisplayMedia({ video: true });
-			// video.srcObject = screenCaptureIns;
-			// debugger;
-			// // this.connection.send({
-			// // 	type: 'sharescreen',
-			// // 	message: 'admin screen share',
-			// // 	streamid: screenCaptureIns.id
-			// // });
+			// (async () => {
+			try {
+				// let screenCaptureIns = await navigator.mediaDevices.getDisplayMedia({ video: true });
+				// video.srcObject = screenCaptureIns;
+				// debugger;
+				// // this.connection.send({
+				// // 	type: 'sharescreen',
+				// // 	message: 'admin screen share',
+				// // 	streamid: screenCaptureIns.id
+				// // });
+				this.connection.addStream({
+					screen: true,
+					oneway: true
+				});
+				// navigator.mediaDevices.getDisplayMedia({
+				// 	video: true,
+				// 	audio: true
+				// }).then(externalStream => {
+				// 	debugger
+				// 	this.connection.addStream({
+				// 		screen: true,
+				// 		oneway: true
+				// 	});
+
+				// 	// video.srcObject = externalStream
+				// 	// this.connection.send({
+				// 	// 	type: 'sharescreen',
+				// 	// 	message: 'admin screen share',
+				// 	// 	streamid: externalStream
+				// 	// });
+				// }, error => {
+				// 	alert(error);
+				// });
+				// this.connection.addStream({
+				// 	screen: true,
+				// 	// oneway: true,
+				// 	// audio: true, // because session.audio==true, now it works
+				// 	video: false, // because session.video==true, now it works
+				// 	oneway: true,
+				// 	streamCallBack: (stream) => {
+				// 		debugger;
+				// 		console.log(stream);
+				// 	}
+				// });
+			} catch (e) {
+				console.log(e);
+			}
+			// })();
+
+
+			// this.connection.getScreenConstraints = function(callback) {
+			// 	this.connection.getScreenConstraints(function(error, screen_constraints) {
+			// 		if (!error) {
+			// 			screen_constraints = this.connection.modifyScreenConstraints(screen_constraints);
+			// 			callback(error, screen_constraints);
+			// 			return;
+			// 		}
+			// 		throw error;
+			// 	});
+			// };
+		}
+		else {
+			//disable screen share
 			this.connection.addStream({
-				screen: true,
-				video: false,
-				audio: 'two-way',
+				screen: false,
+				audio: true,
+				video: true,
+				data: true,
 				oneway: true
 			});
-			// navigator.mediaDevices.getDisplayMedia({
-			// 	video: true,
-			// 	audio: true
-			// }).then(externalStream => {
-			// 	debugger
-			// 	this.connection.addStream({
-			// 		screen: true,
-			// 		oneway: true
-			// 	});
-				
-			// 	// video.srcObject = externalStream
-			// 	// this.connection.send({
-			// 	// 	type: 'sharescreen',
-			// 	// 	message: 'admin screen share',
-			// 	// 	streamid: externalStream
-			// 	// });
-			// }, error => {
-			// 	alert(error);
-			// });
-			// this.connection.addStream({
-			// 	screen: true,
-			// 	// oneway: true,
-			// 	// audio: true, // because session.audio==true, now it works
-			// 	video: false, // because session.video==true, now it works
-			// 	oneway: true,
-			// 	streamCallBack: (stream) => {
-			// 		debugger;
-			// 		console.log(stream);
-			// 	}
-			// });
-		} catch (e) {
-			console.log(e);
 		}
-		// })();
-
-
-		// this.connection.getScreenConstraints = function(callback) {
-		// 	this.connection.getScreenConstraints(function(error, screen_constraints) {
-		// 		if (!error) {
-		// 			screen_constraints = this.connection.modifyScreenConstraints(screen_constraints);
-		// 			callback(error, screen_constraints);
-		// 			return;
-		// 		}
-		// 		throw error;
-		// 	});
-		// };
 
 	}
 	initConnection() {
@@ -262,29 +272,65 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		this.connection.autoCloseEntireSession = false;
 		this.connection.autoCreateMediaElement = false;
 		this.connection.videosContainer = this.videosContainer.nativeElement;
-		this.connection.audiosContainer = this.screenContainer.nativeElement;
 
-		this.connection.session = {
-			// audio: 'two-way',
-			video: true,
-			data: true,
-			oneway: true
-		};
+		// this.connection.session = {
+		// 	audio: true,
+		// 	video: true,
+		// 	data: true,
+		// 	oneway: true
+		// };
 
-		this.connection.addStream({
-			audio: 'two-way'
-		})
+		// this.connection.addStream({
+		// 	audio: 'two-way'
+		// })
 
 		// browser codecs support
 		if (this.connection.DetectRTC.browser.isSafari && Number(this.connection.DetectRTC.browser.fullVersion) <= 12.1) this.connection.codecs.video = 'H264';
 
-		this.connection.sdpConstraints = {
-			mandatory: {
-				OfferToReceiveAudio: true,
-				OfferToReceiveVideo: true
-			}
-		};
+		// this.connection.sdpConstraints = {
+		// 	mandatory: {
+		// 		OfferToReceiveAudio: true,
+		// 		OfferToReceiveVideo: true
+		// 	}
+		// };
+		debugger;
+		if (this.user.type == "coach") {
 
+
+			this.connection.sdpConstraints = {
+				mandatory: {
+					OfferToReceiveAudio: true,
+					OfferToReceiveVideo: false
+				}
+			};
+			this.connection.session = {
+				audio: true,
+				video: true,
+				data: true,
+				oneway: true
+			};
+		}
+		else if (this.user.type == "student") {
+
+
+			this.connection.sdpConstraints = {
+				mandatory: {
+					OfferToReceiveAudio: true,
+					OfferToReceiveVideo: true
+				}
+			};
+
+			this.connection.session = {
+				// audio: true,
+				// video: false,
+				data: true,
+				oneway: true
+			};
+			// this.connection.addStream({
+			// 	audio: true,
+			// 	video: false
+			// })
+		}
 		// on close
 		this.connection.onclose = () => {
 			// reinitialize connection
@@ -319,7 +365,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 				case 'sharescreen':
 					this.streams[event.data.streamid];
 					var video = document.querySelector('video');
-				video.srcObject = event.data.streamid
+					video.srcObject = event.data.streamid
 					break;
 
 				case 'chat':
