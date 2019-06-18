@@ -163,6 +163,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	// 	}
 	// }
 	async shareScreen() {
+		debugger;
 		this.panel = this.panel == "sharescreen" ? "notsharescreen" : "sharescreen";
 		if (this.panel == "sharescreen") {
 			// this.getMediaStream;
@@ -172,7 +173,6 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			// this.connection.session.video = false;
 
 			// this.connection.onstream = (event) => {
-			// 	debugger;
 			// 	if(event.type === 'remote' && !this.connection.session.video) {
 			// 		// document.getElementById('btn-add-video').disabled = false;
 			// 	}
@@ -197,21 +197,30 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			try {
 				// let screenCaptureIns = await navigator.mediaDevices.getDisplayMedia({ video: true });
 				// video.srcObject = screenCaptureIns;
-				// debugger;
 				// // this.connection.send({
 				// // 	type: 'sharescreen',
 				// // 	message: 'admin screen share',
 				// // 	streamid: screenCaptureIns.id
 				// // });
+				this.connection.attachStreams.forEach(stream => {
+					stream.getVideoTracks().forEach(track => {
+						stream.removeTrack(track);
+					});
+					// stream.addTrack(true);
+				});
+
+
 				this.connection.addStream({
 					screen: true,
 					oneway: true
 				});
+
+
 				// navigator.mediaDevices.getDisplayMedia({
 				// 	video: true,
 				// 	audio: true
 				// }).then(externalStream => {
-				// 	debugger
+				// 	
 				// 	this.connection.addStream({
 				// 		screen: true,
 				// 		oneway: true
@@ -233,7 +242,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 				// 	video: false, // because session.video==true, now it works
 				// 	oneway: true,
 				// 	streamCallBack: (stream) => {
-				// 		debugger;
+				// 		
 				// 		console.log(stream);
 				// 	}
 				// });
@@ -256,6 +265,12 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		}
 		else {
 			//disable screen share
+			this.connection.attachStreams.forEach(stream => {
+				stream.getVideoTracks().forEach(track => {
+					stream.removeTrack(track);
+				});
+				// stream.addTrack(true);
+			});
 			this.connection.addStream({
 				screen: false,
 				audio: true,
@@ -293,7 +308,6 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		// 		OfferToReceiveVideo: true
 		// 	}
 		// };
-		debugger;
 		if (this.user.type == "coach") {
 
 
@@ -360,7 +374,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 
 		this.connection.onmessage = (event) => {
 			console.log('CONN ON MESSAGE', event);
-			debugger;
+
 			switch (event.data.type) {
 				case 'sharescreen':
 					this.streams[event.data.streamid];
@@ -465,8 +479,6 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		};
 
 		this.connection.onstream = (event) => {
-			debugger
-			console.log('ON STREAM EVENT ', event);
 			// var width = event.mediaElement.clientWidth || this.connection.shareScreen.clientWidth;
 			// var mediaElement = getMediaElement(event.mediaElement, {
 			// 	title: event.userid,
@@ -1112,7 +1124,6 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	}
 
 	showPanel(name: string) {
-		debugger;
 		// activate panel
 		this.panel = this.panel === name ? 'speaker' : name;
 
