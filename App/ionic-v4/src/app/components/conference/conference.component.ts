@@ -190,7 +190,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 
 		var video = document.querySelector('video');
 
-		adapter.browserShim.shimGetDisplayMedia(window, "window"); // or "screen"
+		// adapter.browserShim.shimGetDisplayMedia(window, "window"); // or "screen"
 
 		// (async () => {
 		try {
@@ -202,24 +202,31 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			// // 	message: 'admin screen share',
 			// // 	streamid: screenCaptureIns.id
 			// // });
-			debugger
-			navigator.mediaDevices.getDisplayMedia({
-				video: true
-			}).then(externalStream => {
-				debugger
-				this.connection.addStream({
-					screen: true
-				});
-				
-				video.srcObject = externalStream
-				this.connection.send({
-					type: 'sharescreen',
-					message: 'admin screen share',
-					streamid: externalStream
-				});
-			}, error => {
-				alert(error);
+			this.connection.addStream({
+				screen: true,
+				video: false,
+				audio: 'two-way',
+				oneway: true
 			});
+			// navigator.mediaDevices.getDisplayMedia({
+			// 	video: true,
+			// 	audio: true
+			// }).then(externalStream => {
+			// 	debugger
+			// 	this.connection.addStream({
+			// 		screen: true,
+			// 		oneway: true
+			// 	});
+				
+			// 	// video.srcObject = externalStream
+			// 	// this.connection.send({
+			// 	// 	type: 'sharescreen',
+			// 	// 	message: 'admin screen share',
+			// 	// 	streamid: externalStream
+			// 	// });
+			// }, error => {
+			// 	alert(error);
+			// });
 			// this.connection.addStream({
 			// 	screen: true,
 			// 	// oneway: true,
@@ -258,11 +265,15 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		this.connection.audiosContainer = this.screenContainer.nativeElement;
 
 		this.connection.session = {
-			audio: true,
+			// audio: 'two-way',
 			video: true,
 			data: true,
 			oneway: true
 		};
+
+		this.connection.addStream({
+			audio: 'two-way'
+		})
 
 		// browser codecs support
 		if (this.connection.DetectRTC.browser.isSafari && Number(this.connection.DetectRTC.browser.fullVersion) <= 12.1) this.connection.codecs.video = 'H264';
