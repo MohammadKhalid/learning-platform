@@ -38,7 +38,7 @@
 <ion-fab vertical="bottom" horizontal="center" slot="fixed" [hidden]="isLoading">
   <div *ngIf="isSpeaker">
     <ion-fab-button size="small" color="danger" (click)="pdfViewerStopShare()" *ngIf="pdfViewerFile"><ion-icon name="easel"></ion-icon></ion-fab-button>
-    <ion-fab-button size="small"  [color]="panel === 'sharescreen' ? 'medium' : 'dark'" (click)="shareScreen()" *ngIf="!pdfViewerFile"><ion-icon name="easel"></ion-icon></ion-fab-button>
+    <ion-fab-button size="small"  [color]="screenVar === 'sharescreen' ? 'medium' : 'dark'" (click)="shareScreen()" ><ion-icon name="easel"></ion-icon></ion-fab-button>
     <!-- <ion-fab-button size="small" [color]="panel === 'screen' ? 'medium' : 'dark'" (click)="showPanel('screen')" *ngIf="!pdfViewerFile"><ion-icon name="easel"></ion-icon></ion-fab-button> -->
 
     <ion-fab-button (click)="presentConfirmStart()" color="primary" text-uppercase *ngIf="item?.status !== 'started'"><small>Start</small></ion-fab-button>

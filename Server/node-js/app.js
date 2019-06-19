@@ -30,10 +30,10 @@ models.sequelize.authenticate().then(() => {
 .catch(err => {
     console.error('Unable to connect to SQL database:',CONFIG.db_name, err);
 });
-if(CONFIG.app === 'dev') {
-  // db sync
-  models.sync();
-}
+// if(CONFIG.app === 'dev') {
+//   // db sync
+//   models.sync();
+// }
 // CORS
 app.use(cors());
 
