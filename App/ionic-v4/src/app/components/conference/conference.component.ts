@@ -164,8 +164,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	// 	}
 	// }
 	async shareScreen() {
-		debugger;
-		this.panel
+		// this.panel
 		// this.connection.resetScreen();
 
 		// this.connection.videosContainer = this.videosContainer.nativeElement;
@@ -174,7 +173,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		// 	audio: false,
 		// 	video: false
 		// });
-
+		let video = document.querySelector('video');
 		// this.connection.resetScreen();
 		this.screenVar = this.screenVar == "sharescreen" ? "notsharescreen" : "sharescreen";
 		if (this.screenVar == "sharescreen") {
@@ -222,6 +221,18 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					audio: true,
 					oneway: true
 				});
+				// this.connection.resetTrack();
+				if (this.connection.attachStreams.length == 2) {
+					let streamEvent = this.connection.streamEvents[this.connection.attachStreams[1].streamid]
+					let mediaStreamObj = streamEvent.stream
+					video.srcObject = mediaStreamObj
+
+					// this.connection.send({
+					// 	type: 'screenshare',
+					// 	extra: { streamid: this.connection.attachStreams[1].streamid }
+					// });
+				}
+
 
 				// this.connection.removeStream({
 				// 	video: true,
@@ -287,8 +298,13 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			// 	audio: true,
 			// 	video: true
 			// };
-			var video = document.querySelector('video');
-
+			// var video = document.querySelector('video');
+			this.connection.resetTrack();
+			if (this.connection.attachStreams.length == 2) {
+				let streamEvent = this.connection.streamEvents[this.connection.attachStreams[0].streamid]
+				let mediaStreamObj = streamEvent.stream
+				video.srcObject = mediaStreamObj
+			}
 			// this.connection.session.audio = true;
 			// this.connection.session.screen = false;
 			// this.connection.session.oneway = true;
@@ -312,7 +328,6 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			// 	video: true,
 			// 	oneway: true
 			// });
-			this.connection.resetTrack();
 			// this.openJoin()
 			// this.connection.send({
 			// 	type: 'sharescreen',
@@ -437,12 +452,20 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		this.connection.onmessage = (event) => {
 			console.log('CONN ON MESSAGE', event);
 
+			
 			switch (event.data.type) {
-				case 'sharescreen':
+				case 'screenshare':
+					// this.streams[event.data.streamid.streamid] = event.data.streamid;
+					// var video = document.querySelector('video');
+					// video.srcObject = event.data.streamid
 					debugger
-					this.streams[event.data.streamid.streamid] = event.data.streamid;
-					var video = document.querySelector('video');
-					video.srcObject = event.data.streamid
+					let video = document.querySelector('video');
+					let streamid = event.data.extra.streamid
+					// let streamEvent = this.connection.streamEvents[streamid]
+					let mediaStreamObj = streamid
+					console.log(this.streams);
+	
+					video.srcObject = mediaStreamObj
 					break;
 
 				case 'chat':
@@ -562,7 +585,8 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			// 		participantsContainerElem[index].remove();
 			// 	}
 			// }
-
+			debugger
+			console.log("connectioon",this.connection)
 			// skip
 			if (this.streams[event.streamid]) {
 				console.log('STREAM EXISTSSSS');
