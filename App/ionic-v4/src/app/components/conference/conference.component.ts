@@ -10,6 +10,8 @@ import * as moment from 'moment';
 import { SimplePdfViewerComponent, SimpleProgressData } from 'simple-pdf-viewer';
 import adapter from 'webrtc-adapter'
 import hark from 'hark';
+import { resolve } from 'url';
+import { reject } from 'q';
 
 @Component({
 	selector: 'conference',
@@ -49,7 +51,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 
 	messages: any[] = [];
 	message: string;
-
+	interval = null
 	miniVideoElem: any;
 
 	isSpeaker: boolean;
@@ -221,16 +223,21 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					audio: true,
 					oneway: true
 				});
+				if(this.interval != null){
+					clearInterval(this.interval)
+				}
 				// this.connection.resetTrack();
 				if (this.connection.attachStreams.length == 2) {
+					
 					let streamEvent = this.connection.streamEvents[this.connection.attachStreams[1].streamid]
 					let mediaStreamObj = streamEvent.stream
-					video.srcObject = mediaStreamObj
-
-					// this.connection.send({
-					// 	type: 'screenshare',
-					// 	extra: { streamid: this.connection.attachStreams[1].streamid }
-					// });
+					video.srcObject = null
+				} else {
+					this.interval = setInterval(() => {
+						let streamEvent = this.connection.streamEvents[this.connection.attachStreams[0].streamid]
+						let mediaStreamObj = streamEvent.stream
+						video.srcObject = null
+					}, 1000);
 				}
 
 
@@ -287,6 +294,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			// };
 		}
 		else {
+			clearInterval(this.interval)
 			// this.connection.sdpConstraints = {
 			// 	mandatory: {
 			// 		OfferToReceiveAudio: true,
@@ -357,6 +365,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		}
 
 	}
+
 	initConnection() {
 		// set connection options
 		this.connection.publicRoomIdentifier = this.publicRoomIdentifier;
@@ -452,7 +461,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		this.connection.onmessage = (event) => {
 			console.log('CONN ON MESSAGE', event);
 
-			
+
 			switch (event.data.type) {
 				case 'screenshare':
 					// this.streams[event.data.streamid.streamid] = event.data.streamid;
@@ -464,7 +473,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					// let streamEvent = this.connection.streamEvents[streamid]
 					let mediaStreamObj = streamid
 					console.log(this.streams);
-	
+
 					video.srcObject = mediaStreamObj
 					break;
 
@@ -586,7 +595,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			// 	}
 			// }
 			debugger
-			console.log("connectioon",this.connection)
+			console.log("connectioon", this.connection)
 			// skip
 			if (this.streams[event.streamid]) {
 				console.log('STREAM EXISTSSSS');
