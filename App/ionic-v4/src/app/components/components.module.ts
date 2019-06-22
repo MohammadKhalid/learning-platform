@@ -18,7 +18,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { StudentProfileComponent } from './profile/student-profile/student-profile.component';
 import { CoachProfileComponent } from './profile/coach-profile/coach-profile.component';
 import { CompanyProfileComponent } from './profile/company-profile/company-profile.component';
-
+import {MatTabsModule} from '@angular/material/tabs';
 import { ErrorsComponent } from './errors/errors.component';
 
 @NgModule({
@@ -30,7 +30,8 @@ import { ErrorsComponent } from './errors/errors.component';
 		IonicSelectableModule,
 		FileDropModule,
 		SimplePdfViewerModule,
-		RouterModule
+		RouterModule,
+		MatTabsModule
 	],
 	declarations: [
 		ErrorsComponent,
