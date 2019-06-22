@@ -8,11 +8,10 @@ import { NotificationService } from '../../services/notification/notification.se
 
 import * as moment from 'moment';
 import { SimplePdfViewerComponent, SimpleProgressData } from 'simple-pdf-viewer';
-import adapter from 'webrtc-adapter'
-import hark from 'hark';
-import { resolve } from 'url';
-import { reject } from 'q';
-
+import adapter from 'webrtc-adapter';
+import { async } from '@angular/core/testing';
+import recordRTC from 'recordrtc';
+// var recordRTC = require('recordrtc');
 @Component({
 	selector: 'conference',
 	templateUrl: './conference.component.html',
@@ -28,9 +27,11 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	@Input('apiEndPoint') apiEndPoint: string;
 
 	@ViewChild('videosContainer') videosContainer: ElementRef;
+	@ViewChild('videosContainer_mob') videosContainer_mob: ElementRef;
 	@ViewChild('participantsContainer', { read: ElementRef }) participantsContainer: ElementRef;
 	@ViewChild('sharedPartOfScreenPreview') sharedPartOfScreenPreview: ElementRef;
 	@ViewChild('speakerVideo') speakerVideo: ElementRef;
+	@ViewChild('speakerVideo_mob') speakerVideo_mob: ElementRef;
 	@ViewChild('miniSpeakerVideo') miniSpeakerVideo: ElementRef;
 
 	@ViewChild('pdfViewer') pdfViewer: SimplePdfViewerComponent;
@@ -40,12 +41,15 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	item: any = {};
 	connection: any;
 	socket: any;
+	isChatOn: boolean = true;
+	isChatOn1: boolean = true;
 
 	pdfViewerFile: Blob;
 	pdfViewerCurrentPage: number;
 
 	panel: string = 'speaker';
 	screenVar: string = "notsharescreen";
+	recordScreen: boolean = true;
 	panelModal: string;
 	participantsCount: number = 0;
 
@@ -61,6 +65,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 
 	streams: any = {};
 	localStream: any;
+	recordContext: any;
 
 	isLoading: boolean = true;
 	// getMediaStream: any;
@@ -165,7 +170,56 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	// 		// });
 	// 	}
 	// }
-	async shareScreen() {
+	async startStopRecord(flag: boolean) {
+		if (flag) {
+			switch (this.user.type) {
+				case "coach":
+					if (this.connection.attachStreams.length == 2) {
+						let stream = await this.connection.streamEvents[this.connection.attachStreams[1].streamid].stream;
+						this.recordContext = new recordRTC(stream, {
+							type: 'video',
+						});
+						this.recordContext.startRecording();
+					}
+					else {
+						this.shareScreen(true);
+						return;
+					}
+					break;
+				case "student":
+					debugger;
+					this.recordContext = new recordRTC(document.querySelector('video').srcObject, {
+						type: 'video'
+					});
+					this.recordContext.startRecording();
+
+				// if (this.connection.attachStreams.length == 1) {
+				// 	let stream = await this.connection.streamEvents[this.connection.attachStreams[0].streamid].stream;
+				// 	this.recordContext = new recordRTC(stream, {
+				// 		type: 'video',
+				// 	});
+				// 	this.recordContext.startRecording();
+				// }
+				// else {
+				// 	this.shareScreen(true);
+				// 	return;
+				// }
+				default:
+					break;
+			}
+
+		}
+		else {
+			this.recordContext.stopRecording(() => {
+				var blob = this.recordContext.getBlob();
+				debugger;
+				recordRTC.invokeSaveAsDialog(blob);
+			});
+		}
+		this.recordScreen = !this.recordScreen;
+	}
+
+	async shareScreen(recallRecord: boolean) {
 		// this.panel
 		// this.connection.resetScreen();
 
@@ -202,7 +256,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			// 	video:false
 			// };
 
-			// var video = document.querySelector('video');
+			// let video = document.querySelector('video');
 
 			// adapter.browserShim.shimGetDisplayMedia(window, "window"); // or "screen"
 
@@ -218,28 +272,83 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 				// 	// stream.addTrack(true);
 				// });
 
-				this.connection.replaceTrack({
-					screen: true,
-					audio: true,
-					oneway: true
-				});
-				if(this.interval != null){
-					clearInterval(this.interval)
-				}
-				// this.connection.resetTrack();
-				if (this.connection.attachStreams.length == 2) {
-					
-					let streamEvent = this.connection.streamEvents[this.connection.attachStreams[1].streamid]
-					let mediaStreamObj = streamEvent.stream
-					video.srcObject = null
-				} else {
-					this.interval = setInterval(() => {
-						let streamEvent = this.connection.streamEvents[this.connection.attachStreams[0].streamid]
-						let mediaStreamObj = streamEvent.stream
-						video.srcObject = null
-					}, 1000);
-				}
+				//chrome code
+				if (this.connection.DetectRTC.browser.name === 'Chrome') {
+					// debugger;
+					// let cameraOption = { screen: true };
+					// this.connection.captureUserMedia((stream) => {
+					// 	video.srcObject = stream;
+					// 	let streamEvent = {
+					// 		type: 'local',
+					// 		stream: stream,
+					// 		streamid: stream.id,
+					// 		mediaElement: video
+					// 	}
+					// 	this.connection.onstream(streamEvent);
+					// }, cameraOption);
 
+					// this.connection.replaceTrack({
+					// 	screen: true,
+					// 	audio: true,
+					// 	oneway: true
+					// });
+
+					navigator.mediaDevices.getDisplayMedia({
+						video: true,
+						audio: true,
+					}).then(externalStream => {
+						video.srcObject = externalStream;
+
+						this.connection.replaceTrack({
+							screen: true,
+							audio: true,
+							oneway: true
+						});
+
+						// this.connection.replaceTrack(externalStream.getVideoTracks()[0]);
+					}, error => {
+						alert(error);
+					});
+				}
+				else {
+					this.connection.replaceTrack({
+						screen: true,
+						audio: true,
+						oneway: true
+					});
+					if (this.interval != null) {
+						clearInterval(this.interval)
+					}
+					// this.connection.resetTrack();
+					// if (this.connection.attachStreams.length == 2) {
+
+					// 	let streamEvent = this.connection.streamEvents[this.connection.attachStreams[1].streamid]
+					// 	let mediaStreamObj = streamEvent.stream;
+					// 	video.srcObject = null;
+					// }
+					// else {
+					if (this.user.type == 'coach') {
+						this.interval = setInterval(() => {
+							video.srcObject = null;
+							if (this.connection.attachStreams.length == 2 && recallRecord) {
+								clearInterval(this.interval);
+								this.startStopRecord(true);
+							}
+						}, 100);
+					}
+					// this.interval = setInterval(() => {
+					// 	debugger;
+					// 	let streamEvent = this.connection.streamEvents[this.connection.attachStreams[0].streamid]
+					// 	let mediaStreamObj = streamEvent.stream;
+					// 	video.srcObject = null;
+
+					// 	if (this.connection.attachStreams.length == 2 && recallRecord) {
+					// 		this.startRecord();
+					// 		clearInterval(this.interval);
+					// 	}
+					// }, 1000);
+					// }
+				}
 
 				// this.connection.removeStream({
 				// 	video: true,
@@ -372,14 +481,17 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		this.connection.autoCloseEntireSession = false;
 		this.connection.autoCreateMediaElement = false;
 		this.connection.videosContainer = this.videosContainer.nativeElement;
+		this.connection.videosContainer_mob = this.videosContainer_mob.nativeElement;
 		this.connection.session = {
 			// audio: true,
 			video: true,
 			data: true,
 			oneway: true
 		};
-
-
+		this.connection.processSdp = (sdp) => {
+			return sdp;
+		}
+		this.connection.optionalArgument = {};
 		// browser codecs support
 		if (this.connection.DetectRTC.browser.isSafari && Number(this.connection.DetectRTC.browser.fullVersion) <= 12.1) this.connection.codecs.video = 'H264';
 
@@ -467,7 +579,6 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					// this.streams[event.data.streamid.streamid] = event.data.streamid;
 					// var video = document.querySelector('video');
 					// video.srcObject = event.data.streamid
-					debugger
 					let video = document.querySelector('video');
 					let streamid = event.data.extra.streamid
 					// let streamEvent = this.connection.streamEvents[streamid]
@@ -594,7 +705,6 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			// 		participantsContainerElem[index].remove();
 			// 	}
 			// }
-			debugger
 			console.log("connectioon", this.connection)
 			// skip
 			if (this.streams[event.streamid]) {
@@ -607,14 +717,16 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 
 			// video
 			let video = event.extra.initiator ? this.speakerVideo.nativeElement : this.elementRenderer.createElement('video');
-
+			let video_mob = event.extra.initiator ? this.speakerVideo_mob.nativeElement : this.elementRenderer.createElement('video');
 			if (event.type === 'local') {
 				video.volume = 0;
-
+				video_mob.volume = 0;
 				try {
 					video.setAttributeNode(document.createAttribute('muted'));
+					video_mob.setAttributeNode(document.createAttribute('muted'));
 				} catch (e) {
 					video.setAttribute('muted', true);
+					video_mob.setAttribute('muted', true);
 				}
 
 				// speech event
@@ -643,6 +755,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 				}
 			}
 			video.srcObject = event.stream;
+			video_mob.srcObject = event.stream;
 
 			// setup participant video html
 			if (!event.extra.initiator) {
@@ -652,9 +765,14 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 				try {
 					video.setAttributeNode(document.createAttribute('autoplay'));
 					video.setAttributeNode(document.createAttribute('playsinline'));
+
+					video_mob.setAttributeNode(document.createAttribute('autoplay'));
+					video_mob.setAttributeNode(document.createAttribute('playsinline'));
 				} catch (e) {
 					video.setAttribute('autoplay', true);
 					video.setAttribute('playsinline', true);
+					video_mob.setAttribute('autoplay', true);
+					video_mob.setAttribute('playsinline', true);
 				}
 
 				// video container
@@ -710,6 +828,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 
 			setTimeout(() => {
 				video.play();
+				video_mob.play();
 			}, 5000);
 
 			// if(event.type === 'local') {
@@ -1255,17 +1374,22 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 
 	sendMessage() {
 		if (!this.message) return;
-
+		this.isChatOn = true;
+		this.isChatOn1 = true;
 		const newMessage = {
 			type: 'chat',
 			text: this.message,
 			firstName: this.user.firstName,
 			lastName: this.user.lastName,
-			userType: this.user.type
+			userType: this.user.type,
+			isActive: false,
+			date : moment().format('HH:mm:ss')
+			
 		};
 
 		// send message
 		this.connection.send(newMessage);
+		newMessage.isActive = true;
 		this.messages.push(newMessage);
 
 		// clear textbox
