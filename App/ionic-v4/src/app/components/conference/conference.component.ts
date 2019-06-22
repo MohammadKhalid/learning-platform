@@ -273,7 +273,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 				// });
 
 				//chrome code
-				if (this.connection.DetectRTC.browser.name === 'Chrome') {
+				// if (this.connection.DetectRTC.browser.name === 'Chrome') {
 					// debugger;
 					// let cameraOption = { screen: true };
 					// this.connection.captureUserMedia((stream) => {
@@ -309,8 +309,8 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					// }, error => {
 					// 	alert(error);
 					// });
-				}
-				else {
+				// }
+				// else {
 					this.connection.replaceTrack({
 						screen: true,
 						audio: true,
@@ -348,7 +348,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					// 	}
 					// }, 1000);
 					// }
-				}
+				// }
 
 				// this.connection.removeStream({
 				// 	video: true,
