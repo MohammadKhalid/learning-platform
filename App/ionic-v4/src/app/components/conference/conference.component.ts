@@ -293,22 +293,22 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					// 	oneway: true
 					// });
 
-					navigator.mediaDevices.getDisplayMedia({
-						video: true,
-						audio: true,
-					}).then(externalStream => {
-						video.srcObject = externalStream;
+					// navigator.mediaDevices.getDisplayMedia({
+					// 	video: true,
+					// 	audio: true,
+					// }).then(externalStream => {
+					// 	video.srcObject = externalStream;
 
-						this.connection.replaceTrack({
-							screen: true,
-							audio: true,
-							oneway: true
-						});
+					// 	this.connection.replaceTrack({
+					// 		screen: true,
+					// 		audio: true,
+					// 		oneway: true
+					// 	});
 
-						// this.connection.replaceTrack(externalStream.getVideoTracks()[0]);
-					}, error => {
-						alert(error);
-					});
+					// 	// this.connection.replaceTrack(externalStream.getVideoTracks()[0]);
+					// }, error => {
+					// 	alert(error);
+					// });
 				}
 				else {
 					this.connection.replaceTrack({
