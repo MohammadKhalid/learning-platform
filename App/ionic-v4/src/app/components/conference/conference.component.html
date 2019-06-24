@@ -20,25 +20,35 @@
         (click)="showPanelModal('message')">
         <ion-icon name="chatboxes" [color]="newMessage ? 'warning': ''"></ion-icon>
       </ion-fab-button>
-      <ion-fab-button show="true" size="small" [color]="panelModal === 'info' ? 'medium' : 'dark'"
+      <!-- <ion-fab-button show="true" size="small" [color]="panelModal === 'info' ? 'medium' : 'dark'"
         (click)="showPanelModal('info')">
         <ion-icon name="information"></ion-icon>
-      </ion-fab-button>
+
+      </ion-fab-button> -->
+      <ion-fab-button size="small" [color]="recordScreen === true ? 'dark' : 'medium'"
+      (click)="startStopRecord(recordScreen)">
+      <ion-icon name="microphone"></ion-icon>
+    </ion-fab-button>
     </ion-fab-list>
 
     <ion-fab-list side="start">
-        <ion-fab-button size="small" [color]="recordScreen === true ? 'dark' : 'medium'" (click)="startStopRecord(recordScreen)" ><ion-icon name="microphone"></ion-icon></ion-fab-button>
-   
-      <ion-fab-button show="true" [disabled]="!localStream?.video?.control" [hidden]="!localStream?.video?.muted" (click)="streamMuteUnmute('video')" color="dark" size="small">
+     
+
+      <ion-fab-button show="true" [disabled]="!localStream?.video?.control" [hidden]="!localStream?.video?.muted"
+        (click)="streamMuteUnmute('video')" color="dark" size="small">
         <ion-icon name="videocam" size="small"></ion-icon>
-        <ion-icon name="remove" size="large" color="dark" style="position: absolute; transform: rotate(45deg) perspective(0); bottom: 5px;"></ion-icon>
-        <ion-icon name="remove" size="large" color="dark" style="position: absolute; transform: rotate(45deg) perspective(0); top: 5px;"></ion-icon>
-        <ion-icon name="remove" size="large" style="position: absolute; transform: rotate(45deg) perspective(0);"></ion-icon>
+        <ion-icon name="remove" size="large" color="dark"
+          style="position: absolute; transform: rotate(45deg) perspective(0); bottom: 5px;"></ion-icon>
+        <ion-icon name="remove" size="large" color="dark"
+          style="position: absolute; transform: rotate(45deg) perspective(0); top: 5px;"></ion-icon>
+        <ion-icon name="remove" size="large" style="position: absolute; transform: rotate(45deg) perspective(0);">
+        </ion-icon>
       </ion-fab-button>
-      <ion-fab-button show="true" [hidden]="localStream?.video?.muted" (click)="streamMuteUnmute('video')" color="dark" size="small">
+      <ion-fab-button show="true" [hidden]="localStream?.video?.muted" (click)="streamMuteUnmute('video')" color="dark"
+        size="small">
         <ion-icon name="videocam"></ion-icon>
       </ion-fab-button>
-  
+
       <ion-fab-button show="true" (click)="streamMuteUnmute('audio')" color="dark" size="small">
         <ion-icon [name]="localStream?.audio?.muted ? 'mic-off' : 'mic'"></ion-icon>
       </ion-fab-button>
@@ -46,19 +56,26 @@
   </ion-fab>
 
   <ion-fab vertical="bottom" horizontal="center" slot="fixed" [hidden]="isLoading">
-      <div *ngIf="isSpeaker">
-        <ion-fab-button size="small" color="danger" (click)="pdfViewerStopShare()" *ngIf="pdfViewerFile"><ion-icon name="easel"></ion-icon></ion-fab-button>
-        <ion-fab-button size="small"  [color]="screenVar === 'sharescreen' ? 'medium' : 'dark'" (click)="shareScreen(false)" ><ion-icon name="easel"></ion-icon></ion-fab-button>
-         <!-- <ion-fab-button size="small" [color]="panel === 'screen' ? 'medium' : 'dark'" (click)="showPanel('screen')" *ngIf="!pdfViewerFile"><ion-icon name="easel"></ion-icon></ion-fab-button> -->
-    
-        <ion-fab-button (click)="presentConfirmStart()" color="primary" text-uppercase *ngIf="item?.status !== 'started'"><small>Start</small></ion-fab-button>
-        <ion-fab-button (click)="presentConfirmStop()" color="danger" text-uppercase *ngIf="item?.status === 'started'"><small>Done</small></ion-fab-button>
-      </div>
-    
-      <div *ngIf="!isSpeaker">
-        <ion-fab-button (click)="presentConfirmLeave()" color="danger" text-uppercase><small>Exit</small></ion-fab-button>
-      </div>
-    </ion-fab>
+    <div *ngIf="isSpeaker">
+      <ion-fab-button size="small" color="danger" (click)="pdfViewerStopShare()" *ngIf="pdfViewerFile">
+        <ion-icon name="easel"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button size="small" [color]="screenVar === 'sharescreen' ? 'medium' : 'dark'"
+        (click)="shareScreen(false)">
+        <ion-icon name="easel"></ion-icon>
+      </ion-fab-button>
+      <!-- <ion-fab-button size="small" [color]="panel === 'screen' ? 'medium' : 'dark'" (click)="showPanel('screen')" *ngIf="!pdfViewerFile"><ion-icon name="easel"></ion-icon></ion-fab-button> -->
+
+      <ion-fab-button (click)="presentConfirmStart()" color="primary" text-uppercase *ngIf="item?.status !== 'started'">
+        <small>Start</small></ion-fab-button>
+      <ion-fab-button (click)="presentConfirmStop()" color="danger" text-uppercase *ngIf="item?.status === 'started'">
+        <small>Done</small></ion-fab-button>
+    </div>
+
+    <div *ngIf="!isSpeaker">
+      <ion-fab-button (click)="presentConfirmLeave()" color="danger" text-uppercase><small>Exit</small></ion-fab-button>
+    </div>
+  </ion-fab>
 
   <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0;">
     <ion-row class="fixed-content ion-justify-content-end">
@@ -76,7 +93,7 @@
 
                     <ion-grid class="fixed-content">
                       <ion-row class="fixed-content ">
-                     
+
                         <ion-col size="12" class="ion-no-padding ion-align-self-end">
 
                           <ion-list lines="none"
@@ -90,13 +107,13 @@
                             <div class="menu">
 
                               <ul class="chat">
-                                <li  [ngClass]="{'self' : message.isActive, 'other' : message.isActive == false }" 
+                                <li [ngClass]="{'self' : message.isActive, 'other' : message.isActive == false }"
                                   *ngFor="let message of messages">
 
                                   <div class="avatar" [ngClass]="{'avatar2' : message.isActive}">
                                     <img class="userImage" src="../../../assets/img/askexpert/default-user.svg" />
                                   </div>
-                                  <div  [ngClass]="{'msg-student':message.isActive, 'msg': message.isActive == false }">
+                                  <div [ngClass]="{'msg-student':message.isActive, 'msg': message.isActive == false }">
                                     <p class="userName"> <b>{{message.firstName}} {{message.lastName}}</b> </p>
                                     <p class="userText">{{message.text}}</p>
                                     <time class="userTime">{{message.date}}</time>
@@ -128,7 +145,7 @@
               </ion-grid>
 
             </mat-tab>
-            <mat-tab  label='Student'>
+            <mat-tab label='Student'>
               <div *ngIf="item?.public === false">
                 <ion-card-header>
                   <ion-card-subtitle>
@@ -180,7 +197,7 @@
 
     <div style="position: absolute; top:0; right:0; bottom:0; left:0; z-index: 1;">
       <ion-grid class="fixed-content">
-        <ion-row class="fixed-content ion-justify-content-end" >
+        <ion-row class="fixed-content ion-justify-content-end">
           <ion-col #participantsContainer size="2" class="ion-align-self-stretch"></ion-col>
         </ion-row>
       </ion-grid>
@@ -273,16 +290,43 @@
   <ion-fab vertical="center" horizontal="center" slot="fixed" [hidden]="!isLoading">
     <ion-spinner name="dots" color="secondary"></ion-spinner>
   </ion-fab>
-  
+
   <ion-fab vertical="bottom" horizontal="center" slot="fixed" activated="true" [hidden]="isLoading">
-   
+
   </ion-fab>
 
 
-  <div #videosContainer_mob class="fixed-content" text-center style="background-color: var(--ion-color-dark)"
+  <div #videosContainer_mob class="fixed-content " text-center style="background-color: var(--ion-color-dark)"
     [hidden]="panel !== 'speaker'">
-    <div class="fixed-content speaker-video-container-mob">
-      <video style="height:40vh;" #speakerVideo_mob playsinline autoplay></video>
+    <div class="fixed-content speaker-video-container-mob ion-text-center">
+      <video style="height:40vh;" #speakerVideo_mob playsinline autoplay>
+        <p style="position: absolute; color:white;">ohoho
+
+        </p>
+      </video>
+      <div class="mob-online">
+
+
+
+
+        <p class="live">Live</p>
+
+
+        <div style="background-color: #4c4c4c;
+             margin-top: 13px;
+             height: 16px;
+             padding: 0px;
+             font-size: 13;
+             font-size: 14px;
+             padding: 6px;
+             /* padding-top: 5px; */
+             padding-bottom: 21px;">
+
+          <ion-icon name="person">33</ion-icon> {{item?.participants.length}}
+        </div>
+
+
+      </div>
     </div>
 
     <div class="fixed-content" style="position:relative;" [hidden]="panel !== 'screen'">
@@ -291,8 +335,8 @@
 
       <div *ngIf="pdfViewerFile">
         <div *ngIf="isSpeaker">
-        
-        </div>     
+
+        </div>
       </div>
     </div>
   </div>
@@ -311,18 +355,18 @@
                 </ion-label>
               </ion-item>
             </ion-col>
-            <ion-col size="12" class="ion-no-padding ion-align-self-end">
+            <ion-col class="ion-no-padding ion-align-self-end">
 
               <ion-list lines="none" class="scrollable-list">
                 <ion-item *ngFor="let message of messages">
-                  <ion-icon name="contact" slot="start" class="mobIcon" align-self-start></ion-icon>
+                  <img class="mobile-img" src="../../../assets/img/askexpert/default-user.svg" alt="">
 
-                  <ion-label text-wrap>
-                    <ion-note class="chatName">{{message.firstName}} {{message.lastName}}</ion-note>
+                  <ion-label text-wrap class="ion-margin-start">
+                    <ion-note class="chatName mobile-user-name">{{message.firstName}} {{message.lastName}}</ion-note>
                     <p>
                       <ion-note>{{message.dateCreated}}</ion-note>
                     </p>
-                    <p>{{message.text}}</p>
+                    <p class="mobile-user-text">{{message.text}}</p>
                   </ion-label>
 
                   <ion-note slot="end" mode="md" text-lowercase>{{message.userType}}</ion-note>
@@ -339,10 +383,10 @@
   </ion-col>
   <ion-grid>
     <ion-row class="box">
-      <ion-col class="sendbox" size-md="8" size-lg="8" size-sm="7" size-xs="11">
+      <ion-col class="sendbox">
         <ion-item class="chat-box">
-          <ion-input class="send-box" type="text" [(ngModel)]="message" (keyup.enter)="sendMessage()"
-            placeholder="Type a message here"></ion-input>
+          <ion-input class="send-box" style="width: 100%;" type="text" [(ngModel)]="message"
+            (keyup.enter)="sendMessage()" placeholder="Type a message here"></ion-input>
           <img (click)="sendMessage()" class="send cursor-pointer" src="./assets/img/askexpert/send.svg">
         </ion-item>
       </ion-col>
