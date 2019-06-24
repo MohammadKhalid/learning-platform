@@ -273,7 +273,8 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 				// });
 
 				//chrome code
-				// if (this.connection.DetectRTC.browser.name === 'Chrome') {
+				debugger;
+				if (this.connection.DetectRTC.browser.name === 'Chrome' && this.connection.attachStreams.length == 1) {
 					// debugger;
 					// let cameraOption = { screen: true };
 					// this.connection.captureUserMedia((stream) => {
@@ -287,30 +288,31 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					// 	this.connection.onstream(streamEvent);
 					// }, cameraOption);
 
-					// this.connection.replaceTrack({
+					// this.connection.repla`ceTrack({
 					// 	screen: true,
 					// 	audio: true,
 					// 	oneway: true
 					// });
 
-					// navigator.mediaDevices.getDisplayMedia({
-					// 	video: true,
-					// 	audio: true,
-					// }).then(externalStream => {
-					// 	video.srcObject = externalStream;
+					navigator.mediaDevices.getDisplayMedia({
+						video: true,
+						audio: true,
+						// oneway: true
+					}).then(externalStream => {
+						video.srcObject = externalStream;
 
-					// 	this.connection.replaceTrack({
-					// 		screen: true,
-					// 		audio: true,
-					// 		oneway: true
-					// 	});
+						// this.connection.replaceTrack({
+						// 	screen: true,
+						// 	audio: true,
+						// 	oneway: true
+						// });
 
-					// 	// this.connection.replaceTrack(externalStream.getVideoTracks()[0]);
-					// }, error => {
-					// 	alert(error);
-					// });
-				// }
-				// else {
+						this.connection.replaceTrack(externalStream.getVideoTracks()[0]);
+					}, error => {
+						alert(error);
+					});
+				}
+				else {
 					this.connection.replaceTrack({
 						screen: true,
 						audio: true,
@@ -319,14 +321,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					if (this.interval != null) {
 						clearInterval(this.interval)
 					}
-					// this.connection.resetTrack();
-					// if (this.connection.attachStreams.length == 2) {
 
-					// 	let streamEvent = this.connection.streamEvents[this.connection.attachStreams[1].streamid]
-					// 	let mediaStreamObj = streamEvent.stream;
-					// 	video.srcObject = null;
-					// }
-					// else {
 					if (this.user.type == 'coach') {
 						this.interval = setInterval(() => {
 							video.srcObject = null;
@@ -336,143 +331,24 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 							}
 						}, 100);
 					}
-					// this.interval = setInterval(() => {
-					// 	debugger;
-					// 	let streamEvent = this.connection.streamEvents[this.connection.attachStreams[0].streamid]
-					// 	let mediaStreamObj = streamEvent.stream;
-					// 	video.srcObject = null;
+				}
 
-					// 	if (this.connection.attachStreams.length == 2 && recallRecord) {
-					// 		this.startRecord();
-					// 		clearInterval(this.interval);
-					// 	}
-					// }, 1000);
-					// }
-				// }
 
-				// this.connection.removeStream({
-				// 	video: true,
-				// 	data: true,
-				// 	oneway: true
-				// })
-				// navigator.mediaDevices.getDisplayMedia({
-				// 	video: true,
-				// 	audio: true
-				// }).then(externalStream => {
-				// 	
-				// this.connection.addStream({
-				// 	screen: true,
-				// 	oneway: true
-				// });
-
-				// 	// video.srcObject = externalStream
-				// 	// this.connection.send({
-				// 	// 	type: 'sharescreen',
-				// 	// 	message: 'admin screen share',
-				// 	// 	streamid: externalStream
-				// 	// });
-				// }, error => {
-				// 	alert(error);
-				// });
-				// this.connection.addStream({
-				// 	screen: true,
-				// 	// oneway: true,
-				// 	// audio: true, // because session.audio==true, now it works
-				// 	video: false, // because session.video==true, now it works
-				// 	oneway: true,
-				// 	streamCallBack: (stream) => {
-
-				// 		console.log(stream);
-				// 	}
-				// });
 			} catch (e) {
 				console.log(e);
 			}
-			// })();
 
-
-			// this.connection.getScreenConstraints = function(callback) {
-			// 	this.connection.getScreenConstraints(function(error, screen_constraints) {
-			// 		if (!error) {
-			// 			screen_constraints = this.connection.modifyScreenConstraints(screen_constraints);
-			// 			callback(error, screen_constraints);
-			// 			return;
-			// 		}
-			// 		throw error;
-			// 	});
-			// };
 		}
 		else {
 			clearInterval(this.interval)
-			// this.connection.sdpConstraints = {
-			// 	mandatory: {
-			// 		OfferToReceiveAudio: true,
-			// 		OfferToReceiveVideo: false
-			// 	}
-			// };
 
-			// this.connection.mediaConstraints = {
-			// 	audio: true,
-			// 	video: true
-			// };
-			// var video = document.querySelector('video');
 			this.connection.resetTrack();
 			if (this.connection.attachStreams.length == 2) {
 				let streamEvent = this.connection.streamEvents[this.connection.attachStreams[0].streamid]
 				let mediaStreamObj = streamEvent.stream
 				video.srcObject = mediaStreamObj
 			}
-			// this.connection.session.audio = true;
-			// this.connection.session.screen = false;
-			// this.connection.session.oneway = true;
-			// this.connection.session.video = true;
-			//disable screen share
-			// this.connection.attachStreams.forEach(stream => {
-			// 	stream.getVideoTracks().forEach(track => {
-			// 		stream.removeTrack(track);
-			// 	});
-			// 	// stream.addTrack(true);
-			// });
-			// this.connection.session = {
-			// 	audio: true,
-			// 	video: true,
-			// 	data: true,
-			// 	oneway: true
-			// };
-
-			// this.connection.removeStream({
-			// 	screen: true,
-			// 	video: true,
-			// 	oneway: true
-			// });
-			// this.openJoin()
-			// this.connection.send({
-			// 	type: 'sharescreen',
-			// 	message: 'admin screen share'
-			// 	// streamid: this.streams[0]
-			// });
-			// this.connection.onstream = function (event) {
-			// 	debugger;
-			// }
-			// this.connection.mediaConstraints.video = true;
-			// this.connection.addStream({
-			// 	// audio: true,
-			// 	video: true,
-			// 	data: true,
-			// 	oneway: true
-			// 	// streamCallback: (stream) => {
-			// 	// 	debugger
-			// 	// 	console.log('Screen is successfully captured: ' + stream.getVideoTracks()[0]);
-			// 	// 	// this.connection.replaceTrack({
-			// 	// 	// 	video: true,
-			// 	// 	// 	audio: true
-			// 	// 	// })
-			// 	// 	// video.src = URL.createObjectURL(stream);
-			// 	// 	// this.connection.videoContainer.appendChild(video)
-			// 	// }
-			// });
 		}
-
 	}
 
 	initConnection() {
@@ -1383,8 +1259,8 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			lastName: this.user.lastName,
 			userType: this.user.type,
 			isActive: false,
-			date : moment().format('HH:mm:ss')
-			
+			date: moment().format('HH:mm:ss')
+
 		};
 
 		// send message
