@@ -9,6 +9,7 @@ import { NotificationService } from '../../services/notification/notification.se
 import * as moment from 'moment';
 import { SimplePdfViewerComponent, SimpleProgressData } from 'simple-pdf-viewer';
 import recordRTC from 'recordrtc';
+import { async } from 'rxjs/internal/scheduler/async';
 @Component({
 	selector: 'conference',
 	templateUrl: './conference.component.html',
@@ -16,7 +17,7 @@ import recordRTC from 'recordrtc';
 })
 
 export class ConferenceComponent implements OnInit, OnDestroy {
-
+	@ViewChild('chatMessageUl') private myScrollContainer: ElementRef;
 	@Input('id') id: string;
 	@Input('publicRoomIdentifier') publicRoomIdentifier: string = 'conference';
 	@Input('user') user: any = {};
@@ -51,6 +52,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	recordScreen: boolean = true;
 	panelModal: string;
 	participantsCount: number = 0;
+	matGroup: boolean = false;
 
 	messages: any[] = [];
 	message: string;
@@ -103,7 +105,16 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 
 		});
 	}
+	bottomScroll(): void {
+		setTimeout(() => {
+			try {
+				this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+			} catch (error) {
 
+			}
+
+		}, 50);
+	}
 	loadData() {
 		console.log('CONNECTION', this.connection);
 
@@ -162,20 +173,21 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					}
 					break;
 				case "student":
-					debugger;
 					let stream = await document.querySelector('video').srcObject;
+					// setTimeout(() => {
 					this.recordContext = new recordRTC(stream, {
 						type: 'video'
 					});
 					this.recordContext.startRecording();
+				// }, 100);
 				default:
 					break;
 			}
 
 		}
 		else {
-			this.recordContext.stopRecording(() => {
-				var blob = this.recordContext.getBlob();
+			this.recordContext.stopRecording(async () => {
+				var blob = await this.recordContext.getBlob();
 				recordRTC.invokeSaveAsDialog(blob);
 			});
 		}
@@ -229,6 +241,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	}
 	chromeScreenShare(recallRecord: boolean) {
 		let video = document.querySelector('video');
+		debugger
 		if (this.screenVar == "sharescreen") {
 			if (this.connection.attachStreams.length == 1) {
 				let objBrowserScreen: any = navigator.mediaDevices;
@@ -251,7 +264,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 							this.startStopRecord(true);
 						}
 					}
-					this.chromeScreenShare(false)
+					// this.chromeScreenShare(false)
 				}, error => {
 					alert(error);
 				});
@@ -302,6 +315,8 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	}
 
 	async shareScreen(recallRecord: boolean) {
+		debugger
+
 		this.screenVar = this.screenVar == "sharescreen" ? "notsharescreen" : "sharescreen";
 		if (this.connection.DetectRTC.browser.name === 'Chrome') {
 			this.chromeScreenShare(recallRecord);
@@ -1142,8 +1157,8 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	}
 
 	showPanelModal(name: string) {
-		this.panelModal = this.panelModal === name ? null : name;
-
+		// this.panelModal = this.panelModal === name ? null : name;
+		this.matGroup = !this.matGroup
 		switch (name) {
 			case 'message':
 				this.newMessage = false;
@@ -1173,6 +1188,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		newMessage.isActive = true;
 		this.messages.push(newMessage);
 
+		this.bottomScroll();
 		// clear textbox
 		this.message = '';
 	}
