@@ -286,12 +286,14 @@
     margin: 0;
     padding: 0 0 50px 0;
 }
-.chat li {
+.chat li .data{
   width: 100%;
-    padding: 0.5rem;
+    padding: -0.5rem;
     overflow: hidden;
     display: flex;
 }
+
+
 .chat .avatar {
     width: 40px;
     height: 0;
@@ -335,12 +337,8 @@
     -ms-user-select: none;
 }
 
-.other .msg {
-  order: 1;
-  margin-left: 23px;
-  border-top-left-radius: 0px;
-  box-shadow: -1px 2px 0px #D4D4D4;
-  width: 100%;
+.other  {
+ 
 }
  
 // li.other.msg-student:before {
@@ -356,28 +354,66 @@
 //   border-bottom-color: transparent; 
 // }
 .other-receive:before {
+  width: 0;
+  height: 0;
   content: "";
+  top: 15px;
+  left: -8px;
   position: relative;
-  top: 0px;
-  right: 0px;
-  left: 58px;
-  width: 0px;
-  height: 0px;
-  border: 9px solid #e6e7e9;
-  border-left-color: transparent;
-  border-bottom-color: transparent;
+  border-style: solid;
+  border-width: 19px 25px 0 0;
+  border-color: #e6e7e9 transparent transparent transparent;
 }
-.other:before {
+.other .data:before {
+  // content: ' ';
+  //   position: absolute;
+  //   width: 0;
+  //   height: 0;
+  //   left: 19px;
+  //   right: auto;
+  //   top: 31px;
+  //   bottom: auto;
+  //   border: 16px solid;
+  //   border-color: #e6e7e9 transparent transparent transparent;
+  width: 0;
+  height: 0;
   content: "";
+  // top: 15px;
+  left: 5px;
   position: relative;
-  top: 0px;
-  right: 0px;
-  left: 58px;
-  width: 0px;
-  height: 0px;
-  border: 9px solid #e6e7e9;
-  border-left-color: transparent;
-  border-bottom-color: transparent;
+  border: 16px solid;
+  border-color: #e6e7e9 transparent transparent transparent;
+}
+.textRight{
+  float: right;
+  padding-right: 15px;
+  font-size: 11px;
+  font-weight: bold;
+}
+.textLeft{
+  padding-left: 15px;
+  font-size: 11px;
+    font-weight: bold;
+    padding-bottom: 0px;
+    position: absolute;
+    margin-top: -16px;
+}
+.userTypeR{
+  font-size: 11px;
+  font-weight: bold;
+  margin-left: 10px;
+
+
+}
+.userTypeL{
+
+  float: right;
+    margin-top: -14px;
+    display: table-header-group;
+    font-size: 11px;
+    font-weight: bold;
+    margin-right: 10px;
+
 }
 
 .self {
@@ -389,12 +425,15 @@
 
 
 .msg {
-    background: white;
-    min-width: 50px;
-    padding: 10px;
-    border-radius: 2px;
-    box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.07);
-    background-color:  #e6e7e9;
+  // margin-top: 15px;
+  width: 64%;
+  border-radius: 10px;
+  padding: 15px;
+  background: #e6e7e9;
+  margin-left: -11px;
+  margin-bottom: 20px;
+
+
 }
 
 emoji{
@@ -464,14 +503,25 @@ emoji.funny{background-image: url(https://i.imgur.com/qKia58V.png);}
 /* T Y P E */
 
 .msg-student {
-  background: white;
-  margin-right: 16px;
-  padding: 10px;
-  border-radius: 2px;
-  box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.07);
-  background-color: #b2d8e1;
-  width: 100%;
+  background: #b9dee7;
+  // margin-top: 15px;
+  width: 64%;
+  border-radius: 10px;
+  
+  padding: 15px;
+ 
+  justify-content: right;
+  margin-left: 112px;
+  margin-bottom: 14px;
+
 }
+
+
+
+
+
+
+
 
 
 // .msg-student p {
@@ -533,7 +583,7 @@ emoji.funny{background-image: url(https://i.imgur.com/qKia58V.png);}
 
 
 .userName {
-  font-size: 1rem;
+  font-size: 0.3rem;
   margin: 0 0 0.2rem 0;
   color: #000;
 }
@@ -546,7 +596,7 @@ emoji.funny{background-image: url(https://i.imgur.com/qKia58V.png);}
 
 .userTime{
   font-size: 0.7rem;
-  color: #000;
+  color: #b1b2b4;
   margin-top: 3px;
   float: right;
   cursor: default;
@@ -586,14 +636,31 @@ emoji.funny{background-image: url(https://i.imgur.com/qKia58V.png);}
 
 
 
-.self:after {
+.self .data:after {
   width: 0;
-  height: 0;
-  content: "";
-  top: 0px;
-  left: -17px;
-  position: relative;
-  border-style: solid;
-  border-width: 13px 13px 0 0;
-  border-color: #B2D8DF transparent transparent transparent;
+    height: 0;
+    content: "";
+    // top: 15px;
+    left: -8px;
+    position: relative;
+    border-style: solid;
+    border-width: 19px 25px 0 0;
+    border-color: #b9dee7 transparent transparent transparent;
 }
+.fixed[scrollx=true], div[scrolly=true] {
+  position: relative;
+  overflow: hidden;
+  ::-webkit-scrollbar {
+      display: none;
+ }
+}
+.fixed[scrollx=true] {
+  overflow-x: auto;
+}
+.fixed[scrolly=true] {
+  overflow-y: auto;
+}
+::-webkit-scrollbar{
+  display: none;
+}
+

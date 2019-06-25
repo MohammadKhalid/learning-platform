@@ -26,13 +26,13 @@
 
       </ion-fab-button> -->
       <ion-fab-button size="small" [color]="recordScreen === true ? 'dark' : 'medium'"
-      (click)="startStopRecord(recordScreen)">
-      <ion-icon name="microphone"></ion-icon>
-    </ion-fab-button>
+        (click)="startStopRecord(recordScreen)">
+        <ion-icon name="microphone"></ion-icon>
+      </ion-fab-button>
     </ion-fab-list>
 
     <ion-fab-list side="start">
-     
+
 
       <ion-fab-button show="true" [disabled]="!localStream?.video?.control" [hidden]="!localStream?.video?.muted"
         (click)="streamMuteUnmute('video')" color="dark" size="small">
@@ -81,13 +81,15 @@
     <ion-row class="fixed-content ion-justify-content-end">
       <!-- mat ka kaam hai -->
       <ion-col size="12" size-sm="6" size-md="5" size-lg="4" class="ion-align-self-stretch ion-no-padding"
-        style="z-index: 9999;" [hidden]="panelModal !== 'message'">
+        style="z-index: 9999;" *ngIf="matGroup" >
         <ion-card color="clean" class="web-card">
-          <mat-tab-group>
-            <mat-tab label="Group">
+          <mat-tab-group >
+            <mat-tab label="Group Chat" >
 
               <ion-col class="ion-no-padding	" style="z-index: 9999;">
-                <ion-card style="margin:auto;" class="mobile_card">
+                <ion-card
+                  style="margin:auto;     box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 0px 0px 0 rgba(0,0,0,.14), 0 0px 0px 0 rgba(0,0,0,.12);"
+                  no-shadow class="mobile_card">
 
                   <div class="chat-lists">
 
@@ -96,33 +98,36 @@
 
                         <ion-col size="12" class="ion-no-padding ion-align-self-end">
 
-                          <ion-list lines="none"
-                            [ngClass]="{'scrollable-list-web': isChatOn, 'web-card' : !isChatOn, 'scrollable-list-web-after-click' : !isChatOn1}">
-                            <ion-item lines="none" *ngIf="messages.length < 1" style="  background-color: #f4f5f8">
-                              <ion-label color="medium">
-                                <p>No message</p>
-                              </ion-label>
-                            </ion-item>
-
                             <div class="menu">
 
-                              <ul class="chat">
+                              <ul class="chat"
+                              [ngClass]="{'scrollable-list-web': isChatOn, 'web-card' : !isChatOn, 'scrollable-list-web-after-click' : !isChatOn1}"
+                                  #chatMessageUl id="chatMessageUl">
                                 <li [ngClass]="{'self' : message.isActive, 'other' : message.isActive == false }"
                                   *ngFor="let message of messages">
+                                  <div
+                                    [ngClass]="{'textRight' : message.isActive, 'textLeft' : message.isActive == false }">
+                                    {{message.firstName}}
 
-                                  <div class="avatar" [ngClass]="{'avatar2' : message.isActive}">
-                                    <img class="userImage" src="../../../assets/img/askexpert/default-user.svg" />
                                   </div>
-                                  <div [ngClass]="{'msg-student':message.isActive, 'msg': message.isActive == false }">
-                                    <p class="userName"> <b>{{message.firstName}} {{message.lastName}}</b> </p>
-                                    <p class="userText">{{message.text}}</p>
-                                    <time class="userTime">{{message.date}}</time>
+                                  <div style="   margin-top: 10px;
+                                  ">
+
+                                    <span
+                                      [ngClass]="{'userTypeR' : message.isActive, 'userTypeL' : message.isActive == false }">{{message.userType}}</span>
+                                  </div>
+                                  <div class="data">
+                                    <div
+                                      [ngClass]="{'msg-student':message.isActive, 'msg': message.isActive == false }">
+                                      <p class="userText">{{message.text}}</p>
+                                      <time class="userTime">{{message.date}}</time>
+                                    </div>
+
                                   </div>
                                 </li>
                               </ul>
                             </div>
 
-                          </ion-list>
                         </ion-col>
                       </ion-row>
                     </ion-grid>
@@ -172,7 +177,108 @@
         </ion-card>
       </ion-col>
       <!-- mat ka kaam hai -->
-
+      <ion-col size="12" size-sm="6" size-md="5" size-lg="4" class="ion-align-self-stretch" style="z-index: 9999;" [hidden]="panelModal !== 'info'">
+          <ion-card color="clean" style="position: absolute; top: 0; right: 0; bottom: 0; left: 0;">
+            <ion-item lines="full" color="medium">
+              {{item?.title}}
+              <ion-button slot="end" fill="clear" color="light" (click)="showPanelModal('')">
+                <ion-icon name="close" slot="icon-only"></ion-icon>
+              </ion-button>
+            </ion-item>
+  
+            <div style="position: absolute; top: 50px; right: 0; bottom: 0; left: 0; overflow-y: scroll;">
+              <ion-item>
+                <ion-icon slot="start" name="information-circle-outline" mode="ios"></ion-icon>
+                
+                <ion-label *ngIf="!item?.started">
+                  <ion-badge color="dark">Not yet started</ion-badge>
+                </ion-label>
+  
+                <ion-label *ngIf="item?.started">
+                  <ion-badge color="warning" *ngIf="item?.status === 'open'">On-going</ion-badge>
+                  <ion-badge color="danger" *ngIf="item?.status === 'close'">Closed</ion-badge>
+                </ion-label>
+  
+                <ion-note slot="end" mode="md" text-uppercase>Status</ion-note>
+              </ion-item>
+  
+              <ion-item>
+                <ion-icon slot="start" name="contact" mode="ios"></ion-icon>
+                <ion-label>
+                  {{item?.speaker?.firstName}} {{item?.speaker?.lastName}}
+                </ion-label>
+                <ion-note slot="end" mode="md" text-uppercase>Speaker</ion-note>
+              </ion-item>
+          
+              <ion-item>
+                <ion-icon slot="start" name="calendar" mode="md"></ion-icon>
+                <ion-label>
+                  {{item?.date ? beautifyDate(item?.date, 'ddd, MMM. DD, YYYY') : '-'}}
+                </ion-label>
+                <ion-note slot="end" mode="md" text-uppercase>Date</ion-note>
+              </ion-item>
+          
+              <ion-item>
+                <ion-icon slot="start" name="time" mode="md"></ion-icon>
+                <ion-label>
+                  {{item?.date ? beautifyDate(item?.date + ' ' + item?.time, 'h:mm a') : '-'}}
+                </ion-label>
+                <ion-note slot="end" mode="md" text-uppercase>Time</ion-note>
+              </ion-item>
+          
+              <ion-item lines="none" *ngIf="item?.public === true">
+                <ion-icon slot="start" name="unlock" mode="ios"></ion-icon>
+                <ion-label>
+                  Public
+                </ion-label>
+                <ion-note slot="end" mode="md" text-uppercase>Everyone can participate</ion-note>
+              </ion-item>
+          
+              <ion-item lines="none" *ngIf="item?.public === false">
+                <ion-icon slot="start" name="lock" mode="ios"></ion-icon>
+                <ion-label text-wrap>
+                  Private
+                  <p>Only participants in the list can join</p>
+                </ion-label>
+              </ion-item>
+  
+              <div *ngIf="item?.public === false">
+                <ion-card-header>
+                  <ion-card-subtitle>
+                    <ion-text color="dark">Paticipants</ion-text>
+                  </ion-card-subtitle>
+                </ion-card-header>
+            
+                <ion-item lines="none" *ngIf="item?.participants?.length < 1">
+                    <ion-label><p>No participants added</p></ion-label>
+                  </ion-item>
+            
+                <ion-item *ngFor="let participant of item?.participants;">
+                  <ion-icon slot="start" name="person" [color]="participant?.present === true ? 'success' : 'medium'" mode="ios"></ion-icon>
+                  <ion-label>
+                    {{participant?.firstName}} {{participant?.lastName}}
+                  </ion-label>
+                </ion-item>
+              </div>
+  
+              <ion-card-header>
+                <ion-card-subtitle>
+                  <ion-text color="dark">Details</ion-text>
+                </ion-card-subtitle>
+              </ion-card-header>
+          
+              <ion-card-content>
+                <h3>{{item?.description || '-'}}</h3>
+                {{item?.detail}}
+              </ion-card-content>
+  
+              <ion-item *ngIf="isSpeaker">
+                  <ion-button slot="start" fill="outline" href="/{{appUrl}}/edit/{{item?.id}}"><ion-icon name="create" slot="start"></ion-icon> Edit</ion-button>
+                  <ion-button slot="end" fill="clear" color="danger" (click)="confirmDelete()"><ion-icon name="trash"></ion-icon></ion-button>
+              </ion-item>
+            </div>
+          </ion-card>
+        </ion-col>
     </ion-row>
 
   </div>
