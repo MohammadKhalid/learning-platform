@@ -41,6 +41,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	socket: any;
 	isChatOn: boolean = true;
 	isChatOn1: boolean = true;
+	onlineUser: number = 0;
 
 	pdfViewerFile: Blob;
 	pdfViewerCurrentPage: number;
@@ -237,7 +238,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 				}).then(externalStream => {
 					//add end event for chrome
 					externalStream.getVideoTracks()[0].addEventListener('ended', () => {
-						this.screenVar == "sharescreen";
+						this.screenVar = "sharescreen";
 						this.connection.attachStreams.pop();
 						this.shareScreen(false);
 					});
@@ -250,6 +251,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 							this.startStopRecord(true);
 						}
 					}
+					this.chromeScreenShare(false)
 				}, error => {
 					alert(error);
 				});
@@ -432,11 +434,14 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					this.streams[event.data.streamid].audioIconElem.setAttribute('color', event.data.value === true ? 'success' : 'light');
 					break;
 				case 'toast':
+					if (event.data.isStudent) {
+						this.participantsCount--
+					}
 					this.notificationService.showMsg(event.data.message);
 					break;
 				case 'join':
+					this.participantsCount++
 					this.notificationService.showMsg(event.data.message);
-
 					// send load to pdfViewer new participant
 					if (this.pdfViewerFile) {
 						if (this.isSpeaker && this.connection.extra.pdfViewer.file) {
@@ -594,7 +599,9 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 				this.participantsContainer.nativeElement.appendChild(elemContainer);
 
 				// count participant
-				this.participantsCount++;
+				// this.participantsCount++;
+
+				// alert(this.participantsCount)
 			}
 
 			setTimeout(() => {
@@ -649,7 +656,8 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 				}
 
 				// count participant
-				this.participantsCount--;
+				// this.participantsCount--;
+				// alert(this.participantsCount)
 			}
 		};
 
@@ -699,7 +707,6 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 						message: 'Speaker is online!'
 					});
 				}, 5000);
-
 				// show controls
 				this.isLoading = false;
 				// }
@@ -723,7 +730,9 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 							type: 'join',
 							message: this.connection.extra.firstName + ' ' + this.connection.extra.lastName + ' joined!'
 						});
+
 					}, 5000);
+					this.participantsCount++
 
 					// show controls
 					this.isLoading = false;
@@ -1078,7 +1087,8 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		const leaveMsg: string = this.connection.extra.initiator ? 'Speaker left!' : this.connection.extra.firstName + ' ' + this.connection.extra.lastName + ' left!';
 		this.connection.send({
 			type: 'toast',
-			message: leaveMsg
+			message: leaveMsg,
+			isStudent: this.connection.extra.initiator ? false : true
 		});
 
 		this.connection.getAllParticipants().forEach((participantId) => {
