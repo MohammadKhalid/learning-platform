@@ -152,6 +152,8 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 							type: 'video',
 						});
 						this.recordContext.startRecording();
+						this.screenVar == "notshareScreen";
+						this.shareScreen(false);
 					}
 					else {
 						this.shareScreen(true);
@@ -188,6 +190,8 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 							type: 'video',
 						});
 						this.recordContext.startRecording();
+						this.screenVar == "notshareScreen";
+						this.shareScreen(false);
 					}
 					else {
 						this.shareScreen(true);
