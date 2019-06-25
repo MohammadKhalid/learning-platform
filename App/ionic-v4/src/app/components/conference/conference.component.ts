@@ -142,9 +142,44 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			}
 		});
 	}
-
-	async startStopRecord(flag: boolean) {
+	chromeStartStopRecord(flag: boolean) {
 		if (flag) {
+			switch (this.user.type) {
+				case "coach":
+					if (this.connection.attachStreams.length == 2) {
+						let stream = this.connection.attachStreams[1];
+						this.recordContext = new recordRTC(stream, {
+							type: 'video',
+						});
+						this.recordContext.startRecording();
+					}
+					else {
+						this.shareScreen(true);
+						return;
+					}
+					break;
+				case "student":
+					debugger;
+					this.recordContext = new recordRTC(document.querySelector('video').srcObject, {
+						type: 'video'
+					});
+					this.recordContext.startRecording();
+				default:
+					break;
+			}
+
+		}
+		else {
+			this.recordContext.stopRecording(() => {
+				var blob = this.recordContext.getBlob();
+				recordRTC.invokeSaveAsDialog(blob);
+			});
+		}
+		this.recordScreen = !this.recordScreen;
+	}
+	async fireFoxStartStopRecord(flag: boolean) {
+		if (flag) {
+			debugger;
 			switch (this.user.type) {
 				case "coach":
 					if (this.connection.attachStreams.length == 2) {
@@ -173,80 +208,99 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		else {
 			this.recordContext.stopRecording(() => {
 				var blob = this.recordContext.getBlob();
-				debugger;
 				recordRTC.invokeSaveAsDialog(blob);
 			});
 		}
 		this.recordScreen = !this.recordScreen;
 	}
-
-	async shareScreen(recallRecord: boolean) {
-
+	startStopRecord(flag: boolean) {
+		if (this.connection.DetectRTC.browser.name === 'Chrome') {
+			this.chromeStartStopRecord(flag);
+		}
+		else {
+			this.fireFoxStartStopRecord(flag);
+		}
+	}
+	chromeScreenShare(recallRecord: boolean) {
 		let video = document.querySelector('video');
-		this.screenVar = this.screenVar == "sharescreen" ? "notsharescreen" : "sharescreen";
-		debugger
 		if (this.screenVar == "sharescreen") {
-			if (this.connection.DetectRTC.browser.name === 'Chrome') {
-				if( this.connection.attachStreams.length == 1){
-					let objBrowserScreen: any = navigator.mediaDevices;
-					objBrowserScreen.getDisplayMedia({
-						video: true,
-						audio: true,
-					}).then(externalStream => {
-						video.srcObject = null;
-						externalStream.getVideoTracks()[0].addEventListener('ended', () => {
-							if (this.screenVar != 'notsharescreen')
-								// this.shareScreen(false)
-								alert('here')
-						})
-						this.connection.addStream(externalStream);
-					}, error => {
-						alert(error);
-					});
-				}else{
-					video.srcObject = null;
-					this.connection.replaceTrack(this.connection.attachStreams[1])
-				}
-				
-			}
-			else {
-				this.connection.replaceTrack({
-					screen: true,
+			if (this.connection.attachStreams.length == 1) {
+				let objBrowserScreen: any = navigator.mediaDevices;
+				objBrowserScreen.getDisplayMedia({
+					video: true,
 					audio: true,
-					oneway: true
-				});
-				if (this.interval != null) {
-					clearInterval(this.interval)
-				}
+				}).then(externalStream => {
+					//add end event for chrome
+					externalStream.getVideoTracks()[0].addEventListener('ended', () => {
+						this.screenVar == "sharescreen";
+						this.connection.attachStreams.pop();
+						this.shareScreen(false);
+					});
 
-				if (this.user.type == 'coach') {
-					this.interval = setInterval(() => {
+					//add stream into RTC
+					this.connection.addStream(externalStream);
+					if (this.user.type == 'coach') {
 						video.srcObject = null;
-						if (this.connection.attachStreams.length == 2 && recallRecord) {
-							clearInterval(this.interval);
+						if (recallRecord) {
 							this.startStopRecord(true);
 						}
-					}, 100);
-				}
+					}
+				}, error => {
+					alert(error);
+				});
+			} else {
+				video.srcObject = null;
+				this.connection.replaceTrack(this.connection.attachStreams[1]);
+			}
+		}
+		else {
+			this.connection.replaceTrack(this.connection.attachStreams[0]);
+			let streamEvent = this.connection.streamEvents[this.connection.attachStreams[0].streamid];
+			let mediaStreamObj = streamEvent.stream;
+			video.srcObject = mediaStreamObj;
+		}
+
+	}
+	fireFoxScreenShare(recallRecord: boolean) {
+		let video = document.querySelector('video');
+		if (this.screenVar == "sharescreen") {
+			this.connection.replaceTrack({
+				screen: true,
+				audio: true,
+				oneway: true
+			});
+			if (this.interval != null) {
+				clearInterval(this.interval)
 			}
 
+			if (this.user.type == 'coach') {
+				this.interval = setInterval(() => {
+					video.srcObject = null;
+					if (this.connection.attachStreams.length == 2 && recallRecord) {
+						clearInterval(this.interval);
+						this.startStopRecord(true);
+					}
+				}, 100);
+			}
 		}
 		else {
 			clearInterval(this.interval)
-			if (this.connection.DetectRTC.browser.name === 'Chrome') {
-				this.connection.replaceTrack(this.connection.attachStreams[0])
+			this.connection.resetTrack();
+			if (this.connection.attachStreams.length == 2) {
 				let streamEvent = this.connection.streamEvents[this.connection.attachStreams[0].streamid]
 				let mediaStreamObj = streamEvent.stream
 				video.srcObject = mediaStreamObj
-			} else {
-
-				this.connection.resetTrack();
-				if (this.connection.attachStreams.length == 2) {
-					let streamEvent = this.connection.streamEvents[this.connection.attachStreams[0].streamid]
-					let mediaStreamObj = streamEvent.stream
-					video.srcObject = mediaStreamObj
-				}
 			}
+		}
+	}
+
+	async shareScreen(recallRecord: boolean) {
+		this.screenVar = this.screenVar == "sharescreen" ? "notsharescreen" : "sharescreen";
+		if (this.connection.DetectRTC.browser.name === 'Chrome') {
+			this.chromeScreenShare(recallRecord);
+		}
+		else {
+			this.fireFoxScreenShare(recallRecord);
 		}
 	}
 
