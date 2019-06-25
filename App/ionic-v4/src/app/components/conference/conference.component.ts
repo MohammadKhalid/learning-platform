@@ -142,7 +142,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			}
 		});
 	}
-	chromeStartStopRecord(flag: boolean) {
+	async chromeStartStopRecord(flag: boolean) {
 		if (flag) {
 			switch (this.user.type) {
 				case "coach":
@@ -160,7 +160,8 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					break;
 				case "student":
 					debugger;
-					this.recordContext = new recordRTC(document.querySelector('video').srcObject, {
+					let stream = await document.querySelector('video').srcObject;
+					this.recordContext = new recordRTC(stream, {
 						type: 'video'
 					});
 					this.recordContext.startRecording();
@@ -179,7 +180,6 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	}
 	async fireFoxStartStopRecord(flag: boolean) {
 		if (flag) {
-			debugger;
 			switch (this.user.type) {
 				case "coach":
 					if (this.connection.attachStreams.length == 2) {
@@ -196,7 +196,8 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					break;
 				case "student":
 					debugger;
-					this.recordContext = new recordRTC(document.querySelector('video').srcObject, {
+					let stream = await document.querySelector('video').srcObject;
+					this.recordContext = new recordRTC(stream, {
 						type: 'video'
 					});
 					this.recordContext.startRecording();
