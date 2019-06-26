@@ -83,7 +83,8 @@
       <ion-col size="12" size-sm="6" size-md="5" size-lg="4" class="ion-align-self-stretch ion-no-padding"
         style="z-index: 9999;" *ngIf="matGroup">
         <ion-card color="clean" class="web-card">
-          <mat-tab-group style="    border-style: solid;
+          <mat-tab-group 
+          mat-stretch-tabs style="border-style: solid;
           border-color: #f4f5f8;">
             <mat-tab label="Group Chat">
 
@@ -493,7 +494,7 @@
             </ion-col>
             <ion-col class="ion-no-padding ion-align-self-end">
 
-                <ul class="mob-chat scrollable-list"
+                <!-- <ul class="mob-chat scrollable-list"
                 #mobileMessageUl id="mobileMessageUl">
                 <li 
                   *ngFor="let message of messages">
@@ -532,11 +533,11 @@
 
                   </div>
                 </li>
-              </ul>
+              </ul> -->
 
 
 
-<!-- 
+
               <ion-list lines="none" class="scrollable-list" #mobileMessageUl id="mobileMessageUl">
                 <ion-item *ngFor="let message of messages">
                   <img class="mobile-img" src="../../../assets/img/askexpert/default-user.svg" alt="">
@@ -551,7 +552,7 @@
 
                   <ion-note slot="end" mode="md" text-lowercase>{{message.userType}}</ion-note>
                 </ion-item>
-              </ion-list> -->
+              </ion-list>
             </ion-col>
           </ion-row>
         </ion-grid>

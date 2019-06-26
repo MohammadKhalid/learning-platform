@@ -408,7 +408,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 
 				case 'chat':
 					this.messages.push(event.data);
-
+					this.bottomScroll();
 					if (this.panelModal !== 'message') {
 						this.newMessage = true;
 
