@@ -149,34 +149,14 @@
   border-left: 0;
   border-bottom: 0;
   margin-top: -19px;
-  margin-left: -5px;
-    // content: ' ';
-    // position: absolute;
-    // width: 0;
-    // height: 0;
-    // left: -14px;
-    // right: auto;
-    // top: 0px;
-    // bottom: auto;
-    // border: 22px solid;
-    // border-color: #f4f5f9 transparent transparent transparent;        
+  margin-left: -5px;      
   }
-
 
 .web_chat_div{
 
   position:relative;
   margin-top:180px;
 }
-
-
-
-
-
-
-
-
-
 
 .scrollable-list-web {
   height: calc(100vh - 178px);
@@ -192,6 +172,8 @@
   height: calc(100vh - 57px);
   background-color: #f4f5f8;
   margin: auto;
+  margin-left: 42px;
+  border-radius: 0px;
 }
 
 
@@ -278,13 +260,14 @@
 
 
 
+
 /* M E S S A G E S */
 
 .chat {
     list-style: none;
     background: none;
     margin: 0;
-    padding: 0 0 50px 0;
+    padding:16px 0 50px 0;
 }
 .chat li .data{
   width: 100%;
@@ -395,8 +378,8 @@
   font-size: 11px;
     font-weight: bold;
     padding-bottom: 0px;
-    position: absolute;
-    margin-top: -16px;
+    // position: absolute;
+    margin-top: 0px;
 }
 .userTypeR{
   font-size: 11px;
@@ -414,9 +397,6 @@
     font-weight: bold;
     margin-right: 10px;
 
-}
-
-.self {
 }
 
 .avatar2 {
@@ -664,3 +644,45 @@ emoji.funny{background-image: url(https://i.imgur.com/qKia58V.png);}
   display: none;
 }
 
+// mobile chat start
+
+.mob-chat {
+  list-style: none;
+ background: none;
+ margin: 0;
+ padding: 16px 0 50px 0;
+}
+.mob-chat li .data{
+  width: 100%;
+ overflow: hidden;
+ display: flex;
+}
+
+
+.mob-chat .msg-student-mob {
+background: #b9dee7;
+width: 100%;
+border-radius: 10px;
+
+padding: 15px;
+
+justify-content: right;
+// margin-left: 112px;
+margin-bottom: 14px;
+
+}
+
+
+.mob-chat .msg-mob {
+background: #e6e7e9;
+width: 100%;
+border-radius: 10px;
+
+padding: 15px;
+
+justify-content: right;
+// margin-left: 112px;
+margin-bottom: 14px;
+
+}
+// mobile chat end

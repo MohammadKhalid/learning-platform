@@ -18,6 +18,9 @@ import { async } from 'rxjs/internal/scheduler/async';
 
 export class ConferenceComponent implements OnInit, OnDestroy {
 	@ViewChild('chatMessageUl') private myScrollContainer: ElementRef;
+	@ViewChild('mobileMessageUl') private myMobileContainer: ElementRef;
+
+	
 	@Input('id') id: string;
 	@Input('publicRoomIdentifier') publicRoomIdentifier: string = 'conference';
 	@Input('user') user: any = {};
@@ -108,7 +111,9 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	bottomScroll(): void {
 		setTimeout(() => {
 			try {
-				this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+				 this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+				this.myMobileContainer.nativeElement.scrollTop = this.myMobileContainer.nativeElement.scrollHeight;
+
 			} catch (error) {
 
 			}
@@ -1179,7 +1184,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			lastName: this.user.lastName,
 			userType: this.user.type,
 			isActive: false,
-			date: moment().format('HH:mm:ss')
+			date: moment().format('HH:mm a')
 
 		};
 
