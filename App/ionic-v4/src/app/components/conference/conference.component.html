@@ -537,22 +537,24 @@
 
 
 
+<div #mobileMessageUl id="mobileMessageUl" class="scrollable-list">
+  <ion-list lines="none"  >
+    <ion-item *ngFor="let message of messages">
+      <img class="mobile-img" src="../../../assets/img/askexpert/default-user.svg" alt="">
 
-              <ion-list lines="none" class="scrollable-list" #mobileMessageUl id="mobileMessageUl">
-                <ion-item *ngFor="let message of messages">
-                  <img class="mobile-img" src="../../../assets/img/askexpert/default-user.svg" alt="">
+      <ion-label text-wrap class="ion-margin-start">
+        <ion-note class="chatName mobile-user-name">{{message.firstName}} {{message.lastName}}</ion-note>
+        <p>
+          <ion-note>{{message.dateCreated}}</ion-note>
+        </p>
+        <p class="mobile-user-text">{{message.text}}</p>
+      </ion-label>
 
-                  <ion-label text-wrap class="ion-margin-start">
-                    <ion-note class="chatName mobile-user-name">{{message.firstName}} {{message.lastName}}</ion-note>
-                    <p>
-                      <ion-note>{{message.dateCreated}}</ion-note>
-                    </p>
-                    <p class="mobile-user-text">{{message.text}}</p>
-                  </ion-label>
+      <ion-note slot="end" mode="md" text-lowercase>{{message.userType}}</ion-note>
+    </ion-item>
+  </ion-list>
 
-                  <ion-note slot="end" mode="md" text-lowercase>{{message.userType}}</ion-note>
-                </ion-item>
-              </ion-list>
+</div>
             </ion-col>
           </ion-row>
         </ion-grid>

@@ -19,6 +19,7 @@ import { async } from 'rxjs/internal/scheduler/async';
 export class ConferenceComponent implements OnInit, OnDestroy {
 	@ViewChild('chatMessageUl') private myScrollContainer: ElementRef;
 	@ViewChild('mobileMessageUl') private myMobileContainer: ElementRef;
+	
 
 	
 	@Input('id') id: string;
@@ -111,8 +112,11 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	bottomScroll(): void {
 		setTimeout(() => {
 			try {
+				debugger;
+				if(this.myScrollContainer)
 				 this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
-				this.myMobileContainer.nativeElement.scrollTop = this.myMobileContainer.nativeElement.scrollHeight;
+				else
+				 this.myMobileContainer.nativeElement.scrollTop = this.myMobileContainer.nativeElement.scrollHeight;
 
 			} catch (error) {
 
