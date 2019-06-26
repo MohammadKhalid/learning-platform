@@ -112,10 +112,9 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	bottomScroll(): void {
 		setTimeout(() => {
 			try {
-				debugger;
 				if(this.myScrollContainer)
 				 this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
-				else
+				if(this.myMobileContainer)
 				 this.myMobileContainer.nativeElement.scrollTop = this.myMobileContainer.nativeElement.scrollHeight;
 
 			} catch (error) {
