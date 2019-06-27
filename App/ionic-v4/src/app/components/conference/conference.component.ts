@@ -19,9 +19,9 @@ import { async } from 'rxjs/internal/scheduler/async';
 export class ConferenceComponent implements OnInit, OnDestroy {
 	@ViewChild('chatMessageUl') private myScrollContainer: ElementRef;
 	@ViewChild('mobileMessageUl') private myMobileContainer: ElementRef;
-	
 
-	
+
+
 	@Input('id') id: string;
 	@Input('publicRoomIdentifier') publicRoomIdentifier: string = 'conference';
 	@Input('user') user: any = {};
@@ -73,6 +73,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	recordContext: any;
 
 	isLoading: boolean = true;
+	studentMediaStream: any;
 	// getMediaStream: any;
 
 	constructor(
@@ -112,10 +113,10 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	bottomScroll(): void {
 		setTimeout(() => {
 			try {
-				if(this.myScrollContainer)
-				 this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
-				if(this.myMobileContainer)
-				 this.myMobileContainer.nativeElement.scrollTop = this.myMobileContainer.nativeElement.scrollHeight;
+				if (this.myScrollContainer)
+					this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+				if (this.myMobileContainer)
+					this.myMobileContainer.nativeElement.scrollTop = this.myMobileContainer.nativeElement.scrollHeight;
 
 			} catch (error) {
 
@@ -181,23 +182,64 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					}
 					break;
 				case "student":
+					debugger;
+					if (this.studentMediaStream) {
+						// this.studentMediaStream.getTracks()[0].stop();
+						this.recordContext = new recordRTC(this.studentMediaStream, {
+							type: 'video',
+						});
+						this.recordContext.startRecording();
+					}
+					else{
+						let objBrowserScreen: any = navigator.mediaDevices;
+						objBrowserScreen.getDisplayMedia({
+							video: true,
+							audio: true,
+						}).then(externalStream => {
+							//add end event for chrome
+							this.studentMediaStream = externalStream;
+							externalStream.getVideoTracks()[0].addEventListener('ended', () => {
+								// this.connection.attachStreams.pop();
+								this.studentMediaStream.getTracks()[0].stop();
+								this.studentMediaStream = undefined;
+							});
+							this.recordContext = new recordRTC(stream, {
+								type: 'video',
+							});
+							this.recordContext.startRecording();
+							//add stream into RTC
+							// this.connection.addStream(externalStream);
+							// this.startStopRecord(true);
+						}, error => {
+							alert(error);
+						});
+
+					}
+
+
+
+
 					let stream = await document.querySelector('video').srcObject;
-					// setTimeout(() => {
 					this.recordContext = new recordRTC(stream, {
 						type: 'video'
 					});
 					this.recordContext.startRecording();
-				// }, 100);
 				default:
 					break;
 			}
 
 		}
 		else {
+			// if (this.user.type == "student") {
+			// 	this.studentMediaStream = null;
+			// }
+			// coach
 			this.recordContext.stopRecording(async () => {
 				var blob = await this.recordContext.getBlob();
 				recordRTC.invokeSaveAsDialog(blob);
 			});
+
+			// student
 		}
 		this.recordScreen = !this.recordScreen;
 	}
