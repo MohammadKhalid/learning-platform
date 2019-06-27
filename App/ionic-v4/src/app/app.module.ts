@@ -23,10 +23,12 @@ import { LoaderService } from './services/utility/loader.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { NotificationService } from './services/notification/notification.service';
+// import { AvailableCertificationsComponent } from './pages/certification/certification/available-certifications/available-certifications.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    // AvailableCertificationsComponent
   ],
   entryComponents: [],
   imports: [
