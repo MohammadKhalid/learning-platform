@@ -17,7 +17,7 @@ import { IonicSelectableModule } from 'ionic-selectable';
 import { FileDropModule } from 'ngx-file-drop';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import {MatSelectModule} from '@angular/material/select';
-import {FormControl, Form} from '@angular/forms';
+
 import { FormsModule } from '@angular/forms';
 
 import { ComponentsModule } from './components/components.module';
@@ -34,6 +34,7 @@ import { NotificationService } from './services/notification/notification.servic
     // AvailableCertificationsComponent
   ],
   entryComponents: [],
+  
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
@@ -50,6 +51,8 @@ import { NotificationService } from './services/notification/notification.servic
     FileDropModule,
     MatSelectModule
   ],
+
+
   providers: [
     LoaderService,
     StatusBar,

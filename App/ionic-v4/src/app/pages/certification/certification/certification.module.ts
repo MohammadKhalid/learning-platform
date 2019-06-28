@@ -9,7 +9,8 @@ import { IonicModule } from '@ionic/angular';
 import { MatTabsModule } from '@angular/material/tabs';
 
 import { CertificationPage } from './certification.page';
-import { FilterComponent } from 'src/app/components/common/filter/filter.component';
+//  import { FilterComponent } from 'src/app/components/common/filter/filter.component';
+import { ComponentsModule } from 'src/app/components/components.module';
 
 const routes: Routes = [
   {
@@ -21,6 +22,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
+    ComponentsModule,
     FormsModule,
     MatFormFieldModule,
     IonicModule,
@@ -28,8 +30,8 @@ const routes: Routes = [
     MatTabsModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [CertificationPage,
-    FilterComponent
+  declarations: [
+    CertificationPage
   ]
 })
 export class CertificationPageModule { }

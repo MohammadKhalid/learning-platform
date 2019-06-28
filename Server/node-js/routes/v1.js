@@ -88,7 +88,7 @@ router.put(     '/show-time/:item_id',  		    passport.authenticate('jwt', {sess
 router.put(     '/show-time/submit/:item_id',  	passport.authenticate('jwt', {session:false}), showTime.item, ShowTimeController.submit);   		// U
 router.put(     '/show-time/review/:item_id',  	passport.authenticate('jwt', {session:false}), showTime.item, ShowTimeController.updateReview);   	// U
 
-router.post(    '/categories',           		passport.authenticate('jwt', {session:false}), role.user, CategoryController.create);	   	// C
+router.post(    '/categories',           		passport.authenticate('jwt', {session:false}), CategoryController.create);	   	// C
 router.get(     '/categories',           		passport.authenticate('jwt', {session:false}), CategoryController.getAll);     				// R
 router.get(     '/categories/:item_id',  		passport.authenticate('jwt', {session:false}), custom.category, CategoryController.get);        				// R
 router.put(     '/categories/:item_id',  		passport.authenticate('jwt', {session:false}), role.user, custom.category, CategoryController.update);   	// U
