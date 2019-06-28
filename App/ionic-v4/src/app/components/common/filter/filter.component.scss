@@ -1,31 +1,67 @@
-.send-box
-{
-  --placeholder-color:#96979c;
+.send-box {
+  --placeholder-color: #96979c;
 }
-.chat-box
-{
-    --background: #ffffff;
-    border: 1px solid #e2e2e2;
-    box-shadow: 1px 1px #e8e8e8;
+.chat-box {
+  --background: #ffffff;
+  border: 1px solid #e2e2e2;
+  box-shadow: 1px 1px #e8e8e8;
 }
 
-.chat-box .send
-{
-   width: 22px;
+.chat-box .send {
+  width: 22px;
 }
-.icon-color{
-    color :#a3a4a5;
+.icon-color {
+  color: #a3a4a5;
 }
-.icon-align{
-    float: right;
-    color: #c8c8c8;
+.icon-align {
+  float: right;
+  color: #c8c8c8;
 }
 
-.option-box{
-    --background: #ffffff;
-    border: 1px solid #e2e2e2;
-    box-shadow: 1px 1px #e8e8e8;
+.option-box {
+  --background: #ffffff;
+  border: 1px solid #e2e2e2;
+  box-shadow: 1px 1px #e8e8e8;
 }
-.selectbox-label{
-    color: #96979c;
+.selectbox-label {
+  color: #96979c;
+}
+// .mat-selector{
+//     box-shadow: 1px 1px 1px 1px #e8e8e8;
+
+// }
+.chat-box-selector {
+  background: #ffffff;
+  border: 1px solid #e2e2e2;
+  box-shadow: 1px 1px 1px 1px #e8e8e8;
+  
+
+  height: 100%;
+}
+
+::ng-deep .mat-form-field-underline {
+  display: none;
+}
+
+.mat-selector {
+  width: 90%;
+  padding-top: 13px;
+  margin-left: 8px;
+}
+// .mat-button{
+//     top: -4px;
+//     padding-top: 26px;
+// }
+::ng-deep .mat-select-arrow {
+  border-left: 15px solid transparent !important;
+  border-right: none !important;
+  border-top: 15px solid transparent !important;
+  border-image-source: url('../../../../assets//img//certification/yPDuQQ.svg') !important;
+  border-image-repeat: stretch !important;
+}
+
+
+.apply-button{
+  height: 49px;
+  width: 100px;
 }

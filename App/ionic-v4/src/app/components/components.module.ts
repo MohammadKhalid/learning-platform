@@ -21,8 +21,12 @@ import { CompanyProfileComponent } from './profile/company-profile/company-profi
 import {MatTabsModule} from '@angular/material/tabs';
 import { ErrorsComponent } from './errors/errors.component';
 import {MatSelectModule} from '@angular/material/select';
+import {MatCardModule} from '@angular/material/card';
+
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { FilterComponent } from './common/filter/filter.component';
+import {MatButtonModule} from '@angular/material/button';
+
 
 @NgModule({
 	imports: [
@@ -36,7 +40,10 @@ import { FilterComponent } from './common/filter/filter.component';
 		RouterModule,
 		MatTabsModule,
 		MatFormFieldModule,
-		MatSelectModule
+		MatSelectModule,
+		MatCardModule,
+		MatButtonModule
+		
 	],
 	declarations: [
 		ErrorsComponent,

@@ -8,10 +8,16 @@ import {FormControl, Form} from '@angular/forms';
   styleUrls: ['./filter.component.scss'],
 })
 export class FilterComponent implements OnInit {
-  toppings = new FormControl();
+  toppings = [];
+  search:string
+
   toppingList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
   constructor() { }
 
   ngOnInit() {}
 
+  submitvalues(){
+    console.log(this.search,this.toppings)
+    
+  }
 }
