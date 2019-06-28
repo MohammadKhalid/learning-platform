@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 
 import { IonicSelectableModule } from 'ionic-selectable';
-import { FileDropModule } from 'ngx-file-drop';
+import { FileDropModule, FileComponent } from 'ngx-file-drop';
 import { SimplePdfViewerModule } from 'simple-pdf-viewer';
 
 import { MediaComponent } from './media/media.component';
@@ -22,6 +22,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 import { ErrorsComponent } from './errors/errors.component';
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { FilterComponent } from './common/filter/filter.component';
 
 @NgModule({
 	imports: [
@@ -47,7 +48,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 		ProfileComponent,
 		StudentProfileComponent,
 		CoachProfileComponent,
-		CompanyProfileComponent
+		CompanyProfileComponent,
+		FilterComponent
 	],
 	entryComponents: [
 		MediaComponent
@@ -60,7 +62,9 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 		ProfileComponent,
 		StudentProfileComponent,
 		CoachProfileComponent,
-		CompanyProfileComponent
+		CompanyProfileComponent,
+		FilterComponent
+
 	]
 })
 export class ComponentsModule {}
