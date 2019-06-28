@@ -1,0 +1,14 @@
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'cerficatecard',
+  templateUrl: './card.component.html',
+  styleUrls: ['./card.component.scss'],
+})
+export class CardComponent implements OnInit {
+
+  constructor() { }
+
+  ngOnInit() {}
+
+}
