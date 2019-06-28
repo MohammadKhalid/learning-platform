@@ -8,28 +8,28 @@ const CONFIG            = require('../config/config');
 module.exports = (sequelize, DataTypes) => {
     var Model = sequelize.define('Category', {
         title       : DataTypes.STRING,
-        description : DataTypes.TEXT,
-        isActive    : {
-            type: DataTypes.BOOLEAN,
-            defaultValue: true
-        },
-        isDeleted   : {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false
-        }
+        // description : DataTypes.TEXT,
+        // isActive    : {
+        //     type: DataTypes.BOOLEAN,
+        //     defaultValue: true
+        // },
+        // isDeleted   : {
+        //     type: DataTypes.BOOLEAN,
+        //     defaultValue: false
+        // }
     });
 
     Model.associate = function(models) {
         // self reference as sub category
-        this.belongsTo(models.Category, { as: 'parentCategory', foreignKey: 'categoryId' });
-        this.hasMany(models.Category, {as: 'subCategories', foreignKey: 'categoryId'});
+        // this.belongsTo(models.Category, { as: 'parentCategory', foreignKey: 'categoryId' });
+        // this.hasMany(models.Category, {as: 'subCategories', foreignKey: 'categoryId'});
 
         // topic
-        this.belongsToMany(models.Topic, { through: 'CategoryTopic', as: 'topics', foreignKey: 'categoryId' });
+        // this.belongsToMany(models.Topic, { through: 'CategoryTopic', as: 'topics', foreignKey: 'categoryId' });
 
         // user
-        this.belongsTo(models.User, {as: 'createdByUser', foreignKey: 'createdBy'});
-        this.belongsTo(models.User, {as: 'updatedByUser', foreignKey: 'updatedBy'});
+        // this.belongsTo(models.User, {as: 'createdByUser', foreignKey: 'createdBy'});
+        // this.belongsTo(models.User, {as: 'updatedByUser', foreignKey: 'updatedBy'});
     };
 
     Model.prototype.getJWT = function () {
