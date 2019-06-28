@@ -1,0 +1,43 @@
+<ion-grid>
+  <ion-row >
+    <drag-scroll>
+      
+      <div class="card-main" *ngFor="let x of data" drag-scroll-item>
+  
+        <ion-card>
+          <ion-item lines="none" class="item" no-padding>
+            <ion-thumbnail class="left-img" slot="start">
+              <ion-img [src]="serverUrl+x.image">
+              </ion-img>
+            </ion-thumbnail>
+            <ion-label class="content">
+  
+              <div class="header">
+                <h3 class="title"> {{x.course}} </h3>
+                <div class="xp">
+                  <h3>
+                    {{x.xp}}
+                  </h3>
+                </div>
+              </div>
+  
+              <div class="description"
+                style="-webkit-box-orient: vertical;box-orient: vertical;-moz-box-orient: vertical;">
+                <p>
+                  {{x.description}}
+                </p>
+              </div>
+              <a href="#" class="learn-more" slot="end">Learn More
+                <ion-icon name="arrow-round-forward"></ion-icon>
+              </a>
+            </ion-label>
+          </ion-item>
+  
+        </ion-card>
+  
+      </div>
+      
+    </drag-scroll>
+
+  </ion-row>
+</ion-grid>
