@@ -20,6 +20,7 @@ const ContactController = require('../controllers/contact.controller');
 const ChatController = require('../controllers/chat.controller');
 const CourseController = require('../controllers/course.controller');
 const SectionController = require('../controllers/section.controller');
+const LessonController = require('../controllers/lesson.controller');
 const SubscriptionPackageController = require('../controllers/subscription-package.controller');
 
 const custom = require('./../middleware/custom');
@@ -168,10 +169,15 @@ router.get('/courses/:coachId', passport.authenticate('jwt', { session: false })
 router.delete('/courses/:courseId', passport.authenticate('jwt', { session: false }), role.user, CourseController.removeCourse);
 router.put('/courses/:courseId', passport.authenticate('jwt', { session: false }), role.user, CourseController.updateCourse);
 
-router.post('/sections', passport.authenticate('jwt', { session: false }), role.user,CertificationUpload, SectionController.create);
-router.get('/sections/:courseId', passport.authenticate('jwt', { session: false }), role.user,CertificationUpload, SectionController.getSections);
-router.delete('/sections/:sectionId', passport.authenticate('jwt', { session: false }), role.user,CertificationUpload, SectionController.removeSection);
-router.put('/sections/:sectionId', passport.authenticate('jwt', { session: false }), role.user,CertificationUpload, SectionController.updateSection);
+router.post('/sections', passport.authenticate('jwt', { session: false }), role.user, SectionController.create);
+router.get('/sections/:courseId', passport.authenticate('jwt', { session: false }), role.user, SectionController.getSections);
+router.delete('/sections/:sectionId', passport.authenticate('jwt', { session: false }), role.user, SectionController.removeSection);
+router.put('/sections/:sectionId', passport.authenticate('jwt', { session: false }), role.user, SectionController.updateSection);
+
+router.post('/lessons', passport.authenticate('jwt', { session: false }), role.user, LessonController.create);
+router.get('/lessons/:sectionId', passport.authenticate('jwt', { session: false }), role.user, LessonController.getLessons);
+router.delete('/lessons/:lessonId', passport.authenticate('jwt', { session: false }), role.user, LessonController.removeLesson);
+router.put('/lessons/:lessonId', passport.authenticate('jwt', { session: false }), role.user, LessonController.updateLesson);
 
 
 router.get('/dashboard', passport.authenticate('jwt', { session: false }), HomeController.Dashboard);
