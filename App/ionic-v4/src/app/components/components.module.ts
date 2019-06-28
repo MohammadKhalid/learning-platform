@@ -20,6 +20,8 @@ import { CoachProfileComponent } from './profile/coach-profile/coach-profile.com
 import { CompanyProfileComponent } from './profile/company-profile/company-profile.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import { ErrorsComponent } from './errors/errors.component';
+import {MatSelectModule} from '@angular/material/select';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 @NgModule({
 	imports: [
@@ -31,7 +33,9 @@ import { ErrorsComponent } from './errors/errors.component';
 		FileDropModule,
 		SimplePdfViewerModule,
 		RouterModule,
-		MatTabsModule
+		MatTabsModule,
+		MatFormFieldModule,
+		MatSelectModule
 	],
 	declarations: [
 		ErrorsComponent,

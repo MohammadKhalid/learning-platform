@@ -16,6 +16,9 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { IonicSelectableModule } from 'ionic-selectable';
 import { FileDropModule } from 'ngx-file-drop';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import {MatSelectModule} from '@angular/material/select';
+import {FormControl, Form} from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 import { ComponentsModule } from './components/components.module';
 import { RtcService } from './services/rtc/rtc.service';
@@ -35,6 +38,7 @@ import { NotificationService } from './services/notification/notification.servic
     BrowserAnimationsModule,
     BrowserModule,
     ComponentsModule,
+    FormsModule,
     IonicModule.forRoot(), 
     AppRoutingModule,
     IonicStorageModule.forRoot({
@@ -43,7 +47,8 @@ import { NotificationService } from './services/notification/notification.servic
     }),
     HttpClientModule,
     IonicSelectableModule,
-    FileDropModule
+    FileDropModule,
+    MatSelectModule
   ],
   providers: [
     LoaderService,
