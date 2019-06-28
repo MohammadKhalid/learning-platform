@@ -203,7 +203,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 								this.studentMediaStream.getTracks()[0].stop();
 								this.studentMediaStream = undefined;
 							});
-							this.recordContext = new recordRTC(stream, {
+							this.recordContext = new recordRTC(this.studentMediaStream, {
 								type: 'video',
 							});
 							this.recordContext.startRecording();
@@ -219,11 +219,11 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 
 
 
-					let stream = await document.querySelector('video').srcObject;
-					this.recordContext = new recordRTC(stream, {
-						type: 'video'
-					});
-					this.recordContext.startRecording();
+					// let stream = await document.querySelector('video').srcObject;
+					// this.recordContext = new recordRTC(stream, {
+					// 	type: 'video'
+					// });
+					// this.recordContext.startRecording();
 				default:
 					break;
 			}
