@@ -1,0 +1,85 @@
+// .scrolling-wrapper {
+//     overflow-x: scroll;
+//     overflow-y: hidden;
+//     white-space: nowrap;
+// }
+
+.card-main {
+    width: 345px;
+    // display: inline-block;
+}
+
+.left-img {
+    width: 100px;
+    height: 100px;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 7px;
+}
+
+.left-img ion-img {
+    object-fit: fill;
+}
+
+.content {
+    min-height: 92px;
+}
+
+.content .header {
+    display: flex;
+}
+
+.content .header .title {
+    width: 50%;
+    font-weight: bold;
+}
+
+.content .header .xp {
+    background-image: url('../../../../assets/img/xp.svg');
+    background-repeat: no-repeat;
+    // background-image: url(./assets/img/xp.svg) no-repeat;
+    background-size: contain;
+    text-align: right;
+    width: 50%;
+}
+
+.content .header .xp h3 {
+    text-align: center;
+    font-size: 10px;
+    padding-top: 3px;
+}
+
+.content .description {
+    display: -webkit-box;
+    display: -moz-box;
+    -webkit-line-clamp: 3;
+    width: 100%;
+    overflow: hidden;
+
+}
+
+.content .description p {
+    white-space: pre-line !important;
+    line-height: 15px;
+    color: #787878;
+    font-size: 12px;
+}
+
+.content .learn-more {
+    float: right;
+    font-size: 12px;
+    text-decoration: none;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    padding: 10px;
+}
+
+.content .learn-more ion-icon {
+    vertical-align: bottom;
+}
+
+// .item .item-native{
+//     padding-left: 7px!important;
+//     -webkit-padding-start: 7px;
+// }

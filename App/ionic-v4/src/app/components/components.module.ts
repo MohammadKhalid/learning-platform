@@ -18,15 +18,14 @@ import { ProfileComponent } from './profile/profile.component';
 import { StudentProfileComponent } from './profile/student-profile/student-profile.component';
 import { CoachProfileComponent } from './profile/coach-profile/coach-profile.component';
 import { CompanyProfileComponent } from './profile/company-profile/company-profile.component';
-import {MatTabsModule} from '@angular/material/tabs';
+import { MatTabsModule, MatSelectModule, MatCardModule } from '@angular/material';
 import { ErrorsComponent } from './errors/errors.component';
-import {MatSelectModule} from '@angular/material/select';
-import {MatCardModule} from '@angular/material/card';
-
-import {MatFormFieldModule} from '@angular/material/form-field';
-import { FilterComponent } from './common/filter/filter.component';
 import {MatButtonModule} from '@angular/material/button';
-
+// import {MatSelectModule} from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FilterComponent } from './common/filter/filter.component';
+import { CartificateCardComponent } from './common/cartificate-card/cartificate-card.component';
+import { DragScrollModule } from 'ngx-drag-scroll';
 
 @NgModule({
 	imports: [
@@ -42,8 +41,8 @@ import {MatButtonModule} from '@angular/material/button';
 		MatFormFieldModule,
 		MatSelectModule,
 		MatCardModule,
-		MatButtonModule
-		
+		MatButtonModule,
+		DragScrollModule
 	],
 	declarations: [
 		ErrorsComponent,
@@ -56,7 +55,8 @@ import {MatButtonModule} from '@angular/material/button';
 		StudentProfileComponent,
 		CoachProfileComponent,
 		CompanyProfileComponent,
-		FilterComponent
+		FilterComponent,
+		CartificateCardComponent
 	],
 	entryComponents: [
 		MediaComponent
@@ -70,8 +70,9 @@ import {MatButtonModule} from '@angular/material/button';
 		StudentProfileComponent,
 		CoachProfileComponent,
 		CompanyProfileComponent,
-		FilterComponent
-
+		FilterComponent,
+		CartificateCardComponent
+	
 	]
 })
-export class ComponentsModule {}
+export class ComponentsModule { }
