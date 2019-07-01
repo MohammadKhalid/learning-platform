@@ -13,6 +13,6 @@
 </ion-header>
 
 <ion-content padding>
- <app-filter></app-filter>
+ <app-filter (searchByFilterEvent)="searchByFilterEvent($event)"></app-filter>
  <certificate-card></certificate-card>
 </ion-content>

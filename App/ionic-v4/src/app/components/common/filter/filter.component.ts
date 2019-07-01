@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {FormControl, Form} from '@angular/forms';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { FormControl, Form } from '@angular/forms';
 
 
 @Component({
@@ -8,16 +8,19 @@ import {FormControl, Form} from '@angular/forms';
   styleUrls: ['./filter.component.scss'],
 })
 export class FilterComponent implements OnInit {
-  toppings = [];
-  search:string
+  categories = [];
+  searchBy: string
+  @Output() searchByFilterEvent = new EventEmitter<object>();
 
   toppingList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
   constructor() { }
 
-  ngOnInit() {}
-
-  submitvalues(){
-    console.log(this.search,this.toppings)
-    
+  ngOnInit() { }
+  search() {
+    let obj = { 
+      searchBy: this.searchBy,
+       categories: this.categories
+       }
+    this.searchByFilterEvent.next(obj);
   }
 }

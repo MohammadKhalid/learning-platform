@@ -17,7 +17,7 @@ export const environment = {
 
 export const SERVER_URL = 'https://thrive19.eastus.cloudapp.azure.com/v1/';
 export const SOCKET_URL = 'https://thrive19.eastus.cloudapp.azure.com/';
-export const RTC_SIGNALLING_SERVER_URL = 'https://thrive19.com:9001/';
+export const RTC_SIGNALLING_SERVER_URL = 'https://thrive19.eastus.cloudapp.azure.com/ss/';
 //export const RTC_SIGNALLING_SERVER_URL = 'https://rtcmulticonnection.herokuapp.com:443/';
 export const ICE_SERVERS = null;
 export const PREFIX_LGT = 'LGT';
