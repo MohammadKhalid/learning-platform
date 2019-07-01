@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Renderer2, ViewChild, ElementRef, Input } from '@angular/core';
-import { NavController, ActionSheetController, AlertController, IonInput } from '@ionic/angular';
+import { NavController, ActionSheetController, AlertController, IonInput, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
 import { RtcService } from '../../services/rtc/rtc.service';
@@ -74,6 +74,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 
 	isLoading: boolean = true;
 	studentMediaStream: any;
+	screenSharing: any;
 	// getMediaStream: any;
 
 	constructor(
@@ -85,7 +86,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		private elementRenderer: Renderer2,
 		private actionSheetCtrl: ActionSheetController,
 		private alertCtrl: AlertController,
-
+		private toastController: ToastController,
 	) {
 		// nav data
 		const navigation = this.router.getCurrentNavigation();
@@ -96,6 +97,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		// rtc connection
+		// this.screenShareMessage()
 		this.rtcService.getConnection().then((connection) => {
 			// set connection
 			this.connection = connection;
@@ -190,7 +192,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 						});
 						this.recordContext.startRecording();
 					}
-					else{
+					else {
 						let objBrowserScreen: any = navigator.mediaDevices;
 						objBrowserScreen.getDisplayMedia({
 							video: true,
@@ -219,11 +221,11 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 
 
 
-					// let stream = await document.querySelector('video').srcObject;
-					// this.recordContext = new recordRTC(stream, {
-					// 	type: 'video'
-					// });
-					// this.recordContext.startRecording();
+				// let stream = await document.querySelector('video').srcObject;
+				// this.recordContext = new recordRTC(stream, {
+				// 	type: 'video'
+				// });
+				// this.recordContext.startRecording();
 				default:
 					break;
 			}
@@ -309,17 +311,18 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					//add stream into RTC
 					this.connection.addStream(externalStream);
 					if (this.user.type == 'coach') {
-						video.srcObject = null;
+						// video.srcObject = null;
 						if (recallRecord) {
 							this.startStopRecord(true);
 						}
 					}
 					// this.chromeScreenShare(false)
 				}, error => {
+					this.screenVar = "notsharescreen"; 
 					alert(error);
 				});
 			} else {
-				video.srcObject = null;
+				// video.srcObject = null;
 				this.connection.replaceTrack(this.connection.attachStreams[1]);
 			}
 		}
@@ -345,7 +348,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 
 			if (this.user.type == 'coach') {
 				this.interval = setInterval(() => {
-					video.srcObject = null;
+					// video.srcObject = null;
 					if (this.connection.attachStreams.length == 2 && recallRecord) {
 						clearInterval(this.interval);
 						this.startStopRecord(true);
@@ -1392,5 +1395,15 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		}
 
 		return false;
+	}
+
+	async screenShareMessage() {
+		this.screenSharing = await this.toastController.create({
+			message: 'Screen Sharing',
+			position: 'top',
+			color: 'danger',
+			cssClass: 'toast-screen-share'
+		});
+		this.screenSharing.present();
 	}
 }
