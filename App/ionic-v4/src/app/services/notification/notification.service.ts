@@ -19,27 +19,26 @@ export class NotificationService {
   constructor(
     private toastController: ToastController,
     private authService: AuthenticationService
-  ) {}
+  ) { }
 
   notify(message) {
     console.log('NOTIFICATION MSG', message);
     this._notification.next(message);
     setTimeout(() => this._notification.next(null), 3000);
   }
-
   showMsg(msg: string, duration: number = 2000) {
-		return this.toastController.create({
-			message: msg,
-			position: 'bottom',
-			closeButtonText: 'Close',
-			duration: duration,
-			cssClass: 'toast-fullwidth toast-danger toast-text-center'
-		}).then((toast) => {
-			this.toast = toast;
+    return this.toastController.create({
+      message: msg,
+      position: 'top',
+      closeButtonText: 'Close',
+      duration: duration,
+      cssClass: 'toast-fullwidth toast-danger toast-text-right'
+    }).then((toast) => {
+      this.toast = toast;
       this.toast.present();
-      
-      if(msg === 'Unauthorized') this.authService.logout();
-		});
-	}
+
+      if (msg === 'Unauthorized') this.authService.logout();
+    });
+  }
 
 }
