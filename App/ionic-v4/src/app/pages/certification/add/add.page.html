@@ -9,12 +9,12 @@
 
 <ion-content padding>
 
-   <ion-list>
+   <ion-list class="ion-padding">
     <ion-item lines="inset">
 				<ion-label position="floating"> Title Of Certificate :  <ion-text color="danger">*</ion-text></ion-label>
 				<ion-input
 					type="input"
-					placeholder="How do you call this training"
+					placeholder="placeholder"
 				></ion-input>
 			</ion-item>
   
@@ -25,7 +25,7 @@
       <ion-item lines="inset">
           <ion-label position="floating">Description <ion-text color="danger">*</ion-text></ion-label>
           <ion-textarea 
-            placeholder="A short highlight"
+            placeholder="placeholder"
           ></ion-textarea>
         </ion-item>
     
@@ -42,19 +42,27 @@
   
   
 
- 
-  <ion-item>
-      <ion-label  fixed>File Upload :</ion-label>
 
-      <div >
-          <input type="file" name="avatar" (change)="onFileChange($event)" />
-          <ion-icon name="cloud-upload" size="large"></ion-icon>      
-      
-        </div>
-  </ion-item>
+  <ion-item>
+     
+    <!-- <i style="float: left;" (click)="fileInput.click()" class="fa fa-upload" ></i>
+   
+    <input type="file" #fileInput placeholder="vshown" (change)="onFileChanged($event)" >
+    {{fileInput.value}}
+     -->
+
+  <span  *ngIf="files">{{files}}</span>
+  <span  *ngIf="!files"><label class="Namespan">File Upload</label></span>
+  <input id="uinput"   #fileInput type="file"  id="" (change)="onFileChanged($event)">
+  <div class="elment">
+
+    <i class="fa fa-upload"  (click)="fileInput.click()"></i>
+  </div>
+
+  </ion-item >
   
-  <ion-item lines="none"  class="ion-float-right">
-  <ion-button>Save and Next</ion-button>
+  <ion-item lines="none"  class="ion-float-right ion-padding-top" >
+  <ion-button  routerLink="/certification/addmodule" routerLinkActive="router-link-active"  size="md" >Save and Next</ion-button>
   </ion-item>
    
 
