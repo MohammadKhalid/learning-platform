@@ -6,7 +6,7 @@ import { IonicModule } from '@ionic/angular';
  import { ngfModule, ngf } from "angular-file";
  import { MDBBootstrapModule } from 'angular-bootstrap-md';
 
- import { FileSelectDirective, FileDropDirective, FileUploader } from 'ng2-file-upload/ng2-file-upload';
+//  import { FileSelectDirective, FileDropDirective, FileUploader } from 'ng2-file-upload/ng2-file-upload';
 
 import { AddPage } from './add.page';
 import { MatFormFieldModule, MatSelectModule } from '@angular/material';
@@ -35,7 +35,6 @@ const routes: Routes = [
     
 
   ],
-  declarations: [AddPage,
-    FileSelectDirective]
+  declarations: [AddPage]
 })
 export class AddPageModule {}
