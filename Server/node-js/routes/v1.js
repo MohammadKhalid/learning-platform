@@ -22,6 +22,9 @@ const CourseController = require('../controllers/course.controller');
 const SectionController = require('../controllers/section.controller');
 const LessonController = require('../controllers/lesson.controller');
 const SubscriptionPackageController = require('../controllers/subscription-package.controller');
+const TextController = require('../controllers/text.controller');
+const ResourceController = require('../controllers/resources.controller');
+const QuizController = require('../controllers/quiz.controller');
 
 const custom = require('./../middleware/custom');
 const role = require('./../middleware/role');
@@ -46,6 +49,18 @@ const CertificationStorage = multer.diskStorage({
 
 const CertificationUpload = multer({
     storage: CertificationStorage
+}).single('file')
+
+
+const ResourceStorage = multer.diskStorage({
+    destination: './uploads/resources',
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname))
+    }
+})
+
+const ResourceUpload = multer({
+    storage: ResourceStorage
 }).single('file')
 
 require('./../middleware/passport')(passport)
@@ -168,6 +183,15 @@ router.post('/courses', passport.authenticate('jwt', { session: false }), role.u
 router.get('/courses/:coachId', passport.authenticate('jwt', { session: false }), role.user, CourseController.getCourse);
 router.delete('/courses/:courseId', passport.authenticate('jwt', { session: false }), role.user, CourseController.removeCourse);
 router.put('/courses/:courseId', passport.authenticate('jwt', { session: false }), role.user, CourseController.updateCourse);
+router.post('/enrollCourses', passport.authenticate('jwt', { session: false }), CourseController.enrollCourse);
+router.get('/getAllCourses/:userId', passport.authenticate('jwt', { session: false }), CourseController.getStudentCourse);
+
+
+router.post('/resources', passport.authenticate('jwt', { session: false }), role.user, ResourceUpload, ResourceController.create);
+router.get('/resources/:sectionId', passport.authenticate('jwt', { session: false }), role.user, ResourceController.get);
+router.delete('/resources/:resourceId', passport.authenticate('jwt', { session: false }), role.user, ResourceController.remove);
+router.put('/resources/:resourceId', passport.authenticate('jwt', { session: false }), role.user, ResourceController.update);
+
 
 router.post('/sections', passport.authenticate('jwt', { session: false }), role.user, SectionController.create);
 router.get('/sections/:courseId', passport.authenticate('jwt', { session: false }), role.user, SectionController.getSections);
@@ -178,6 +202,17 @@ router.post('/lessons', passport.authenticate('jwt', { session: false }), role.u
 router.get('/lessons/:sectionId', passport.authenticate('jwt', { session: false }), role.user, LessonController.getLessons);
 router.delete('/lessons/:lessonId', passport.authenticate('jwt', { session: false }), role.user, LessonController.removeLesson);
 router.put('/lessons/:lessonId', passport.authenticate('jwt', { session: false }), role.user, LessonController.updateLesson);
+
+router.post('/text', passport.authenticate('jwt', { session: false }), role.user, TextController.create);
+router.get('/text/:sectionId', passport.authenticate('jwt', { session: false }), role.user, TextController.getText);
+router.delete('/text/:textId', passport.authenticate('jwt', { session: false }), role.user, TextController.removeText);
+router.put('/text/:textId', passport.authenticate('jwt', { session: false }), role.user, TextController.updateText);
+
+
+router.post('/quiz', passport.authenticate('jwt', { session: false }), role.user, QuizController.create);
+router.get('/quiz/:sectionId', passport.authenticate('jwt', { session: false }), role.user, QuizController.get);
+router.delete('/quiz/:quizId', passport.authenticate('jwt', { session: false }), role.user, QuizController.remove);
+router.put('/quiz/:quizId', passport.authenticate('jwt', { session: false }), role.user, QuizController.update);
 
 
 router.get('/dashboard', passport.authenticate('jwt', { session: false }), HomeController.Dashboard);
