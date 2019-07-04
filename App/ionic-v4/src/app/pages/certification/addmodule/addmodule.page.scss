@@ -1,16 +1,45 @@
 
 
+.container4 {
+    display: table;
+    height: 200px;
+    width: 100%;
+    text-align: center;
+    border: 2px dashed #f0eeec;
+    margin-top: 150px;
+    background-color:#0065b3;
+}
+
+span {
+    display: table-cell;
+    vertical-align: middle;
+    color:white;
+  }
+  
+
 
 
 .drop-zone { 
-    background-color: #f6f6f6;
-    border: dotted 3px #dedddd; 
+   
     height: 30vh;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 20px 0;
+    height: 100px;
+
 }
+ 
+.dotteddesign{
+    background-color: #f6f6f6;
+    border: dotted 3px #dedddd; 
+    margin: auto;
+}
+.container {
+    position: relative;
+  }
+  
+
 
 .file-input-container {
 
