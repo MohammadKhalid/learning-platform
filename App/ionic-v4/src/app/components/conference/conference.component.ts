@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Renderer2, ViewChild, ElementRef, Input } from '@angular/core';
-import { NavController, ActionSheetController, AlertController, IonInput } from '@ionic/angular';
+import { NavController, ActionSheetController, AlertController, IonInput, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
 import { RtcService } from '../../services/rtc/rtc.service';
@@ -30,6 +30,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	@Input('apiEndPoint') apiEndPoint: string;
 
 	@ViewChild('videosContainer') videosContainer: ElementRef;
+	@ViewChild('speakerVideoForStudent') speakerVideoForStudent: ElementRef;
 	@ViewChild('videosContainer_mob') videosContainer_mob: ElementRef;
 	@ViewChild('participantsContainer', { read: ElementRef }) participantsContainer: ElementRef;
 	@ViewChild('sharedPartOfScreenPreview') sharedPartOfScreenPreview: ElementRef;
@@ -46,7 +47,6 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	socket: any;
 	isChatOn: boolean = true;
 	isChatOn1: boolean = true;
-	onlineUser: number = 0;
 
 	pdfViewerFile: Blob;
 	pdfViewerCurrentPage: number;
@@ -74,6 +74,10 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 
 	isLoading: boolean = true;
 	studentMediaStream: any;
+	screenSharing: any;
+	studentSideCoachVisible: boolean = true;
+	dummyStream: any;
+	onlineUsers: any = [];
 	// getMediaStream: any;
 
 	constructor(
@@ -85,7 +89,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		private elementRenderer: Renderer2,
 		private actionSheetCtrl: ActionSheetController,
 		private alertCtrl: AlertController,
-
+		private toastController: ToastController,
 	) {
 		// nav data
 		const navigation = this.router.getCurrentNavigation();
@@ -96,6 +100,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		// rtc connection
+		// this.screenShareMessage()
 		this.rtcService.getConnection().then((connection) => {
 			// set connection
 			this.connection = connection;
@@ -182,7 +187,6 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					}
 					break;
 				case "student":
-					debugger;
 					if (this.studentMediaStream) {
 						// this.studentMediaStream.getTracks()[0].stop();
 						this.recordContext = new recordRTC(this.studentMediaStream, {
@@ -190,7 +194,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 						});
 						this.recordContext.startRecording();
 					}
-					else{
+					else {
 						let objBrowserScreen: any = navigator.mediaDevices;
 						objBrowserScreen.getDisplayMedia({
 							video: true,
@@ -219,11 +223,11 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 
 
 
-					// let stream = await document.querySelector('video').srcObject;
-					// this.recordContext = new recordRTC(stream, {
-					// 	type: 'video'
-					// });
-					// this.recordContext.startRecording();
+				// let stream = await document.querySelector('video').srcObject;
+				// this.recordContext = new recordRTC(stream, {
+				// 	type: 'video'
+				// });
+				// this.recordContext.startRecording();
 				default:
 					break;
 			}
@@ -262,7 +266,6 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					}
 					break;
 				case "student":
-					debugger;
 					let stream = await document.querySelector('video').srcObject;
 					this.recordContext = new recordRTC(stream, {
 						type: 'video'
@@ -289,9 +292,66 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			this.fireFoxStartStopRecord(flag);
 		}
 	}
+	// chromeScreenShare(recallRecord: boolean) {
+	// 	let video = document.querySelector('video');
+	// 	if (this.screenVar == "sharescreen") {
+	// 		if (this.connection.attachStreams.length == 1) {
+	// 			let objBrowserScreen: any = navigator.mediaDevices;
+	// 			objBrowserScreen.getDisplayMedia({
+	// 				video: true,
+	// 				audio: true,
+	// 			}).then(externalStream => {
+	// 				//add end event for chrome
+	// 				externalStream.getVideoTracks()[0].addEventListener('ended', () => {
+	// 					this.screenVar = "sharescreen";
+	// 					this.connection.attachStreams.pop();
+	// 					this.shareScreen(false);
+	// 				});
+
+	// 				//add stream into RTC
+	// 				this.connection.addStream(externalStream);
+	// 				if (this.user.type == 'coach') {
+	// 					// video.srcObject = null;
+	// 					if (recallRecord) {
+	// 						this.startStopRecord(true);
+	// 					}
+	// 				}
+	// 				// this.connection.send({
+	// 				// 	type: 'screenshare',
+	// 				// 	extra: { screenShare: true }
+	// 				// });
+	// 				// this.chromeScreenShare(false)
+	// 			}, error => {
+	// 				this.screenVar = "notsharescreen";
+	// 				alert(error);
+	// 			});
+	// 		} else {
+	// 			// video.srcObject = null;
+	// 			this.connection.replaceTrack(this.connection.attachStreams[1]);
+	// 			// this.connection.send({
+	// 			// 	type: 'screenshare',
+	// 			// 	extra: { screenShare: true }
+	// 			// });
+	// 		}
+	// 	}
+	// 	else {
+	// 		this.connection.replaceTrack(this.connection.attachStreams[0]);
+	// 		let streamEvent = this.connection.streamEvents[this.connection.attachStreams[0].streamid];
+	// 		let mediaStreamObj = streamEvent.stream;
+	// 		video.srcObject = mediaStreamObj;
+	// 		this.connection.replaceTrack(this.connection.attachStreams[1]);
+
+	// 		// this.connection.send({
+	// 		// 	type: 'screenshare',
+	// 		// 	extra: { screenShare: false }
+	// 		// });
+
+	// 	}
+
+	// }
 	chromeScreenShare(recallRecord: boolean) {
 		let video = document.querySelector('video');
-		debugger
+
 		if (this.screenVar == "sharescreen") {
 			if (this.connection.attachStreams.length == 1) {
 				let objBrowserScreen: any = navigator.mediaDevices;
@@ -301,6 +361,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 				}).then(externalStream => {
 					//add end event for chrome
 					externalStream.getVideoTracks()[0].addEventListener('ended', () => {
+						//for ka loop laga kar stream agr ho tou del krwani h.
 						this.screenVar = "sharescreen";
 						this.connection.attachStreams.pop();
 						this.shareScreen(false);
@@ -309,18 +370,29 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					//add stream into RTC
 					this.connection.addStream(externalStream);
 					if (this.user.type == 'coach') {
-						video.srcObject = null;
+						// video.srcObject = null;
 						if (recallRecord) {
 							this.startStopRecord(true);
 						}
 					}
+					this.connection.send({
+						type: 'screenshare',
+						extra: { screenShare: true, streamId: this.connection.attachStreams[0].streamid }
+					});
 					// this.chromeScreenShare(false)
 				}, error => {
 					alert(error);
 				});
 			} else {
-				video.srcObject = null;
-				this.connection.replaceTrack(this.connection.attachStreams[1]);
+				this.connection.attachStreams.pop();
+				// video.srcObject = null;
+				this.chromeScreenShare(recallRecord);
+				// this.connection.replaceTrack(this.connection.attachStreams[1]);
+
+				// this.connection.send({
+				// 	type: 'screenshare',
+				// 	extra: { screenShare: true, streamId: this.connection.attachStreams[0].streamid }
+				// });
 			}
 		}
 		else {
@@ -328,8 +400,12 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			let streamEvent = this.connection.streamEvents[this.connection.attachStreams[0].streamid];
 			let mediaStreamObj = streamEvent.stream;
 			video.srcObject = mediaStreamObj;
-		}
 
+			this.connection.send({
+				type: 'screenshare',
+				extra: { screenShare: false, streamId: this.connection.attachStreams[0].streamid }
+			});
+		}
 	}
 	fireFoxScreenShare(recallRecord: boolean) {
 		let video = document.querySelector('video');
@@ -345,7 +421,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 
 			if (this.user.type == 'coach') {
 				this.interval = setInterval(() => {
-					video.srcObject = null;
+					// video.srcObject = null;
 					if (this.connection.attachStreams.length == 2 && recallRecord) {
 						clearInterval(this.interval);
 						this.startStopRecord(true);
@@ -365,8 +441,6 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	}
 
 	async shareScreen(recallRecord: boolean) {
-		debugger
-
 		this.screenVar = this.screenVar == "sharescreen" ? "notsharescreen" : "sharescreen";
 		if (this.connection.DetectRTC.browser.name === 'Chrome') {
 			this.chromeScreenShare(recallRecord);
@@ -441,14 +515,40 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 
 		this.connection.onmessage = (event) => {
 			console.log('CONN ON MESSAGE', event);
-
-
 			switch (event.data.type) {
 				case 'screenshare':
-					let video = document.querySelector('video');
-					let streamid = event.data.extra.streamid
-					let mediaStreamObj = streamid
-					video.srcObject = mediaStreamObj
+					if (this.user.type == 'student' && event.data.extra.screenShare) {
+						// alert('if fire')
+						debugger;
+						this.studentSideCoachVisible = false;
+						console.log("connectioon", this.connection.streamEvents.selectAll());
+						// if (this.connection.streamEvents.selectAll().length == 2) {
+						// 	this.speakerVideoForStudent.nativeElement.srcObject = this.dummyStream;
+						// 	// this.speakerVideoForStudent.nativeElement.srcObject = this.connection.streamEvents.selectAll()[0].stream;
+						// 	this.speakerVideoForStudent.nativeElement.play();
+						// }
+						// else {
+						this.dummyStream = this.connection.getRemoteStreams()[0];
+						this.speakerVideoForStudent.nativeElement.srcObject = this.connection.getRemoteStreams()[0];
+						this.speakerVideoForStudent.nativeElement.play();
+						// }
+						// this.connection.streamEvents.selectAll().forEach(el => {
+						// 	debugger;
+						// 	if (el.stream.id == event.data.extra.streamId) {
+						// 		this.speakerVideoForStudent.nativeElement.srcObject = el.stream;
+						// 		this.speakerVideoForStudent.nativeElement.play();
+						// 	}
+						// 	// if (el.stream.isVideo == true && el.stream.type == "remote") {
+						// 	// this.speakerVideoForStudent.nativeElement.srcObject = this.connection.streamEvents.selectAll()[0].stream;
+						// 	// this.speakerVideoForStudent.nativeElement.play();
+						// 	// }
+						// });
+						// this.speakerVideoForStudent.nativeElement.src = URL.createObjectURL(event.stream);
+					}
+					else {
+						// alert('else fire')
+						this.studentSideCoachVisible = true;
+					}
 					break;
 
 				case 'chat':
@@ -499,13 +599,18 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					this.streams[event.data.streamid].audioIconElem.setAttribute('color', event.data.value === true ? 'success' : 'light');
 					break;
 				case 'toast':
-					if (event.data.isStudent) {
-						this.participantsCount--
-					}
 					this.notificationService.showMsg(event.data.message);
 					break;
 				case 'join':
-					this.participantsCount++
+					// this.participantsCount++
+					this.onlineUsers = [];
+					this.connection.getAllParticipants().forEach(el => {
+						let user = this.connection.peers[el];
+						this.onlineUsers.push(user.extra);
+					});
+					this.participantsCount = this.onlineUsers.length;
+					this.connection.send({ type: 'online', users: this.onlineUsers });
+
 					this.notificationService.showMsg(event.data.message);
 					// send load to pdfViewer new participant
 					if (this.pdfViewerFile) {
@@ -517,6 +622,19 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 								file: this.connection.extra.pdfViewer.file
 							});
 						}
+					}
+					break;
+				case 'online':
+					if (this.user.type == 'student') {
+						this.onlineUsers = event.data.users.filter(el => el.id != this.user.id);
+						this.participantsCount = this.onlineUsers.length;
+						// if (this.user.id != event.data.extra.id) {
+						// 	// this.onlineUsers.push(user.extra);
+						// 	this.onlineUsers = event.data.users;
+						// 	this.participantsCount = this.onlineUsers.length;
+						// }
+						// this.onlineUsers = event.data.users;
+						// this.participantsCount = this.onlineUsers.length;
 					}
 					break;
 				case 'remoteStream':
@@ -545,9 +663,21 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		};
 
 		this.connection.onstream = (event) => {
+			// if (this.user.type == 'student') {
 
-			console.log("connectioon", this.connection)
-			// skip
+			// 	console.log("connectioon", this.connection.streamEvents.selectAll());
+			// 	debugger;
+			// 	this.connection.streamEvents.selectAll().forEach(el => {
+			// 		debugger;
+			// 		if (el.stream.isVideo == true && el.stream.type == "remote") {
+			// 			this.speakerVideoForStudent.nativeElement.srcObject = el.stream;
+			// 			this.speakerVideoForStudent.nativeElement.play();
+			// 		}
+			// 	});
+			// 	// this.speakerVideoForStudent.nativeElement.src = URL.createObjectURL(event.stream);
+
+			// }
+
 			if (this.streams[event.streamid]) {
 				console.log('STREAM EXISTSSSS');
 				return;
@@ -597,6 +727,9 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			}
 			video.srcObject = event.stream;
 			video_mob.srcObject = event.stream;
+
+
+
 
 			// setup participant video html
 			if (!event.extra.initiator) {
@@ -710,7 +843,13 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			// remove participant video element
 			if (event.extra.initiator) {
 				// this.speakerVideo.nativeElement.srcObject = null;
-			} else {
+			}
+			else {
+				if (this.onlineUsers.length > 0) {
+					this.onlineUsers = this.onlineUsers.filter(el => el.id != event.extra.id);
+					this.participantsCount = this.onlineUsers.length;
+					this.connection.send({ type: 'online', users: this.onlineUsers });
+				}
 				let participantsContainerElem = this.participantsContainer.nativeElement.querySelectorAll('[data-userid="' + event.userid + '"]')
 				if (participantsContainerElem) {
 					console.log('USER LEAVE ELEMS', participantsContainerElem);
@@ -797,7 +936,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 						});
 
 					}, 5000);
-					this.participantsCount++
+					// this.participantsCount++
 
 					// show controls
 					this.isLoading = false;
@@ -1392,5 +1531,15 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		}
 
 		return false;
+	}
+
+	async screenShareMessage() {
+		this.screenSharing = await this.toastController.create({
+			message: 'Screen Sharing',
+			position: 'top',
+			color: 'danger',
+			cssClass: 'toast-screen-share'
+		});
+		this.screenSharing.present();
 	}
 }

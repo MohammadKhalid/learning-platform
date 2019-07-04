@@ -2,6 +2,8 @@
   <ion-badge color="danger" style="position: absolute; top: 1rem; left: 1rem; z-index: 10;"
     *ngIf="connection?.isLowBandwidth">low connection</ion-badge>
 
+  <ion-badge color="danger" style="position: absolute;top: 1rem;right: 1rem;z-index: 10;"
+    *ngIf="screenVar == 'sharescreen'">Screen Share</ion-badge>
   <ion-fab vertical="center" horizontal="center" slot="fixed" [hidden]="!isLoading">
     <ion-spinner name="dots" color="secondary"></ion-spinner>
   </ion-fab>
@@ -25,9 +27,9 @@
         <ion-icon name="information"></ion-icon>
 
       </ion-fab-button> -->
-      <ion-fab-button size="small" [color]="recordScreen === true ? 'dark' : 'medium'"
+      <ion-fab-button size="small" [color]="recordScreen === true ? 'dark ' : 'medium '"
         (click)="startStopRecord(recordScreen)">
-        <ion-icon name="radio-button-on" color="danger"></ion-icon>
+        <ion-icon name="radio-button-on" [color]="recordScreen === true ? 'danger' : 'success'"></ion-icon>
       </ion-fab-button>
     </ion-fab-list>
 
@@ -60,9 +62,14 @@
       <ion-fab-button size="small" color="danger" (click)="pdfViewerStopShare()" *ngIf="pdfViewerFile">
         <ion-icon name="easel"></ion-icon>
       </ion-fab-button>
-      <ion-fab-button size="small" [color]="screenVar === 'sharescreen' ? 'medium' : 'dark'"
-        (click)="shareScreen(false)">
-        <ion-icon name="easel"></ion-icon>
+      <ion-fab-button size="small" *ngIf="screenVar === 'sharescreen'" color="dark" (click)="shareScreen(false)">
+        <!-- <img src="./assets/img/stop-sharing.svg" alt="not sharing"> -->
+        <!-- <ion-icon name="easel"></ion-icon> -->
+        <ion-icon src="./assets/img/sharing.svg"></ion-icon>
+
+      </ion-fab-button>
+      <ion-fab-button size="small" *ngIf="screenVar === 'notsharescreen'" color="dark" (click)="shareScreen(false)">
+        <ion-icon src="./assets/img/stop-sharing.svg"></ion-icon>
       </ion-fab-button>
       <!-- <ion-fab-button size="small" [color]="panel === 'screen' ? 'medium' : 'dark'" (click)="showPanel('screen')" *ngIf="!pdfViewerFile"><ion-icon name="easel"></ion-icon></ion-fab-button> -->
 
@@ -83,8 +90,7 @@
       <ion-col size="12" size-sm="6" size-md="5" size-lg="4" class="ion-align-self-stretch ion-no-padding"
         style="z-index: 9999;" *ngIf="matGroup">
         <ion-card color="clean" class="web-card">
-          <mat-tab-group 
-          mat-stretch-tabs style="border-style: solid;
+          <mat-tab-group mat-stretch-tabs style="border-style: solid;
           border-color: #f4f5f8;">
             <mat-tab label="Group Chat">
 
@@ -177,17 +183,17 @@
               </ion-grid>
 
             </mat-tab>
-            <mat-tab label='Participants'>
+            <mat-tab label='Participants ({{participantsCount}})'>
               <div *ngIf="item?.public === false">
 
 
-                <ion-item lines="none" *ngIf="item?.participants?.length < 1">
+                <ion-item lines="none" *ngIf="onlineUsers.length==0">
                   <ion-label>
                     <p>No participants added</p>
                   </ion-label>
                 </ion-item>
 
-                <ion-item *ngFor="let participant of item?.participants;">
+                <ion-item *ngFor="let participant of onlineUsers">
                   <ion-icon slot="start" name="person" [color]="participant?.present === true ? 'success' : 'medium'"
                     mode="ios"></ion-icon>
                   <ion-label>
@@ -314,10 +320,9 @@
 
   </div>
 
-  <!-- <div #screenContainer class="fixed-content" text-center style="background-color: var(--ion-color-light)">
 
-</div> -->
-
+  <video #speakerVideoForStudent id="speakerVideoForStudent" [hidden]="studentSideCoachVisible"
+    style="position: absolute;z-index: 1;width: 210px;bottom: 0;padding: 10px;border-radius: 15px;"></video>
   <div #videosContainer class="fixed-content" text-center style="background-color: var(--ion-color-dark)"
     [hidden]="panel !== 'speaker'">
     <div class="fixed-content speaker-video-container">
@@ -437,7 +442,7 @@
     [hidden]="panel !== 'speaker'">
     <div class="fixed-content speaker-video-container-mob ion-text-center">
       <video style="height:40vh;" #speakerVideo_mob playsinline autoplay>
-        <p style="position: absolute; color:white;">ohoho
+        <p style="position: absolute; color:white;">
 
         </p>
       </video>
@@ -494,7 +499,7 @@
             </ion-col>
             <ion-col class="ion-no-padding ion-align-self-end">
 
-                <!-- <ul class="mob-chat scrollable-list"
+              <!-- <ul class="mob-chat scrollable-list"
                 #mobileMessageUl id="mobileMessageUl">
                 <li 
                   *ngFor="let message of messages">
@@ -537,24 +542,24 @@
 
 
 
-<div #mobileMessageUl id="mobileMessageUl" class="scrollable-list">
-  <ion-list lines="none"  >
-    <ion-item *ngFor="let message of messages">
-      <img class="mobile-img" src="../../../assets/img/askexpert/default-user.svg" alt="">
+              <div #mobileMessageUl id="mobileMessageUl" class="scrollable-list">
+                <ion-list lines="none">
+                  <ion-item *ngFor="let message of messages">
+                    <img class="mobile-img" src="../../../assets/img/askexpert/default-user.svg" alt="">
 
-      <ion-label text-wrap class="ion-margin-start">
-        <ion-note class="chatName mobile-user-name">{{message.firstName}} {{message.lastName}}</ion-note>
-        <p>
-          <ion-note>{{message.dateCreated}}</ion-note>
-        </p>
-        <p class="mobile-user-text">{{message.text}}</p>
-      </ion-label>
+                    <ion-label text-wrap class="ion-margin-start">
+                      <ion-note class="chatName mobile-user-name">{{message.firstName}} {{message.lastName}}</ion-note>
+                      <p>
+                        <ion-note>{{message.dateCreated}}</ion-note>
+                      </p>
+                      <p class="mobile-user-text">{{message.text}}</p>
+                    </ion-label>
 
-      <ion-note slot="end" mode="md" text-lowercase>{{message.userType}}</ion-note>
-    </ion-item>
-  </ion-list>
+                    <ion-note slot="end" mode="md" text-lowercase>{{message.userType}}</ion-note>
+                  </ion-item>
+                </ion-list>
 
-</div>
+              </div>
             </ion-col>
           </ion-row>
         </ion-grid>

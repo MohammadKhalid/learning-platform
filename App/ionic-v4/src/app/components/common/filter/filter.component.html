@@ -1,16 +1,16 @@
 <div>
 <ion-grid>
   <ion-row>
-    <ion-col size-md="9" size-sm="12">
+    <ion-col size-md="8" size-sm="12">
 
       <ion-item class="chat-box">
-        <ion-input class="send-box" type="text" placeholder="Type a message here" [(ngModel)]="search"></ion-input>
+        <ion-input class="send-box" type="text" placeholder="Type a message here" [(ngModel)]="searchBy"></ion-input>
         <ion-icon name="search" class="icon-color"></ion-icon>
       </ion-item>
 
 
     </ion-col>
-    <ion-col size-md="3" size-sm="12" size-xs="12" class="ion-no-padding">
+    <ion-col size-md="4" size-sm="12" size-xs="12" class="ion-no-padding">
 
       <ion-row class="rows">
 
@@ -18,7 +18,7 @@
             <div class="chat-box-selector" fxLayout>
               <div class="mat-selector">
                   <mat-label></mat-label>
-                <mat-select  [(ngModel)]="toppings" placeholder="Categories" multiple>
+                <mat-select  [(ngModel)]="categories" placeholder="Categories" multiple>
                   <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
                 </mat-select>
               </div>
@@ -28,8 +28,8 @@
 
 
         
-        <ion-col  size-md="5" size-sm="2" size-xs="3">
-              <button [disabled]="((!search) && (toppings.length == 0))" mat-flat-button color="primary" class="apply-button" (click)=submitvalues(); flex>Apply</button>
+        <ion-col  size-md="4" size-sm="2" size-xs="3">
+              <button [disabled]="((!searchBy) && (categories.length == 0))" mat-flat-button color="primary" class="apply-button" (click)="search();" flex>Apply</button>
 
           </ion-col>
       </ion-row>

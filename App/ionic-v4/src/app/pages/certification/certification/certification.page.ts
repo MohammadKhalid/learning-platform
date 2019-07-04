@@ -11,5 +11,7 @@ export class CertificationPage implements OnInit {
 
   ngOnInit() {
   }
-
+  searchByFilterEvent(data){
+    debugger;
+  }
 }

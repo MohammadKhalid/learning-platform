@@ -26,6 +26,7 @@ import { LoaderService } from './services/utility/loader.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { NotificationService } from './services/notification/notification.service';
+import { MatFormFieldModule } from '@angular/material';
 // import { AvailableCertificationsComponent } from './pages/certification/certification/available-certifications/available-certifications.component';
 
 @NgModule({
@@ -49,7 +50,8 @@ import { NotificationService } from './services/notification/notification.servic
     HttpClientModule,
     IonicSelectableModule,
     FileDropModule,
-    MatSelectModule
+    MatSelectModule,
+    MatFormFieldModule
   ],
 
 

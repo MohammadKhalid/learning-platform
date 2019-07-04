@@ -33,6 +33,7 @@
               "src/manifest.json"
             ],
             "styles": [
+              
               {
                 "input": "src/theme/variables.scss"
               },
