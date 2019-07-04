@@ -47,7 +47,6 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	socket: any;
 	isChatOn: boolean = true;
 	isChatOn1: boolean = true;
-	onlineUser: number = 0;
 
 	pdfViewerFile: Blob;
 	pdfViewerCurrentPage: number;
@@ -78,6 +77,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	screenSharing: any;
 	studentSideCoachVisible: boolean = true;
 	dummyStream: any;
+	onlineUsers: any = [];
 	// getMediaStream: any;
 
 	constructor(
@@ -361,7 +361,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 				}).then(externalStream => {
 					//add end event for chrome
 					externalStream.getVideoTracks()[0].addEventListener('ended', () => {
-					//for ka loop laga kar stream agr ho tou del krwani h.
+						//for ka loop laga kar stream agr ho tou del krwani h.
 						this.screenVar = "sharescreen";
 						this.connection.attachStreams.pop();
 						this.shareScreen(false);
@@ -599,13 +599,18 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					this.streams[event.data.streamid].audioIconElem.setAttribute('color', event.data.value === true ? 'success' : 'light');
 					break;
 				case 'toast':
-					if (event.data.isStudent) {
-						this.participantsCount--
-					}
 					this.notificationService.showMsg(event.data.message);
 					break;
 				case 'join':
-					this.participantsCount++
+					// this.participantsCount++
+					this.onlineUsers = [];
+					this.connection.getAllParticipants().forEach(el => {
+						let user = this.connection.peers[el];
+						this.onlineUsers.push(user.extra);
+					});
+					this.participantsCount = this.onlineUsers.length;
+					this.connection.send({ type: 'online', users: this.onlineUsers });
+
 					this.notificationService.showMsg(event.data.message);
 					// send load to pdfViewer new participant
 					if (this.pdfViewerFile) {
@@ -617,6 +622,19 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 								file: this.connection.extra.pdfViewer.file
 							});
 						}
+					}
+					break;
+				case 'online':
+					if (this.user.type == 'student') {
+						this.onlineUsers = event.data.users.filter(el => el.id != this.user.id);
+						this.participantsCount = this.onlineUsers.length;
+						// if (this.user.id != event.data.extra.id) {
+						// 	// this.onlineUsers.push(user.extra);
+						// 	this.onlineUsers = event.data.users;
+						// 	this.participantsCount = this.onlineUsers.length;
+						// }
+						// this.onlineUsers = event.data.users;
+						// this.participantsCount = this.onlineUsers.length;
 					}
 					break;
 				case 'remoteStream':
@@ -825,7 +843,13 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			// remove participant video element
 			if (event.extra.initiator) {
 				// this.speakerVideo.nativeElement.srcObject = null;
-			} else {
+			}
+			else {
+				if (this.onlineUsers.length > 0) {
+					this.onlineUsers = this.onlineUsers.filter(el => el.id != event.extra.id);
+					this.participantsCount = this.onlineUsers.length;
+					this.connection.send({ type: 'online', users: this.onlineUsers });
+				}
 				let participantsContainerElem = this.participantsContainer.nativeElement.querySelectorAll('[data-userid="' + event.userid + '"]')
 				if (participantsContainerElem) {
 					console.log('USER LEAVE ELEMS', participantsContainerElem);
@@ -912,7 +936,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 						});
 
 					}, 5000);
-					this.participantsCount++
+					// this.participantsCount++
 
 					// show controls
 					this.isLoading = false;
