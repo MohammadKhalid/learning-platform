@@ -62,9 +62,11 @@
       <ion-fab-button size="small" color="danger" (click)="pdfViewerStopShare()" *ngIf="pdfViewerFile">
         <ion-icon name="easel"></ion-icon>
       </ion-fab-button>
-      <ion-fab-button size="small" *ngIf="screenVar === 'sharescreen'" color="medium" (click)="shareScreen(false)">
+      <ion-fab-button size="small" *ngIf="screenVar === 'sharescreen'" color="dark" (click)="shareScreen(false)">
         <!-- <img src="./assets/img/stop-sharing.svg" alt="not sharing"> -->
-        <ion-icon name="easel"></ion-icon>
+        <!-- <ion-icon name="easel"></ion-icon> -->
+        <ion-icon src="./assets/img/sharing.svg"></ion-icon>
+
       </ion-fab-button>
       <ion-fab-button size="small" *ngIf="screenVar === 'notsharescreen'" color="dark" (click)="shareScreen(false)">
         <ion-icon src="./assets/img/stop-sharing.svg"></ion-icon>
@@ -181,17 +183,17 @@
               </ion-grid>
 
             </mat-tab>
-            <mat-tab label='Participants'>
+            <mat-tab label='Participants ({{participantsCount}})'>
               <div *ngIf="item?.public === false">
 
 
-                <ion-item lines="none" *ngIf="item?.participants?.length < 1">
+                <ion-item lines="none" *ngIf="onlineUsers.length==0">
                   <ion-label>
                     <p>No participants added</p>
                   </ion-label>
                 </ion-item>
 
-                <ion-item *ngFor="let participant of item?.participants;">
+                <ion-item *ngFor="let participant of onlineUsers">
                   <ion-icon slot="start" name="person" [color]="participant?.present === true ? 'success' : 'medium'"
                     mode="ios"></ion-icon>
                   <ion-label>
