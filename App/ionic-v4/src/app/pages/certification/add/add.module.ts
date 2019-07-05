@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
- import { ngfModule, ngf } from "angular-file";
+//  import { ngfModule, ngf } from "angular-file";
  import { MDBBootstrapModule } from 'angular-bootstrap-md';
 
 //  import { FileSelectDirective, FileDropDirective, FileUploader } from 'ng2-file-upload/ng2-file-upload';
@@ -30,11 +30,14 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     MatFormFieldModule,
     MatSelectModule,
-    ngfModule
+    // ngfModule
     
     
 
   ],
-  declarations: [AddPage]
+  declarations: [AddPage,
+    // FileSelectDirective
+  ]
+  
 })
 export class AddPageModule {}
