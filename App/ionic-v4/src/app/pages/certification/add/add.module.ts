@@ -38,5 +38,6 @@ const routes: Routes = [
   declarations: [AddPage,
     // FileSelectDirective
   ]
+  
 })
 export class AddPageModule {}
