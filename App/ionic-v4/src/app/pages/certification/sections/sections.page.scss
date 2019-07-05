@@ -1,0 +1,13 @@
+.example-container {
+    height: calc(100vh - 56px);
+   
+  }
+ 
+
+    .mat-darawer{
+        position: relative;
+        z-index: 1;
+        display: block;
+        height: 100%;  
+        overflow: hidden;
+    }

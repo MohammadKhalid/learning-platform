@@ -31,7 +31,7 @@ Object.keys(db).forEach((modelName) => {
 
 db.sync = function() {
     // default
-    sequelize.sync({ /*alter: true,*/ force: false }).then((res) => {
+    sequelize.sync({ alter: true, force: false }).then((res) => {
       // console.log('SYNC RESULT ', res);
     }).catch((e) => {
       console.log('ERROR SYNC');
