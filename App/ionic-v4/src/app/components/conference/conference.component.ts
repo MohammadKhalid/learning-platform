@@ -172,7 +172,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		if (flag) {
 			switch (this.user.type) {
 				case "coach":
-				
+
 					if (this.connection.attachStreams.length == 2) {
 						let stream = this.connection.attachStreams[1];
 						this.recordContext = new recordRTC(stream, {
@@ -293,97 +293,55 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			this.fireFoxStartStopRecord(flag);
 		}
 	}
-	// chromeScreenShare(recallRecord: boolean) {
-	// 	let video = document.querySelector('video');
-	// 	if (this.screenVar == "sharescreen") {
-	// 		if (this.connection.attachStreams.length == 1) {
-	// 			let objBrowserScreen: any = navigator.mediaDevices;
-	// 			objBrowserScreen.getDisplayMedia({
-	// 				video: true,
-	// 				audio: true,
-	// 			}).then(externalStream => {
-	// 				//add end event for chrome
-	// 				externalStream.getVideoTracks()[0].addEventListener('ended', () => {
-	// 					this.screenVar = "sharescreen";
-	// 					this.connection.attachStreams.pop();
-	// 					this.shareScreen(false);
-	// 				});
 
-	// 				//add stream into RTC
-	// 				this.connection.addStream(externalStream);
-	// 				if (this.user.type == 'coach') {
-	// 					// video.srcObject = null;
-	// 					if (recallRecord) {
-	// 						this.startStopRecord(true);
-	// 					}
-	// 				}
-	// 				// this.connection.send({
-	// 				// 	type: 'screenshare',
-	// 				// 	extra: { screenShare: true }
-	// 				// });
-	// 				// this.chromeScreenShare(false)
-	// 			}, error => {
-	// 				this.screenVar = "notsharescreen";
-	// 				alert(error);
-	// 			});
-	// 		} else {
-	// 			// video.srcObject = null;
-	// 			this.connection.replaceTrack(this.connection.attachStreams[1]);
-	// 			// this.connection.send({
-	// 			// 	type: 'screenshare',
-	// 			// 	extra: { screenShare: true }
-	// 			// });
-	// 		}
-	// 	}
-	// 	else {
-	// 		this.connection.replaceTrack(this.connection.attachStreams[0]);
-	// 		let streamEvent = this.connection.streamEvents[this.connection.attachStreams[0].streamid];
-	// 		let mediaStreamObj = streamEvent.stream;
-	// 		video.srcObject = mediaStreamObj;
-	// 		this.connection.replaceTrack(this.connection.attachStreams[1]);
-
-	// 		// this.connection.send({
-	// 		// 	type: 'screenshare',
-	// 		// 	extra: { screenShare: false }
-	// 		// });
-
-	// 	}
-
-	// }
 	chromeScreenShare(recallRecord: boolean) {
 		let video = document.querySelector('video');
 
 		if (this.screenVar == "sharescreen") {
 			// if (this.connection.attachStreams.length == 1) {
-				let objBrowserScreen: any = navigator.mediaDevices;
-				objBrowserScreen.getDisplayMedia({
-					video: true,
-					audio: true,
-				}).then(externalStream => {
-					//add end event for chrome
-					externalStream.getVideoTracks()[0].addEventListener('ended', () => {
-						//for ka loop laga kar stream agr ho tou del krwani h.
-						this.screenVar = "sharescreen";
+			let objBrowserScreen: any = navigator.mediaDevices;
+			objBrowserScreen.getDisplayMedia({
+				video: true,
+				audio: true,
+			}).then(externalStream => {
+				//add end event for chrome
+				
+				// externalStream.isAudio = true;
+				// this.connection.attachStreams[0].isAudio = true;
+				externalStream.getVideoTracks()[0].addEventListener('ended', () => {
+					//for ka loop laga kar stream agr ho tou del krwani h.
+					
+					if (this.connection.attachStreams[this.connection.attachStreams.length - 1].isVideo === undefined) {
+						this.screenVar = "notsharescreen";
 						this.connection.attachStreams.pop();
-						this.shareScreen(false);
-					});
-
-					//add stream into RTC
-					this.connection.addStream(externalStream);
-					if (this.user.type == 'coach') {
-						// video.srcObject = null;
-						if (recallRecord) {
-							this.startStopRecord(true);
-						}
 					}
-					this.connection.send({
-						type: 'screenshare',
-						extra: { screenShare: true, streamId: this.connection.attachStreams[0].streamid }
-					});
-					// this.chromeScreenShare(false)
-				}, error => {
-					alert(error);
+					// this.connection.attachStreams.forEach(el => {
+					// 	if (el.isvide != true) {
+					// 		this.screenVar = "notsharescreen";
+					// 		this.connection.attachStreams.pop();
+					// 	}
+					// });
+					// this.screenVar = "sharescreen";
+					// this.connection.attachStreams.pop();
+					// this.shareScreen(false);
 				});
+
+				//add stream into RTC
+				this.connection.addStream(externalStream);
+				if (this.user.type == 'coach') {
+					// video.srcObject = null;
+					if (recallRecord) {
+						this.startStopRecord(true);
+					}
+				}
+				this.connection.send({
+					type: 'screenshare',
+					extra: { screenShare: true, streamId: this.connection.attachStreams[0].streamid }
+				});
+				// this.chromeScreenShare(false)
+			}, error => {
+				alert(error);
+			});
 			// } 
 			// else {
 			// 	this.connection.attachStreams.pop();
@@ -598,7 +556,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 				case 'screenshare':
 					if (this.user.type == 'student' && event.data.extra.screenShare) {
 						// alert('if fire')
-						
+
 						this.studentSideCoachVisible = false;
 						console.log("connectioon", this.connection.streamEvents.selectAll());
 						// if (this.connection.streamEvents.selectAll().length == 2) {
