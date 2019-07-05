@@ -62,6 +62,49 @@ export class RestApiService {
 		return req;
 	}
 
+
+	postPromise(endpoint: string, body: any, reqOpts?: any): Promise<any> {
+
+		if (!reqOpts) reqOpts = { headers: {} };
+		if (this.sessionData && this.sessionData.token) reqOpts.headers.Authorization = this.sessionData.token;
+
+		return new Promise((resolve, reject) => {
+
+			this.http.post(this.url + endpoint, body, reqOpts)
+				.toPromise()
+				.then(
+					res => { // Success
+						resolve(res);
+					}
+				).catch(onreject => {
+					reject(onreject);
+				});
+		});
+
+	}
+
+
+	getPromise(endpoint: string, params?: any, reqOpts?: any): Promise<any> {
+
+		if (!reqOpts) reqOpts = { headers: {} };
+		if (this.sessionData && this.sessionData.token) reqOpts.headers.Authorization = this.sessionData.token;
+
+		return new Promise((resolve, reject) => {
+			let url = params ? `${this.url}/${endpoint}/${params}` : `${this.url}/${endpoint}`;
+			this.http.get(url, reqOpts)
+				.toPromise()
+				.then(
+					res => { // Success
+						resolve(res);
+					}
+				).catch(onreject => {
+					reject(onreject);
+				});
+		});
+
+	}
+
+
 	postFormData(endpoint: string, body: any, reqOpts?: any) {
 		const httpHeaders = new HttpHeaders({
 			Authorization: this.sessionData.token

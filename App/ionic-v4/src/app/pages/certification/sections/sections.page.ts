@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sections',
@@ -8,7 +9,7 @@ import { MenuController } from '@ionic/angular';
 })
 export class SectionsPage implements OnInit {
 
-  constructor(private menu :MenuController) { }
+  constructor(private menu :MenuController, private reouter : Router) { }
   public searchTerm: string = "";
   public items: any;
   public item: any = [
@@ -19,14 +20,30 @@ export class SectionsPage implements OnInit {
       { title: "five" },
       { title: "six" }
   ];
+ 
+
+  
   ngOnInit() {
-    this.menu.enable(false, 'mainMenu');
   }
 back(){
   this.menu.enable(true,'mainMenu')
   console.log('working')
 }
 setFilteredItems() {
-  this.items = this.item.filterItems(this.searchTerm);
+ this.items=  this.item.filterItems(this.searchTerm);
 }
+
+ionViewWillEnter(){
+  this.menu.enable(false,'mainMenu')
+
+}
+show(){
+  this.reouter.navigate(['/certification/sections/concepts'])
+  console.log('1')
+}
+show1(){
+  this.reouter.navigate(['/certification/sections/resources'])
+  console.log('2')
+}
+
 }

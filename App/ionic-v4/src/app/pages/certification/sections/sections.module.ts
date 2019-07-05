@@ -8,11 +8,22 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 
 import { SectionsPage } from './sections.page';
 import { ResourcesPage } from './resources/resources.page';
+import { ConceptsPage } from './concepts/concepts.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: SectionsPage
+    component: SectionsPage,
+    children:[{
+      path:'resources',
+      component:ResourcesPage,
+    },
+      {
+        path: 'concepts',
+        component:ConceptsPage,
+       
+      }
+    ]
   }
 ];
 
@@ -25,7 +36,7 @@ const routes: Routes = [
     RouterModule.forChild(routes)
   ],
   declarations: [SectionsPage,
-  ResourcesPage]
+  ResourcesPage,ConceptsPage]
 })
 export class SectionsPageModule {
 

@@ -14,8 +14,7 @@ export class CategoryPage implements OnInit {
 
 	urlEndPoint: string = 'categories';
 	sessionData: any;
-	items: any = [];
-
+	items  = [];
 	queryParams: any;
 
 	constructor(
@@ -39,10 +38,13 @@ export class CategoryPage implements OnInit {
 	}
 
 	getList() {
-		this.restApi.get('categories', this.queryParams).subscribe((res: any) => {
-			if(res.success === true) {
-				this.items = res.items;
-			}
+		this.restApi.getPromise('categories', this.sessionData.user.id)
+		.then(res => {
+			//debugger;
+			this.items = res.data;
+			
+		}).catch(onreject => {
+			console.log(onreject);
 		});
 	}
 

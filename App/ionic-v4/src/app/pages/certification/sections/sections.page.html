@@ -21,56 +21,17 @@
           
             <ion-list>
                 <ion-item>
-                  <ion-label>Pokémon Yellow</ion-label>
+                 <ion-button (click)="show1()"  > Resources</ion-button>
                 </ion-item>
                 <ion-item>
-                  <ion-label>Mega Man X</ion-label>
+                  <ion-button (click)="show()" > Concepts</ion-button>
                 </ion-item>
-                <ion-item>
-                  <ion-label>The Legend of Zelda</ion-label>
-                </ion-item>
-                <ion-item>
-                  <ion-label>Pac-Man</ion-label>
-                </ion-item>
-                <ion-item>
-                  <ion-label>Super Mario World</ion-label>
-                </ion-item>
-                <ion-item>
-                    <ion-label>Pokémon Yellow</ion-label>
-                  </ion-item>
-                  <ion-item>
-                    <ion-label>Mega Man X</ion-label>
-                  </ion-item>
-                  <ion-item>
-                    <ion-label>The Legend of Zelda</ion-label>
-                  </ion-item>
-                  <ion-item>
-                    <ion-label>Pac-Man</ion-label>
-                  </ion-item>
-                  <ion-item>
-                    <ion-label>Super Mario World</ion-label>
-                  </ion-item>
-                  <ion-item>
-                      <ion-label>Pokémon Yellow</ion-label>
-                    </ion-item>
-                    <ion-item>
-                      <ion-label>Mega Man X</ion-label>
-                    </ion-item>
-                    <ion-item>
-                      <ion-label>The Legend of Zelda</ion-label>
-                    </ion-item>
-                    <ion-item>
-                      <ion-label>Pac-Man</ion-label>
-                    </ion-item>
-                    <ion-item>
-                      <ion-label>Super Mario World</ion-label>
-                    </ion-item>
+        
               </ion-list>
           </mat-drawer>
           <mat-drawer-content class="mat-darawer">
 
-          <app-resources></app-resources>
-
+              <router-outlet></router-outlet>
           </mat-drawer-content>
         </mat-drawer-container>
       

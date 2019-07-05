@@ -7,9 +7,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class CartificateCardComponent implements OnInit {
   private _scrollbarHidden: boolean;
-  @Input('scrollbar-hidden')
-  get scrollbarHidden() { return this._scrollbarHidden; }
-  set scrollbarHidden(value: boolean) { this._scrollbarHidden = value; };
+  
   data: any;
   serverUrl: string="./assets/img/";
   constructor() { }
