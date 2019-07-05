@@ -81,7 +81,8 @@ export class AppComponent {
         menu: [
           { title: 'Dashboard', url: '/dashboard', icon: 'apps', icon_mode: 'md' },
           { title: 'Categories', url: '/category', icon: 'list', icon_mode: 'ios' },
-          { title: 'Topics', url: '/topic', icon: 'book', icon_mode: 'ios' }
+          { title: 'Topics', url: '/topic', icon: 'book', icon_mode: 'ios' },
+          { title: 'Level Settings', url: '/level-setting', icon: 'book', icon_mode: 'ios' }
         ]
       },
       {

@@ -2,8 +2,11 @@
   <ion-badge color="danger" style="position: absolute; top: 1rem; left: 1rem; z-index: 10;"
     *ngIf="connection?.isLowBandwidth">low connection</ion-badge>
 
-  <ion-badge color="danger" style="position: absolute;top: 1rem;right: 1rem;z-index: 10;"
-    *ngIf="screenVar == 'sharescreen'">Screen Share</ion-badge>
+  <ion-badge color="danger" [ngClass]="{'schare-screen-show-message':matGroup,'schare-screen-hide-message':!matGroup}"
+    *ngIf="screenVar == 'sharescreen'">Your screen is being shared</ion-badge>
+
+   
+
   <ion-fab vertical="center" horizontal="center" slot="fixed" [hidden]="!isLoading">
     <ion-spinner name="dots" color="secondary"></ion-spinner>
   </ion-fab>
@@ -62,13 +65,13 @@
       <ion-fab-button size="small" color="danger" (click)="pdfViewerStopShare()" *ngIf="pdfViewerFile">
         <ion-icon name="easel"></ion-icon>
       </ion-fab-button>
-      <ion-fab-button size="small" *ngIf="screenVar === 'sharescreen'" color="dark" (click)="shareScreen(false)">
+      <ion-fab-button size="small" [hidden]="screenVar === 'notsharescreen'" color="dark" (click)="shareScreen(false)">
         <!-- <img src="./assets/img/stop-sharing.svg" alt="not sharing"> -->
         <!-- <ion-icon name="easel"></ion-icon> -->
         <ion-icon src="./assets/img/sharing.svg"></ion-icon>
 
       </ion-fab-button>
-      <ion-fab-button size="small" *ngIf="screenVar === 'notsharescreen'" color="dark" (click)="shareScreen(false)">
+      <ion-fab-button size="small" [hidden]="screenVar === 'sharescreen'" color="dark" (click)="shareScreen(false)">
         <ion-icon src="./assets/img/stop-sharing.svg"></ion-icon>
       </ion-fab-button>
       <!-- <ion-fab-button size="small" [color]="panel === 'screen' ? 'medium' : 'dark'" (click)="showPanel('screen')" *ngIf="!pdfViewerFile"><ion-icon name="easel"></ion-icon></ion-fab-button> -->
@@ -320,9 +323,10 @@
 
   </div>
 
-
+  <!-- <video #speakerVideoForStudent id="speakerVideoForStudent" [hidden]="studentSideCoachVisible"
+  style="position: absolute;z-index: 1;width: 210px;bottom: 0;padding: 10px;border-radius: 15px;"></video> -->
   <video #speakerVideoForStudent id="speakerVideoForStudent" [hidden]="studentSideCoachVisible"
-    style="position: absolute;z-index: 1;width: 210px;bottom: 0;padding: 10px;border-radius: 15px;"></video>
+    style="position: absolute;z-index: 1;width: 210px;top: 0;padding: 10px;border-radius: 15px;"></video>
   <div #videosContainer class="fixed-content" text-center style="background-color: var(--ion-color-dark)"
     [hidden]="panel !== 'speaker'">
     <div class="fixed-content speaker-video-container">

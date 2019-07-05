@@ -8,7 +8,11 @@ const CONFIG            = require('../config/config');
 module.exports = (sequelize, DataTypes) => {
     var Model = sequelize.define('Category', {
         title       : DataTypes.STRING,
-        // description : DataTypes.TEXT,
+        createdBy: {
+            type: DataTypes.UUID,
+            allowNull: false
+        },
+        description : DataTypes.TEXT,
         // isActive    : {
         //     type: DataTypes.BOOLEAN,
         //     defaultValue: true
@@ -21,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
 
     Model.associate = function(models) {
         // self reference as sub category
-        // this.belongsTo(models.Category, { as: 'parentCategory', foreignKey: 'categoryId' });
+        this.belongsTo(models.User, { as: 'admin', foreignKey: 'createdBy' });
         // this.hasMany(models.Category, {as: 'subCategories', foreignKey: 'categoryId'});
 
         // topic
