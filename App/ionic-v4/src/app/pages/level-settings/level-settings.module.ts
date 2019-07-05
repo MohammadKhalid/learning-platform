@@ -4,15 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
-import {MatSidenavModule} from '@angular/material/sidenav';
 
-import { SectionsPage } from './sections.page';
-import { ResourcesPage } from './resources/resources.page';
+import { LevelSettingsPage } from './level-settings.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: SectionsPage
+    component: LevelSettingsPage
   }
 ];
 
@@ -21,14 +19,8 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    MatSidenavModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [SectionsPage,
-  ResourcesPage]
+  declarations: [LevelSettingsPage]
 })
-export class SectionsPageModule {
-
-
- 
-}
+export class LevelSettingsPageModule {}

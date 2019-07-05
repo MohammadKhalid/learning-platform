@@ -25,6 +25,7 @@ const SubscriptionPackageController = require('../controllers/subscription-packa
 const TextController = require('../controllers/text.controller');
 const ResourceController = require('../controllers/resources.controller');
 const QuizController = require('../controllers/quiz.controller');
+const StudentExperienceSettingsController = require('../controllers/studentExperienceSettings.controller');
 
 const custom = require('./../middleware/custom');
 const role = require('./../middleware/role');
@@ -122,8 +123,8 @@ router.put('/show-time/submit/:item_id', passport.authenticate('jwt', { session:
 router.put('/show-time/review/:item_id', passport.authenticate('jwt', { session: false }), showTime.item, ShowTimeController.updateReview);   	// U
 
 router.post('/categories', passport.authenticate('jwt', { session: false }), CategoryController.create);	   	// C
-router.get('/categories', passport.authenticate('jwt', { session: false }), CategoryController.getAll);     				// R
-router.get('/categories/:item_id', passport.authenticate('jwt', { session: false }), custom.category, CategoryController.get);        				// R
+router.get('/categories/:userId', passport.authenticate('jwt', { session: false }), CategoryController.getAll);     				// R
+router.get('/category/:item_id', passport.authenticate('jwt', { session: false }), custom.category, CategoryController.get);        				// R
 router.put('/categories/:item_id', passport.authenticate('jwt', { session: false }), role.user, custom.category, CategoryController.update);   	// U
 router.delete('/categories/:item_id', passport.authenticate('jwt', { session: false }), role.user, custom.category, CategoryController.remove);   	// D
 
@@ -208,11 +209,15 @@ router.get('/text/:sectionId', passport.authenticate('jwt', { session: false }),
 router.delete('/text/:textId', passport.authenticate('jwt', { session: false }), role.user, TextController.removeText);
 router.put('/text/:textId', passport.authenticate('jwt', { session: false }), role.user, TextController.updateText);
 
-
 router.post('/quiz', passport.authenticate('jwt', { session: false }), role.user, QuizController.create);
 router.get('/quiz/:sectionId', passport.authenticate('jwt', { session: false }), role.user, QuizController.get);
 router.delete('/quiz/:quizId', passport.authenticate('jwt', { session: false }), role.user, QuizController.remove);
 router.put('/quiz/:quizId', passport.authenticate('jwt', { session: false }), role.user, QuizController.update);
+
+router.post('/studentExperienceSettings', passport.authenticate('jwt', { session: false }), role.user, StudentExperienceSettingsController.create);
+router.get('/studentExperienceSettings/:adminId', passport.authenticate('jwt', { session: false }), role.user, StudentExperienceSettingsController.get);
+router.delete('/studentExperienceSettings/:studentExpSettingsId', passport.authenticate('jwt', { session: false }), role.user, StudentExperienceSettingsController.remove);
+router.put('/studentExperienceSettings/:studentExpSettingsId', passport.authenticate('jwt', { session: false }), role.user, StudentExperienceSettingsController.update);
 
 
 router.get('/dashboard', passport.authenticate('jwt', { session: false }), HomeController.Dashboard);

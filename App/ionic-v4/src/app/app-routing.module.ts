@@ -21,6 +21,11 @@ const routes: Routes = [
     loadChildren: './pages/certification/certification-routing.module#CertificationRoutingModule'
   },
   { 
+    path: 'level-setting', 
+    canActivate: [AuthGuardService],
+    loadChildren: './pages/level-settings/level-settings.module#LevelSettingsPageModule'
+  },
+  { 
     path: 'company', 
     canActivate: [AuthGuardService],
     loadChildren: './pages/user/user-routing.module#UserRoutingModule',
@@ -98,6 +103,8 @@ const routes: Routes = [
 
   { path: 'error', loadChildren: './pages/public/error/error.module#ErrorPageModule' },
   { path: '**', loadChildren: './pages/public/error/error.module#ErrorPageModule', data: { error: 404 } },
+  { path: 'level-settings', loadChildren: './pages/level-settings/level-settings.module#LevelSettingsPageModule' },
+
 
 ];
 

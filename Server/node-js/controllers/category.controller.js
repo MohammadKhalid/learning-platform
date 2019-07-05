@@ -3,9 +3,11 @@ const { to, ReE, ReS } = require('../services/util.service');
 
 const create = async function (req, res) {
 
-    let { title } = req.body
+    let { title, description, userId } = req.body
     const category = await Category.create({
-        title: title
+        title: title,
+        description: description,
+        createdBy: userId
     })
 
     return ReS(res, { data: category }, 200);
@@ -13,7 +15,12 @@ const create = async function (req, res) {
 module.exports.create = create;
 
 const getAll = async function (req, res) {
-    const categories = await Category.findAll()
+    let { userId } = req.params
+    const categories = await Category.findAll({
+        where: {
+            createdBy: userId
+        }
+    })
     return ReS(res, { data: categories }, 200);
 }
 module.exports.getAll = getAll;
@@ -31,10 +38,11 @@ const get = async function (req, res) {
 module.exports.get = get;
 
 const update = async function (req, res) {
-    let { title } = req.body
+    let { title,description } = req.body
     let { item_id } = req.params
     const category = await Category.update({
-        title: title
+        title: title,
+        description: description,
     }, {
             where: {
                 id: item_id
