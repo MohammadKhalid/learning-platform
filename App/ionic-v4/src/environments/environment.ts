@@ -15,8 +15,8 @@ export const environment = {
  */
 // import 'zone.js/dist/zone-error';  // Included with Angular CLI.
 
-export const SERVER_URL = 'http://192.168.0.136:3000/v1/';
-export const SOCKET_URL = 'http://192.168.0.136:3000/';
+export const SERVER_URL = 'https://thrive19.eastus.cloudapp.azure.com/v1/';
+export const SOCKET_URL = 'https://thrive19.eastus.cloudapp.azure.com/';
 export const RTC_SIGNALLING_SERVER_URL = 'https://thrive19.com:9001/';
 //export const RTC_SIGNALLING_SERVER_URL = 'https://rtcmulticonnection.herokuapp.com:443/';
 export const ICE_SERVERS = null;
