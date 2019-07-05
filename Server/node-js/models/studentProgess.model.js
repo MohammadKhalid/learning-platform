@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     Model.associate = function (models) {
         this.belongsTo(models.User, { as: 'student', foreignKey: 'studentId' });
         this.belongsTo(models.Section, { as: 'section', foreignKey: 'sectionId' });
+        this.belongsTo(models.Lesson, { as: 'lesson', foreignKey: 'lessonId' });
     };
 
 

@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.UUID,
             allowNull: false
         },
-        // description : DataTypes.TEXT,
+        description : DataTypes.TEXT,
         // isActive    : {
         //     type: DataTypes.BOOLEAN,
         //     defaultValue: true
