@@ -3,9 +3,10 @@ const { to, ReE, ReS } = require('../services/util.service');
 
 const create = async function (req, res) {
 
-    let { title } = req.body
+    let { title,userId } = req.body
     const category = await Category.create({
-        title: title
+        title: title,
+        createdBy: userId
     })
 
     return ReS(res, { data: category }, 200);
