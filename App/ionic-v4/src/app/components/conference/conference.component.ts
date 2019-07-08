@@ -663,7 +663,8 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					break;
 				case 'online':
 					if (this.user.type == 'student') {
-						this.onlineUsers = event.data.users.filter(el => el.id != this.user.id);
+						// this.onlineUsers = event.data.users.filter(el => el.id != this.user.id);
+						this.onlineUsers = event.data.users;
 						this.participantsCount = this.onlineUsers.length;
 						// if (this.user.id != event.data.extra.id) {
 						// 	// this.onlineUsers.push(user.extra);
@@ -883,7 +884,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			}
 			else {
 				if (this.onlineUsers.length > 0) {
-					this.onlineUsers = this.onlineUsers.filter(el => el.id != event.extra.id);
+					this.onlineUsers = this.onlineUsers;
 					this.participantsCount = this.onlineUsers.length;
 					this.connection.send({ type: 'online', users: this.onlineUsers });
 				}
