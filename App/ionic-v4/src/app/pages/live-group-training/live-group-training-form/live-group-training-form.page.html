@@ -1,14 +1,14 @@
 <ion-header no-border>
-  <ion-toolbar color="primary">
-  	<ion-buttons slot="start">
-      <ion-back-button defaultHref="live-group-training"></ion-back-button>
-    </ion-buttons>
+	<ion-toolbar color="primary">
+		<ion-buttons slot="start">
+			<ion-back-button defaultHref="live-group-training"></ion-back-button>
+		</ion-buttons>
 		<ion-title text-capitalize>{{action}} Live Group Training</ion-title>
 		<ion-buttons slot="end">
-				<ion-button [hidden]="!form?.valid" [disabled]="!form?.valid" (click)="save()">Save</ion-button>
-			</ion-buttons>
+			<ion-button [hidden]="!form?.valid" [disabled]="!form?.valid" (click)="save()">Save</ion-button>
+		</ion-buttons>
 
-  </ion-toolbar>
+	</ion-toolbar>
 </ion-header>
 
 <ion-content>
@@ -17,7 +17,7 @@
 		<ion-label color="danger">Error! Permission denied.</ion-label>
 	</ion-item>
 
-	<form [formGroup]="form" *ngIf="modulePermission === true"> 
+	<form [formGroup]="form" *ngIf="modulePermission === true">
 
 		<ion-list>
 			<ion-list-header>
@@ -25,29 +25,21 @@
 			</ion-list-header>
 
 			<ion-item lines="inset">
-				<ion-label position="floating">Title <ion-text color="danger">*</ion-text></ion-label>
-				<ion-input
-					type="input"
-					placeholder="How do you call this training"
-					formControlName="title"
-				></ion-input>
+				<ion-label position="floating">Title <ion-text color="danger">*</ion-text>
+				</ion-label>
+				<ion-input type="input" placeholder="How do you call this training" formControlName="title"></ion-input>
 			</ion-item>
 
 			<ion-item lines="inset">
-				<ion-label position="floating">Description <ion-text color="danger">*</ion-text></ion-label>
-				<ion-textarea 
-					placeholder="A short highlight"
-					formControlName="description"
-				></ion-textarea>
+				<ion-label position="floating">Description <ion-text color="danger">*</ion-text>
+				</ion-label>
+				<ion-textarea placeholder="A short highlight" formControlName="description"></ion-textarea>
 			</ion-item>
 
 			<ion-item lines="full">
 				<ion-label position="floating">Details</ion-label>
-				<ion-textarea 
-					rows="5" 
-					placeholder="Everything about this training"
-					formControlName="detail"
-				></ion-textarea>
+				<ion-textarea rows="5" placeholder="Everything about this training" formControlName="detail">
+				</ion-textarea>
 			</ion-item>
 		</ion-list>
 
@@ -55,60 +47,51 @@
 			<ion-list-header>
 				<ion-label color="primary">Date and Time</ion-label>
 			</ion-list-header>
-			
+
 			<ion-item lines="none">
 				<ion-icon name="calendar" mode="md" slot="start"></ion-icon>
 				<ion-label>Date</ion-label>
-				<ion-datetime 
-					display-format="DDDD, MMM. DD, YYYY"
-					picker-format="MMM DD YYYY" 
-					formControlName="date"
-				></ion-datetime>
+				<ion-datetime display-format="DDDD, MMM. DD, YYYY" picker-format="MMM DD YYYY" formControlName="date">
+				</ion-datetime>
 			</ion-item>
 
 			<ion-item lines="full">
 				<ion-icon name="time" mode="md" slot="start"></ion-icon>
 				<ion-label>Time</ion-label>
 				<ion-datetime
-					display-format="h:mm A"
+					displayFormat="HH:mm"
 					formControlName="time"
 				></ion-datetime>
 			</ion-item>
 
 			<ion-item lines="full">
-					<ion-icon name="globe" slot="start"></ion-icon>
-					<ion-label>Timezone</ion-label>
+				<ion-icon name="globe" slot="start"></ion-icon>
+				<ion-label>Timezone</ion-label>
 
-					<ionic-selectable
-						formControlName="timezone"
-
-						headerColor="primary"
-						[searchFailText]="'No records found'"
-						[canSearch]="true"
-						[hasVirtualScroll]="true"
-						[items]="timeZones">
-						<ng-template ionicSelectableTitleTemplate>
-							Select Timezone
-						</ng-template>
-						<ng-template ionicSelectableCloseButtonTemplate>
-							<ion-icon name="close-circle"></ion-icon>
-						</ng-template>
-					</ionic-selectable>
-				</ion-item>
+				<ionic-selectable formControlName="timezone" headerColor="primary" [searchFailText]="'No records found'"
+					[canSearch]="true" [hasVirtualScroll]="true" [items]="timeZones">
+					<ng-template ionicSelectableTitleTemplate>
+						Select Timezone
+					</ng-template>
+					<ng-template ionicSelectableCloseButtonTemplate>
+						<ion-icon name="close-circle"></ion-icon>
+					</ng-template>
+				</ionic-selectable>
+			</ion-item>
 		</ion-list>
 
 		<ion-list>
-				<ion-list-header>
-					<ion-label color="primary">Participants</ion-label>
-				</ion-list-header>
+			<ion-list-header>
+				<ion-label color="primary">Participants</ion-label>
+			</ion-list-header>
 
-				<ion-item lines="none">
-						<ion-label>
-							Public
-							<p>Everyone can participate</p>
-						</ion-label>
-						<ion-toggle color="secondary" formControlName="public"></ion-toggle>
-					</ion-item>
+			<ion-item lines="none">
+				<ion-label>
+					Public
+					<p>Everyone can participate</p>
+				</ion-label>
+				<ion-toggle color="secondary" formControlName="public"></ion-toggle>
+			</ion-item>
 		</ion-list>
 
 		<ion-list *ngIf="!form.value.public">
@@ -130,7 +113,8 @@
 				<ion-icon name="contact" mode="ios" slot="start" color="medium"></ion-icon>
 
 				<ion-label>
-					<h3>{{selectedParticipant.name || selectedParticipant.firstName + ' ' + selectedParticipant.lastName }}</h3>
+					<h3>{{selectedParticipant.name || selectedParticipant.firstName + ' ' + selectedParticipant.lastName }}
+					</h3>
 				</ion-label>
 
 				<ion-button slot="end" fill="clear" (click)="removeSelectedParticipant(selectedParticipant)">
@@ -139,27 +123,16 @@
 			</ion-item>
 
 			<ion-item hidden>
-				<ionic-selectable
-					#participantSelectable
-					formControlName="participants"
-
-					headerColor="primary"
-					[searchFailText]="'No records found'"
-					[isMultiple]="true"
-					[canSearch]="true"
-
-					[items]="participants"
-					itemValueField="id"
-
-					(onChange)="participantChange($event)">
+				<ionic-selectable #participantSelectable formControlName="participants" headerColor="primary"
+					[searchFailText]="'No records found'" [isMultiple]="true" [canSearch]="true" [items]="participants"
+					itemValueField="id" (onChange)="participantChange($event)">
 					<ng-template ionicSelectableTitleTemplate>
 						Select Participants
 					</ng-template>
 
-					<ng-template ionicSelectableItemTemplate let-port="item"
-							let-isPortSelected="isItemSelected">
-							{{port.firstName}} {{port.lastName}}
-						</ng-template>
+					<ng-template ionicSelectableItemTemplate let-port="item" let-isPortSelected="isItemSelected">
+						{{port.firstName}} {{port.lastName}}
+					</ng-template>
 
 					<ng-template ionicSelectableCloseButtonTemplate>
 						<ion-icon name="close-circle"></ion-icon>
