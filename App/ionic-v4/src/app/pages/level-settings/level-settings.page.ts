@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { RestApiService } from '../../services/http/rest-api.service';
+import { AuthenticationService } from '../../services/user/authentication.service';
+import { ToastController } from '@ionic/angular';
+import { NotificationService } from 'src/app/services/notification/notification.service';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+
 
 @Component({
   selector: 'app-level-settings',
@@ -11,27 +16,76 @@ export class LevelSettingsPage implements OnInit {
   initialLevel: string = '';
   initialExperience: string = '';
   baseUrl: string;
+  sessionData: any;
+  adminId: any;
+  submitToLevelSettingsForm: FormGroup;
+  flag: boolean = false;
+  buttonText: String;
 
-  constructor(private restApi: RestApiService) {
+  constructor(
+    private restApi: RestApiService,
+    private authService: AuthenticationService,
+    private toast: ToastController,
+    private notificationService: NotificationService,
+    private fb : FormBuilder
+  ) {
     this.baseUrl = this.restApi.url;
+    this.authService.authenticationState.subscribe((state) => {
+      this.sessionData = state ? this.authService.getSessionData() : null;
+    });
+    this.adminId = this.sessionData.user.id;
+
   }
 
   ngOnInit() {
+    this.submitToLevelSettingsForm = this.fb.group({
+      initialLevel: new FormControl('',Validators.compose([
+        Validators.required,
+        Validators.pattern('^[0-9]*[1-9][0-9]*$')])),
+
+      initialExperience: new FormControl('',Validators.compose([
+        Validators.required,
+        Validators.pattern('^[0-9]*[1-9][0-9]*$')])),
+
+        adminId:this.adminId
+  });
+    this.restApi.getPromise(`studentExperienceSettings/${this.adminId}`).then(
+      res => { // Success
+        let { data } = res;
+        console.log(res.length);
+        if(data.length > 0){
+          this.flag = true;
+          this.buttonText = "Edit"
+        }
+        else{
+          this.flag = false;
+          this.buttonText = "Save"
+        }
+        
+        // data = data.pop();
+        this.submitToLevelSettingsForm.controls['initialLevel'].setValue(data[0].initialLevel);
+        this.submitToLevelSettingsForm.controls['initialExperience'].setValue(data[0].initialExperience);
+      }
+    ).catch(onreject => {
+
+    });
+
   }
 
   saveSettings() {
-    let obj = {
-      initialLevel: this.initialLevel,
-      initialExperience: this.initialExperience,
-      adminId: "b5a8abb3-ec1a-4abe-bd07-681da590c0c5"
-    }
+    console.log(this.submitToLevelSettingsForm.valid)
+    // let obj = {
+    //   initialLevel: this.initialLevel,
+    //   initialExperience: this.initialExperience,
+    //   adminId: this.adminId
+    // }
 
-    this.restApi.post('studentExperienceSettings', obj, {}).subscribe((res: any) => {
-      if (res.success === true) {
-        console.log(res);
-      } else {
-        console.log(res);
+    this.restApi.postPromise('studentExperienceSettings', this.submitToLevelSettingsForm.value).then(
+      res => { // Success
+        this.notificationService.showMsg("Saved Successfully");
       }
+    ).catch(onreject => {
+      this.notificationService.showMsg("Not Saved");
     });
   }
 }
