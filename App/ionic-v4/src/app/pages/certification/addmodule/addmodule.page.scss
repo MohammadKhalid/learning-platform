@@ -59,3 +59,46 @@ span {
 .nv-file-over { 
     border: dotted 3px red; 
 }
+
+.uperheadings{
+    width: 100%;
+
+    display: inline-table;
+    background: black;
+}
+.xp1{
+    color: black;
+    font-size: 8px;
+}
+.xp{
+    float: right;
+    
+    background-image: url('../../../../assets/img/xp.svg');
+    background-repeat: no-repeat;
+    width: 50%;}
+.title{
+    color: black;
+}
+.time{
+    float: right;
+    color: black;
+    font-size: 8px;
+}
+
+
+.textClr{
+    color: #bbbbbb;
+    font-size: 14px;
+    font-weight: 8px;
+}
+
+
+
+
+.col1{
+    margin-left: 40px;}
+
+
+
+// progress bar
+
