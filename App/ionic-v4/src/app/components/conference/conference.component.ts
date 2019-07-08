@@ -10,6 +10,7 @@ import * as moment from 'moment';
 import { SimplePdfViewerComponent, SimpleProgressData } from 'simple-pdf-viewer';
 import recordRTC from 'recordrtc';
 import { async } from 'rxjs/internal/scheduler/async';
+
 @Component({
 	selector: 'conference',
 	templateUrl: './conference.component.html',
@@ -78,6 +79,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	studentSideCoachVisible: boolean = true;
 	dummyStream: any;
 	onlineUsers: any = [];
+	audioPlay = new Audio();
 	// getMediaStream: any;
 
 	constructor(
@@ -89,7 +91,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		private elementRenderer: Renderer2,
 		private actionSheetCtrl: ActionSheetController,
 		private alertCtrl: AlertController,
-		private toastController: ToastController,
+		private toastController: ToastController
 	) {
 		// nav data
 		const navigation = this.router.getCurrentNavigation();
@@ -99,6 +101,9 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
+		this.audioPlay.src = "./assets/message-sound/graceful.mp3";
+		this.audioPlay.load();
+
 		// rtc connection
 		// this.screenShareMessage()
 		this.rtcService.getConnection().then((connection) => {
@@ -305,12 +310,12 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 				audio: true,
 			}).then(externalStream => {
 				//add end event for chrome
-				
+
 				// externalStream.isAudio = true;
 				// this.connection.attachStreams[0].isAudio = true;
 				externalStream.getVideoTracks()[0].addEventListener('ended', () => {
 					//for ka loop laga kar stream agr ho tou del krwani h.
-					
+
 					if (this.connection.attachStreams[this.connection.attachStreams.length - 1].isVideo === undefined) {
 						this.screenVar = "notsharescreen";
 						this.connection.attachStreams.pop();
@@ -593,8 +598,8 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 					this.bottomScroll();
 					if (this.panelModal !== 'message') {
 						this.newMessage = true;
-
 						// toast message
+						this.audioPlay.play();
 						this.notificationService.showMsg(event.data.firstName + ' say "' + event.data.text + '"');
 					}
 					break;

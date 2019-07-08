@@ -332,13 +332,13 @@
     <div class="fixed-content speaker-video-container">
       <video #speakerVideo playsinline autoplay></video>
 
-      <ion-grid class="fixed-content" *ngIf="!connection?.attachStreams[0]?.isVideo" [hidden]="isLoading">
+      <!-- <ion-grid class="fixed-content" *ngIf="!connection?.attachStreams[0]?.isVideo" [hidden]="isLoading">
         <ion-row class="fixed-content">
           <ion-col class="ion-align-self-center ion-text-center">
             <ion-icon name="contact" mode="ios" color="medium" size="large"></ion-icon>
           </ion-col>
         </ion-row>
-      </ion-grid>
+      </ion-grid> -->
     </div>
 
     <div style="position: absolute; top:0; right:0; bottom:0; left:0; z-index: 1;">
@@ -468,7 +468,7 @@
              /* padding-top: 5px; */
              padding-bottom: 21px;">
 
-          <ion-icon name="person">33</ion-icon> {{item?.participants.length}}
+          <ion-icon name="person"></ion-icon> {{item?.participants.length}}
         </div>
 
 
