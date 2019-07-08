@@ -4,6 +4,7 @@ import { AuthenticationService } from '../user/authentication.service';
 
 import { SERVER_URL } from '../../../environments/environment';
 import { Observable } from 'rxjs/Observable';
+import { LoadingController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ export class RestApiService {
 
 	constructor(
 		private authService: AuthenticationService,
-		private http: HttpClient
+		private http: HttpClient,
+		public loadingController: LoadingController
 	) {
 		this.authService.authenticationState.subscribe((state) => {
 			this.sessionData = state ? this.authService.getSessionData() : null;
@@ -65,7 +67,7 @@ export class RestApiService {
 
 	postPromise(endpoint: string, body: any, reqOpts?: any): Promise<any> {
 
-		if (!reqOpts) reqOpts = { headers: {} };
+		if(!reqOpts) reqOpts = { headers: {} };
 		if (this.sessionData && this.sessionData.token) reqOpts.headers.Authorization = this.sessionData.token;
 
 		return new Promise((resolve, reject) => {
@@ -83,6 +85,38 @@ export class RestApiService {
 
 	}
 
+
+	putPromise(endpoint: string, body: any, reqOpts?: any): Promise<any> {
+
+		if (!reqOpts) reqOpts = { headers: {} };
+		if (this.sessionData && this.sessionData.token) reqOpts.headers.Authorization = this.sessionData.token;
+	
+		return new Promise((resolve, reject) => {
+
+			this.http.put(this.url + endpoint, body, reqOpts)
+				.toPromise()
+				.then(
+					res => { // Success
+						resolve(res);
+					}
+				).catch(onreject => {
+					reject(onreject);
+				});
+		});
+
+	}
+
+	async presentLoading() {
+		const loading = await this.loadingController.create({
+		  message: 'Please wait...',
+		  duration: 2000
+		});
+		await loading.present();
+	
+		const { role, data } = await loading.onDidDismiss();
+	
+	  }
+	
 
 	getPromise(endpoint: string, params?: any, reqOpts?: any): Promise<any> {
 
@@ -103,6 +137,8 @@ export class RestApiService {
 		});
 
 	}
+
+
 
 
 	postFormData(endpoint: string, body: any, reqOpts?: any) {
