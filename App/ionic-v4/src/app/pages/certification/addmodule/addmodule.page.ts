@@ -7,14 +7,17 @@ import {Router} from '@angular/router';
   styleUrls: ['./addmodule.page.scss'],
 })
 export class AddmodulePage implements OnInit {
-
+  addModelbutton : boolean = true;
+  moduleDetail : boolean = false;
   constructor(private router: Router) { }
 
   ngOnInit() {
   }
 
   loadmoduledetail() {
-    this.router.navigate(['/certification/moduledetail']);
+    this.addModelbutton = !this.addModelbutton;
+    this.moduleDetail = !this.moduleDetail;
+    // this.router.navigate(['/certification/moduledetail']);
   }
 
 }
