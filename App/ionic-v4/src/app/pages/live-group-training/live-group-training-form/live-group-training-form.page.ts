@@ -27,7 +27,7 @@ export class LiveGroupTrainingFormPage implements OnInit {
 	sessionData: any;
 	participants: any;
 	defaultDate = new Date().toISOString().slice(0, 10);
-	defaultDateTime: string = '09:00';
+	defaultDateTime: string = moment("09:00","hh:mm a").format();
 	action: string;
 	timeZones: any = [];
 	defaultTimezone: string;
@@ -122,6 +122,7 @@ export class LiveGroupTrainingFormPage implements OnInit {
 	}
 
 	save() {
+		debugger
 		if(this.action === 'new')
 			this.restApi.post(this.urlEndPoint + 's', this.form.value).subscribe((resp: any) => {
 				this.saveCallback(resp);

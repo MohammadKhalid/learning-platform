@@ -5,6 +5,9 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
+
+
 import { LiveGroupTrainingFormPage } from './live-group-training-form.page';
 import { IonicSelectableModule } from 'ionic-selectable';
 
@@ -22,7 +25,9 @@ const routes: Routes = [
     ReactiveFormsModule,
     IonicModule,
     RouterModule.forChild(routes),
-    IonicSelectableModule
+    IonicSelectableModule,
+    OwlDateTimeModule, 
+    OwlNativeDateTimeModule,
   ],
   declarations: [LiveGroupTrainingFormPage],
   exports: [LiveGroupTrainingFormPage]

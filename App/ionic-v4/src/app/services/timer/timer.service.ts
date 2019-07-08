@@ -25,12 +25,13 @@ export class TimerService {
 
 	private createTimeObject(date: Date): Time {
 	    let time: Time = {days: 0, hours: 0, minutes: 0, seconds: 0, text: ''};
-			time.text = moment(date).fromNow(true);
+			time.text = moment(date).fromNow();
 
 	    return time;
 	}
 
 	timer(date: Date, intervalAmount: number = 1000): Observable<Time> {
+		debugger
 		return interval(intervalAmount).map(() => this.createTimeObject(date));
 	}
 
