@@ -5,9 +5,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
-
-
 import { LiveGroupTrainingFormPage } from './live-group-training-form.page';
 import { IonicSelectableModule } from 'ionic-selectable';
 
