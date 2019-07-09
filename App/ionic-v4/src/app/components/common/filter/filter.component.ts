@@ -1,5 +1,7 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormControl, Form } from '@angular/forms';
+import { AuthenticationService } from 'src/app/services/user/authentication.service';
+import { RestApiService } from 'src/app/services/http/rest-api.service';
 
 
 @Component({
@@ -9,18 +11,39 @@ import { FormControl, Form } from '@angular/forms';
 })
 export class FilterComponent implements OnInit {
   categories = [];
-  searchBy: string
+  searchBy: string = "";
+  user: any;
+  categoryList: any = [];
   @Output() searchByFilterEvent = new EventEmitter<object>();
-
   toppingList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
-  constructor() { }
+  constructor(
+    private restApi: RestApiService,
+    private authService: AuthenticationService,
+  ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.user = this.authService.getSessionData().user;
+    this.fetchCategories();
+  }
+
+  fetchCategories() {
+    this.restApi.getPromise(`categories/${this.user.createdBy}`)
+      .then(res => {
+        let { success, data } = res;
+        if (success) {
+          this.categoryList = data;
+        }
+      }).catch(err => {
+        console.log(err);
+      })
+  }
+
   search() {
-    let obj = { 
-      searchBy: this.searchBy,
-       categories: this.categories
-       }
+    let obj = {
+      coachId: this.user.id,
+      categories: this.categories,
+      searchBy: this.searchBy
+    }
     this.searchByFilterEvent.next(obj);
   }
 }

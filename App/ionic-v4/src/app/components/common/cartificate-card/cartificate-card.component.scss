@@ -5,8 +5,7 @@
 // }
 
 .card-main {
-    width: 345px;
-    // display: inline-block;
+    width: 336px;
 }
 
 .left-img {
@@ -79,10 +78,32 @@
     vertical-align: bottom;
 }
 
+// ::-webkit-scrollbar { 
+//     display: none; 
+// } 
+// ::-webkit-scrollbar{
+//     width: 0px;
+// }
 // .item .item-native{
 //     padding-left: 7px!important;
 //     -webkit-padding-start: 7px;
 // }
 
+// .scroll-hide::-webkit-scrollbar {
+//     width: 15px;
+//     height: 15px;
+// }
 
+// .scroll-hide::-webkit-scrollbar-track-piece {
+//     background-color: #C2D2E4;
+// }
 
+// .scroll-hide::-webkit-scrollbar-thumb:vertical {
+//     height: 30px;
+//     background-color: #0A4C95;
+// }
+
+::-webkit-scrollbar {
+    display: none;
+    overflow-x: hidden
+}

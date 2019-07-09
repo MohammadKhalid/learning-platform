@@ -1,9 +1,5 @@
-<ion-grid>
-  <ion-row >
-    <drag-scroll>
-      
-      <div class="card-main" *ngFor="let x of data" drag-scroll-item >
-        
+    <drag-scroll drag-scroll-y-disabled="true" scroll-x-wheel-enabled="true" style="height: 132px;">
+           <div class="card-main" *ngFor="let x of courses" drag-scroll-item>
 
         <ion-card>
           <ion-item lines="none" class="item" no-padding>
@@ -12,16 +8,16 @@
               </ion-img>
             </ion-thumbnail>
             <ion-label class="content">
-  
+
               <div class="header">
-                <h3 class="title"> {{x.course}} </h3>
+                <h3 class="title"> {{x.title}} </h3>
                 <div class="xp">
                   <h3>
                     {{x.xp}}
                   </h3>
                 </div>
               </div>
-  
+
               <div class="description"
                 style="-webkit-box-orient: vertical;box-orient: vertical;-moz-box-orient: vertical;">
                 <p>
@@ -33,12 +29,8 @@
               </a>
             </ion-label>
           </ion-item>
-  
-        </ion-card>
- 
-      </div>
-      
-    </drag-scroll>
 
-  </ion-row>
-</ion-grid>
+        </ion-card>
+
+      </div>
+    </drag-scroll>

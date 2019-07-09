@@ -6,13 +6,22 @@
 
     <ion-title>Certification</ion-title>
     <ion-buttons slot="end">
-      
-        <ion-button strong="true" routerDirection="root" routerLink="/certification/add" ><ion-icon  name="add"></ion-icon>Add Course</ion-button>
-      </ion-buttons>
+
+      <ion-button strong="true" routerDirection="root" routerLink="/certification/add">
+        <ion-icon name="add"></ion-icon>Add Course
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
- <app-filter (searchByFilterEvent)="searchByFilterEvent($event)"></app-filter>
- <certificate-card></certificate-card>
+
+  <app-filter (searchByFilterEvent)="searchByFilterEvent($event)"></app-filter>
+  <div *ngFor="let obj of courses">
+
+    <h2 class="certficate-title">
+      <span>{{obj.title}}</span>
+    </h2>
+    <certificate-card [courses]="obj.subCategories"></certificate-card>
+  </div>
 </ion-content>

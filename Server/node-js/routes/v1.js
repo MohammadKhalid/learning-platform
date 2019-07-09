@@ -26,6 +26,7 @@ const TextController = require('../controllers/text.controller');
 const ResourceController = require('../controllers/resources.controller');
 const QuizController = require('../controllers/quiz.controller');
 const StudentExperienceSettingsController = require('../controllers/studentExperienceSettings.controller');
+const LevelController = require('../controllers/level.controller');
 
 const custom = require('./../middleware/custom');
 const role = require('./../middleware/role');
@@ -181,7 +182,7 @@ router.delete('/chat', ChatController.remove);
 
 
 router.post('/courses', passport.authenticate('jwt', { session: false }), role.user,CertificationUpload, CourseController.create);
-router.get('/courses/:coachId', passport.authenticate('jwt', { session: false }), role.user, CourseController.getCourse);
+router.get('/courses', passport.authenticate('jwt', { session: false }), role.user, CourseController.getCourse);
 router.delete('/courses/:courseId', passport.authenticate('jwt', { session: false }), role.user, CourseController.removeCourse);
 router.put('/courses/:courseId', passport.authenticate('jwt', { session: false }), role.user, CourseController.updateCourse);
 router.post('/enrollCourses', passport.authenticate('jwt', { session: false }), CourseController.enrollCourse);
@@ -219,6 +220,7 @@ router.get('/studentExperienceSettings/:adminId', passport.authenticate('jwt', {
 router.delete('/studentExperienceSettings/:studentExpSettingsId', passport.authenticate('jwt', { session: false }), role.user, StudentExperienceSettingsController.remove);
 router.put('/studentExperienceSettings/:studentExpSettingsId', passport.authenticate('jwt', { session: false }), role.user, StudentExperienceSettingsController.update);
 
+router.put('/level/:studentId', passport.authenticate('jwt', { session: false }), LevelController.update);
 
 router.get('/dashboard', passport.authenticate('jwt', { session: false }), HomeController.Dashboard);
 

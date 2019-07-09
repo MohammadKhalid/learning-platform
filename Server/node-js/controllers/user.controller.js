@@ -1,4 +1,4 @@
-const { User, UserCompany } = require('../models');
+const { User, UserCompany, StudentExperienceSettings, Level } = require('../models');
 const authService       = require('../services/auth.service');
 const userService       = require('../services/user.service');
 const { to, ReE, ReS }  = require('../services/util.service');
@@ -18,6 +18,21 @@ const create = async function(req, res){
         let err, user;
 
         [err, user] = await to(userService.create(loggedUser, body));
+        console.log(user);
+        if(user.type == 'student'){
+            const studentExpSettings = await StudentExperienceSettings.findOne({
+                where: {
+                    adminId: user.createdBy
+                }
+            })
+
+            const levelSettings = await Level.create({
+                studentId: user.id,
+                nextExperience: studentExpSettings.initialExperience,
+                currentExperience: 0,
+                currentLevel: studentExpSettings.initialLevel
+            })
+        }
 
         if(err) return ReE(res, err, 422);
     }

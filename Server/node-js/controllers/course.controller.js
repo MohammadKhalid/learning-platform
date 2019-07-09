@@ -34,7 +34,7 @@ const getStudentCourse = async (req, res) => {
         }
     })
 
-    let courseIds = studentCourseIds.map(val=> val.CourseId);
+    let courseIds = studentCourseIds.map(val => val.CourseId);
 
     console.log(studentCourseIds);
 
@@ -45,10 +45,10 @@ const getStudentCourse = async (req, res) => {
             as: "category",
             attributes: [['id', 'categoryId'], 'title']
         }],
-        where:{
-            id:{
-                [Op.notIn]:courseIds
-            } 
+        where: {
+            id: {
+                [Op.notIn]: courseIds
+            }
         }
     })
 
@@ -86,17 +86,33 @@ const create = async (req, res) => {
 module.exports.create = create;
 
 const getCourse = async (req, res) => {
-    let { coachId } = req.params
-    const course = await Course.findAll({
-        attributes: [['id', 'courseId'], 'title', 'description', 'image'],
-        include: [{
-            model: Category,
-            as: "category",
-            attributes: [['id', 'categoryId'], 'title']
-        }],
-        where: {
-            createdBy: coachId
+    let { categories, searchBy, coachId } = req.query
+    let condition = {}
+    let categoryCondition = {}
+    condition.createdBy = coachId
+
+    if (categories) {
+        categories = categories.split(',')
+        categoryCondition.id = {
+            [Op.in]: categories
         }
+    }
+    
+    if (searchBy) {
+        condition.title = {
+            [Op.like]: `%${searchBy}%`
+        }
+    }
+
+    const course = await Category.findAll({
+        attributes: [['id', 'categoryId'], 'title'],
+        include: [{
+            model: Course,
+            as: "subCategories",
+            attributes: [['id', 'courseId'], 'title', 'description', 'image'],
+            where: condition
+        }],
+        where: categoryCondition
     })
     if (course) return ReS(res, { data: course }, 200);
     else return ReE(res, { message: 'Unable to insert Course.' }, 500)
@@ -126,7 +142,7 @@ const updateCourse = async (req, res) => {
             where: {
                 id: courseId
             }
-    })
+        })
     if (course) return ReS(res, { data: course }, 200);
     else return ReE(res, { message: 'Unable to insert Course.' }, 500)
 }

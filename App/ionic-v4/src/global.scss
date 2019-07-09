@@ -191,7 +191,7 @@ div.d3-tooltip {
 	circle.color-warning { fill: var(--ion-color-warning); }
 	circle.color-primary { fill: var(--ion-color-primary); }
 	circle.color-secondary { fill: var(--ion-color-secondary); }
-
+	
 	circle.closed {
 		fill: var(--ion-color-dark, #222428);
 	}
@@ -238,4 +238,7 @@ div.d3-tooltip {
 			stroke-width: 0;
 		}
 	}
+}
+.item-has-focus {
+	--highlight-background: #0065b3; 
 }
