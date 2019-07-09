@@ -83,21 +83,16 @@
                   </div>
 
                   <div>
-                      <round-progress
-                      [current]="current"
-                      [max]="max"
-                      [color]="'#45ccce'"
-                      [background]="'#eaeaea'"
-                      [radius]="50"
-                      [stroke]="80"
-                      [semicircle]="true"
-                      [rounded]="true"
-                      [clockwise]="false"
-                      [responsive]="false"
-                      [duration]="800"
-                      [animation]="'easeInOutQuart'"
-                      [animationDelay]="0"
-                      (onRender)="doSomethingWithCurrentValue($event)"></round-progress>
+         <circle-progress
+          [percent]="60"
+          [radius]="60"
+          [outerStrokeWidth]="12"
+          [innerStrokeWidth]="6"
+          [outerStrokeColor]="'#d6d7db'"
+          [innerStrokeColor]="'#d6d7db'"
+          [animation]="true"
+          [animationDuration]="300"
+        ></circle-progress>
                   </div>
                 </div>
             </div>
