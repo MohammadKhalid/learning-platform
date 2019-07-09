@@ -26,6 +26,7 @@ const TextController = require('../controllers/text.controller');
 const ResourceController = require('../controllers/resources.controller');
 const QuizController = require('../controllers/quiz.controller');
 const StudentExperienceSettingsController = require('../controllers/studentExperienceSettings.controller');
+const LevelController = require('../controllers/level.controller');
 
 const custom = require('./../middleware/custom');
 const role = require('./../middleware/role');
@@ -219,6 +220,7 @@ router.get('/studentExperienceSettings/:adminId', passport.authenticate('jwt', {
 router.delete('/studentExperienceSettings/:studentExpSettingsId', passport.authenticate('jwt', { session: false }), role.user, StudentExperienceSettingsController.remove);
 router.put('/studentExperienceSettings/:studentExpSettingsId', passport.authenticate('jwt', { session: false }), role.user, StudentExperienceSettingsController.update);
 
+router.put('/level/:studentId', passport.authenticate('jwt', { session: false }), LevelController.update);
 
 router.get('/dashboard', passport.authenticate('jwt', { session: false }), HomeController.Dashboard);
 
