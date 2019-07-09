@@ -17,7 +17,11 @@ span {
   }
   
 
-
+#circle{
+    display: flex;
+    padding: 57px;
+    padding-inline-start: 69px;
+}
 
 .drop-zone { 
    
@@ -258,7 +262,7 @@ span {
   .xp span {
     display: table-cell;
     vertical-align: middle;
-    color: white;
+    color: #000;
     text-align: -webkit-center;
     padding-left: 26px;
     padding-top: 2px;
