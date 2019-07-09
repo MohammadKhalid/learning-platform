@@ -11,9 +11,9 @@ import { RestApiService } from 'src/app/services/http/rest-api.service';
 })
 export class FilterComponent implements OnInit {
   categories = [];
-  searchBy: string;
+  searchBy: string = "";
   user: any;
-  categoryList: any;
+  categoryList: any = [];
   @Output() searchByFilterEvent = new EventEmitter<object>();
   toppingList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
   constructor(
@@ -32,7 +32,7 @@ export class FilterComponent implements OnInit {
         let { success, data } = res;
         if (success) {
           this.categoryList = data;
-                }
+        }
       }).catch(err => {
         console.log(err);
       })
@@ -40,8 +40,9 @@ export class FilterComponent implements OnInit {
 
   search() {
     let obj = {
-      searchBy: this.searchBy,
-      categories: this.categories
+      coachId: this.user.id,
+      categories: this.categories,
+      searchBy: this.searchBy
     }
     this.searchByFilterEvent.next(obj);
   }

@@ -86,19 +86,19 @@ const create = async (req, res) => {
 module.exports.create = create;
 
 const getCourse = async (req, res) => {
-    let { coachId } = req.params
-    let { searchBy, categories } = req.body
+    let { categories, searchBy, coachId } = req.query
     let condition = {}
     let categoryCondition = {}
     condition.createdBy = coachId
 
-    if((categories != undefined || categories != null || categories != '') && categories.length > 0){
+    if (categories) {
+        categories = categories.split(',')
         categoryCondition.id = {
             [Op.in]: categories
         }
     }
     
-    if(searchBy != undefined || searchBy != null || searchBy != ''){
+    if (searchBy) {
         condition.title = {
             [Op.like]: `%${searchBy}%`
         }

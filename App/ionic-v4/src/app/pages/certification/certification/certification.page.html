@@ -17,11 +17,11 @@
 <ion-content padding>
 
   <app-filter (searchByFilterEvent)="searchByFilterEvent($event)"></app-filter>
-  <div>
+  <div *ngFor="let obj of courses">
 
-    <h2>
-      <span>THIS IS A TEST</span>
+    <h2 class="certficate-title">
+      <span>{{obj.title}}</span>
     </h2>
-    <certificate-card></certificate-card>
+    <certificate-card [courses]="obj.subCategories"></certificate-card>
   </div>
 </ion-content>

@@ -17,6 +17,7 @@ export const environment = {
 
 // export const SERVER_URL = 'https://thrive19.eastus.cloudapp.azure.com/v1/';
 export const SERVER_URL = 'http://localhost:3000/v1/';
+export const IMAGE_URL = 'http://localhost:3000/';
 // export const SOCKET_URL = 'https://thrive19.eastus.cloudapp.azure.com/';
 export const SOCKET_URL = 'http://localhost:3000/';
 export const RTC_SIGNALLING_SERVER_URL = 'https://thrive19.com:9001/';

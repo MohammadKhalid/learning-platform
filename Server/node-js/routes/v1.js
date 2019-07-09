@@ -182,7 +182,7 @@ router.delete('/chat', ChatController.remove);
 
 
 router.post('/courses', passport.authenticate('jwt', { session: false }), role.user,CertificationUpload, CourseController.create);
-router.get('/courses/:coachId', passport.authenticate('jwt', { session: false }), role.user, CourseController.getCourse);
+router.get('/courses', passport.authenticate('jwt', { session: false }), role.user, CourseController.getCourse);
 router.delete('/courses/:courseId', passport.authenticate('jwt', { session: false }), role.user, CourseController.removeCourse);
 router.put('/courses/:courseId', passport.authenticate('jwt', { session: false }), role.user, CourseController.updateCourse);
 router.post('/enrollCourses', passport.authenticate('jwt', { session: false }), CourseController.enrollCourse);

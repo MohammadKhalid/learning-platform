@@ -1,5 +1,5 @@
     <drag-scroll drag-scroll-y-disabled="true" scroll-x-wheel-enabled="true" style="height: 132px;">
-           <div class="card-main" *ngFor="let x of data" drag-scroll-item>
+           <div class="card-main" *ngFor="let x of courses" drag-scroll-item>
 
         <ion-card>
           <ion-item lines="none" class="item" no-padding>
@@ -10,7 +10,7 @@
             <ion-label class="content">
 
               <div class="header">
-                <h3 class="title"> {{x.course}} </h3>
+                <h3 class="title"> {{x.title}} </h3>
                 <div class="xp">
                   <h3>
                     {{x.xp}}
