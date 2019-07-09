@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
+import { FormGroup, FormArray , FormControl, FormBuilder } from '@angular/forms';   
+
 
 @Component({
   selector: 'app-addmodule',
@@ -8,8 +10,11 @@ import {Router} from '@angular/router';
 })
 export class AddmodulePage implements OnInit {
   addModelbutton : boolean = true;
+  addDetail : FormGroup
   moduleDetail : boolean = false;
-  constructor(private router: Router) { }
+  
+ 
+  constructor(private router: Router, private fb : FormBuilder) { }
 
   ngOnInit() {
   }
@@ -19,5 +24,6 @@ export class AddmodulePage implements OnInit {
     this.moduleDetail = !this.moduleDetail;
     // this.router.navigate(['/certification/moduledetail']);
   }
+  
 
 }

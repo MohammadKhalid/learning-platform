@@ -12,7 +12,7 @@
   
   <ion-content padding>
   
-    <mat-card>
+    <!-- <mat-card> -->
       
 <!--       
       <div class="uperheadings">
@@ -20,7 +20,7 @@
         <span style="float: right"> Xp</span>
       </div> -->
 
-      <ion-grid>
+      <!-- <ion-grid>
         <ion-row>
           <ion-col size="7">
             <div class="col1">
@@ -34,17 +34,89 @@
 </div>
           </ion-col>
           <ion-col size="5">
-            <span class="xp"> <p class="xp1">xp</p></span>
+            <div class="xp"> 
+              <span class="xp1"> 100XP</span>
+            </div>
             
           </ion-col>
         </ion-row>
-      </ion-grid>
+      </ion-grid> -->
 
 
 
 
 
-    </mat-card>
+    <!-- </mat-card> -->
+
+
+
+
+
+
+
+   
+        
+
+        <ion-card class="mainCard">
+            <div class="container" padding>
+                <div class="contentA" >
+                  <div class="header">
+                    <span> lesson no 1</span>
+                    <h5>Introduction</h5>
+                  </div>
+                  <div class="des"  style="-webkit-box-orient: vertical;box-orient: vertical;-moz-box-orient: vertical;">
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                  </div>
+
+                  <div class="btn&time">
+                      <ion-button  size="small" fill="outline">Start Lesson</ion-button>
+                     
+                  </div>
+                  
+                </div>
+                <div class="contentB">
+
+                  <div class="xp">
+                    <span>
+                      100XP
+                    </span>
+                  </div>
+
+                  <div id="circle">
+         <circle-progress
+          [percent]="60"
+          [radius]="30"
+          [outerStrokeWidth]="8"
+          [innerStrokeWidth]="6"
+          [outerStrokeColor]="'#d6d7db'"
+          [innerStrokeColor]="'#d6d7db'"
+          [animation]="true"
+          [animationDuration]="300"
+        ></circle-progress>
+                  </div>
+                </div>
+            </div>
+  
+        </ion-card>
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <!-- <ion-grid class="ion-justify-content-center"> -->
    <!-- <div class=""> -->
