@@ -19,7 +19,7 @@
               <div class="mat-selector">
                   <mat-label></mat-label>
                 <mat-select  [(ngModel)]="categories" placeholder="Categories" multiple>
-                  <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
+                  <mat-option *ngFor="let data of categoryList" [value]="data.id">{{data.title}}</mat-option>
                 </mat-select>
               </div>
           </div>
