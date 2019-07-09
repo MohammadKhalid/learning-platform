@@ -25,9 +25,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     IonicModule,
     RouterModule.forChild(routes),
-    IonicSelectableModule,
-    OwlDateTimeModule, 
-    OwlNativeDateTimeModule,
+    IonicSelectableModule
   ],
   declarations: [LiveGroupTrainingFormPage],
   exports: [LiveGroupTrainingFormPage]
