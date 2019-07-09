@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 import {MatCardModule} from '@angular/material/card';
 
+import {RoundProgressModule} from 'angular-svg-round-progressbar';
+
 
 import { IonicModule } from '@ionic/angular';
 
@@ -22,6 +24,8 @@ const routes: Routes = [
     MatCardModule,
     FormsModule,
     IonicModule,
+    RoundProgressModule,
+    
     RouterModule.forChild(routes)
   ],
   declarations: [AddmodulePage]
