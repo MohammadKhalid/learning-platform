@@ -40,7 +40,8 @@ const routes: Routes = [
       "subtitleColor": "#444444",
       "showBackground": false,
       "showInnerStroke": false,
-      "responsive": false
+      "responsive": false,
+      'showTitle' : true
     }),
     
     RouterModule.forChild(routes)
