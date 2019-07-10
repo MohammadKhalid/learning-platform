@@ -57,8 +57,8 @@
    
         
 
-        <ion-card class="mainCard">
-            <div class="container" padding>
+        <!-- <ion-card class="mainCard" padding>
+            <div class="container">
                 <div class="contentA" >
                   <div class="header">
                     <span> lesson no 1</span>
@@ -86,6 +86,7 @@
          <circle-progress
           [percent]="60"
           [radius]="30"
+         
           [outerStrokeWidth]="8"
           [innerStrokeWidth]="6"
           [outerStrokeColor]="'#d6d7db'"
@@ -98,11 +99,67 @@
             </div>
   
         </ion-card>
+  -->
+
+
+
+
+
+    <div class="card-main" *ngFor="let x of data"  >
+        
+
+        <ion-card>
+          <ion-item lines="none" class="item" no-padding>
+           
+            <ion-label class="content" padding>
+               
+              <div class="header">
+               
+                <h3 class="title">Lesson no 1 </h3>
+                <div class="xp">
+                  <h3>
+                    {{x.xp}}
+                  </h3>
+                </div>
+              </div>
+              <h5 class="intro">Introduction</h5>
+                 <div class="mainDiv">
+              <div class="description"
+                style="-webkit-box-orient: vertical;box-orient: vertical;-moz-box-orient: vertical;">
+                <p>
+                  {{x.description}}
+                </p>
+               
+                </div>
+                <div class="circle">
+                    <circle-progress
+                    [percent]="60"
+                    [radius]="30"
+                   
+                    [outerStrokeWidth]="8"
+                    [innerStrokeWidth]="6"
+                    [outerStrokeColor]="'#d6d7db'"
+                    [innerStrokeColor]="'#d6d7db'"
+                    [animation]="true"
+                    [animationDuration]="300"
+                  ></circle-progress>
+                </div>
+               
+              </div>
+              
+           
+
+
+              <div class="btn&time">
+                  <ion-button  size="small" fill="outline">Start Lesson</ion-button>
+                 
+              </div>
+            </ion-label>
+          </ion-item>
+  
+        </ion-card>
  
-
-
-
-
+      </div>
 
 
 
