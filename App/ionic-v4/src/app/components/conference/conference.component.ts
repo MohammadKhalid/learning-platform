@@ -176,7 +176,6 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		if (flag) {
 			switch (this.user.type) {
 				case "coach":
-					debugger;
 					if (this.connection.attachStreams.length == 2) {
 						let stream = this.connection.attachStreams[1];
 						this.recordContext = new recordRTC(stream, {
@@ -467,7 +466,6 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	}
 	// fireFoxScreenShare(recallRecord: boolean) {
 	// 	let video = this.speakerVideo.nativeElement;
-	// 	debugger;
 	// 	if (this.screenVar == "sharescreen") {
 	// 		this.connection.resetScreen();
 	// 		this.connection.addStream({
@@ -626,8 +624,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 						this.speakerVideoForStudent.nativeElement.play();
 						// }
 						// this.connection.streamEvents.selectAll().forEach(el => {
-						// 	debugger;
-						// 	if (el.stream.id == event.data.extra.streamId) {
+											// 	if (el.stream.id == event.data.extra.streamId) {
 						// 		this.speakerVideoForStudent.nativeElement.srcObject = el.stream;
 						// 		this.speakerVideoForStudent.nativeElement.play();
 						// 	}
@@ -760,9 +757,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			// if (this.user.type == 'student') {
 
 			// 	console.log("connectioon", this.connection.streamEvents.selectAll());
-			// 	debugger;
-			// 	this.connection.streamEvents.selectAll().forEach(el => {
-			// 		debugger;
+		// 	this.connection.streamEvents.selectAll().forEach(el => {
 			// 		if (el.stream.isVideo == true && el.stream.type == "remote") {
 			// 			this.speakerVideoForStudent.nativeElement.srcObject = el.stream;
 			// 			this.speakerVideoForStudent.nativeElement.play();

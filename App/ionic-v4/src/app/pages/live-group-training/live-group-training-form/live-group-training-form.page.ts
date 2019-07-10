@@ -126,8 +126,7 @@ export class LiveGroupTrainingFormPage implements OnInit {
 
 		time =  moment(time).format('HH:mm')
 		this.form.get('time').setValue(time)
-		debugger
-		if(this.action === 'new')
+	if(this.action === 'new')
 			this.restApi.post(this.urlEndPoint + 's', this.form.value).subscribe((resp: any) => {
 				this.saveCallback(resp);
 			});
