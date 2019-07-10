@@ -58,7 +58,6 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	panelModal: string;
 	participantsCount: number = 0;
 	matGroup: boolean = false;
-
 	messages: any[] = [];
 	message: string;
 	interval = null
@@ -177,19 +176,68 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		if (flag) {
 			switch (this.user.type) {
 				case "coach":
-
+					debugger;
 					if (this.connection.attachStreams.length == 2) {
 						let stream = this.connection.attachStreams[1];
 						this.recordContext = new recordRTC(stream, {
 							type: 'video',
 						});
 						this.recordContext.startRecording();
-						this.screenVar == "sharescreen";
+						// this.shareScreen(false)
+						// this.screenVar == "sharescreen";
+
+						// this.screenVar = "sharescreen";
 						// this.shareScreen(false);
 					}
 					else {
-						this.shareScreen(true);
-						return;
+						let objBrowserScreen: any = navigator.mediaDevices;
+						objBrowserScreen.getDisplayMedia({
+							video: true,
+							audio: true,
+						}).then(externalStream => {
+							//add end event for chrome
+							this.recordContext = new recordRTC(externalStream, {
+								type: 'video',
+							});
+							this.recordContext.startRecording();
+							// externalStream.isAudio = true;
+							// this.connection.attachStreams[0].isAudio = true;
+
+							externalStream.getVideoTracks()[0].addEventListener('ended', () => {
+								//for ka loop laga kar stream agr ho tou del krwani h.
+
+								if (this.connection.attachStreams[this.connection.attachStreams.length - 1].isVideo === undefined) {
+									this.screenVar = "notsharescreen";
+									this.connection.attachStreams.pop();
+								}
+							});
+
+							//add stream into RTC
+							// this.connection.addStream(externalStream);
+							// if (this.user.type == 'coach') {
+							// 	// video.srcObject = null;
+							// 	if (recallRecord) {
+							// 		this.startStopRecord(true);
+							// 	}
+							// }
+							// if (recallRecord) {
+							// 	//do something
+							// }
+							// else {
+							// 	this.connection.send({
+							// 		type: 'screenshare',
+							// 		extra: { screenShare: true, streamId: this.connection.attachStreams[0].streamid }
+							// 	});
+							// }
+
+							// this.chromeScreenShare(false)
+						}, error => {
+							alert(error);
+						});
+						// this.screenVar == "sharescreen";
+						// // this.screenVar = "sharescreen";
+						// this.shareScreen(true);
+						// return;
 					}
 					break;
 				case "student":
@@ -225,9 +273,6 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 						});
 
 					}
-
-
-
 
 				// let stream = await document.querySelector('video').srcObject;
 				// this.recordContext = new recordRTC(stream, {
@@ -339,10 +384,16 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 						this.startStopRecord(true);
 					}
 				}
-				this.connection.send({
-					type: 'screenshare',
-					extra: { screenShare: true, streamId: this.connection.attachStreams[0].streamid }
-				});
+				if (recallRecord) {
+					//do something
+				}
+				else {
+					this.connection.send({
+						type: 'screenshare',
+						extra: { screenShare: true, streamId: this.connection.attachStreams[0].streamid }
+					});
+				}
+
 				// this.chromeScreenShare(false)
 			}, error => {
 				alert(error);
