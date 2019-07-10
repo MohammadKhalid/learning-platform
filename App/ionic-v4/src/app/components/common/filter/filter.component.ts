@@ -15,8 +15,7 @@ export class FilterComponent implements OnInit {
   user: any;
   categoryList: any = [];
   @Output() searchByFilterEvent = new EventEmitter<object>();
-  toppingList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
-  constructor(
+   constructor(
     private restApi: RestApiService,
     private authService: AuthenticationService,
   ) { }

@@ -44,7 +44,7 @@
       </ion-item>
 
       <ion-item lines="none" class="ion-float-right ion-padding-top">
-        <ion-button  routerLink="/certification/addmodule" routerLinkActive="router-link-active"  size="md" >Save and Next</ion-button>
+        <ion-button type="submit"  [disabled]="!addCourseForm.valid" routerLink="/certification/addmodule" routerLinkActive="router-link-active"  size="md" >Save and Next</ion-button>
       </ion-item>
 
 

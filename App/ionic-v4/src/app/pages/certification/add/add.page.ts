@@ -79,7 +79,6 @@ export class AddPage implements OnInit {
     obj.append('createdBy',this.addCourseForm.get('createdBy').value)
     this.restApi.postPromise('courses',obj)
     .then(res=>{
-      
       this.notificationService.showMsg("Saved Successfully");
     }).catch(err=>{
       this.notificationService.showMsg("Error inserting Course");
