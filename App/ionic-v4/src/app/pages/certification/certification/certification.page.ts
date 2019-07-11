@@ -29,8 +29,7 @@ export class CertificationPage implements OnInit {
   }
   searchByFilterEvent(obj) {
     this.restService.get(`courses`, obj).subscribe((resp: any) => {
-      debugger;
-      if (resp.data) this.courses = resp.data;
+     if (resp.data) this.courses = resp.data;
 
     });
   }

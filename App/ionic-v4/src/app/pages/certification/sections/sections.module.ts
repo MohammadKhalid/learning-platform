@@ -14,16 +14,16 @@ const routes: Routes = [
   {
     path: '',
     component: SectionsPage,
-    children:[{
-      path:'resources',
-      component:ResourcesPage,
-    },
-      {
-        path: 'concepts',
-        component:ConceptsPage,
+    // children:[{
+    //   path:'resources',
+    //   component:ResourcesPage,
+    // },
+    //   {
+    //     path: 'concepts',
+    //     component:ConceptsPage,
        
-      }
-    ]
+    //   }
+    // ]
   }
 ];
 

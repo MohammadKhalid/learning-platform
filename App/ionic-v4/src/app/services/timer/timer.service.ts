@@ -31,7 +31,6 @@ export class TimerService {
 	}
 
 	timer(date: Date, intervalAmount: number = 1000): Observable<Time> {
-		debugger
 		return interval(intervalAmount).map(() => this.createTimeObject(date));
 	}
 
