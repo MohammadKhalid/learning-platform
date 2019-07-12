@@ -176,10 +176,12 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		if (flag) {
 			switch (this.user.type) {
 				case "coach":
+					debugger;
 					if (this.connection.attachStreams.length == 2) {
 						let stream = this.connection.attachStreams[1];
+						stream.addTrack(this.connection.attachStreams[0].getAudioTracks()[0]);
 						this.recordContext = new recordRTC(stream, {
-							type: 'video',
+							type: 'video'
 						});
 						this.recordContext.startRecording();
 						// this.shareScreen(false)
@@ -192,11 +194,11 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 						let objBrowserScreen: any = navigator.mediaDevices;
 						objBrowserScreen.getDisplayMedia({
 							video: true,
-							audio: true,
 						}).then(externalStream => {
 							//add end event for chrome
+							externalStream.addTrack(this.connection.attachStreams[0].getAudioTracks()[0]);
 							this.recordContext = new recordRTC(externalStream, {
-								type: 'video',
+								type: 'video'
 							});
 							this.recordContext.startRecording();
 							// externalStream.isAudio = true;
@@ -349,14 +351,15 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		if (this.screenVar == "sharescreen") {
 			// if (this.connection.attachStreams.length == 1) {
 			let objBrowserScreen: any = navigator.mediaDevices;
+			// objBrowserScreen.addTrack(this.connection.attachStreams[0].getAudioTracks()[0]);//new functionality for audio
 			objBrowserScreen.getDisplayMedia({
-				video: true,
-				audio: true,
+				video: true
 			}).then(externalStream => {
 				//add end event for chrome
 
 				// externalStream.isAudio = true;
 				// this.connection.attachStreams[0].isAudio = true;
+				externalStream.addTrack(this.connection.attachStreams[0].getAudioTracks()[0]);//new functionality for audio
 				externalStream.getVideoTracks()[0].addEventListener('ended', () => {
 					//for ka loop laga kar stream agr ho tou del krwani h.
 
@@ -624,7 +627,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 						this.speakerVideoForStudent.nativeElement.play();
 						// }
 						// this.connection.streamEvents.selectAll().forEach(el => {
-											// 	if (el.stream.id == event.data.extra.streamId) {
+						// 	if (el.stream.id == event.data.extra.streamId) {
 						// 		this.speakerVideoForStudent.nativeElement.srcObject = el.stream;
 						// 		this.speakerVideoForStudent.nativeElement.play();
 						// 	}
@@ -757,7 +760,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			// if (this.user.type == 'student') {
 
 			// 	console.log("connectioon", this.connection.streamEvents.selectAll());
-		// 	this.connection.streamEvents.selectAll().forEach(el => {
+			// 	this.connection.streamEvents.selectAll().forEach(el => {
 			// 		if (el.stream.isVideo == true && el.stream.type == "remote") {
 			// 			this.speakerVideoForStudent.nativeElement.srcObject = el.stream;
 			// 			this.speakerVideoForStudent.nativeElement.play();
