@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {Router} from '@angular/router';
-import { FormGroup, FormArray , FormControl, FormBuilder } from '@angular/forms';   
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormGroup, FormArray, FormControl, FormBuilder } from '@angular/forms';
+import { RestApiService } from 'src/app/services/http/rest-api.service';
 
 
 @Component({
@@ -9,58 +10,38 @@ import { FormGroup, FormArray , FormControl, FormBuilder } from '@angular/forms'
   styleUrls: ['./addmodule.page.scss'],
 })
 export class AddmodulePage implements OnInit {
-  addModelbutton : boolean = true;
-  addDetail : FormGroup
-  moduleDetail : boolean = false;
-  
- 
-  constructor(private router: Router, private fb : FormBuilder) { }
-  data: any;
-  serverUrl: string="./assets/img/";
- 
+  addModelbutton: boolean = true;
+
+  moduleDetail: boolean = false;
+  id: any;
+
+  constructor(private router: Router, private fb: FormBuilder, private actroute: ActivatedRoute, private service: RestApiService) { }
+  data: any ;
+  serverUrl: string = "./assets/img/";
+  forms: FormGroup
   ngOnInit() {
-    this.data = [
-      {
-        id: 2,
-        course: "Math",
-        image: "card-img.jpg",
-        title: "Math",
-        xp: "990XP",
-        description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-      },
-      {
-        id: 2,
-        course: "Math",
-        image: "card-img.jpg",
-        title: "Math",
-        xp: "990XP",
-        description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-      },
-      {
-        id: 2,
-        course: "Math",
-        image: "card-img.jpg",
-        title: "Math",
-        xp: "990XP",
-        description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-      },
-      {
-        id: 2,
-        course: "Math",
-        image: "card-img.jpg",
-        title: "Math",
-        xp: "990XP",
-        description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-      },
-      {
-        id: 2,
-        course: "Math",
-        image: "card-img.jpg",
-        title: "Math",
-        xp: "990XP",
-        description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-      }
-    ];
+
+    this.id = this.actroute.snapshot.paramMap.get('id');
+    this.forms = this.fb.group({
+      title: new FormControl(''),
+      description: new FormControl(''),
+      totalExperience: new FormControl(''),
+      courseId: this.id
+    })
+
+    console.log(this.actroute.snapshot.paramMap.get('id'));
+
+    this.service.getPromise('sections', this.id).then(res => {
+      this.data=res.data;
+    }).catch(err => {
+
+
+    })
+
+
+
+
+
 
   }
 
@@ -69,6 +50,23 @@ export class AddmodulePage implements OnInit {
     this.moduleDetail = !this.moduleDetail;
     // this.router.navigate(['/certification/moduledetail']);
   }
-  
+
+  addModule() {
+
+    debugger
+
+
+    this.service.postPromise('sections', this.forms.value).then(res => {
+      debugger;
+      this.data.push(res.data); 
+this.addModelbutton = !this.addModelbutton;
+this.moduleDetail = !this.moduleDetail
+
+    }).catch(res => {
+
+    })
+
+  }
+
 
 }

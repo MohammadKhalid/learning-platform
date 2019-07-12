@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 import {MatCardModule} from '@angular/material/card';
 
@@ -26,22 +26,26 @@ const routes: Routes = [
     FormsModule,
     IonicModule,
     RoundProgressModule,
+    ReactiveFormsModule,
     // BrowserModule,
     NgCircleProgressModule.forRoot({
-      "backgroundGradient": true,
-      "backgroundColor": "#ffffff",
-      "backgroundGradientStopColor": "#c0c0c0",
-      "backgroundPadding": -10,
       "radius": 40,
-      "maxPercent": 100,
+      
+      "space": -10,
+      "outerStrokeGradient": true,
       "outerStrokeWidth": 10,
-      "outerStrokeColor": "#61A9DC",
-      "innerStrokeWidth": 0,
-      "subtitleColor": "#444444",
+      "outerStrokeColor": "#4882c2",
+      "outerStrokeGradientStopColor": "#0065b3",
+      "innerStrokeColor": "#e7e8ea",
+      "innerStrokeWidth": 10,
+      "title": "UI",
+      "animateTitle": true,
+      "animationDuration": 200,
+      "showTitle": false,
+      "showSubtitle" : true,
+      "showUnits": false,
       "showBackground": false,
-      "showInnerStroke": false,
-      "responsive": false,
-      'showTitle' : true
+      "startFromZero": false
     }),
     
     RouterModule.forChild(routes)

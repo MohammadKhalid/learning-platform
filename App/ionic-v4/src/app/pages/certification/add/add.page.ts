@@ -3,6 +3,8 @@ import { RestApiService } from '../../../services/http/rest-api.service';
 import { AuthenticationService } from '../../../services/user/authentication.service';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { NotificationService } from 'src/app/services/notification/notification.service';
+import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 
 
 @Component({
@@ -23,7 +25,9 @@ export class AddPage implements OnInit {
     private restApi: RestApiService,
     private authService: AuthenticationService,
     private notificationService: NotificationService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private route : Router,
+    private navCtrl : NavController
   ) {
     this.authService.authenticationState.subscribe((state) => {
       this.sessionData = state ? this.authService.getSessionData() : null;
@@ -79,7 +83,10 @@ export class AddPage implements OnInit {
     obj.append('createdBy',this.addCourseForm.get('createdBy').value)
     this.restApi.postPromise('courses',obj)
     .then(res=>{
+      debugger;
       this.notificationService.showMsg("Saved Successfully");
+      this.navCtrl.navigateRoot('/certification/addmodule/' + res.data.id)
+      
     }).catch(err=>{
       this.notificationService.showMsg("Error inserting Course");
     })
