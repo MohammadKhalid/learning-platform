@@ -176,9 +176,9 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		if (flag) {
 			switch (this.user.type) {
 				case "coach":
-					debugger;
 					if (this.connection.attachStreams.length == 2) {
 						let stream = this.connection.attachStreams[1];
+
 						stream.addTrack(this.connection.attachStreams[0].getAudioTracks()[0]);
 						this.recordContext = new recordRTC(stream, {
 							type: 'video'
@@ -250,17 +250,38 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 						this.recordContext.startRecording();
 					}
 					else {
+
 						let objBrowserScreen: any = navigator.mediaDevices;
-						objBrowserScreen.getDisplayMedia({
-							video: true,
-							audio: true,
+						await objBrowserScreen.getDisplayMedia({
+							video: true
 						}).then(externalStream => {
 							//add end event for chrome
 							this.studentMediaStream = externalStream;
+							let videoTag = this.speakerVideo;
+							this.connection.streamEvents.selectAll({
+								remote: true
+							}).forEach(function (remoteStreamEvent) {
+								if (remoteStreamEvent.stream.isVideo) {
+									debugger;
+									console.log(videoTag.nativeElement.srcObject.getAudioTracks()[0]);
+									externalStream.addTrack(videoTag.nativeElement.srcObject.getAudioTracks()[0]);
+									// remoteStreamEvent.stream.getAudioTracks()[0];
+									// console.log(remoteStreamEvent.stream.getVideoTracks()[0]);
+								}
+							});
+							// console.log(this.speakerVideo.nativeElement.srcObject);
+							// console.log(this.connection.getRemoteStreams());
+							// this.studentMediaStream.addTrack(this.connection.getRemoteStreams().getAudioTracks()[0]); //coach stream
 							externalStream.getVideoTracks()[0].addEventListener('ended', () => {
+								this.recordContext.stopRecording(async () => {
+									var blob = await this.recordContext.getBlob();
+									recordRTC.invokeSaveAsDialog(blob);
+									this.recordScreen = !this.recordScreen;
+								});
 								// this.connection.attachStreams.pop();
 								this.studentMediaStream.getTracks()[0].stop();
 								this.studentMediaStream = undefined;
+
 							});
 							this.recordContext = new recordRTC(this.studentMediaStream, {
 								type: 'video',
@@ -271,6 +292,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 							// this.startStopRecord(true);
 						}, error => {
 							alert(error);
+							this.recordScreen = !this.recordScreen;
 						});
 
 					}
@@ -290,6 +312,15 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			// 	this.studentMediaStream = null;
 			// }
 			// coach
+			// if (this.user.type== 'coach') {
+
+			// 	// this.connection.attachStreams[this.connection.attachStreams.length - 1].getTracks().forEach(el => el.stop());
+
+			// 	// if (this.connection.attachStreams[this.connection.attachStreams.length - 1].isVideo === undefined) {
+			// 	// 	this.screenVar = "notsharescreen";
+			// 	// 	this.connection.attachStreams.pop();
+			// 	// }
+			// }
 			this.recordContext.stopRecording(async () => {
 				var blob = await this.recordContext.getBlob();
 				recordRTC.invokeSaveAsDialog(blob);
@@ -414,6 +445,9 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 			// }
 		}
 		else {
+			// let currentStream = this.connection.streamEvents[this.connection.attachStreams[1].streamid];
+			// currentStream.getTracks().forEach(el => el.stop());
+
 			this.connection.attachStreams.pop();
 			this.connection.replaceTrack(this.connection.attachStreams[0]);
 			let streamEvent = this.connection.streamEvents[this.connection.attachStreams[0].streamid];
