@@ -275,7 +275,7 @@
               </ion-label>
             </ion-item>
 
-            <div>
+            <div *ngIf="item?.public === false">
               <ion-card-header>
                 <ion-card-subtitle>
                   <ion-text color="dark">Paticipants</ion-text>
