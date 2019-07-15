@@ -122,7 +122,7 @@ export class LiveGroupTrainingPage implements OnInit {
 			// set time left timer
 			for (let item of resp.items) {
 				// time left counter
-				item['timeLeft'] = this.timerService.timer(new Date(moment(item.date + ' ' + item.time).toISOString()));
+				item['timeLeft'] = this.timerService.timer(new Date(moment(item.date + ' ' + item.time).tz('Australia/Sydney').toISOString()));
 			}
 
 			// push items

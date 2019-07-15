@@ -1,7 +1,16 @@
 <div class="isWeb">
+    <div class="screenShareMsg" *ngIf="screenVar == 'sharescreen'">
+        <div>
+            <span>
+              You are screensharing
+            </span>
+            <ion-button color="light" (click)="shareScreen(false)">STOP</ion-button>
+        </div>
+    </div>
     <ion-badge color="danger" style="position: absolute; top: 1rem; left: 1rem; z-index: 10;" *ngIf="connection?.isLowBandwidth">low connection</ion-badge>
-
-    <ion-badge color="danger" [ngClass]="{'schare-screen-show-message':matGroup,'schare-screen-hide-message':!matGroup}" *ngIf="screenVar == 'sharescreen'">Your screen is being shared</ion-badge>
+    <!-- 
+        <ion-badge color="danger" [ngClass]="{'schare-screen-show-message':matGroup,'schare-screen-hide-message':!matGroup}"
+          *ngIf="screenVar == 'sharescreen'">Your screen is being shared</ion-badge> -->
 
 
 
@@ -9,11 +18,11 @@
         <ion-spinner name="dots" color="secondary"></ion-spinner>
     </ion-fab>
 
-    <ion-fab vertical="top" horizontal="start" slot="fixed" *ngIf="isSpeaker" [hidden]="isLoading">
-        <ion-fab-button (click)="presentParticipantSetting()" color="warning" size="small">
+    <!-- <ion-fab vertical="top" horizontal="start" slot="fixed" *ngIf="isSpeaker" [hidden]="isLoading">
+          <ion-fab-button (click)="presentParticipantSetting()" color="warning" size="small">
             <ion-icon name="people" mode="ios"></ion-icon>
-        </ion-fab-button>
-    </ion-fab>
+          </ion-fab-button>
+        </ion-fab> -->
 
     <ion-fab vertical="bottom" horizontal="center" slot="fixed" activated="true" [hidden]="isLoading">
         <ion-fab-button disabled="true"></ion-fab-button>
@@ -22,31 +31,35 @@
             <ion-fab-button show="true" size="small" [color]="panelModal === 'message' ? 'medium' : 'dark'" (click)="showPanelModal('message')">
                 <ion-icon name="chatboxes" [color]="newMessage ? 'warning': ''"></ion-icon>
             </ion-fab-button>
-            <!-- <ion-fab-button show="true" size="small" [color]="panelModal === 'info' ? 'medium' : 'dark'"
-        (click)="showPanelModal('info')">
-        <ion-icon name="information"></ion-icon>
 
-      </ion-fab-button> -->
-            <ion-fab-button size="small" [color]="recordScreen === true ? 'dark ' : 'medium '" (click)="startStopRecord(recordScreen)">
+            <!-- <ion-fab-button show="true" size="small" [color]="panelModal === 'info' ? 'medium' : 'dark'"
+              (click)="showPanelModal('info')">
+              <ion-icon name="information"></ion-icon>
+      
+            </ion-fab-button> -->
+            <ion-fab-button size="small" *ngIf='user.type == "coach"' [color]="recordScreen === true ? 'dark ' : 'medium '" (click)="startStopRecord(recordScreen)">
                 <ion-icon name="radio-button-on" [color]="recordScreen === true ? 'danger' : 'success'"></ion-icon>
             </ion-fab-button>
         </ion-fab-list>
 
         <ion-fab-list side="start">
 
+            <ion-fab-button size="small" *ngIf="!isSpeaker" [color]="recordScreen === true ? 'dark ' : 'medium '" (click)="startStopRecord(recordScreen)">
+                <ion-icon name="radio-button-on" [color]="recordScreen === true ? 'danger' : 'success'"></ion-icon>
+            </ion-fab-button>
 
-            <ion-fab-button show="true" [disabled]="!localStream?.video?.control" [hidden]="!localStream?.video?.muted" (click)="streamMuteUnmute('video')" color="dark" size="small">
+            <ion-fab-button *ngIf="isSpeaker" show="true" [disabled]="!localStream?.video?.control" [hidden]="!localStream?.video?.muted" (click)="streamMuteUnmute('video')" color="dark" size="small">
                 <ion-icon name="videocam" size="small"></ion-icon>
                 <ion-icon name="remove" size="large" color="dark" style="position: absolute; transform: rotate(45deg) perspective(0); bottom: 5px;"></ion-icon>
                 <ion-icon name="remove" size="large" color="dark" style="position: absolute; transform: rotate(45deg) perspective(0); top: 5px;"></ion-icon>
                 <ion-icon name="remove" size="large" style="position: absolute; transform: rotate(45deg) perspective(0);">
                 </ion-icon>
             </ion-fab-button>
-            <ion-fab-button show="true" [hidden]="localStream?.video?.muted" (click)="streamMuteUnmute('video')" color="dark" size="small">
+            <ion-fab-button *ngIf="isSpeaker" show="true" [hidden]="localStream?.video?.muted" (click)="streamMuteUnmute('video')" color="dark" size="small">
                 <ion-icon name="videocam"></ion-icon>
             </ion-fab-button>
 
-            <ion-fab-button show="true" (click)="streamMuteUnmute('audio')" color="dark" size="small">
+            <ion-fab-button show="true" *ngIf="isSpeaker" (click)="streamMuteUnmute('audio')" color="dark" size="small">
                 <ion-icon [name]="localStream?.audio?.muted ? 'mic-off' : 'mic'"></ion-icon>
             </ion-fab-button>
         </ion-fab-list>
@@ -85,7 +98,7 @@
             <ion-col size="12" size-sm="6" size-md="5" size-lg="4" class="ion-align-self-stretch ion-no-padding" style="z-index: 9999;" *ngIf="matGroup">
                 <ion-card color="clean" class="web-card">
                     <mat-tab-group mat-stretch-tabs style="border-style: solid;
-          border-color: #f4f5f8;">
+                border-color: #f4f5f8;">
                         <mat-tab label="Group Chat">
 
                             <ion-col class="ion-no-padding	" style="z-index: 9999;">
@@ -104,41 +117,41 @@
                                                             <li [ngClass]="{'self' : message.isActive, 'other' : message.isActive == false }" *ngFor="let message of messages">
                                                                 <div *ngIf="message.isActive; else loggedOut" style="padding-bottom: 15px;">
                                                                     <span style="float: right;
-                                     font-size: 11px;
-                                     padding-right: 10px;
-
-                                     font-weight: bold;">{{message.firstName}}</span>
+                                           font-size: 11px;
+                                           padding-right: 10px;
+      
+                                           font-weight: bold;">{{message.firstName}}</span>
                                                                     <span style="float: left;
-                                     padding-left: 5px;
-                                                    font-size: 11px;
-                                     font-weight: bold;">{{message.userType}}</span>
+                                           padding-left: 5px;
+                                                          font-size: 11px;
+                                           font-weight: bold;">{{message.userType}}</span>
                                                                 </div>
 
                                                                 <ng-template #loggedOut>
 
                                                                     <div style="padding-bottom: 15px;">
                                                                         <span style="float: left;
-                                          font-size: 11px;
-                                           padding-left: 10px;
-                                            font-weight: bold;">{{message.firstName}}</span>
+                                                font-size: 11px;
+                                                 padding-left: 10px;
+                                                  font-weight: bold;">{{message.firstName}}</span>
                                                                         <span style="float: right;
-                                          font-size: 11px;
-                                          padding-right:5px;
-                                           font-weight: bold;">{{message.userType}}</span>
+                                                font-size: 11px;
+                                                padding-right:5px;
+                                                 font-weight: bold;">{{message.userType}}</span>
                                                                     </div>
                                                                 </ng-template>
 
 
 
                                                                 <!-- <div>
-                                   <span>{{message.firstName}}</span> 
-                                   <span
-                                   [ngClass]="{'userTypeR' : message.isActive, 'userTypeL' : message.isActive == false }">{{message.userType}}</span>
-                                  </div>
-                                  <div  style="margin-top: 10px;">
-
-                                    
-                                  </div> -->
+                                         <span>{{message.firstName}}</span> 
+                                         <span
+                                         [ngClass]="{'userTypeR' : message.isActive, 'userTypeL' : message.isActive == false }">{{message.userType}}</span>
+                                        </div>
+                                        <div  style="margin-top: 10px;">
+      
+                                          
+                                        </div> -->
                                                                 <div class="data">
                                                                     <div [ngClass]="{'msg-student':message.isActive, 'msg': message.isActive == false }">
                                                                         <p class="userText">{{message.text}}</p>
@@ -172,7 +185,7 @@
 
                         </mat-tab>
                         <mat-tab label='Participants ({{participantsCount}})'>
-                            <div *ngIf="item?.public === false">
+                            <div>
 
 
                                 <ion-item lines="none" *ngIf="onlineUsers.length==0">
@@ -306,19 +319,19 @@
     </div>
 
     <!-- <video #speakerVideoForStudent id="speakerVideoForStudent" [hidden]="studentSideCoachVisible"
-  style="position: absolute;z-index: 1;width: 210px;bottom: 0;padding: 10px;border-radius: 15px;"></video> -->
+        style="position: absolute;z-index: 1;width: 210px;bottom: 0;padding: 10px;border-radius: 15px;"></video> -->
     <video #speakerVideoForStudent id="speakerVideoForStudent" [hidden]="studentSideCoachVisible" style="position: absolute;z-index: 1;width: 210px;top: 0;padding: 10px;border-radius: 15px;"></video>
     <div #videosContainer class="fixed-content" text-center style="background-color: var(--ion-color-dark)" [hidden]="panel !== 'speaker'">
         <div class="fixed-content speaker-video-container">
             <video #speakerVideo playsinline autoplay></video>
 
             <!-- <ion-grid class="fixed-content" *ngIf="!connection?.attachStreams[0]?.isVideo" [hidden]="isLoading">
-        <ion-row class="fixed-content">
-          <ion-col class="ion-align-self-center ion-text-center">
-            <ion-icon name="contact" mode="ios" color="medium" size="large"></ion-icon>
-          </ion-col>
-        </ion-row>
-      </ion-grid> -->
+              <ion-row class="fixed-content">
+                <ion-col class="ion-align-self-center ion-text-center">
+                  <ion-icon name="contact" mode="ios" color="medium" size="large"></ion-icon>
+                </ion-col>
+              </ion-row>
+            </ion-grid> -->
         </div>
 
         <div style="position: absolute; top:0; right:0; bottom:0; left:0; z-index: 1;">
@@ -336,8 +349,8 @@
         <div *ngIf="pdfViewerFile">
             <div *ngIf="isSpeaker">
                 <!-- <ion-fab vertical="top" horizontal="start" slot="fixed" *ngIf="!pdfViewer.isDocumentLoaded()">
-        <ion-fab-button (click)="pdfViewerUpload()" color="dark" size="small"><ion-icon name="attach"></ion-icon></ion-fab-button>
-      </ion-fab> -->
+              <ion-fab-button (click)="pdfViewerUpload()" color="dark" size="small"><ion-icon name="attach"></ion-icon></ion-fab-button>
+            </ion-fab> -->
 
                 <div *ngIf="pdfViewer.isDocumentLoaded()">
                     <ion-fab vertical="top" horizontal="start" slot="fixed">
@@ -423,29 +436,27 @@
     <div #videosContainer_mob class="fixed-content " text-center style="background-color: var(--ion-color-dark)" [hidden]="panel !== 'speaker'">
         <div class="fixed-content speaker-video-container-mob ion-text-center">
             <video style="height:40vh;" #speakerVideo_mob playsinline autoplay>
-        <p style="position: absolute; color:white;">
-
-        </p>
-      </video>
+              <p style="position: absolute; color:white;">
+      
+              </p>
+            </video>
             <div class="mob-online">
 
 
 
-                <div class="livediv">
-                    <p class="live">Live</p>
 
-                </div>
+                <p class="live">Live</p>
 
 
                 <div style="background-color: #4c4c4c;
-             margin-top: 13px;
-             height: 16px;
-             padding: 0px;
-             font-size: 13;
-             font-size: 14px;
-             padding: 6px;
-             /* padding-top: 5px; */
-             padding-bottom: 24px;">
+                   margin-top: 13px;
+                   height: 16px;
+                   padding: 0px;
+                   font-size: 13;
+                   font-size: 14px;
+                   padding: 6px;
+                   /* padding-top: 5px; */
+                   padding-bottom: 21px;">
 
                     <ion-icon name="person"></ion-icon> <span style="position: relative; bottom: 2px;"> {{item?.participants.length}}</span>
                 </div>
@@ -482,45 +493,45 @@
                         <ion-col class="ion-no-padding ion-align-self-end">
 
                             <!-- <ul class="mob-chat scrollable-list"
-                #mobileMessageUl id="mobileMessageUl">
-                <li 
-                  *ngFor="let message of messages">
-                  <div *ngIf="message.isActive; else loggedOut" style="padding-bottom: 15px;">
-                    <span style="    float: left;
-                    font-size: 11px;
-                    padding-left: 10px;
-                    font-weight: bold;">{{message.firstName}}</span>
-                    <span style="float: right;
-                    font-size: 11px;
-                    padding-right: 5px;
-                    font-weight: bold;">{{message.userType}}</span>
-                  </div>
-
-                  <ng-template #loggedOut>
-
-                    <div style="padding-bottom: 15px;">
-                      <span style="float: left;
-                            font-size: 11px;
-                             padding-left: 10px;
-                              font-weight: bold;">{{message.firstName}}</span>
-                      <span style="float: right;
-                            font-size: 11px;
-                            padding-right:5px;
-                             font-weight: bold;">{{message.userType}}</span>
-                    </div>
-                  </ng-template>
-
-
-
-                  <div class="data">
-                    <div [ngClass]="{'msg-student-mob':message.isActive, 'msg-mob': message.isActive == false }">
-                      <p class="userText">{{message.text}}</p>
-                      <time class="userTime">{{message.date}}</time>
-                    </div>
-
-                  </div>
-                </li>
-              </ul> -->
+                      #mobileMessageUl id="mobileMessageUl">
+                      <li 
+                        *ngFor="let message of messages">
+                        <div *ngIf="message.isActive; else loggedOut" style="padding-bottom: 15px;">
+                          <span style="    float: left;
+                          font-size: 11px;
+                          padding-left: 10px;
+                          font-weight: bold;">{{message.firstName}}</span>
+                          <span style="float: right;
+                          font-size: 11px;
+                          padding-right: 5px;
+                          font-weight: bold;">{{message.userType}}</span>
+                        </div>
+      
+                        <ng-template #loggedOut>
+      
+                          <div style="padding-bottom: 15px;">
+                            <span style="float: left;
+                                  font-size: 11px;
+                                   padding-left: 10px;
+                                    font-weight: bold;">{{message.firstName}}</span>
+                            <span style="float: right;
+                                  font-size: 11px;
+                                  padding-right:5px;
+                                   font-weight: bold;">{{message.userType}}</span>
+                          </div>
+                        </ng-template>
+      
+      
+      
+                        <div class="data">
+                          <div [ngClass]="{'msg-student-mob':message.isActive, 'msg-mob': message.isActive == false }">
+                            <p class="userText">{{message.text}}</p>
+                            <time class="userTime">{{message.date}}</time>
+                          </div>
+      
+                        </div>
+                      </li>
+                    </ul> -->
 
 
 
