@@ -429,6 +429,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 
 				// this.chromeScreenShare(false)
 			}, error => {
+				this.screenVar = "notsharescreen";
 				alert(error);
 			});
 			// } 

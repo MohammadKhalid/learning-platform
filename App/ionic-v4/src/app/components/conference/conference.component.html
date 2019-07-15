@@ -1,9 +1,17 @@
 <div class="isWeb">
+  <div class="screenShareMsg" *ngIf="screenVar == 'sharescreen'">
+    <div>
+      <span>
+        You are screensharing
+      </span>
+      <ion-button color="light" (click)="shareScreen(false)">STOP</ion-button>
+    </div>
+  </div>
   <ion-badge color="danger" style="position: absolute; top: 1rem; left: 1rem; z-index: 10;"
     *ngIf="connection?.isLowBandwidth">low connection</ion-badge>
-
+<!-- 
   <ion-badge color="danger" [ngClass]="{'schare-screen-show-message':matGroup,'schare-screen-hide-message':!matGroup}"
-    *ngIf="screenVar == 'sharescreen'">Your screen is being shared</ion-badge>
+    *ngIf="screenVar == 'sharescreen'">Your screen is being shared</ion-badge> -->
 
 
 
@@ -11,11 +19,11 @@
     <ion-spinner name="dots" color="secondary"></ion-spinner>
   </ion-fab>
 
-  <ion-fab vertical="top" horizontal="start" slot="fixed" *ngIf="isSpeaker" [hidden]="isLoading">
+  <!-- <ion-fab vertical="top" horizontal="start" slot="fixed" *ngIf="isSpeaker" [hidden]="isLoading">
     <ion-fab-button (click)="presentParticipantSetting()" color="warning" size="small">
       <ion-icon name="people" mode="ios"></ion-icon>
     </ion-fab-button>
-  </ion-fab>
+  </ion-fab> -->
 
   <ion-fab vertical="bottom" horizontal="center" slot="fixed" activated="true" [hidden]="isLoading">
     <ion-fab-button disabled="true"></ion-fab-button>
@@ -25,12 +33,13 @@
         (click)="showPanelModal('message')">
         <ion-icon name="chatboxes" [color]="newMessage ? 'warning': ''"></ion-icon>
       </ion-fab-button>
+
       <!-- <ion-fab-button show="true" size="small" [color]="panelModal === 'info' ? 'medium' : 'dark'"
         (click)="showPanelModal('info')">
         <ion-icon name="information"></ion-icon>
 
       </ion-fab-button> -->
-      <ion-fab-button size="small" [color]="recordScreen === true ? 'dark ' : 'medium '"
+      <ion-fab-button size="small" *ngIf='user.type == "coach"' [color]="recordScreen === true ? 'dark ' : 'medium '"
         (click)="startStopRecord(recordScreen)">
         <ion-icon name="radio-button-on" [color]="recordScreen === true ? 'danger' : 'success'"></ion-icon>
       </ion-fab-button>
@@ -38,9 +47,13 @@
 
     <ion-fab-list side="start">
 
+      <ion-fab-button size="small" *ngIf="!isSpeaker" [color]="recordScreen === true ? 'dark ' : 'medium '"
+        (click)="startStopRecord(recordScreen)">
+        <ion-icon name="radio-button-on" [color]="recordScreen === true ? 'danger' : 'success'"></ion-icon>
+      </ion-fab-button>
 
-      <ion-fab-button show="true" [disabled]="!localStream?.video?.control" [hidden]="!localStream?.video?.muted"
-        (click)="streamMuteUnmute('video')" color="dark" size="small">
+      <ion-fab-button *ngIf="isSpeaker" show="true" [disabled]="!localStream?.video?.control"
+        [hidden]="!localStream?.video?.muted" (click)="streamMuteUnmute('video')" color="dark" size="small">
         <ion-icon name="videocam" size="small"></ion-icon>
         <ion-icon name="remove" size="large" color="dark"
           style="position: absolute; transform: rotate(45deg) perspective(0); bottom: 5px;"></ion-icon>
@@ -49,12 +62,12 @@
         <ion-icon name="remove" size="large" style="position: absolute; transform: rotate(45deg) perspective(0);">
         </ion-icon>
       </ion-fab-button>
-      <ion-fab-button show="true" [hidden]="localStream?.video?.muted" (click)="streamMuteUnmute('video')" color="dark"
-        size="small">
+      <ion-fab-button *ngIf="isSpeaker" show="true" [hidden]="localStream?.video?.muted"
+        (click)="streamMuteUnmute('video')" color="dark" size="small">
         <ion-icon name="videocam"></ion-icon>
       </ion-fab-button>
 
-      <ion-fab-button show="true" (click)="streamMuteUnmute('audio')" color="dark" size="small">
+      <ion-fab-button show="true" *ngIf="isSpeaker" (click)="streamMuteUnmute('audio')" color="dark" size="small">
         <ion-icon [name]="localStream?.audio?.muted ? 'mic-off' : 'mic'"></ion-icon>
       </ion-fab-button>
     </ion-fab-list>

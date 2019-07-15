@@ -25,7 +25,7 @@ export class TimerService {
 
 	private createTimeObject(date: Date): Time {
 	    let time: Time = {days: 0, hours: 0, minutes: 0, seconds: 0, text: ''};
-			time.text = moment(date).fromNow();
+			time.text = moment(date).tz('Australia/Sydney').fromNow();
 
 	    return time;
 	}
