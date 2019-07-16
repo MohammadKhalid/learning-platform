@@ -27,7 +27,8 @@ export class LiveGroupTrainingFormPage implements OnInit {
 	sessionData: any;
 	participants: any;
 	defaultDate = new Date().toISOString().slice(0, 10);
-	defaultDateTime: string = moment("09:00", "hh:mm a").format();
+	defaultDateTime: string = moment("09:00", "HH:mm").toString()
+	// defaultDateTime: string = "Tue Jul 16 2019 09:00:00"
 	action: string;
 	timeZones: any = [];
 	defaultTimezone: string;
@@ -43,23 +44,23 @@ export class LiveGroupTrainingFormPage implements OnInit {
 		private authService: AuthenticationService
 	) {
 		this.sessionData = this.authService.getSessionData();
-
-		const localTimeZone = moment.tz.guess();
+		// alert(moment("09:00", "HH:mm").toString())
+		// const localTimeZone = moment.tz.guess();
+		debugger
 		// this.defaultTimezone = "(GMT" + moment.tz(localTimeZone).format('Z') + ")" + localTimeZone;
-		this.defaultTimezone = localTimeZone;
-		console.log('DEFAULT TZ', this.defaultTimezone);
+		// this.defaultTimezone = localTimeZone;
+		// console.log('DEFAULT TZ', this.defaultTimezone);
+		// moment.tz.setDefault(localTimeZone)
+		// // init timezone
+		// const timeZones = moment.tz.names();
+		// this.timeZones = timeZones;
 
-		// init timezone
-		const timeZones = moment.tz.names();
-		this.timeZones = timeZones;
-
-		console.log('TZ', timeZones);
+		// console.log('TZ', timeZones);
 	}
 
 	ngOnInit() {
-		this.initForm();
-
 		// load
+		this.initForm();
 		this.activatedRoute.params.subscribe((param) => {
 			this.routeParam = param;
 
@@ -107,6 +108,11 @@ export class LiveGroupTrainingFormPage implements OnInit {
 		});
 	}
 
+	// ngAfterViewInit(){
+	// 	debugger
+	// 	this.form.get('time').setValue(this.defaultDateTime)
+	// }
+
 	initForm() {
 		// setup form
 		this.form = this.formBuilder.group({
@@ -123,9 +129,9 @@ export class LiveGroupTrainingFormPage implements OnInit {
 
 	save() {
 		let time = this.form.get('time').value
-
 		time = moment(time).format('HH:mm')
 		this.form.get('time').setValue(time)
+		debugger
 		if (this.action === 'new')
 			this.restApi.post(this.urlEndPoint + 's', this.form.value).subscribe((resp: any) => {
 				this.saveCallback(resp);

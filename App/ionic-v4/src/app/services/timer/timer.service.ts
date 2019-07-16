@@ -21,17 +21,31 @@ export interface Time {
 })
 export class TimerService {
 
-	constructor() {}
+	constructor() {
 
-	private createTimeObject(date: Date): Time {
-	    let time: Time = {days: 0, hours: 0, minutes: 0, seconds: 0, text: ''};
-			time.text = moment(date).tz('Australia/Sydney').fromNow();
-
-	    return time;
 	}
 
-	timer(date: Date, intervalAmount: number = 1000): Observable<Time> {
-		return interval(intervalAmount).map(() => this.createTimeObject(date));
+	private createTimeObject(date: Date, timezone) {
+		let time = { days: 0, hours: 0, minutes: 0, seconds: 0, text: '', date: '' }
+		if (timezone == moment.tz.guess()) {
+			time.text = moment(date, "HH:mm").fromNow();
+		} else {
+			let now = moment.utc();
+			let currentTimeZoneOff = moment.tz.zone(moment.tz.guess()).offset(now);
+			let serverTimeZoneOff = moment.tz.zone(timezone).offset(now);
+			let difference = (serverTimeZoneOff - currentTimeZoneOff )/60
+			time.text = moment(date,"YYYY-MM-DD HH:mm").add(difference,'hours').fromNow();
+		}
+		debugger
+		return time;
+	}
+
+	// timer(date: Date, intervalAmount: number = 1000): Observable<Time> {
+	// 	return interval(intervalAmount).map(() => this.createTimeObject(date));
+	// }
+
+	timer(date, timezone, intervalAmount: number = 1000) {
+		return interval(intervalAmount).map(() => this.createTimeObject(date, timezone));
 	}
 
 	countDownTimer(timeLeft: number = 30, intervalAmount: number = 1000) {

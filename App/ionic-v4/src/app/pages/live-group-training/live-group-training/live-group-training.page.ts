@@ -40,7 +40,7 @@ export class LiveGroupTrainingPage implements OnInit {
 	) {
 		// set query params
 		this.setQueryParamsDefault();
-
+		// moment.tz.setDefault('Australia/Sydney')
 		// get user data
 		this.sessionData = this.authService.getSessionData();
 	}
@@ -122,7 +122,8 @@ export class LiveGroupTrainingPage implements OnInit {
 			// set time left timer
 			for (let item of resp.items) {
 				// time left counter
-				item['timeLeft'] = this.timerService.timer(new Date(moment(item.date + ' ' + item.time).tz('Australia/Sydney').toISOString()));
+				// item['timeLeft'] = this.timerService.timer(moment(item.date + ' ' + item.time).tz('Australia/Sydney').toISOString());
+				item['timeLeft'] = this.timerService.timer(item.date+" "+item.time,item.timezone);
 			}
 
 			// push items
@@ -312,5 +313,14 @@ export class LiveGroupTrainingPage implements OnInit {
 	beautifyDate(date: string, format: string = 'MMMM D, YYYY', timezone?: string) {
 		return timezone && moment.tz.names().includes(timezone) ? moment(moment.tz(date, 'YYYY-MM-DD HH:mm', timezone).utc().toISOString()).format(format) : moment(date).format(format);
 		// return moment(date).tz(DEFAULT_TIMEZONE).format(format);
+	}
+
+	makeDate(date,format,timezone){
+		// if (timezone == moment.tz.guess()) {
+		// 	return moment(date).format(format)
+		// }else{
+
+		// }
+		return moment(date).format(format)
 	}
 }

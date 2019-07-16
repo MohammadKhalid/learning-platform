@@ -11,8 +11,9 @@ const create = async function(req, res){
 
     // speaker id
     item_info.speakerId = user.id;
-
+    // console.log("before",req.body)
     [err, item] = await to(LiveGroupTraining.create(item_info));
+    // console.log("after",item)
     if(err) return ReE(res, err, 422);
 
     // participants

@@ -57,14 +57,15 @@
 
 		<ion-item>
 			<ion-icon size="small" slot="start" name="calendar" mode="ios"></ion-icon>
-			<ion-label><h3>{{beautifyDate(item?.date + ' ' + item?.time, 'ddd, MMM. DD, YYYY', item?.timezone || null)}}</h3></ion-label>
+			<!-- <ion-label><h3>{{beautifyDate(item?.date + ' ' + item?.time, 'ddd, MMM. DD, YYYY', item?.timezone || null)}}</h3></ion-label> -->
+			<ion-label><h3>{{makeDate(item?.date + ' ' + item?.time,'ddd, MMM. DD, YYYY',item?.timezone)}}</h3></ion-label>
 			<ion-note slot="end" mode="md">Date</ion-note>
 		</ion-item>
 
 		<ion-item>
 			<ion-icon size="small" slot="start" name="time" mode="md"></ion-icon>
 			<!-- <ion-label><h3>{{beautifyDate(item?.date + ' ' + item?.time, 'h:mm A', item?.timezone || null)}}</h3></ion-label> -->
-			<ion-label><h3>{{item.time}}</h3></ion-label>
+			<ion-label><h3>{{makeDate(item?.date + ' ' + item?.time,'HH:mm',item?.timezone)}} - {{item?.timezone}}</h3></ion-label>
 			<ion-note slot="end" mode="md">Time</ion-note>
 		</ion-item>
 	
