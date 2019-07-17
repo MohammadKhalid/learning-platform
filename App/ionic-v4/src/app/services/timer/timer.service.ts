@@ -31,12 +31,12 @@ export class TimerService {
 			time.text = moment(date, "HH:mm").fromNow();
 		} else {
 			let now = moment.utc();
-			let currentTimeZoneOff = moment.tz.zone(moment.tz.guess()).offset(now);
-			let serverTimeZoneOff = moment.tz.zone(timezone).offset(now);
-			let difference = (serverTimeZoneOff - currentTimeZoneOff )/60
-			time.text = moment(date,"YYYY-MM-DD HH:mm").add(difference,'hours').fromNow();
+			let currentTimeZoneOff = moment.tz.zone(moment.tz.guess()).offset(Number(now));
+			let serverTimeZoneOff = moment.tz.zone(timezone).offset(Number(now));
+			let difference = (serverTimeZoneOff - currentTimeZoneOff) / 60
+			time.text = moment(date, "YYYY-MM-DD HH:mm").add(difference, 'hours').fromNow();
 		}
-		debugger
+		
 		return time;
 	}
 
