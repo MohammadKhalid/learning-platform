@@ -10,6 +10,8 @@ import * as moment from 'moment';
 import { SimplePdfViewerComponent, SimpleProgressData } from 'simple-pdf-viewer';
 import recordRTC from 'recordrtc';
 import { async } from 'rxjs/internal/scheduler/async';
+import { Platform } from '@ionic/angular';
+
 
 @Component({
 	selector: 'conference',
@@ -90,7 +92,8 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		private elementRenderer: Renderer2,
 		private actionSheetCtrl: ActionSheetController,
 		private alertCtrl: AlertController,
-		private toastController: ToastController
+		private toastController: ToastController,
+		private plt : Platform
 	) {
 		// nav data
 		const navigation = this.router.getCurrentNavigation();
@@ -102,6 +105,11 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 		this.audioPlay.src = "./assets/message-sound/graceful.mp3";
 		this.audioPlay.load();
+		 if(this.plt.is('android')){
+			 alert('isAndriod')
+		 }else{
+			 alert('normal device')
+		 }
 
 		// rtc connection
 		// this.screenShareMessage()
