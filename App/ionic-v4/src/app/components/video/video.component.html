@@ -1,12 +1,17 @@
-<ion-content padding>
 <ion-card ion-padding>
     <form [formGroup]="addVideoForm" (ngSubmit)="addVideo()">
 
         <ion-list class="ion-padding">
           <ion-item lines="inset">
-            <ion-label position="floating"> Title Of Certificate : <ion-text color="danger">*</ion-text>
+            <ion-label position="floating">URL<ion-text color="danger">*</ion-text>
             </ion-label>
-            <ion-input type="input" formControlName='title' placeholder="Enter Title"></ion-input>
+            <ion-input type="input" formControlName='url' placeholder="Enter Title"></ion-input>
+          </ion-item>
+          
+          <ion-item lines="inset">
+            <ion-label position="floating">Experience<ion-text color="danger">*</ion-text>
+            </ion-label>
+            <ion-input type="input" formControlName='experience' placeholder="Enter Experience"></ion-input>
           </ion-item>
     
           <ion-item lines="inset">
@@ -25,4 +30,3 @@
       </form>
 </ion-card>
   
-</ion-content>

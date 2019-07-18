@@ -16,11 +16,13 @@ export class VideoComponent implements OnInit {
 
   initForm() {
     this.addVideoForm = this.formBuilder.group({
-      title: new FormControl('', Validators.compose([
-        Validators.required
+      url: new FormControl('', Validators.compose([
+        Validators.required,
+        Validators.pattern('^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$')
       ])),
-      categoryId: new FormControl('', Validators.compose([
-        Validators.required
+      experience: new FormControl('', Validators.compose([
+        Validators.required,
+        Validators.pattern('^[0-9]*$')
       ])),
       description: new FormControl(''),
     });

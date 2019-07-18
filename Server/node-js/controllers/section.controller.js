@@ -20,7 +20,7 @@ module.exports.create = create;
 const getSections = async (req, res) => {
     let { courseId } = req.params
     const section = await Section.findAll({
-        attributes: [['id', 'sectionId'], 'title', 'description', 'totalExperience'],
+        attributes: ['id', 'title', 'description', 'totalExperience'],
         include: [{
             model: Course,
             as: "course",

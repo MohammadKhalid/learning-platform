@@ -43,12 +43,7 @@ export class AddmodulePage implements OnInit {
       this.data = res.data;
     }).catch(err => {
 
-
     })
-
-
-    
-    
 
   }
   
@@ -63,12 +58,8 @@ export class AddmodulePage implements OnInit {
   }
 
   addModule() {
-
-
-
-
     this.service.postPromise('sections', this.forms.value).then(res => {
-
+      debugger;
       this.data.push(res.data);
       this.addModelbutton = !this.addModelbutton;
       this.moduleDetail = !this.moduleDetail
