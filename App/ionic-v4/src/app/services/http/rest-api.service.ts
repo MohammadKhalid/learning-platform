@@ -213,6 +213,7 @@ export class RestApiService {
 			{id: 0 , value: 'video'},
 			{id: 1 , value: 'Text'},
 			{id: 2 , value: 'Quiz'},
+			{id: 3 , value: 'Recources'},
 		]
 	}
 }
