@@ -1,80 +1,67 @@
 <ion-header no-border>
     <ion-toolbar color="primary">
-     
-  
-      <ion-title>Add Module</ion-title>
-      <ion-buttons slot="start">
-          <ion-back-button defaultHref="/certification/add"></ion-back-button>
+
+
+        <ion-title>Add Module</ion-title>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/certification/add"></ion-back-button>
 
         </ion-buttons>
     </ion-toolbar>
-  </ion-header>
-  
-  <ion-content padding>
-  
- 
+</ion-header>
+
+<ion-content padding>
 
 
 
- 
-    <div class="card-main"  *ngFor="let x of data"  >
-        
+
+
+
+    <div class="card-main" *ngFor="let x of data">
+
 
         <ion-card>
-          <ion-item lines="none" class="item" no-padding  class="itemN">
-           
-            <ion-label class="content" padding>
-               
-              <div class="header">
-               
-                <h3 class="title">{{x.title | titlecase}}  </h3>
-                <div class="xp">
-                  <h3>
-                    {{x.totalExperience}}XP
-                  </h3>
-                </div>
-              </div>
-             
-                 <div class="mainDiv">
-              <div class="description"
-                style="-webkit-box-orient: vertical;box-orient: vertical;-moz-box-orient: vertical;">
-                <p>
-                  {{x.description}}
-                </p>
-               
-                </div>
-                <div class="circle">
-                    <circle-progress
-                    [percent] = "50"
-                    [maxPercent] = "x.totalExperience"
-                    [radius]="30"
-                    [showTitle]="false"
-                    [showSubtitle]="false"
-                    [outerStrokeWidth]="10"
-                    [innerStrokeWidth]="10"
-                    [outerStrokeColor]="'#0065b3'"
-                    [innerStrokeColor]="'#d6d7db'"
-                    [animation]="true"
-                    [animationDuration]="100"
+            <ion-item lines="none" class="item" no-padding class="itemN">
 
-                  ></circle-progress>
-                </div>
-               
-              </div>
-              
-           
+                <ion-label class="content" padding>
+
+                    <div class="header">
+
+                        <h3 class="title">{{x.title | titlecase}} </h3>
+                        <div class="xp">
+                            <h3>
+                                {{x.totalExperience}}XP
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div class="mainDiv">
+                        <div class="description" style="-webkit-box-orient: vertical;box-orient: vertical;-moz-box-orient: vertical;">
+                            <p>
+                                {{x.description}}
+                            </p>
+
+                        </div>
+                        <div class="circle">
+                            <circle-progress [percent]="50" [maxPercent]="x.totalExperience" [radius]="30" [showTitle]="false" [showSubtitle]="false" [outerStrokeWidth]="10" [innerStrokeWidth]="10" [outerStrokeColor]="'#0065b3'" [innerStrokeColor]="'#d6d7db'" [animation]="true"
+                                [animationDuration]="100"></circle-progress>
+                        </div>
+
+                    </div>
 
 
-              <div class="btnbtn">
-                  <ion-button  size="small" class="ionBtn" fill="outline"   >Start Lesson</ion-button>
-                 
-              </div>
-            </ion-label>
-          </ion-item>
-  
+
+
+                    <div class="btnbtn">
+                        <ion-button size="small" class="ionBtn" fill="outline">Start Lesson</ion-button>
+
+                    </div>
+                </ion-label>
+            </ion-item>
+
         </ion-card>
- 
-      </div>
+
+    </div>
 
 
 
@@ -91,47 +78,50 @@
 
 
 
-      <div *ngIf="addModelbutton" class="container4" (click)="loadmoduledetail()">
-          <span>+ Add Module</span>
-          </div>
-  
-   <form [formGroup]="forms"   (ngSubmit)="addModule()">
-    
-   <ion-list class="ion-padding" *ngIf="moduleDetail">
-    <ion-item lines="inset">
-      <ion-label position="floating"> Module Title <ion-text color="danger">*</ion-text>
-      </ion-label>
-      <ion-input type="input" formControlName="title" placeholder="placeholder"></ion-input>
-    </ion-item>
+    <div *ngIf="addModelbutton" [ngClass]="{'container4':data.length == 0,'container3':data.length > 0}" (click)="loadmoduledetail()">
+        <span>+ Add Module</span>
+    </div>
 
-    <ion-item lines="inset">
-      <ion-label position="floating"> Description <ion-text color="danger">*</ion-text>
-      </ion-label>
-      <ion-input type="input" formControlName="description" placeholder="placeholder"></ion-input>
-    </ion-item>
+    <form [formGroup]="forms" (ngSubmit)="addModule()">
 
-    <ion-item lines="inset">
-      <ion-label position="floating"> Total Experience <ion-text color="danger">*</ion-text>
-      </ion-label>
-      <ion-input type="input" formControlName="totalExperience" placeholder="placeholder"></ion-input>
-    </ion-item>
+        <ion-list class="ion-padding" *ngIf="moduleDetail">
+            <ion-item lines="inset">
+                <ion-label position="floating"> Module Title
+                    <ion-text color="danger">*</ion-text>
+                </ion-label>
+                <ion-input type="input" formControlName="title" placeholder="placeholder"></ion-input>
+            </ion-item>
 
+            <ion-item lines="inset">
+                <ion-label position="floating"> Description
+                    <ion-text color="danger">*</ion-text>
+                </ion-label>
+                <ion-textarea placeholder="placeholder" formControlName='description'></ion-textarea>
+            </ion-item>
 
-
-
-
-
-
-    <ion-item lines="none" class="ion-float-right ion-padding-top">
-      <ion-button type="submit"  size="md">Save and Next</ion-button>
-    </ion-item>
-  </ion-list>
-
-</form>
-<!-- </ion-grid> -->
+            <ion-item lines="inset">
+                <ion-label position="floating"> Total Experience
+                    <ion-text color="danger">*</ion-text>
+                </ion-label>
+                <ion-input type="input" formControlName="totalExperience" placeholder="placeholder"></ion-input>
+            </ion-item>
 
 
 
 
 
-  </ion-content>
+
+
+            <ion-item lines="none" class="ion-float-right ion-padding-top">
+                <ion-button type="submit" size="md">Save and Next</ion-button>
+            </ion-item>
+        </ion-list>
+
+    </form>
+    <!-- </ion-grid> -->
+
+
+
+
+
+</ion-content>
