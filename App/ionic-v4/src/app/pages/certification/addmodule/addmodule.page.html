@@ -20,7 +20,7 @@
     <div class="card-main" *ngFor="let x of data">
 
 
-        <ion-card>
+        <ion-card [routerLink]="['/certification/sections',x.sectionId]">
             <ion-item lines="none" class="item" no-padding class="itemN">
 
                 <ion-label class="content" padding>
@@ -113,7 +113,8 @@
 
 
             <ion-item lines="none" class="ion-float-right ion-padding-top">
-                <ion-button type="submit" size="md">Save and Next</ion-button>
+                <ion-button size="md" (click)="Cancel()">Cancel </ion-button>
+                <ion-button type="submit" size="md" [disabled]="!forms.valid">Save </ion-button>
             </ion-item>
         </ion-list>
 
