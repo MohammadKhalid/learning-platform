@@ -20,13 +20,14 @@ import { CoachProfileComponent } from './profile/coach-profile/coach-profile.com
 import { CompanyProfileComponent } from './profile/company-profile/company-profile.component';
 import { MatTabsModule, MatSelectModule, MatCardModule } from '@angular/material';
 import { ErrorsComponent } from './errors/errors.component';
-import {MatButtonModule} from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
 // import {MatSelectModule} from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FilterComponent } from './common/filter/filter.component';
 import { CartificateCardComponent } from './common/cartificate-card/cartificate-card.component';
 import { DragScrollModule } from 'ngx-drag-scroll';
 
+import { LazyLoadImageModule, intersectionObserverPreset } from 'ng-lazyload-image';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -42,7 +43,10 @@ import { DragScrollModule } from 'ngx-drag-scroll';
 		MatSelectModule,
 		MatCardModule,
 		MatButtonModule,
-		DragScrollModule
+		DragScrollModule,
+		LazyLoadImageModule.forRoot({
+			preset: intersectionObserverPreset // <-- tell LazyLoadImage that you want to use IntersectionObserver
+		})
 	],
 	declarations: [
 		ErrorsComponent,
@@ -72,7 +76,7 @@ import { DragScrollModule } from 'ngx-drag-scroll';
 		CompanyProfileComponent,
 		FilterComponent,
 		CartificateCardComponent
-	
+
 	]
 })
 export class ComponentsModule { }

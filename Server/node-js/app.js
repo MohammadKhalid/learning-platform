@@ -38,6 +38,7 @@ if(CONFIG.app === 'dev') {
 app.use(cors());
 
 app.use('/v1', v1);
+app.use('/uploads',express.static('uploads'));
 
 app.use('/', function(req, res){
 	res.statusCode = 200;//send the appropriate status code
