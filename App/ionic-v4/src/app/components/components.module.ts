@@ -28,6 +28,7 @@ import { CartificateCardComponent } from './common/cartificate-card/cartificate-
 import { DragScrollModule } from 'ngx-drag-scroll';
 
 import { LazyLoadImageModule, intersectionObserverPreset } from 'ng-lazyload-image';
+import { VideoComponent } from './video/video.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -60,7 +61,8 @@ import { LazyLoadImageModule, intersectionObserverPreset } from 'ng-lazyload-ima
 		CoachProfileComponent,
 		CompanyProfileComponent,
 		FilterComponent,
-		CartificateCardComponent
+		CartificateCardComponent,
+		VideoComponent
 	],
 	entryComponents: [
 		MediaComponent
@@ -75,7 +77,8 @@ import { LazyLoadImageModule, intersectionObserverPreset } from 'ng-lazyload-ima
 		CoachProfileComponent,
 		CompanyProfileComponent,
 		FilterComponent,
-		CartificateCardComponent
+		CartificateCardComponent,
+		VideoComponent
 
 	]
 })
