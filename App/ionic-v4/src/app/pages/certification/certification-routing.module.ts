@@ -9,14 +9,7 @@ const routes: Routes = [
   { path: 'add', loadChildren: './add/add.module#AddPageModule' },
   { path: 'addmodule/:id', loadChildren: './addmodule/addmodule.module#AddmodulePageModule' },
   { path: 'moduledetail', loadChildren: './moduledetail/moduledetail.module#ModuledetailPageModule' },
-  // { path: 'sections', loadChildren: './sections/sections.module#SectionsPageModule'},
-  // children:[{
-  // { path: 'resources', loadChildren: './sections/resources/resources.module#ResourcesPageModule'},
-  // { path: 'concepts', loadChildren: './sections/concepts/concepts.module#ConceptsPageModule' },
-
-             
-  // }] },
-
+  { path: 'sections', loadChildren: './sections/sections.module#SectionsPageModule'},
 
 ];
 
