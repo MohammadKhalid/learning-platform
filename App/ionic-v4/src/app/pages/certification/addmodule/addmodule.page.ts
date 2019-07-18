@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormGroup, FormArray, FormControl, FormBuilder } from '@angular/forms';
+import { FormGroup, FormArray, FormControl, FormBuilder,Validators } from '@angular/forms';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
 import { NotificationService } from 'src/app/services/notification/notification.service';
 
@@ -30,7 +30,10 @@ export class AddmodulePage implements OnInit {
     this.forms = this.fb.group({
       title: new FormControl(''),
       description: new FormControl(''),
-      totalExperience: new FormControl(''),
+      totalExperience: new FormControl('',Validators.compose([
+        Validators.required,
+        Validators.pattern('^[0-9]*$')
+      ])),
       courseId: this.id
     })
 
@@ -44,12 +47,15 @@ export class AddmodulePage implements OnInit {
     })
 
 
-
-
-
+    
+    
 
   }
-
+  
+  Cancel(){
+    this.addModelbutton = !this.addModelbutton;
+    this.moduleDetail = !this.moduleDetail;
+  }
   loadmoduledetail() {
     this.addModelbutton = !this.addModelbutton;
     this.moduleDetail = !this.moduleDetail;
