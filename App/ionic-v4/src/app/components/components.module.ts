@@ -29,6 +29,9 @@ import { DragScrollModule } from 'ngx-drag-scroll';
 
 import { LazyLoadImageModule, intersectionObserverPreset } from 'ng-lazyload-image';
 import { VideoComponent } from './video/video.component';
+import { FileUploadModule } from 'ng2-file-upload';
+import { DropzoneComponent } from './common/dropzone/dropzone.component';
+import { ResourcesComponent } from './resources/resources.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -45,6 +48,7 @@ import { VideoComponent } from './video/video.component';
 		MatCardModule,
 		MatButtonModule,
 		DragScrollModule,
+		FileUploadModule,
 		LazyLoadImageModule.forRoot({
 			preset: intersectionObserverPreset // <-- tell LazyLoadImage that you want to use IntersectionObserver
 		})
@@ -62,7 +66,9 @@ import { VideoComponent } from './video/video.component';
 		CompanyProfileComponent,
 		FilterComponent,
 		CartificateCardComponent,
-		VideoComponent
+		VideoComponent,
+		DropzoneComponent,
+		ResourcesComponent,
 	],
 	entryComponents: [
 		MediaComponent
@@ -78,8 +84,9 @@ import { VideoComponent } from './video/video.component';
 		CompanyProfileComponent,
 		FilterComponent,
 		CartificateCardComponent,
-		VideoComponent
-
+		VideoComponent,
+		DropzoneComponent,
+		ResourcesComponent,
 	]
 })
 export class ComponentsModule { }

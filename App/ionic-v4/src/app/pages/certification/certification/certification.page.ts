@@ -17,7 +17,7 @@ export class CertificationPage implements OnInit {
   ) {
 
     this.user = this.authService.getSessionData().user;
-   }
+  }
 
   ngOnInit() {
     let obj = {
@@ -29,8 +29,7 @@ export class CertificationPage implements OnInit {
   }
   searchByFilterEvent(obj) {
     this.restService.get(`courses`, obj).subscribe((resp: any) => {
-     if (resp.data) this.courses = resp.data;
-
+      if (resp.data) this.courses = resp.data;
     });
   }
 }
