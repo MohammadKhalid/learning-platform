@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormArray, FormControl, FormBuilder } from '@angular/forms';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
+import { NotificationService } from 'src/app/services/notification/notification.service';
 
 
 @Component({
@@ -15,8 +16,12 @@ export class AddmodulePage implements OnInit {
   moduleDetail: boolean = false;
   id: any;
 
-  constructor(private router: Router, private fb: FormBuilder, private actroute: ActivatedRoute, private service: RestApiService) { }
-  data: any ;
+  constructor(private router: Router, 
+    private fb: FormBuilder,
+     private actroute: ActivatedRoute,
+      private service: RestApiService,
+      private notifictation : NotificationService) { }
+  data: any;
   serverUrl: string = "./assets/img/";
   forms: FormGroup
   ngOnInit() {
@@ -32,7 +37,7 @@ export class AddmodulePage implements OnInit {
     console.log(this.actroute.snapshot.paramMap.get('id'));
 
     this.service.getPromise('sections', this.id).then(res => {
-      this.data=res.data;
+      this.data = res.data;
     }).catch(err => {
 
 
@@ -53,17 +58,18 @@ export class AddmodulePage implements OnInit {
 
   addModule() {
 
-    debugger
+
 
 
     this.service.postPromise('sections', this.forms.value).then(res => {
-      debugger;
-      this.data.push(res.data); 
-this.addModelbutton = !this.addModelbutton;
-this.moduleDetail = !this.moduleDetail
+
+      this.data.push(res.data);
+      this.addModelbutton = !this.addModelbutton;
+      this.moduleDetail = !this.moduleDetail
+      this.notifictation.showMsg("Successfully Added");
 
     }).catch(res => {
-
+          this.notifictation.showMsg('Error to Add ');
     })
 
   }

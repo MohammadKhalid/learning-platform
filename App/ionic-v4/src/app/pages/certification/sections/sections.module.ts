@@ -4,26 +4,22 @@ import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
-import {MatSidenavModule} from '@angular/material/sidenav';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 import { SectionsPage } from './sections.page';
-import { ResourcesPage } from './resources/resources.page';
-import { ConceptsPage } from './concepts/concepts.page';
+import { MatSelectModule } from '@angular/material';
+
 
 const routes: Routes = [
   {
     path: '',
     component: SectionsPage,
-    // children:[{
-    //   path:'resources',
-    //   component:ResourcesPage,
-    // },
-    //   {
-    //     path: 'concepts',
-    //     component:ConceptsPage,
-       
-    //   }
-    // ]
+
+    children: [
+      { path: 'resources', loadChildren: './resources/resources.module#ResourcesPageModule' },
+      { path: '', loadChildren: './concepts/concepts.module#ConceptsPageModule' },
+      { path: 'concepts', loadChildren: './concepts/concepts.module#ConceptsPageModule' },
+    ]
   }
 ];
 
@@ -32,14 +28,14 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
+    MatSelectModule,
     MatSidenavModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [SectionsPage,
-  ResourcesPage,ConceptsPage]
+  declarations: [SectionsPage]
 })
 export class SectionsPageModule {
 
 
- 
+
 }

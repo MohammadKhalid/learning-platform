@@ -207,4 +207,12 @@ export class RestApiService {
 	setSessionData(data) {
 		this.sessionData = data;
 	}
+
+	getConceptsOptins(){
+		return [
+			{id: 0 , value: 'video'},
+			{id: 1 , value: 'Text'},
+			{id: 2 , value: 'Quiz'},
+		]
+	}
 }
