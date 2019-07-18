@@ -1,7 +1,7 @@
 <drag-scroll drag-scroll-y-disabled="true" scroll-x-wheel-enabled="true" style="height: 132px;">
   <div class="card-main" *ngFor="let x of courses" drag-scroll-item>
 
-    <ion-card>
+    <ion-card >
       <ion-item lines="none" class="item" no-padding>
         <ion-thumbnail class="left-img" slot="start">
           <img [defaultImage]="defaultImage" [lazyLoad]="serverUrl+x.image" [errorImage]="imageToShowOnError">

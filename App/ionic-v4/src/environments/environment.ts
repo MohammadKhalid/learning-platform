@@ -24,4 +24,7 @@ export const RTC_SIGNALLING_SERVER_URL = 'https://thrive19.com:9001/';
 // export const SERVER_URL = 'https://api.thrive19.com/v1/';
 // export const SOCKET_URL = 'https://api.thrive19.com/';
 // export const RTC_SIGNALLING_SERVER_URL = 'https://thrive19.com:9001/';
+
+export const ICE_SERVERS = null;
+export const PREFIX_LGT = 'LGT';
 export const DEFAULT_TIMEZONE = 'Australia/Sydney';
