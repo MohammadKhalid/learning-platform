@@ -7,22 +7,29 @@
 	
 	<ion-title text-capitalize>{{routeData.singular}} <span *ngIf="routeData?.type !== 'profile'">Detail</span></ion-title>
 		
-	<!-- <ion-buttons slot="end" *ngIf="sessionData.user.type === 'admin' || sessionData.user.id === item?.id">
+	<ion-buttons slot="end" *ngIf="sessionData.user.type === 'admin' || sessionData.user.type === 'client' || sessionData.user.id === item?.id">
 		<ion-button strong="true" (click)="presentPageAction()"><ion-icon slot="icon-only" name="more"></ion-icon></ion-button>
-	</ion-buttons> -->
+	</ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content *ngIf="routeData?.type === 'profile'">
 	<student-profile *ngIf="sessionData?.user?.type === 'student'"></student-profile>
 	<coach-profile *ngIf="sessionData?.user?.type === 'coach'"></coach-profile>
-	<company-profile *ngIf="sessionData?.user?.type === 'company'"></company-profile>
+	<client-profile *ngIf="sessionData?.user?.type === 'client'"></client-profile>
 	<profile *ngIf="sessionData?.user?.type === 'admin'"></profile>
 </ion-content>
 
 <ion-content *ngIf="routeData?.type !== 'profile'">
 	<student-profile *ngIf="routeData?.type === 'student'"></student-profile>
 	<coach-profile *ngIf="routeData?.type === 'coach'"></coach-profile>
-	<company-profile *ngIf="routeData?.type === 'company'"></company-profile>
+	<client-profile *ngIf="routeData?.type === 'client'"></client-profile>
 	<profile *ngIf="routeData?.type === 'admin'"></profile>
 </ion-content>
+
+<!-- <ion-content *ngIf="routeData?.type !== 'profile'">
+	<app-student-dashboard *ngIf="routeData?.type === 'student'"></app-student-dashboard>
+	<app-coach-dashboard *ngIf="routeData?.type === 'coach'"></app-coach-dashboard>
+	<app-client-dashboard *ngIf="routeData?.type === 'client'"></app-client-dashboard>
+	<app-dashboard *ngIf="routeData?.type === 'admin'"></app-dashboard>
+</ion-content> -->

@@ -26,6 +26,7 @@ export class AppComponent {
   navRouterStartEvent: any;
   loginUrl: string = '/login';
   defaultUrl: string = '/dashboard';
+  disabledItems = [ '/certification', '/report' ];
   public sockets: io;
 
 
@@ -36,7 +37,7 @@ export class AppComponent {
     menu: [
       { title: 'Practice Time', url: '/practice-time', icon: 'fitness', icon_mode: 'ios' },
       { title: 'Show Time', url: '/show-time', icon: 'glasses', icon_mode: 'ios' },
-      { title: 'Certification', url: '/certification', icon: 'ribbon', icon_mode: 'ios' }
+      { title: 'Certification', url: '#', icon: 'ribbon', icon_mode: 'ios' }
     ]
   };
 
@@ -56,7 +57,7 @@ export class AppComponent {
       title: 'My Account'
     },
     menu: [
-      { title: 'Reports', url: '/report', icon: 'stats', icon_mode: 'ios' },
+      { title: 'Reports', url: '#', icon: 'stats', icon_mode: 'ios' },
       { title: 'Profile', url: '/profile', icon: 'contact', icon_mode: 'ios' }
     ]
   };
@@ -67,6 +68,7 @@ export class AppComponent {
         header: false,
         menu: [
           { title: 'Dashboard', url: '/dashboard', icon: 'apps', icon_mode: 'md' },
+          { title: 'Categories', url: '/category', icon: 'list', icon_mode: 'ios' },
           { title: 'Topics', url: '/topic', icon: 'book', icon_mode: 'ios' },
           { title: 'Coaches', url: '/coach', icon: 'contacts', icon_mode: 'ios' }
         ]
@@ -82,7 +84,7 @@ export class AppComponent {
           { title: 'Dashboard', url: '/dashboard', icon: 'apps', icon_mode: 'md' },
           { title: 'Categories', url: '/category', icon: 'list', icon_mode: 'ios' },
           { title: 'Topics', url: '/topic', icon: 'book', icon_mode: 'ios' },
-          { title: 'Level Settings', url: '/level-setting', icon: 'book', icon_mode: 'ios' }
+          { title: 'Companies', url: '/company', icon: 'business', icon_mode: 'ios' }
         ]
       },
       {
@@ -90,9 +92,9 @@ export class AppComponent {
           title: 'Users'
         },
         menu: [
+          { title: 'Clients', url: '/client', icon: 'business', icon_mode: 'md' },
           { title: 'Students', url: '/student', icon: 'school', icon_mode: 'ios' },
-          { title: 'Coaches', url: '/coach', icon: 'contacts', icon_mode: 'ios' },
-          { title: 'Companies', url: '/company', icon: 'business', icon_mode: 'md' }
+          { title: 'Coaches', url: '/coach', icon: 'contacts', icon_mode: 'ios' }
         ]
       },
       {
@@ -107,11 +109,14 @@ export class AppComponent {
       this.linksAssessment,
       this.linksAccount
     ],
-    company: [
+    client: [
       {
         header: false,
         menu: [
-          { title: 'Dashboard', url: '/dashboard', icon: 'apps', icon_mode: 'md' }
+          { title: 'Dashboard', url: '/dashboard', icon: 'apps', icon_mode: 'md' },
+          { title: 'Categories', url: '/category', icon: 'list', icon_mode: 'ios' },
+          { title: 'Topics', url: '/topic', icon: 'book', icon_mode: 'ios' },
+          { title: 'Companies', url: '/company', icon: 'business', icon_mode: 'md' }
         ]
       },
       {
@@ -144,7 +149,7 @@ export class AppComponent {
   private userCommonRoutes = [
     '', 
     'public',
-    'error', 
+    'error',
     'login', 
     'dashboard', 
     'topic', 
@@ -160,12 +165,14 @@ export class AppComponent {
     'test'
   ];
   private userRoutes = {
-    student: [],
+    student: [ 'category' ],
     coach: [
       'student'
     ],
-    company: [
-      'student'
+    client: [
+      'company',
+      'student',
+      'category'
     ]
   };
   private userRouterConfig: Array<object>;
@@ -191,8 +198,9 @@ export class AppComponent {
 
     this.authenticationService.authenticationState.subscribe((state) => {
       if(this.authenticationService.authDidCheck) {
+        const navStartRoot = this.navStart.split('/')[1];
 
-        if(this.navStart === '/setup') {
+        if(this.navStart === '/setup' || navStartRoot === 'public') {
           // menu state
           this.menuCtrl.enable(false);
         } else {
@@ -265,13 +273,19 @@ export class AppComponent {
   }
 
   isActive(url: string) {
+    // disable color
+    if(url === '#') return 'medium';
+
     if(this.router.url === url || this.router.url === '/dashboard' && url === '/') return 'secondary';
 
     return 'dark';
   }
 
   isActiveLabel(url: string) {
-    if(this.router.url === url || this.router.url === '/dashboard' && url === '/') return 'medium';
+    // disable color
+    if(url === '#') return 'medium';
+
+    if(this.router.url === url || this.router.url === '/dashboard' && url === '/') return 'secondary';
 
     return '';
   }

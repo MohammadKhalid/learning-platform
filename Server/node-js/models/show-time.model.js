@@ -22,14 +22,23 @@ module.exports = (sequelize, DataTypes) => {
 
   Model.associate = function(models){
     this.belongsToMany(models.Answer, { through: models.ShowTimeAnswer, as: 'answers', foreignKey: 'showTimeId', otherKey: 'answerId'});
-    this.belongsToMany(models.User, {as: 'users', through: 'UserShowTime', foreignKey: 'showTimeId', otherKey: 'userId'});
 
     this.belongsTo(models.Topic, {as: 'topic', foreignKey: 'topicId'});
     this.belongsTo(models.User, {as: 'student', foreignKey: 'userId', otherKey: 'userId'});
     this.belongsTo(models.User, {as: 'coach', foreignKey: 'submittedTo', otherKey: 'userId'});
 
-    // this.belongsTo(models.User, { as: 'coach', foreignKey: 'submittedTo', otherKey: 'userId' });
-    // this.belongsTo(models.Topic, { as: 'topic', foreignKey: 'topicId', foreignKey: 'topicId' });
+    this.belongsToMany(models.User, {
+      through: {
+        model: models.UserTag,
+        unique: false,
+        scope: {
+          taggable: 'showTime'
+        }
+      },
+      foreignKey: 'taggableId',
+      constraints: false,
+      as: 'users'
+    });
   };
 
   Model.prototype.toWeb = function (pw) {

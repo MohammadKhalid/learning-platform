@@ -57,15 +57,13 @@
 
 		<ion-item>
 			<ion-icon size="small" slot="start" name="calendar" mode="ios"></ion-icon>
-			<!-- <ion-label><h3>{{beautifyDate(item?.date + ' ' + item?.time, 'ddd, MMM. DD, YYYY', item?.timezone || null)}}</h3></ion-label> -->
-			<ion-label><h3>{{makeDate(item?.date + ' ' + item?.time,'ddd, MMM. DD, YYYY',item?.timezone)}}</h3></ion-label>
+			<ion-label><h3>{{beautifyDate(item?.date + ' ' + item?.time, 'ddd, MMM. DD, YYYY', item?.timezone || null)}}</h3></ion-label>
 			<ion-note slot="end" mode="md">Date</ion-note>
 		</ion-item>
 
 		<ion-item>
 			<ion-icon size="small" slot="start" name="time" mode="md"></ion-icon>
-			<!-- <ion-label><h3>{{beautifyDate(item?.date + ' ' + item?.time, 'h:mm A', item?.timezone || null)}}</h3></ion-label> -->
-			<ion-label><h3>{{makeDate(item?.date + ' ' + item?.time,'HH:mm',item?.timezone)}} - {{item?.timezone}}</h3></ion-label>
+			<ion-label><h3>{{beautifyDate(item?.date + ' ' + item?.time, 'h:mm A', item?.timezone || null)}}</h3></ion-label>
 			<ion-note slot="end" mode="md">Time</ion-note>
 		</ion-item>
 	
@@ -86,9 +84,7 @@
 					<div *ngIf="!item?.started">
 						<ion-badge color="success" *ngIf="item?.isSpeakerJoin">Open</ion-badge>
 						<span *ngIf="!item?.isSpeakerJoin">
-							<!-- <ion-badge color="{{timeLeft.text[0] === 'a' ? 'warning' : 'dark'}}" *ngIf="item.timeLeft | async as timeLeft">{{timeLeft.text}} {{timeLeft.text[0] === 'a' ? 'ago' : 'left'}}</ion-badge> -->
-							<ion-badge color="{{timeLeft.text[0] === 'a' ? 'warning' : 'dark'}}" *ngIf="item.timeLeft | async as timeLeft">{{timeLeft.text.includes('in') ? timeLeft.text.replace('in ',''): timeLeft.text }} {{timeLeft.text.includes('ago') ? '' : 'left'}}</ion-badge>
-							<!-- <ion-badge color="{{'dark'}}">{{timeLeft}}</ion-badge> -->
+							<ion-badge color="{{timeLeft.text[0] === 'a' ? 'warning' : 'dark'}}" *ngIf="item.timeLeft | async as timeLeft">{{timeLeft.text}} {{timeLeft.text[0] === 'a' ? 'ago' : 'left'}}</ion-badge>
 						</span>
 					</div>
 				</div>

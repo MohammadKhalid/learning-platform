@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "st": "nodemon ./bin/www"
+    "start:dev": "nodemon ./bin/www"
   },
   "dependencies": {
     "await-to-js": "^2.1.1",
@@ -33,13 +33,10 @@
     "passport-jwt": "^4.0.0",
     "pg": "^7.10.0",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^5.7.6",
+    "sequelize": "^5.10.1",
     "sequelize-cli": "^5.5.0",
     "serve-favicon": "~2.4.5",
     "socket.io": "^2.2.0",
     "validator": "^9.4.1"
-  },
-  "devDependencies": {
-    "nodemon": "^1.19.1"
   }
 }

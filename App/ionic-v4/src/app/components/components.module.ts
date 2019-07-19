@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 
 import { IonicSelectableModule } from 'ionic-selectable';
-import { FileDropModule, FileComponent } from 'ngx-file-drop';
+import { FileDropModule } from 'ngx-file-drop';
 import { SimplePdfViewerModule } from 'simple-pdf-viewer';
 
 import { MediaComponent } from './media/media.component';
@@ -17,21 +17,35 @@ import { ChatBoxComponent } from './chat-box/chat-box.component';
 import { ProfileComponent } from './profile/profile.component';
 import { StudentProfileComponent } from './profile/student-profile/student-profile.component';
 import { CoachProfileComponent } from './profile/coach-profile/coach-profile.component';
-import { CompanyProfileComponent } from './profile/company-profile/company-profile.component';
-import { MatTabsModule, MatSelectModule, MatCardModule } from '@angular/material';
-import { ErrorsComponent } from './errors/errors.component';
-import { MatButtonModule } from '@angular/material/button';
-// import {MatSelectModule} from '@angular/material/select';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { FilterComponent } from './common/filter/filter.component';
-import { CartificateCardComponent } from './common/cartificate-card/cartificate-card.component';
-import { DragScrollModule } from 'ngx-drag-scroll';
+import { ClientProfileComponent } from './profile/client-profile/client-profile.component';
 
-import { LazyLoadImageModule, intersectionObserverPreset } from 'ng-lazyload-image';
-import { VideoComponent } from './video/video.component';
-import { FileUploadModule } from 'ng2-file-upload';
-import { DropzoneComponent } from './common/dropzone/dropzone.component';
-import { ResourcesComponent } from './resources/resources.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { StudentDashboardComponent } from './dashboard/student-dashboard/student-dashboard.component';
+import { CoachDashboardComponent } from './dashboard/coach-dashboard/coach-dashboard.component';
+import { ClientDashboardComponent } from './dashboard/client-dashboard/client-dashboard.component';
+import { AdminDashboardComponent } from './dashboard/admin-dashboard/admin-dashboard.component';
+
+import { CategoryComponent } from './category/category.component';
+import { AdminCategoryComponent } from './category/admin-category/admin-category.component';
+import { AdminCategoryFormComponent } from './category/admin-category-form/admin-category-form.component';
+import { ClientCategoryComponent } from './category/client-category/client-category.component';
+import { ClientCategoryFormComponent } from './category/client-category-form/client-category-form.component';
+import { CoachCategoryComponent } from './category/coach-category/coach-category.component';
+import { StudentCategoryComponent } from './category/student-category/student-category.component';
+
+import { TopicComponent } from './topic/topic.component';
+import { AdminTopicComponent } from './topic/admin-topic/admin-topic.component';
+import { AdminTopicFormComponent } from './topic/admin-topic-form/admin-topic-form.component';
+import { ClientTopicComponent } from './topic/client-topic/client-topic.component';
+import { ClientTopicFormComponent } from './topic/client-topic-form/client-topic-form.component';
+import { CoachTopicComponent } from './topic/coach-topic/coach-topic.component';
+import { StudentTopicComponent } from './topic/student-topic/student-topic.component';
+
+import { ClientTagModalComponent } from './modal/client-tag-modal/client-tag-modal.component';
+
+import { MatTabsModule } from '@angular/material/tabs';
+import { ErrorsComponent } from './errors/errors.component';
+
 @NgModule({
 	imports: [
 		CommonModule,
@@ -42,16 +56,7 @@ import { ResourcesComponent } from './resources/resources.component';
 		FileDropModule,
 		SimplePdfViewerModule,
 		RouterModule,
-		MatTabsModule,
-		MatFormFieldModule,
-		MatSelectModule,
-		MatCardModule,
-		MatButtonModule,
-		DragScrollModule,
-		FileUploadModule,
-		LazyLoadImageModule.forRoot({
-			preset: intersectionObserverPreset // <-- tell LazyLoadImage that you want to use IntersectionObserver
-		})
+		MatTabsModule
 	],
 	declarations: [
 		ErrorsComponent,
@@ -63,15 +68,32 @@ import { ResourcesComponent } from './resources/resources.component';
 		ProfileComponent,
 		StudentProfileComponent,
 		CoachProfileComponent,
-		CompanyProfileComponent,
-		FilterComponent,
-		CartificateCardComponent,
-		VideoComponent,
-		DropzoneComponent,
-		ResourcesComponent,
+		ClientProfileComponent,
+		DashboardComponent,
+		StudentDashboardComponent,
+		CoachDashboardComponent,
+		CoachDashboardComponent,
+		ClientDashboardComponent,
+		AdminDashboardComponent,
+		CategoryComponent,
+		AdminCategoryComponent,
+		AdminCategoryFormComponent,
+		ClientCategoryComponent,
+		ClientCategoryFormComponent,
+		CoachCategoryComponent,
+		StudentCategoryComponent,
+		TopicComponent,
+		AdminTopicComponent,
+		AdminTopicFormComponent,
+		ClientTopicComponent,
+		ClientTopicFormComponent,
+		CoachTopicComponent,
+		StudentTopicComponent,
+		ClientTagModalComponent
 	],
 	entryComponents: [
-		MediaComponent
+		MediaComponent,
+		ClientTagModalComponent
 	],
 	exports: [
 		ConferenceComponent,
@@ -81,12 +103,30 @@ import { ResourcesComponent } from './resources/resources.component';
 		ProfileComponent,
 		StudentProfileComponent,
 		CoachProfileComponent,
-		CompanyProfileComponent,
-		FilterComponent,
-		CartificateCardComponent,
-		VideoComponent,
-		DropzoneComponent,
-		ResourcesComponent,
+		ClientProfileComponent,
+		DashboardComponent,
+		StudentDashboardComponent,
+		CoachDashboardComponent,
+		CoachDashboardComponent,
+		ClientDashboardComponent,
+		AdminDashboardComponent,
+		CategoryComponent,
+		AdminCategoryComponent,
+		AdminCategoryFormComponent,
+		ClientCategoryComponent,
+		ClientCategoryFormComponent,
+		CoachCategoryComponent,
+		StudentCategoryComponent,
+		TopicComponent,
+		AdminTopicComponent,
+		AdminTopicFormComponent,
+		ClientTopicComponent,
+		ClientTopicFormComponent,
+		CoachTopicComponent,
+		StudentTopicComponent
+	],
+	providers: [
+		ProfileComponent
 	]
 })
-export class ComponentsModule { }
+export class ComponentsModule {}

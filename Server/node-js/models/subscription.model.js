@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Model.associate = function(models) {
+    this.belongsTo(models.User, {as: 'user', foreignKey: 'userId'});
     this.belongsTo(models.SubscriptionPackage, {as: 'subscriptionPackage', foreignKey: 'subscriptionPackageId'});
   }
 

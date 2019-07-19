@@ -4,6 +4,10 @@
       <ion-back-button [defaultHref]="url.path"></ion-back-button>
     </ion-buttons>
     <ion-title text-capitalize>{{data.route.type}} Time Detail</ion-title>
+
+    <ion-buttons slot="end" *ngIf="data.session.type === 'admin' || data.session.id === item?.userId">
+      <ion-button strong="true" (click)="presentPageAction()"><ion-icon slot="icon-only" name="more"></ion-icon></ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 

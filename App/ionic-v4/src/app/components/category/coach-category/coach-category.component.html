@@ -1,0 +1,45 @@
+<ion-header no-border>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title>Categories</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="showHideSearchBox()" [hidden]="!searchBoxToolbarHidden"><ion-icon name="search"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-toolbar [hidden]="searchBoxToolbarHidden">
+    <ion-searchbar debounce="1000" mode="ios" clearIcon="backspace" (ionChange)="startSearch($event)"></ion-searchbar>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="closeSearch($event)"><ion-icon name="close-circle"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list lines="full">
+    <ion-item lines="none" *ngIf="items?.length < 1">
+      <ion-label><p>No category yet</p></ion-label>
+    </ion-item>
+  
+    <ion-item *ngFor="let item of items; let i = index">
+      <ion-label>
+        <p><span *ngFor="let parent of item.parents; let i = index"><small>{{ i > 0 ? ' / ' : '' }}</small>{{parent.title}}</span></p>
+        <span text-capitalize>{{item?.title}}</span>
+        <p>{{item?.description || 'No description'}}</p>
+      </ion-label>
+    </ion-item>
+  
+  </ion-list>
+  
+  <ion-infinite-scroll [disabled]="isInfiniteScrollDisabled" margin-top (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content
+      style="min-height: 1px;"
+      loadingSpinner="bubbles">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

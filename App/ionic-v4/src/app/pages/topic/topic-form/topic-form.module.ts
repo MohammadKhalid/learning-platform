@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
+import { ComponentsModule } from '../../../components/components.module';
 import { IonicSelectableModule } from 'ionic-selectable';
 
 import { TopicFormPage } from './topic-form.page';
@@ -21,8 +22,9 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    RouterModule.forChild(routes),
-    IonicSelectableModule
+    ComponentsModule,
+    IonicSelectableModule,
+    RouterModule.forChild(routes)
   ],
   declarations: [TopicFormPage]
 })

@@ -16,9 +16,6 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { IonicSelectableModule } from 'ionic-selectable';
 import { FileDropModule } from 'ngx-file-drop';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
-import {MatSelectModule} from '@angular/material/select';
-
-import { FormsModule } from '@angular/forms';
 
 import { ComponentsModule } from './components/components.module';
 import { RtcService } from './services/rtc/rtc.service';
@@ -26,21 +23,16 @@ import { LoaderService } from './services/utility/loader.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { NotificationService } from './services/notification/notification.service';
-import { MatFormFieldModule } from '@angular/material';
-// import { AvailableCertificationsComponent } from './pages/certification/certification/available-certifications/available-certifications.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    // AvailableCertificationsComponent
+    AppComponent
   ],
   entryComponents: [],
-  
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
     ComponentsModule,
-    FormsModule,
     IonicModule.forRoot(), 
     AppRoutingModule,
     IonicStorageModule.forRoot({
@@ -49,12 +41,8 @@ import { MatFormFieldModule } from '@angular/material';
     }),
     HttpClientModule,
     IonicSelectableModule,
-    FileDropModule,
-    MatSelectModule,
-    MatFormFieldModule
+    FileDropModule
   ],
-
-
   providers: [
     LoaderService,
     StatusBar,

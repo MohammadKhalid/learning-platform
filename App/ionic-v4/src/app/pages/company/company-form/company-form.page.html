@@ -1,0 +1,125 @@
+<ion-header no-border>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-back-button [defaultHref]="id ? 'company/detail/' + item?.id : 'company'"></ion-back-button>
+      </ion-buttons>
+  
+      <ion-title text-capitalize>{{action}} Company</ion-title>
+  
+      <ion-buttons slot="end">
+        <ion-button type="button" *ngIf="form.valid && !submitted" (click)="save()">Save</ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content>
+    <form [formGroup]="form">
+      <ion-input type="hidden" formControlName="id" ></ion-input>
+
+      <ion-list *ngIf="sessionData.user.type === 'admin'">
+        <ion-item lines="inset">
+          <ion-label position="floating">Client <ion-text color="danger">*</ion-text></ion-label>
+          <ion-select formControlName="clientId" (ionChange)="clientChanged($event)">
+            <ion-select-option value="{{client.id}}" *ngFor="let client of formFieldData?.clients">{{client.firstName}} {{client.lastName}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-list>
+
+      <ion-list>
+        <ion-item lines="inset">
+          <ion-label position="floating">Name <ion-text color="danger">*</ion-text></ion-label>
+          <ion-input
+            formControlName="name"
+          ></ion-input>
+        </ion-item>
+  
+        <ion-item lines="full" hidden="true">
+          <ion-label position="floating">Description</ion-label>
+          <ion-textarea
+             formControlName="description"
+             rows="5"
+          ></ion-textarea>
+        </ion-item>
+      </ion-list>
+
+      <ion-list>
+        <ion-list-header>
+          <ion-label color="primary">Departments</ion-label>
+        </ion-list-header>
+
+        <ion-item *ngFor="let clientDepartment of clientDepartments">
+          <ion-label><h3>{{clientDepartment.name}}</h3></ion-label>
+          <ion-checkbox value="{{clientDepartment.id}}" (ionChange)="clientDepartmentChanged($event)" [checked]="form.controls.departmentIds.value.includes(clientDepartment.id)"></ion-checkbox>
+        </ion-item>
+
+        <ion-item-group formArrayName="departments" *ngFor="let department of departmentForms.controls; let depIndex = index;">
+            <ion-item-group [formGroupName]="depIndex">
+                <ion-item lines="inset">
+                  <ion-input
+                    placeholder="Enter Department Name"
+                    formControlName="name"
+                  ></ion-input>
+                  <ion-button *ngIf="clientDepartments?.length > 0 || depIndex > 0" fill="none" slot="end" (click)="removeDepartment(depIndex)">
+                    <ion-icon name="trash" color="danger" slot="icon-only"></ion-icon>
+                  </ion-button>
+                  <ion-note *ngIf="clientDepartments?.length < 1 && depIndex < 1" color="danger" slot="end"><strong>*</strong></ion-note>
+                </ion-item>
+            </ion-item-group>
+        </ion-item-group>
+
+        <ion-item margin-top lines="none">
+          <ion-button fill="outline" (click)="addDepartment()">
+              Add Department
+          </ion-button>
+        </ion-item>
+      </ion-list>
+
+      <ion-list>
+        <ion-list-header>
+          <ion-label color="primary">Location</ion-label>
+        </ion-list-header>
+
+        <ion-item lines="inset">
+          <ion-label position="stacked">Street / City /  State</ion-label>
+          <ion-input
+            formControlName="address"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item lines="full">
+          <ion-label position="stacked">Country</ion-label>
+          <ion-input
+            formControlName="country"
+          ></ion-input>
+        </ion-item>
+      </ion-list>
+
+      <ion-list>
+        <ion-list-header>
+          <ion-label color="primary">Telecom</ion-label>
+        </ion-list-header>
+
+        <ion-item lines="inset">
+          <ion-label position="stacked">Email</ion-label>
+          <ion-input
+            formControlName="email"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item lines="inset">
+          <ion-label position="stacked">Phone</ion-label>
+          <ion-input
+            formControlName="phone"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item lines="full">
+          <ion-label position="stacked">Fax</ion-label>
+          <ion-input
+            formControlName="fax"
+          ></ion-input>
+        </ion-item>
+      </ion-list>
+  </form>
+  
+</ion-content>

@@ -1,10 +1,10 @@
-<ion-header no-border>
+<!-- <ion-header no-border>
     <ion-toolbar color="primary">
         <div style="width: 175px;">
             <ion-img src="assets/img/logo-light.png" margin-horizontal></ion-img>
         </div>
     </ion-toolbar>
-</ion-header>
+</ion-header> -->
 
 <ion-content padding class="bg">
     <ion-grid class="fixed-content" text-center [hidden]="!loading">
@@ -19,7 +19,10 @@
         <ion-row style="height: 100%" align-items-center>
             <ion-col size="12" size-sm="5" size-md="4" size-lg="3" style="margin: auto">
                 <form [formGroup]="loginForm">
-                    <ion-card padding-top color="clean">
+                    <ion-card padding color="clean">
+                        <div padding-vertical>
+                            <ion-img src="assets/img/logo.png" margin-horizontal></ion-img>
+                        </div>
                         <ion-card-header>
                             <ion-card-title><strong>Login to your account</strong></ion-card-title>
                             <ion-card-subtitle *ngIf="showLoginMessage"><ion-text color="danger">Wrong username or password</ion-text></ion-card-subtitle>
@@ -39,12 +42,12 @@
                             <ion-button (click)="login()" color="dark" shape="round" expand="block" [disabled]="!loginForm?.valid">LOG IN</ion-button>
                         </div>
 
-                        <ion-item lines="full" routerLink="">
+                        <ion-item lines="none" routerLink="">
                             <ion-label><p>Forgot password</p></ion-label>
                             <ion-icon name="help-circle-outline" slot="end" size="small"></ion-icon>
                         </ion-item>
 
-                        <ion-item color="medium" lines="none">
+                        <!-- <ion-item color="medium" lines="none">
                             <ion-label text-wrap><p>If you want to try before committing to an active monthly plan, then you can sign up for a free 14-day trial. NO COST, NO OBLIGATION!</p></ion-label>
                         </ion-item>
 
@@ -53,7 +56,7 @@
                                 <strong>Free Trial</strong>
                             </ion-label>
                             <ion-button routerLink="/public/signup">Signup</ion-button>    
-                        </ion-item>
+                        </ion-item> -->
                     </ion-card>
                 </form>
             </ion-col>

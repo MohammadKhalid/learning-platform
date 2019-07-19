@@ -21,15 +21,15 @@ const routes: Routes = [
     loadChildren: './pages/certification/certification-routing.module#CertificationRoutingModule'
   },
   { 
-    path: 'level-setting', 
-    canActivate: [AuthGuardService],
-    loadChildren: './pages/level-settings/level-settings.module#LevelSettingsPageModule'
-  },
-  { 
     path: 'company', 
     canActivate: [AuthGuardService],
+    loadChildren: './pages/company/company-routing.module#CompanyRoutingModule'
+  },
+  { 
+    path: 'client', 
+    canActivate: [AuthGuardService],
     loadChildren: './pages/user/user-routing.module#UserRoutingModule',
-    data: { type: 'company', singular: 'company', plural: 'companies', apiEndPoint: 'companies', appUrl: 'company', rootUrl: 'company', rootApiEndPoint: 'companies' }
+    data: { type: 'client', singular: 'client', plural: 'clients', apiEndPoint: 'clients', appUrl: 'client', rootUrl: 'client', rootApiEndPoint: 'clients' }
   },
   { 
     path: 'coach', 
@@ -102,10 +102,7 @@ const routes: Routes = [
   { path: 'media/detail/:id', canActivate: [AuthGuardService], loadChildren: './pages/media/media-detail/media-detail.module#MediaDetailPageModule' },
 
   { path: 'error', loadChildren: './pages/public/error/error.module#ErrorPageModule' },
-  { path: '**', loadChildren: './pages/public/error/error.module#ErrorPageModule', data: { error: 404 } },
-  { path: 'level-settings', loadChildren: './pages/level-settings/level-settings.module#LevelSettingsPageModule' },
-
-
+  { path: '**', loadChildren: './pages/public/error/error.module#ErrorPageModule', data: { error: 404 } }
 ];
 
 @NgModule({

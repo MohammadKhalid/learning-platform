@@ -5,6 +5,7 @@ import { HttpEventType } from '@angular/common/http';
 import { AlertController, NavController, ToastController, IonContent } from '@ionic/angular';
 
 import { RestApiService } from '../../../services/http/rest-api.service';
+import { PublicRestApiService } from '../../../services/http/public-rest-api.service';
 import { ViewService } from '../../../services/view/view.service';
 import { IonicSelectableComponent } from 'ionic-selectable';
 
@@ -12,11 +13,9 @@ import { RtcService } from '../../../services/rtc/rtc.service';
 import { TimerService } from '../../../services/timer/timer.service';
 import { NotificationService } from '../../../services/notification/notification.service';
 
-import RecordRTC from 'recordrtc';
-import DetectRTC from 'detectrtc';
-
-import 'web-streams-polyfill';
+import * as RecordRTC from 'recordrtc';
 import adapter from 'webrtc-adapter';
+import { reject } from 'q';
 
 @Component({
   selector: 'app-show-time-form',
@@ -34,15 +33,13 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
 
     // showRecordingCompatMessage: boolean = false;
     recordRTC: any;
-    recorderVideo: any;
-    recorderAudio: any;
 
     topics: any = [];
     form: any = {};
 
-    @ViewChild('videoRecorder') videoElement: ElementRef;
+    @ViewChild('videoRecorder') videoElement: any;
 
-    video: HTMLMediaElement;
+    video: HTMLVideoElement;
     videoStatus: string = "stop";
     textStatus: string = "ready";
     recordingDuration: number;
@@ -89,14 +86,10 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
     segmentPrev: any;
     isCustomTopic: boolean = false;
 
-    cameraSettings: any;
-    workerPath: string = 'https://archive.org/download/ffmpeg_asm/ffmpeg_asm.js';
-
-    panelModal: string;
-
     constructor(
         private notificationService: NotificationService,
         private restService: RestApiService,
+        private publicRestService: PublicRestApiService,
         private alertCtrl: AlertController,
         private toastCtrl: ToastController,
         private navCtrl: NavController,
@@ -106,14 +99,17 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
         private activatedRoute: ActivatedRoute
     ) {
         // set media base url
-        this.mediaBaseUrl = this.restService.url;
+        this.mediaBaseUrl = this.publicRestService.url;
 
-        // get topics
-        this.restService.get('topics', {}).subscribe((res: any) => {
+        // get input data
+        this.restService.get('show-time/form-input-data', {}).subscribe((res: any) => {
+            this.coaches = res.coaches;
+
+            // set topics
             let items = [];
 
-            for (var i = res.items.length - 1; i >= 0; i--) {
-                const topic = res.items[i];
+            for (var i = res.topics.length - 1; i >= 0; i--) {
+                const topic = res.topics[i];
                 const categories = topic.categories;
 
                 // no category
@@ -139,18 +135,9 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
 
             this.topics = items;
         });
-
-        // get coaches
-        this.restService.get('form-input-data', {}).subscribe((resp: any) => {
-            if(resp.data.coaches) this.coaches = resp.data.coaches;
-        });
     }
 
     ngOnInit() {
-        if(document.domain == 'localhost') {
-			this.workerPath = location.href.replace(location.href.split('/').pop(), '') + 'assets/js/ffmpeg_asm.js';
-		}
-
         // get route data
         this.activatedRoute.data.subscribe((routeData) => {
             // set vars
@@ -160,10 +147,6 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
 
             if(this.data.route.type === 'practice') this.isPractice = true;
         });
-
-        // temp
-        // this.initNativeElem();
-        // this.videoInit();
     }
 
     showTutorial() {
@@ -202,11 +185,6 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
 
         // set the initial state of the video
         this.video = this.videoElement.nativeElement;
-        this.video.addEventListener('error', (err) => {
-            // This craps out in Safari 6
-            console.error(this.video.error, err);
-            // alert('nay :(');
-          });
 
         this.video.oncanplay = () => {
             console.log('Video can play');
@@ -284,10 +262,8 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
                     this.videoStatus = 'recording';
                     this.textStatus = this.videoStatus;
 
-                    this.record();
-                } catch(e) {
-                    console.log('ERROR RECORDING', e);
-
+                    this.recordRTC.startRecording();
+                } catch {
                     this.content.scrollToTop().then(() => {
                         this.showRecordingCompatMessage = true;
                     });
@@ -297,174 +273,50 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
     }
 
     videoInit() {
-        const mediaConstraints = !this.cameraSettings ? { video: true, audio: true } : {
-			video: {
-				width: { ideal: this.cameraSettings.width.max },
-				height: { ideal: this.cameraSettings.height.max }
-			},
-			audio: { echoCancellation: true }
-		};
+        const mediaConstraints = {
+            video: true,
+            audio: true
+        };
+        
+        navigator.mediaDevices.getUserMedia(mediaConstraints).then((camera) => {
+            this.video.setAttribute('autoplay', '');
+            this.video.setAttribute('playsinline', '');
+            this.video.setAttribute('muted', '');
 
-		navigator.mediaDevices.getUserMedia(mediaConstraints).then((stream) => {
-			if(!this.cameraSettings) {
-				let track = stream.getVideoTracks()[0];
-				this.cameraSettings = track.getCapabilities();
-
-				return this.videoInit();
+            try {
+                this.video.srcObject = camera;
+            } catch (error) {
+                this.video.src = window.URL.createObjectURL(camera);
             }
-            
-            console.log('DetectRTC', DetectRTC);
 
-            if(DetectRTC.isVideoSupportsStreamCapturing) {
-                try {
-                    this.video.srcObject = stream;
-                } catch (error) {
-                    this.video.src = URL.createObjectURL(stream);
+            let options: any = {
+                type: 'video',
+                mimeType: 'video/webm',
+                //mimeType: 'video/webm\;codecs=h264', // or video/webm\;codecs=h264 or video/webm\;codecs=vp9
+                // audioBitsPerSecond: 128000,
+                // videoBitsPerSecond: 128000,
+                // bitsPerSecond: 128000 // if this line is provided, skip above two
+                timeSlice: 1000, // pass this parameter
+                onTimeStamp: (timestamp, timestamps) => {
+                    let duration = Math.round((new Date().getTime() - timestamps[0]) / 1000);
+
+                    console.log('DURATION', duration);
+
+                    if(duration < 1) return;
+
+                    this.textDuration = duration;
                 }
+            };
 
-                let options: any = {
-                    type: 'video',
-                    mimeType: 'video/webm',
-                    timeSlice: 1000,
-                    onTimeStamp: (timestamp, timestamps) => {
-                        console.log('TIMESTAMPPP', timestamp);
+            this.recordRTC = RecordRTC(camera, options);
 
-                        let duration = (new Date().getTime() - timestamps[0]) / 1000;
+            // release camera on stopRecording
+            this.recordRTC.camera = camera;
 
-                        console.log('DURATION', duration);
-
-                        if(duration < 1) return;
-
-                        this.textDuration = duration;
-                    }
-                };
-
-                // construct recorder
-                this.recordRTC = RecordRTC(stream, options);
-
-                // release camera on stopRecording
-                this.recordRTC.camera = stream;
-
-                // set duration
-                if(this.question.question.answerLimit) this.setRecorderDuration();
-
-                this.video.play();
-            } else {
-                let audioTrack = this.getTracks(stream, 'audio');
-                let audioStream = new MediaStream();
-                    audioStream.addTrack(audioTrack[0]);
-
-                let videoTrack = this.getTracks(stream, 'video');
-                let videoStream = new MediaStream();
-                    videoStream.addTrack(videoTrack[0]);
-
-                try {
-                    this.video.srcObject = videoStream;
-                } catch (error) {
-                    this.video.src = URL.createObjectURL(videoStream);
-                }
-
-                this.video.play();
-    
-                this.recorderVideo = new RecordRTC(videoStream, {
-                    type: 'video',
-                    recorderType: RecordRTC.WebAssemblyRecorder,
-                    workerPath: '/assets/webm-wasm/webm-worker.js',
-                    webAssemblyPath: '/assets/webm-wasm/webm-wasm.wasm',
-                    width: this.cameraSettings.width.max,
-                    height: this.cameraSettings.height.max,
-                    frameRate: this.cameraSettings.frameRate.max,
-                    videoBitsPerSecond: 128000,
-                    initCallback: () => {
-                        this.recorderAudio.startRecording();
-                    }
-                    // timeSlice: 1000,
-                    // ondataavailable: function(blob) {
-                    // 	console.log('VIDEO DATAAAAAA');
-                    // }
-                });
-    
-                // audio
-                this.recorderAudio = new RecordRTC(audioStream, {
-                    type: 'audio',
-                    recorderType: RecordRTC.StereoAudioRecorder,
-                    audioBitsPerSecond: 128000,
-                    numberOfAudioChannels: 1,
-                    desiredSampRate: 16000
-                    // bufferSize: 0,
-                    // sampleRate: 44100,
-                    // initCallback: () => {
-                    // 	this.recorderVideo.record();
-                    // }
-                    // timeSlice: 1000,
-                    // ondataavailable: (blob) => {
-                    // 	console.log('AUDIO DATA');
-                    // }
-                });
-            }
-		}).catch((err) => {
-            console.log('err', err);
+            // set duration
+            if(this.question.question.answerLimit) this.setRecorderDuration();
+        }, (err) => {
             console.log(err.name + ": " + err.message);
-        });
-    }
-
-    // videoInit() {
-    //     const mediaConstraints = {
-    //         video: true,
-    //         audio: true
-    //     };
-
-    //     navigator.mediaDevices.getUserMedia(mediaConstraints).then((camera) => {
-    //         try {
-    //             this.video.srcObject = camera;
-    //         } catch (error) {
-    //             this.video.src = URL.createObjectURL(camera);
-    //         }
-
-    //         let options: any = {
-    //             // type: 'video',
-    //             recorderType: RecordRTC.MediaStreamRecorder,
-    //             mimeType: 'video/webm',
-    //             //mimeType: 'video/webm\;codecs=h264', // or video/webm\;codecs=h264 or video/webm\;codecs=vp9
-    //             // audioBitsPerSecond: 128000,
-    //             // videoBitsPerSecond: 128000,
-    //             // bitsPerSecond: 128000 // if this line is provided, skip above two
-    //             timeSlice: 1000, // pass this parameter
-    //             onTimeStamp: (timestamp, timestamps) => {
-    //                 console.log('TIMESTAMPPP', timestamp);
-
-    //                 let duration = (new Date().getTime() - timestamps[0]) / 1000;
-
-    //                 console.log('DURATION', duration);
-
-    //                 if(duration < 1) return;
-
-    //                 this.textDuration = duration;
-    //             }
-    //         };
-
-    //         // construct recorder
-    //         this.recordRTC = RecordRTC(camera, options);
-
-    //         // release camera on stopRecording
-    //         this.recordRTC.camera = camera;
-
-    //         // set duration
-    //         if(this.question.question.answerLimit) this.setRecorderDuration();
-
-    //         this.video.play();
-    //     }, (err) => {
-    //         console.log(err.name + ": " + err.message);
-    //     });
-    // }
-
-    getTracks(stream, kind) {
-        if (!stream || !stream.getTracks) {
-            return [];
-        }
-    
-        return stream.getTracks().filter(function(t) {
-            return t.kind === (kind || 'audio');
         });
     }
 
@@ -518,7 +370,7 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
                     this.showChallenge = false;
 
                     try {
-                        this.record();
+                        this.recordRTC.startRecording();
 
                         this.videoStatus = 'recording';
                         this.textStatus = this.videoStatus;
@@ -528,9 +380,7 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
 
                         // deactivate view leave
                         this.viewService.state.next(false);
-                    } catch(e) {
-                        console.log('ERROR RECORDING 2', e);
-
+                    } catch {
                         this.content.scrollToTop().then(() => {
                             this.showRecordingCompatMessage = true;
                         });
@@ -571,17 +421,6 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
         });
     }
 
-    record() {
-        this.videoStatus = 'initializing';
-        this.textStatus = this.videoStatus;
-
-        if(DetectRTC.isVideoSupportsStreamCapturing) {
-            this.recordRTC.startRecording();
-        } else {
-            // this.recorderVideo.startRecording();
-        }
-    }
-
     startRecording() {
         // stop telepromter
         if(this.teleprompterPlaying) this.telepromptStop();
@@ -591,18 +430,11 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
     }
 
     stopRecording(): void {
-        this.recordRTC.stopRecording((data) => {this.stopRecordingCallback(data)});
+        this.recordRTC.stopRecording((data) => this.stopRecordingCallback(data));
     }
 
     stopRecordingCallback(data): void {
-        // this.video.muted = false;
-        // this.video.volume = 1;
-        // this.video.src = data;
-        
-        // this.recordRTC.camera.stop();
-        // this.recordRTC.destroy();
-        // this.recordRTC = null;
-    
+        // close camera
         this.video.src = this.video.srcObject = null;
         this.video.src = data;
 
@@ -638,7 +470,7 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
         try {
             this.video.srcObject = this.recordRTC.camera;
         } catch (error) {
-            this.video.src = URL.createObjectURL(this.recordRTC.camera);
+            this.video.src = window.URL.createObjectURL(this.recordRTC.camera);
         }
 
         // video controls
@@ -648,44 +480,41 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
     }
 
     initSave() {
-        this.videoStatus = 'initializing';
-        this.textStatus = this.videoStatus;
+        return new Promise((resolve, reject) => {
+            this.videoStatus = 'initializing';
+            this.textStatus = this.videoStatus;
 
-        let formData = this.isCustomTopic ? this.form : {
-            topicId: this.form.topicId,
-            submittedTo: this.form.submittedTo,
-            sendTo: this.form.sendTo
-        };
+            let formData = this.isCustomTopic ? this.form : {
+                topicId: this.form.topicId,
+                submittedTo: this.form.submittedTo,
+                sendTo: this.form.sendTo
+            };
 
-        return this.restService.post(this.url.api, formData).toPromise().then((res: any) => {
-            console.log('INIT SAVEEEEEE', res);
+            this.restService.post(this.url.api, formData).subscribe((res: any) => {
+                if(res.success === true) {
+                    this.showTime = res.item;
 
-            if(res.success) {
-                console.log('INIT SAVEEEEEE SUCESSSSSSSSSS');
-                this.showTime = res.item;
-                if(this.isCustomTopic) this.question = this.showTime.topic.questions[0];
-            } else {
-                console.log('INIT SAVEEEEEE ERRRRR');
-                this.notificationService.showMsg(res.error);
-            }
+                    if(this.isCustomTopic) this.question = this.showTime.topic.questions[0];
+                } else {
+                    this.notificationService.showMsg(res.error);
+                }
 
-            console.log('INIT SAVEEEEEE END');
+                resolve();
+            });
         });
     }
 
     save() {
-        console.log('CALL INIT SAVE');
         // save show time first if not yet added
-        if(this.showTime) this.saving();
-        else this.initSave().then(() => { 
-            console.log('CALL INIT SAVE THENNNNN');
+        if(!this.showTime) this.initSave().then(() => {
+            console.log('INIT SAVING NEW', this.showTime);
             this.saving();
         });
+        else this.saving();
     }
 
     saving() {
-        console.log('SAVING.......');
-
+        console.log('UPLOADING');
         this.videoStatus = 'uploading';
         this.textStatus = 'uploading';
 
@@ -714,8 +543,6 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
         // append show time question id
         formData.append('topicQuestionId', this.question.id);
 
-        console.log('SAVEEEEE ANSERRRRRRR', this.showTime);
-
         this.restService.postFormData(this.url.api + '/answer/' + this.showTime.id, formData).subscribe((event) => {
             if (event.type === HttpEventType.UploadProgress) {
                 let progress = Math.round(100 * event.loaded / event.total);
@@ -734,7 +561,7 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
                 let data: any = event.body;
 
                 // update
-                if(data.success) {
+                if(data.success === true) {
                     // done
                     if(this.questionNumber == this.form.questions.length) {
                         // close camera
@@ -753,6 +580,13 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
 
                         // update status
                         this.restService.put(this.url.api + '/' + this.showTime.id, { status: 'completed' }).subscribe(() => {
+                            // send email
+                            if(this.form.submittedTo || this.form.sendTo) {
+                                console.log('SEND EMAIL', this.url.api);
+                                this.restService.put(this.url.api + '/submit/' + this.showTime.id, { submittedTo: this.form.submittedTo, sendTo: this.form.sendTo }).subscribe(() => {
+                                    console.log('EMAIL SENT');
+                                });
+                            }
 
                             // go to detail
                             this.navCtrl.navigateRoot('/' + this.url.api + '/detail/' + this.showTime.id).then(() => {
@@ -765,9 +599,6 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
                                         type: this.data.route.type
                                     });
                                 }
-
-                                // submit
-                                if(this.form.sendTo) this.restService.put(this.url.api + '/submit/' + this.showTime.id, { submittedTo: this.form.submittedTo, sendTo: this.form.sendTo });
                             });
                         });
                     } else {
@@ -798,7 +629,7 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
         const alert = await this.alertCtrl.create({
             header: 'Before you start',
             subHeader: 'Read the instructions carefully',
-            message: '<p>When you click on Start Recording various objections will appear on your screen. There are <strong>' + this.form.questions.length +  '</strong> in total and during the recording you are expected to overcome each of them either using some of the example word-tracks we have provided you within "Practice Time", or other effective word-tracks that you may have learn’t from your manager or elsewhere.</p><p><br>Remember you only get <strong>one chance at recording</strong> this so please make sure you feel confident.</p>',
+            message: '<p>When you click on start recording you may see multiple instructions, objections or other commands that you need to address or overcome. You are expected to address each one, whether there’s only one or multiple points. Please do this using some of the example word-tracks we have provided for you within “Practice Time”, or other effective word-tracks that you may have learnt from your manager or elsewhere.</p><p><br>Remember you only get one chance at recording in Show Time so please make sure you feel confident and give it your best shot. Good luck!</p>',
             backdropDismiss: false,
             buttons: [
                 {
@@ -812,8 +643,6 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
     }
 
     toggleControls() {
-        console.log('VIDEO ELEM', this.video);
-
         this.video.muted = !this.video.muted;
         this.video.controls = !this.video.controls;
         this.video.autoplay = !this.video.autoplay;
@@ -883,7 +712,7 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
                 let typeArray    = type.split('/')[0];
 
                 let mediaPaths = [
-                    { type: type, path: this.restService.url + media.path }
+                    { type: type, path: this.mediaBaseUrl + media.path }
                 ];
 
                 if(typeArray === 'video' || type === 'application/octet-stream') {
@@ -898,7 +727,7 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
                             newMediaPathArray.pop();
                         
                         let newMediaPath     = newMediaPathArray.join('.') + '.mp4';    
-                        mediaPaths.push({type: 'video/mp4', path: this.restService.url + newMediaPath});
+                        mediaPaths.push({type: 'video/mp4', path: this.mediaBaseUrl + newMediaPath});
                     }
                 }
 

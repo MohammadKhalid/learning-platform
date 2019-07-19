@@ -1,0 +1,39 @@
+<ion-header no-border>
+  <ion-toolbar color="primary">
+    <ion-title>{{propsData.firstName}} {{propsData.lastName}}</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="true">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item-group *ngFor="let company of propsData?.companies">
+    <ion-item lines="full" color="light">
+      <ion-checkbox slot="start"></ion-checkbox>
+      <ion-label>
+        {{company?.name}}
+      </ion-label>
+      <ion-note slot="end" mode="md">Company</ion-note>
+    </ion-item>
+
+    <ion-item-group margin-start padding-start>
+      <ion-item lines="none">
+        <ion-label>
+          <p>Students</p>
+          <h3 *ngIf="company?.users?.length < 1">No record</h3>
+        </ion-label>
+      </ion-item>
+
+      <ion-item *ngFor="let student of company?.users">
+        <ion-label>
+          {{student?.firstName}} {{student?.lastName}}
+        </ion-label>
+        <ion-checkbox slot="start"></ion-checkbox>
+      </ion-item>
+    </ion-item-group>
+  </ion-item-group>
+</ion-content>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController, NavController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 import { RtcService } from '../../../services/rtc/rtc.service';
 import { RestApiService } from '../../../services/http/rest-api.service';
@@ -12,9 +13,9 @@ import * as moment from 'moment';
 import 'moment-timezone';
 
 @Component({
-	selector: 'app-live-group-training',
-	templateUrl: './live-group-training.page.html',
-	styleUrls: ['./live-group-training.page.scss'],
+  selector: 'app-live-group-training',
+  templateUrl: './live-group-training.page.html',
+  styleUrls: ['./live-group-training.page.scss'],
 })
 export class LiveGroupTrainingPage implements OnInit {
 
@@ -31,16 +32,17 @@ export class LiveGroupTrainingPage implements OnInit {
 	isInfiniteScrollDisabled: boolean = false;
 
 	constructor(
-		private alertCtrl: AlertController,
+		private alertCtrl: AlertController, 
 		private navCtrl: NavController,
-		private restApi: RestApiService,
-		private rtcService: RtcService,
+		private router: Router,
+  		private restApi: RestApiService,
+  		private rtcService: RtcService,
 		private authService: AuthenticationService,
 		private timerService: TimerService
 	) {
 		// set query params
 		this.setQueryParamsDefault();
-		// moment.tz.setDefault('Australia/Sydney')
+
 		// get user data
 		this.sessionData = this.authService.getSessionData();
 	}
@@ -75,8 +77,8 @@ export class LiveGroupTrainingPage implements OnInit {
 			switch (message.type) {
 				case 'opened':
 					this.getRoom(message.roomid).then((roomIndex: any) => {
-						if (roomIndex >= 0) {
-							if (this.items[roomIndex]) {
+						if(roomIndex >= 0) {
+							if(this.items[roomIndex]) {
 								this.items[roomIndex].started = message.started;
 								this.items[roomIndex].status = 'open';
 							}
@@ -86,20 +88,20 @@ export class LiveGroupTrainingPage implements OnInit {
 					break;
 				case 'join':
 					this.getRoom(message.roomid).then((roomIndex: any) => {
-						if (roomIndex >= 0) {
-							if (this.items[roomIndex]) {
-								if (message.speaker) this.items[roomIndex].isSpeakerJoin = true;
+						if(roomIndex >= 0) {
+							if(this.items[roomIndex]) {
+								if(message.speaker) this.items[roomIndex].isSpeakerJoin = true;
 							}
 						}
 					});
 					break;
 				case 'leave':
 					this.getRoom(message.roomid).then((roomIndex: any) => {
-						if (roomIndex >= 0) {
+						if(roomIndex >= 0) {
 							// update room status
-							if (this.items[roomIndex]) {
+							if(this.items[roomIndex]) {
 								this.items[roomIndex].status = message.status;
-								if (message.speaker) this.items[roomIndex].isSpeakerJoin = false;
+								if(message.speaker) this.items[roomIndex].isSpeakerJoin = false;
 							}
 						}
 					});
@@ -120,26 +122,25 @@ export class LiveGroupTrainingPage implements OnInit {
 
 		this.restApi.get('live-group-trainings', this.queryParams).subscribe((resp: any) => {
 			// set time left timer
-			for (let item of resp.items) {
+			for(let item of resp.items) {
 				// time left counter
-				// item['timeLeft'] = this.timerService.timer(moment(item.date + ' ' + item.time).tz('Australia/Sydney').toISOString());
-				item['timeLeft'] = this.timerService.timer(item.date+" "+item.time,item.timezone);
+				item['timeLeft'] = this.timerService.timer(new Date(moment(item.date + ' ' + item.time).toISOString()));
 			}
 
 			// push items
 			this.items = this.items.concat(resp.items);
 
-			if (resp.items.length > 0) {
+			if(resp.items.length > 0) {
 				// update pagi
 				this.queryParams.pageNumber++;
 
 				// update room options
-				if (this.connection.socket) this.connection.socket.emit('get-public-rooms', this.publicRoomIdentifier, (listOfRooms) => {
+				if(this.connection.socket) this.connection.socket.emit('get-public-rooms', this.publicRoomIdentifier, (listOfRooms) => {
 					listOfRooms.forEach((room) => {
 						this.getRoom(room.sessionid).then((roomIndex: any) => {
-							if (roomIndex >= 0) {
+							if(roomIndex >= 0) {
 								// speaker is in room flag
-								if (this.items[roomIndex]) this.items[roomIndex].isSpeakerJoin = true;
+								if(this.items[roomIndex]) this.items[roomIndex].isSpeakerJoin = true;
 							}
 						});
 					});
@@ -147,13 +148,13 @@ export class LiveGroupTrainingPage implements OnInit {
 			}
 
 			// enable infinite scroll
-			if (this.isInfiniteScrollDisabled) this.isInfiniteScrollDisabled = false;
+			if(this.isInfiniteScrollDisabled) this.isInfiniteScrollDisabled = false;
 
 			// hide loading indicator
-			if (event && event.type === 'ionInfinite') {
+			if(event && event.type === 'ionInfinite') {
 				setTimeout(() => {
 					event.target.complete();
-
+				
 					// App logic to determine if all data is loaded
 					// and disable the infinite scroll
 					// if (data.length == 1000) {
@@ -166,32 +167,32 @@ export class LiveGroupTrainingPage implements OnInit {
 
 	async getRoom(roomId: string) {
 		for (let i = this.items.length - 1; i >= 0; i--) {
-			if (this.items[i].id == roomId) return i;
-		}
+		   if(this.items[i].id == roomId) return i;
+	   	}
 
-		return null;
-	}
+	   	return null;
+   	}
 
 	getPublicRooms(): void {
-		//if(!this.items.length) return;
+	    //if(!this.items.length) return;
 
-		this.connection.socket.emit('get-public-rooms', this.publicRoomIdentifier, (listOfRooms) => {
-			this.updateListOfRooms(listOfRooms);
-			//setTimeout(() => { this.looper(), 3000});
-		});
+	    this.connection.socket.emit('get-public-rooms', this.publicRoomIdentifier, (listOfRooms) => {
+	        this.updateListOfRooms(listOfRooms);
+	        //setTimeout(() => { this.looper(), 3000});
+	    });
 	}
 
 	updateListOfRooms(rooms: any): void {
-		// if (!rooms.length) return;
+	    // if (!rooms.length) return;
 
-		// set rooms
-		// this.items = rooms;
+	    // set rooms
+	    // this.items = rooms;
 	}
 
 	openCanvasDesigner(isInitiator: boolean, sessionid: string): void {
-		let href: string = '/live-group-training/session?open=' + isInitiator + '&sessionid=' + sessionid;
+	    let href: string = '/live-group-training/session?open=' + isInitiator + '&sessionid=' + sessionid;
 
-		this.navCtrl.navigateForward(href);
+	    this.navCtrl.navigateForward(href);
 	}
 
 	joinRoom(room: any) {
@@ -208,11 +209,13 @@ export class LiveGroupTrainingPage implements OnInit {
 	}
 
 	gotoSession(id: string) {
-		this.navCtrl.navigateRoot('/live-group-training/session', { state: { id: id } });
+		console.log('SESSION ID', id);
+		this.router.navigate(['live-group-training', 'session'], { state: { id: id } });
+		// this.navCtrl.navigateRoot('/live-group-training/session', { state: { id: id } });
 	}
 
 	canJoin(room: any) {
-		if (
+		if(
 			this.sessionData.user.type === 'admin' ||
 			room.participants.includes(this.sessionData.user.id) ||
 			room.speakerId === this.sessionData.user.id ||
@@ -233,7 +236,7 @@ export class LiveGroupTrainingPage implements OnInit {
 
 	startSearch(event: any) {
 		// ignore
-		if (!event.detail.value) return;
+		if(!event.detail.value) return;
 
 		// disable infinite scroll
 		this.isInfiniteScrollDisabled = true;
@@ -253,7 +256,7 @@ export class LiveGroupTrainingPage implements OnInit {
 
 	closeSearch(event: any) {
 		// reset
-		if (this.didSearch) {
+		if(this.didSearch) {
 			this.resetAll().then(() => {
 				// query
 				this.loadData(event);
@@ -278,49 +281,40 @@ export class LiveGroupTrainingPage implements OnInit {
 		const alert = await this.alertCtrl.create({
 			header: 'Sort / Filter',
 			inputs: [
-				{
-					name: 'checkbox1',
-					type: 'checkbox',
-					label: 'Title',
-					value: 'value1',
-					checked: true
-				},
-
-				{
-					name: 'checkbox2',
-					type: 'checkbox',
-					label: 'Date',
-					value: 'value2'
-				}
+			  {
+				name: 'checkbox1',
+				type: 'checkbox',
+				label: 'Title',
+				value: 'value1',
+				checked: true
+			  },
+	  
+			  {
+				name: 'checkbox2',
+				type: 'checkbox',
+				label: 'Date',
+				value: 'value2'
+			  }
 			],
 			buttons: [
-				{
-					text: 'Cancel',
-					role: 'cancel',
-					cssClass: 'secondary',
-					handler: () => { }
-				}, {
-					text: 'OK',
-					handler: () => {
-					}
+			  {
+				text: 'Cancel',
+				role: 'cancel',
+				cssClass: 'secondary',
+				handler: () => {}
+			  }, {
+				text: 'OK',
+				handler: () => {
 				}
+			  }
 			]
 		});
-
+	  
 		await alert.present();
 	}
 
 	beautifyDate(date: string, format: string = 'MMMM D, YYYY', timezone?: string) {
 		return timezone && moment.tz.names().includes(timezone) ? moment(moment.tz(date, 'YYYY-MM-DD HH:mm', timezone).utc().toISOString()).format(format) : moment(date).format(format);
-		// return moment(date).tz(DEFAULT_TIMEZONE).format(format);
-	}
-
-	makeDate(date,format,timezone){
-		// if (timezone == moment.tz.guess()) {
-		// 	return moment(date).format(format)
-		// }else{
-
-		// }
-		return moment(date).format(format)
-	}
+    // return moment(date).tz(DEFAULT_TIMEZONE).format(format);
+  }
 }

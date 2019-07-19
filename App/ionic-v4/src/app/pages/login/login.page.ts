@@ -72,7 +72,7 @@ export class LoginPage implements OnInit {
         //let password = CryptoJS.enc.Hex.stringify(CryptoJS.SHA1(this.account.password));
         let password = this.loginForm.value.password;
 
-        this.restApi.post('login', { username: this.loginForm.value.username, password: password }).subscribe((resp: any) => {
+        this.restApi.post('auth/login', { username: this.loginForm.value.username, password: password }).subscribe((resp: any) => {
             if (resp.success && resp.success === true) {
                this.sockets.emit('set-online', { user_id: resp.user.id });
                 // clear form

@@ -1,0 +1,83 @@
+<ion-header no-border>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="category"></ion-back-button>
+      </ion-buttons>
+  
+      <ion-title text-capitalize>{{action}} Category</ion-title>
+  
+      <ion-buttons slot="end">
+        <ion-button type="button" *ngIf="form.valid && submitted === false" (click)="save()">Save</ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content>
+    <form [formGroup]="form">
+      <ion-list>
+        <ion-item [hidden]="inputData?.categories?.length < 1">
+          <ion-label position="stacked">Categories</ion-label>
+          <ion-select formControlName="parents" placeholder="Select parent categories" multiple="true">
+            <ion-select-option [value]="category.id" *ngFor="let category of inputData?.categories; let i = index;" [disabled]="category.id === item?.id">{{category.title}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+  
+        <ion-item>
+          <ion-label position="stacked">Name <ion-text color="danger">*</ion-text></ion-label>
+          <ion-input
+            formControlName="title"
+            placeholder="How do you call this category"
+          ></ion-input>
+        </ion-item>
+  
+        <ion-item>
+          <ion-label position="stacked">Description</ion-label>
+          <ion-textarea formControlName="description" rows="4" placeholder="Optional"></ion-textarea>
+        </ion-item>
+      </ion-list>
+  
+      <ion-list>
+        <ion-list-header>
+          <ion-label color="primary">Assign to</ion-label>
+        </ion-list-header>
+
+        <ion-item-group formArrayName="clients" *ngFor="let client of clientForms.controls; let clientIndex = index;">
+          <ion-item-group [formGroupName]="clientIndex">
+            <ion-input type="hidden" formControlName="id"></ion-input>
+            <ion-item-divider color="light">
+              <ion-note slot="end" mode="md" padding-end>Client</ion-note>
+              <ion-label>{{client?.value?.name}}</ion-label>
+            </ion-item-divider>
+
+            <ion-item-group formArrayName="companies" *ngFor="let company of client?.controls?.companies?.controls; let compIndex = index;">
+              <ion-item-group [formGroupName]="compIndex">
+                <ion-input type="hidden" formControlName="id"></ion-input>
+                <ion-item [lines]="compIndex + 1 === client?.controls?.companies?.controls?.length ? 'none' : 'inset'">
+                  <ion-label><h3>{{company?.value?.name}}</h3></ion-label>
+                  <ion-toggle slot="start" formControlName="checked"></ion-toggle>
+                </ion-item>
+              </ion-item-group>
+            </ion-item-group>
+
+            <ion-item lines="none" *ngIf="client?.controls?.companies?.controls?.length < 1">
+              <ion-label><p>No companies yet.</p>
+                <ion-button fill="outline" routerLink="/company/add">
+                  Add Company
+                </ion-button>
+              </ion-label>
+            </ion-item>
+
+          </ion-item-group>
+        </ion-item-group>
+        
+        <ion-item lines="none" *ngIf="inputData?.clients?.length < 1">
+          <ion-label><p>No clients yet.</p>
+          <ion-button fill="outline" routerLink="/client/add">
+            Add Client
+          </ion-button>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </form>
+  
+  </ion-content>

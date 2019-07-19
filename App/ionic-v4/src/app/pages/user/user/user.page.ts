@@ -18,7 +18,10 @@ export class UserPage implements OnInit {
 	paramData: any;
 	queryParams: any;
 	detailLink: string;
-	userCanAdd = ['admin', 'company'];
+	userCanAdd = ['admin', 'client'];
+	searchBoxToolbarHidden: boolean = true;
+	isInfiniteScrollDisabled: boolean = false;
+	didSearch: boolean = false;
 
 	constructor(
 		private restApi: RestApiService,
@@ -40,15 +43,13 @@ export class UserPage implements OnInit {
 
 			this.activatedRoute.params.subscribe((data) => {
 				this.paramData = data;
-				this.getList();
+				this.loadData();
 			});
 		});
 	}
 
-	getList() {
+	loadData(event?: any) {
 		let apiEndPoint: string;
-
-		console.log('routeData', this.routeData);
 
 		if(this.routeData.rootUrl !== this.routeData.type) {
 			apiEndPoint = this.routeData.rootApiEndPoint + '/' + this.paramData.id + '/' + this.routeData.apiEndPoint;
@@ -60,16 +61,79 @@ export class UserPage implements OnInit {
 			this.detailLink = '/' + this.routeData.appUrl + '/detail/';
 		}
 
-		this.restApi.get(apiEndPoint, this.queryParams).subscribe((res: any) => {
-			if(res.success === true) {
-				this.items = res.items;
-			} else {
-				this.navCtrl.navigateRoot('/dashboard');
+		this.restApi.get(apiEndPoint, this.queryParams).subscribe((resp: any) => {
+			// push items
+			this.items = this.items.concat(resp.items);
+
+			if(resp.items.length > 0) {
+				// update pagi
+				this.queryParams.pageNumber++;
+			}
+
+			// enable infinite scroll
+			if(this.isInfiniteScrollDisabled) this.isInfiniteScrollDisabled = false;
+
+			// hide loading indicator
+			if(event && event.type === 'ionInfinite') {
+				setTimeout(() => {
+					event.target.complete();
+				}, 500);
 			}
 		});
 	}
 
 	canAdd() {
 		return this.userCanAdd.includes(this.sessionData.user.type);
+	}
+
+	showHideSearchBox() {
+		this.searchBoxToolbarHidden = this.searchBoxToolbarHidden ? false : true;
+	}
+
+	startSearch(event: any) {
+		// ignore
+		if(!event.detail.value) return;
+
+		// disable infinite scroll
+		this.isInfiniteScrollDisabled = true;
+
+		// reset
+		this.resetAll().then(() => {
+			// set query
+			this.queryParams.searchQuery = event.detail.value.trim();
+
+			// query
+			this.loadData(event);
+
+			// flag search state
+			this.didSearch = true;
+		});
+	}
+
+	closeSearch(event: any) {
+		// reset
+		if(this.didSearch) {
+			this.resetAll().then(() => {
+				// query
+				this.loadData(event);
+			});
+		}
+
+		// flag search state
+		this.didSearch = false;
+
+		this.showHideSearchBox();
+	}
+
+	async resetAll() {
+		// set query params
+		this.setQueryParamsDefault();
+
+		// reset items
+		this.items = [];
+	}
+
+	setQueryParamsDefault() {
+		this.queryParams = { pageNumber: 0, limit: 25 };
 	}
 }

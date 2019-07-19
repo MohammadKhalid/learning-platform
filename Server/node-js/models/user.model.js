@@ -8,8 +8,8 @@ const CONFIG            = require('../config/config');
 module.exports = (sequelize, DataTypes) => {
     var Model = sequelize.define('User', {
         id          : {
-                        primaryKey: true,
                         type: DataTypes.UUID,
+                        primaryKey: true,
                         defaultValue: DataTypes.UUIDV4
                     },
         type        : {
@@ -17,11 +17,15 @@ module.exports = (sequelize, DataTypes) => {
                         values: ['admin', 'client', 'coach', 'student', 'company']
                     },
         email       : {type: DataTypes.STRING, allowNull: true, unique: true, defaultValue: null},
-        username    : {type: DataTypes.STRING, allowNull: true, unique: true, validate: { len: {args: [7, 20], msg: "Invalid, too short."} }},
+        username    : {type: DataTypes.STRING, allowNull: true, unique: true, validate: { len: {args: [4, 20], msg: "Invalid, too short."} }},
         password    : DataTypes.STRING,
         firstName   : DataTypes.STRING(50),
         lastName    : DataTypes.STRING(50),
         description : DataTypes.TEXT,
+        isPublic    : {
+                        type: DataTypes.BOOLEAN,
+                        defaultValue: false
+                    },
         isActive    : {
                         type: DataTypes.BOOLEAN,
                         defaultValue: false
@@ -30,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
                         type: DataTypes.BOOLEAN,
                         defaultValue: false
                     },
-        isLogin: DataTypes.BOOLEAN
+        isLogin     : DataTypes.BOOLEAN
     },
     {
         defaultScope: {
@@ -46,22 +50,48 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     Model.associate = function(models) {
+        // this.belongsToMany(models.ShowTime, {as: 'showTimes', through: 'UserShowTimes', foreignKey: 'userId', otherKey: 'showTimeId'});
+        // this.belongsToMany(models.AskExpert, {as: 'askExperts', through: 'UserAskExperts', foreignKey: 'userId', otherKey: 'askExpertId'});
+        // this.belongsToMany(models.Media, {as: 'medias', through: 'UserMedias', foreignKey: 'userId', otherKey: 'mediaId'});
+        // this.belongsToMany(models.Category, {as: 'categories', through: 'UserCategories', foreignKey: 'userId', otherKey: 'categoryId'});
+        // this.belongsToMany(models.Company, {as: 'companies', through: models.UserCompany, foreignKey: 'userId', otherKey: 'companyId'});
+        // this.belongsToMany(models.Department, {as: 'departments', through: 'UserDepartments', foreignKey: 'userId', otherKey: 'departmentId'});
+
+        // this.belongsTo(models.User, {as: 'createdByUser', foreignKey: 'createdBy'});
+        // this.belongsTo(models.User, {as: 'updatedByUser', foreignKey: 'updatedBy'});
+
+        // this.hasOne(models.UserProfile, {as: 'profile', foreignKey: 'userId'});
+
+        // this.hasMany(models.UserAddress, {as: 'addresses', foreignKey: 'userId'});
+        // this.hasMany(models.UserTelecom, {as: 'telecoms', foreignKey: 'userId'});
+
+        this.hasOne(models.Subscription, {as: 'subscription', foreignKey: 'userId'});
+
+        this.belongsToMany(models.Profile, { through: { model: models.UserTag, unique: false }, foreignKey: 'userId', constraints: false, as: 'profiles' });
+        this.belongsToMany(models.Address, { through: { model: models.UserTag, unique: false }, foreignKey: 'userId', constraints: false, as: 'addresses' });
+        this.belongsToMany(models.Telecom, { through: { model: models.UserTag, unique: false }, foreignKey: 'userId', constraints: false, as: 'telecoms' });
+        this.belongsToMany(models.ShowTime, { through: { model: models.UserTag, unique: false }, foreignKey: 'userId', constraints: false, as: 'showTimes' });
+        this.belongsToMany(models.Category, { through: { model: models.UserTag, unique: false, scope: { taggable: 'category' } }, foreignKey: 'userId', constraints: false, as: 'categories' });
+        this.belongsToMany(models.Topic, { through: { model: models.UserTag, unique: false, scope: { taggable: 'topic' } }, foreignKey: 'userId', constraints: false, as: 'topics' });
+        this.belongsToMany(models.Media, { through: { model: models.UserTag, unique: false }, foreignKey: 'userId', constraints: false, as: 'medias' });
+        this.belongsToMany(models.LiveGroupTraining, { through: { model: models.UserTag, unique: false }, foreignKey: 'userId', constraints: false, as: 'liveGroupTrainings' });
+        // this.belongsToMany(models.AskExpert, { through: { model: models.UserTag, unique: false }, foreignKey: 'userId', constraints: false, as: 'askExperts' });
+
+        this.hasMany(models.UserCompany, {as: 'assignedCompanies', foreignKey: 'userId'});
         this.belongsToMany(models.Company, {as: 'companies', through: models.UserCompany, foreignKey: 'userId', otherKey: 'companyId'});
-        this.belongsToMany(models.ShowTime, {as: 'showTimes', through: 'UserShowTime', foreignKey: 'userId', otherKey: 'showTimeId'});
-        this.belongsToMany(models.AskExpert, {as: 'askExperts', through: 'UserAskExpert', foreignKey: 'userId', otherKey: 'askExpertId'});
 
-        this.hasOne(models.UserProfile, {as: 'profile', foreignKey: 'userId'});
-
-        this.belongsTo(models.Subscription, {as: 'subscription', foreignKey: 'subscriptionId'});
-        this.belongsTo(models.User, {as: 'createdByUser', foreignKey: 'createdBy'});
-        this.belongsTo(models.User, {as: 'updatedByUser', foreignKey: 'updatedBy'});
-
-        // this.belongsToMany(models.LiveGroupTraining, {as: 'liveGroupTrainings', through: 'UserLiveGroupTraining', foreignKey: 'userId', otherKey: 'liveGroupTrainingId'});
-        // this.belongsToMany(models.PracticeTime, {as: 'practiceTimes', through: 'UserPracticeTime', foreignKey: 'userId', otherKey: 'practiceTimeId'});
-        // this.belongsToMany(models.ShowTime, {as: 'showTimes', through: 'UserShowTime', foreignKey: 'userId', otherKey: 'showTimeId'});
-
-        this.hasMany(models.UserAddress, {as: 'addresses', foreignKey: 'userId'});
-        this.hasMany(models.UserTelecom, {as: 'telecoms', foreignKey: 'userId'});
+        this.belongsToMany(models.Department, {
+            through: {
+              model: models.DepartmentTag,
+              unique: false,
+              scope: {
+                taggable: 'user'
+              }
+            },
+            foreignKey: 'taggableId',
+            constraints: false,
+            as: 'departments'
+        });
     };
 
     Model.beforeSave(async (user, options) => {

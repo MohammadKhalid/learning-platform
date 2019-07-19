@@ -4,7 +4,6 @@ import { AuthenticationService } from '../user/authentication.service';
 
 import { SERVER_URL } from '../../../environments/environment';
 import { Observable } from 'rxjs/Observable';
-import { LoadingController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
@@ -16,11 +15,16 @@ export class RestApiService {
 
 	constructor(
 		private authService: AuthenticationService,
-		private http: HttpClient,
-		public loadingController: LoadingController
+		private http: HttpClient
 	) {
 		this.authService.authenticationState.subscribe((state) => {
-			this.sessionData = state ? this.authService.getSessionData() : null;
+			if(state) {
+				this.sessionData = this.authService.getSessionData();
+				this.url = this.url + this.sessionData.user.type + '/';
+			} else {
+				this.sessionData = null;
+				this.url = SERVER_URL;
+			}
 		});
 	}
 
@@ -63,83 +67,6 @@ export class RestApiService {
 		// });
 		return req;
 	}
-
-
-	postPromise(endpoint: string, body: any, reqOpts?: any): Promise<any> {
-
-		if(!reqOpts) reqOpts = { headers: {} };
-		if (this.sessionData && this.sessionData.token) reqOpts.headers.Authorization = this.sessionData.token;
-
-		return new Promise((resolve, reject) => {
-
-			this.http.post(this.url + endpoint, body, reqOpts)
-				.toPromise()
-				.then(
-					res => { // Success
-						resolve(res);
-					}
-				).catch(onreject => {
-					reject(onreject);
-				});
-		});
-
-	}
-
-
-	putPromise(endpoint: string, body: any, reqOpts?: any): Promise<any> {
-
-		if (!reqOpts) reqOpts = { headers: {} };
-		if (this.sessionData && this.sessionData.token) reqOpts.headers.Authorization = this.sessionData.token;
-	
-		return new Promise((resolve, reject) => {
-
-			this.http.put(this.url + endpoint, body, reqOpts)
-				.toPromise()
-				.then(
-					res => { // Success
-						resolve(res);
-					}
-				).catch(onreject => {
-					reject(onreject);
-				});
-		});
-
-	}
-
-	async presentLoading() {
-		const loading = await this.loadingController.create({
-		  message: 'Please wait...',
-		  duration: 2000
-		});
-		await loading.present();
-	
-		const { role, data } = await loading.onDidDismiss();
-	
-	  }
-	
-
-	getPromise(endpoint: string, params?: any, reqOpts?: any): Promise<any> {
-
-		if (!reqOpts) reqOpts = { headers: {} };
-		if (this.sessionData && this.sessionData.token) reqOpts.headers.Authorization = this.sessionData.token;
-
-		return new Promise((resolve, reject) => {
-			let url = params ? `${this.url}/${endpoint}/${params}` : `${this.url}/${endpoint}`;
-			this.http.get(url, reqOpts)
-				.toPromise()
-				.then(
-					res => { // Success
-						resolve(res);
-					}
-				).catch(onreject => {
-					reject(onreject);
-				});
-		});
-
-	}
-
-
-
 
 	postFormData(endpoint: string, body: any, reqOpts?: any) {
 		const httpHeaders = new HttpHeaders({
@@ -206,14 +133,5 @@ export class RestApiService {
 
 	setSessionData(data) {
 		this.sessionData = data;
-	}
-
-	getConceptsOptins(){
-		return [
-			{id: 0 , value: 'video'},
-			{id: 1 , value: 'Text'},
-			{id: 2 , value: 'Quiz'},
-			{id: 3 , value: 'Recources'},
-		]
 	}
 }

@@ -48,13 +48,13 @@ let item = async function (req, res, next) {
     let user, users_array, users;
     user = req.user;
 
-    if(user.type !== 'admin') {
-        [err, users] = await to(item.getUsers());
+    // if(user.type !== 'admin') {
+    //     [err, users] = await to(item.getUsers());
 
-        users_array = users.map(obj=> String(obj.dataValues.id));
+    //     users_array = users.map(obj=> String(obj.dataValues.id));
 
-        if(!users_array.includes(String(user.id))) return ReE(res, "User does not have permission to read with id: "+item_id);
-    }
+    //     if(!users_array.includes(String(user.id))) return ReE(res, "User does not have permission to read with id: "+item_id);
+    // }
 
     req.item = item;
     next();

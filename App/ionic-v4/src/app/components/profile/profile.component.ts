@@ -91,77 +91,81 @@ export class ProfileComponent implements OnInit {
 		});
 	}
 
-	presentPageAction() {
-		const id = this.routeData.type === 'profile' ? '' : '/' + this.item.id;
+	// presentPageAction() {
+	// 	const id = this.routeData.type === 'profile' ? '' : '/' + this.item.id;
 
-		let actions: any = [
-			{
-				text: 'Edit',
-				icon: 'create',
-				handler: () => {
-					console.log('ROUTE DATA ID', '/' + this.routeData.appUrl + '/edit' + id);
-					this.navCtrl.navigateRoot('/' + this.routeData.appUrl + '/edit' + id);
-				}
-			}
-		];
+	// 	let actions: any = [
+	// 		{
+	// 			text: 'Edit',
+	// 			icon: 'create',
+	// 			handler: () => {
+	// 				console.log('ROUTE DATA ID', '/' + this.routeData.appUrl + '/edit' + id);
+	// 				this.navCtrl.navigateRoot('/' + this.routeData.appUrl + '/edit' + id);
+	// 			}
+	// 		}
+	// 	];
 
-		if(this.routeData.type !== 'profile') {
-			actions.push({
-				text: 'Delete',
-				role: 'destructive',
-				icon: 'trash',
-				handler: () => {
-					this.alertCtrl.create({
-						header: 'Delete Confirmation',
-						subHeader: this.item.title,
-						message: 'Are you sure you want to delete this ' + this.routeData.singular + '?',
-						buttons: [
-							{
-								text: 'Cancel',
-								role: 'cancel'
-							},
-							{
-								text: 'Yes',
-								handler: () => {
-									this.notificationService.showMsg('Deleting...', 0).then((toast: any) => {
-										this.restApi.delete(this.routeData.apiEndPoint + '/' + this.item.id).subscribe((res: any) => {
-											this.notificationService.toast.dismiss();
+	// 	if(this.routeData.type !== 'profile') {
+	// 		actions.push({
+	// 			text: 'Delete',
+	// 			role: 'destructive',
+	// 			icon: 'trash',
+	// 			handler: () => {
+	// 				this.alertCtrl.create({
+	// 					header: 'Delete Confirmation',
+	// 					subHeader: this.item.title,
+	// 					message: 'Are you sure you want to delete this ' + this.routeData.singular + '?',
+	// 					buttons: [
+	// 						{
+	// 							text: 'Cancel',
+	// 							role: 'cancel'
+	// 						},
+	// 						{
+	// 							text: 'Yes',
+	// 							handler: () => {
+	// 								this.notificationService.showMsg('Deleting...', 0).then((toast: any) => {
+	// 									this.restApi.delete(this.routeData.apiEndPoint + '/' + this.item.id).subscribe((res: any) => {
+	// 										this.notificationService.toast.dismiss();
 			
-											if(res.success === true) {
-												this.notificationService.showMsg(this.routeData.singular + ' ' + this.item.firstName + ' ' + this.item.lastName + ' has been deleted!').then(() => {
-													this.navCtrl.navigateRoot(this.routeData.appUrl);
-												});
-											} else {
-												this.notificationService.showMsg(res.error);
-											}
-										});
-									});
-								}
-							}
-						]
-					}).then((alert) => {
-						alert.present();
-					});
-				}
-			});
-		}
+	// 										if(res.success === true) {
+	// 											this.notificationService.showMsg(this.routeData.singular + ' ' + this.item.firstName + ' ' + this.item.lastName + ' has been deleted!').then(() => {
+	// 												this.navCtrl.navigateRoot(this.routeData.appUrl);
+	// 											});
+	// 										} else {
+	// 											this.notificationService.showMsg(res.error);
+	// 										}
+	// 									});
+	// 								});
+	// 							}
+	// 						}
+	// 					]
+	// 				}).then((alert) => {
+	// 					alert.present();
+	// 				});
+	// 			}
+	// 		});
+	// 	}
 
-		// cancel
-		actions.push({
-			text: 'Cancel',
-			icon: 'close',
-			role: 'cancel',
-			handler: () => {
-				console.log('Cancel clicked');
-			}
-		});
+	// 	// cancel
+	// 	actions.push({
+	// 		text: 'Cancel',
+	// 		icon: 'close',
+	// 		role: 'cancel',
+	// 		handler: () => {
+	// 			console.log('Cancel clicked');
+	// 		}
+	// 	});
 
-		this.actionSheetCtrl.create({
-			header: this.item.title,
-			buttons: actions
-		}).then((action) => {
-			action.present();
-		});
+	// 	this.actionSheetCtrl.create({
+	// 		header: this.item.title,
+	// 		buttons: actions
+	// 	}).then((action) => {
+	// 		action.present();
+	// 	});
+	// }
+
+	get itemValue() {
+		return this.item;
 	}
 
 }

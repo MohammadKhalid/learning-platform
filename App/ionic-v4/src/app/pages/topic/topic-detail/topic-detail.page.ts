@@ -6,6 +6,8 @@ import { RestApiService } from '../../../services/http/rest-api.service';
 import { AuthenticationService } from '../../../services/user/authentication.service';
 import { NotificationService } from '../../../services/notification/notification.service';
 
+import { SERVER_URL } from '../../../../environments/environment';
+
 @Component({
   selector: 'app-topic-detail',
   templateUrl: './topic-detail.page.html',
@@ -29,7 +31,7 @@ export class TopicDetailPage implements OnInit {
         private alertCtrl: AlertController
 	) {
 		// set media base url
-        this.mediaBaseUrl = this.restApi.url;
+        this.mediaBaseUrl = SERVER_URL;
 
 		this.sessionData = this.authService.getSessionData();
 	}
@@ -70,7 +72,7 @@ export class TopicDetailPage implements OnInit {
 					let typeArray	= type.split('/')[0];
 
 					let mediaPaths = [
-						{ type: type, path: this.restApi.url + media.path }
+						{ type: type, path: this.mediaBaseUrl + media.path }
 					];
 
 					if(typeArray === 'video' || type === 'application/octet-stream') {
@@ -85,7 +87,7 @@ export class TopicDetailPage implements OnInit {
 								newMediaPathArray.pop();
 							
 							let newMediaPath 	= newMediaPathArray.join('.') + '.mp4';	
-							mediaPaths.push({type: 'video/mp4', path: this.restApi.url + newMediaPath});
+							mediaPaths.push({type: 'video/mp4', path: this.mediaBaseUrl + newMediaPath});
 						}
 					}
 
@@ -96,73 +98,84 @@ export class TopicDetailPage implements OnInit {
 	}
 
 	presentPageAction() {
+		let actionButtons: Array<object> = [];
+
+		// {	
+		// 	text: 'Add Challenge',
+		// 	icon: 'add',
+		// 	handler: () => {
+		// 		this.navCtrl.navigateRoot('/topic/detail/' + this.item.id + '/challenge/add');
+		// 	}
+		// },
+
+		// add edit button
+		// if(this.item.createdBy === this.sessionData.user.id) {
+			actionButtons.push({
+				text: 'Edit',
+				icon: 'create',
+				handler: () => {
+					this.navCtrl.navigateRoot('/topic/edit/' + this.item.id);
+				}
+			});
+		// }
+
+		actionButtons.push({
+			text: 'Delete',
+			role: 'destructive',
+			icon: 'trash',
+			handler: () => {
+				this.alertCtrl.create({
+					header: 'Delete Confirmation',
+					subHeader: this.item.title,
+					message: 'Are you sure you want to delete this topic?',
+					buttons: [
+						{
+							text: 'Cancel',
+							role: 'cancel'
+						},
+						{
+							text: 'Yes',
+							handler: () => {
+								this.notificationService.showMsg('Deleting...', 0).then((toast: any) => {
+									this.restApi.delete(this.urlEndPoint + 's/' + this.item.id).subscribe((res: any) => {
+										this.notificationService.toast.dismiss();
+		
+										if(res.success === true) {
+											this.notificationService.showMsg('Topic ' + this.item.title + ' has been deleted!').then(() => {
+												this.navCtrl.navigateRoot(this.urlEndPoint);
+											});
+										} else {
+											this.notificationService.showMsg(res.error);
+										}
+									});
+								});
+							}
+						}
+					]
+				}).then((alert) => {
+					alert.present();
+				});
+			}
+		},
+		{
+			text: 'Cancel',
+			icon: 'close',
+			role: 'cancel',
+			handler: () => {
+				console.log('Cancel clicked');
+			}
+		});
+
 		this.actionSheetCtrl.create({
 			header: this.item.title,
-			buttons: [
-				{	
-					text: 'Add Challenge',
-					icon: 'add',
-					handler: () => {
-						this.navCtrl.navigateRoot('/topic/detail/' + this.item.id + '/challenge/add');
-					}
-				},
-				{
-					text: 'Edit',
-					icon: 'create',
-					handler: () => {
-						this.navCtrl.navigateRoot('/topic/edit/' + this.item.id);
-					}
-				},
-				{
-					text: 'Delete',
-					role: 'destructive',
-					icon: 'trash',
-					handler: () => {
-						this.alertCtrl.create({
-							header: 'Delete Confirmation',
-							subHeader: this.item.title,
-							message: 'Are you sure you want to delete this topic?',
-							buttons: [
-								{
-									text: 'Cancel',
-									role: 'cancel'
-								},
-								{
-									text: 'Yes',
-									handler: () => {
-										this.notificationService.showMsg('Deleting...', 0).then((toast: any) => {
-											this.restApi.delete(this.urlEndPoint + 's/' + this.item.id).subscribe((res: any) => {
-												this.notificationService.toast.dismiss();
-				
-												if(res.success === true) {
-													this.notificationService.showMsg('Topic ' + this.item.title + ' has been deleted!').then(() => {
-														this.navCtrl.navigateRoot(this.urlEndPoint);
-													});
-												} else {
-													this.notificationService.showMsg(res.error);
-												}
-											});
-										});
-									}
-								}
-							]
-						}).then((alert) => {
-							alert.present();
-						});
-					}
-				},
-				{
-					text: 'Cancel',
-					icon: 'close',
-					role: 'cancel',
-					handler: () => {
-						console.log('Cancel clicked');
-					}
-				}
-			]
+			buttons: actionButtons
 		}).then((action) => {
 			action.present();
 		});
+	}
+
+	viewMedia(item: any) {
+
 	}
 
 }

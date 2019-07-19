@@ -26,6 +26,10 @@ export class DashboardPage implements OnInit {
 	}
 
 	ngOnInit() {
+		this.restApi.get('dashboard', {}).subscribe((res: any) => {
+			console.log('DASHBOARD', res);
+		});
+
 		// const connectionOptions = {
 		// 	publicRoomIdentifier: 'live-group-trainings',
 		// 	socketMessageEvent:  'live-group-trainings'
