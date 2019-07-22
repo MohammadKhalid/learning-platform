@@ -70,7 +70,8 @@
 				<ion-icon name="time" mode="md" slot="start"></ion-icon>
 				<ion-label>Time</ion-label>
 				<ion-datetime
-					display-format="h:mm A"
+					display-format="HH:mm"
+					picker-format = "HH:mm"
 					formControlName="time"
 				></ion-datetime>
 			</ion-item>
@@ -79,21 +80,13 @@
 					<ion-icon name="globe" slot="start"></ion-icon>
 					<ion-label>Timezone</ion-label>
 
-					<ionic-selectable
-						formControlName="timezone"
-
-						headerColor="primary"
-						[searchFailText]="'No records found'"
-						[canSearch]="true"
-						[hasVirtualScroll]="true"
-						[items]="timeZones">
-						<ng-template ionicSelectableTitleTemplate>
-							Select Timezone
-						</ng-template>
-						<ng-template ionicSelectableCloseButtonTemplate>
-							<ion-icon name="close-circle"></ion-icon>
-						</ng-template>
-					</ionic-selectable>
+					<!-- <ionic-selectable formControlName="timezone" headerColor="primary" [searchFailText]="'No records found'"
+					[canSearch]="true" [hasVirtualScroll]="true" [items]="timeZones"> -->
+					<ion-label class="ion-text-end">Australia/Sydney</ion-label>
+					<!-- <ng-template ionicSelectableCloseButtonTemplate>
+						<ion-icon name="close-circle"></ion-icon>
+					</ng-template> -->
+				<!-- </ionic-selectable> -->
 				</ion-item>
 		</ion-list>
 

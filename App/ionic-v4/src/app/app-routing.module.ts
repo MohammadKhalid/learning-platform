@@ -20,6 +20,11 @@ const routes: Routes = [
     canActivate: [AuthGuardService],
     loadChildren: './pages/certification/certification-routing.module#CertificationRoutingModule'
   },
+   { 
+    path: 'level-setting', 
+    canActivate: [AuthGuardService],
+    loadChildren: './pages/level-settings/level-settings.module#LevelSettingsPageModule'
+  },
   { 
     path: 'company', 
     canActivate: [AuthGuardService],
@@ -102,7 +107,8 @@ const routes: Routes = [
   { path: 'media/detail/:id', canActivate: [AuthGuardService], loadChildren: './pages/media/media-detail/media-detail.module#MediaDetailPageModule' },
 
   { path: 'error', loadChildren: './pages/public/error/error.module#ErrorPageModule' },
-  { path: '**', loadChildren: './pages/public/error/error.module#ErrorPageModule', data: { error: 404 } }
+  { path: '**', loadChildren: './pages/public/error/error.module#ErrorPageModule', data: { error: 404 } },
+ { path: 'level-settings', loadChildren: './pages/level-settings/level-settings.module#LevelSettingsPageModule' }
 ];
 
 @NgModule({

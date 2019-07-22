@@ -27,7 +27,8 @@ export class LiveGroupTrainingFormPage implements OnInit {
 	sessionData: any;
 	participants: any;
 	defaultDate = new Date().toISOString().slice(0, 10);
-	defaultDateTime: string = '09:00';
+	defaultDateTime: string = moment("09:00", "HH:mm").toString()
+	// defaultDateTime: string = "Tue Jul 16 2019 09:00:00"
 	action: string;
 	timeZones: any = [];
 	defaultTimezone: string;
@@ -44,16 +45,16 @@ export class LiveGroupTrainingFormPage implements OnInit {
 	) {
 		this.sessionData = this.authService.getSessionData();
 
-		const localTimeZone = moment.tz.guess();
+	//	const localTimeZone = moment.tz.guess();
 		// this.defaultTimezone = "(GMT" + moment.tz(localTimeZone).format('Z') + ")" + localTimeZone;
-		this.defaultTimezone = localTimeZone;
-		console.log('DEFAULT TZ', this.defaultTimezone);
+	//	this.defaultTimezone = localTimeZone;
+	//	console.log('DEFAULT TZ', this.defaultTimezone);
 
 		// init timezone
-		const timeZones = moment.tz.names();
-		this.timeZones = timeZones;
+		// const timeZones = moment.tz.names();
+		// this.timeZones = timeZones;
 
-		console.log('TZ', timeZones);
+		// console.log('TZ', timeZones);
 	}
 
 	ngOnInit() {
@@ -115,13 +116,20 @@ export class LiveGroupTrainingFormPage implements OnInit {
             detail: [''],
             date: [this.defaultDate, Validators.required],
 			time: [this.defaultDateTime, Validators.required],
-			timezone: [this.defaultTimezone, Validators.required],
+		timezone: 'Australia/Sydney',
             public: [false, Validators.required],
             participants: []
         });
 	}
 
 	save() {
+  	let time = this.form.get('time').value;
+		time = moment(time).format('HH:mm');
+		this.form.get('time').setValue(time);
+
+		let date = this.form.get('date').value;
+		date = moment(date).format('YYYY-MM-DD');
+		this.form.get('date').setValue(date);
 		if(this.action === 'new')
 			this.restApi.post(this.urlEndPoint + 's', this.form.value).subscribe((resp: any) => {
 				this.saveCallback(resp);

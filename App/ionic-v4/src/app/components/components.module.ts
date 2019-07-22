@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 
 import { IonicSelectableModule } from 'ionic-selectable';
-import { FileDropModule } from 'ngx-file-drop';
+import { FileDropModule, FileComponent } from 'ngx-file-drop';
 import { SimplePdfViewerModule } from 'simple-pdf-viewer';
 
 import { MediaComponent } from './media/media.component';
@@ -18,7 +18,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { StudentProfileComponent } from './profile/student-profile/student-profile.component';
 import { CoachProfileComponent } from './profile/coach-profile/coach-profile.component';
 import { ClientProfileComponent } from './profile/client-profile/client-profile.component';
-
+import { MatTabsModule, MatSelectModule, MatCardModule } from '@angular/material';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { StudentDashboardComponent } from './dashboard/student-dashboard/student-dashboard.component';
 import { CoachDashboardComponent } from './dashboard/coach-dashboard/coach-dashboard.component';
@@ -40,12 +40,20 @@ import { ClientTopicComponent } from './topic/client-topic/client-topic.componen
 import { ClientTopicFormComponent } from './topic/client-topic-form/client-topic-form.component';
 import { CoachTopicComponent } from './topic/coach-topic/coach-topic.component';
 import { StudentTopicComponent } from './topic/student-topic/student-topic.component';
-
 import { ClientTagModalComponent } from './modal/client-tag-modal/client-tag-modal.component';
-
-import { MatTabsModule } from '@angular/material/tabs';
 import { ErrorsComponent } from './errors/errors.component';
+import { MatButtonModule } from '@angular/material/button';
+// import {MatSelectModule} from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FilterComponent } from './common/filter/filter.component';
+import { CartificateCardComponent } from './common/cartificate-card/cartificate-card.component';
+import { DragScrollModule } from 'ngx-drag-scroll';
 
+import { LazyLoadImageModule, intersectionObserverPreset } from 'ng-lazyload-image';
+import { VideoComponent } from './video/video.component';
+import { FileUploadModule } from 'ng2-file-upload';
+import { DropzoneComponent } from './common/dropzone/dropzone.component';
+import { ResourcesComponent } from './resources/resources.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -56,7 +64,16 @@ import { ErrorsComponent } from './errors/errors.component';
 		FileDropModule,
 		SimplePdfViewerModule,
 		RouterModule,
-		MatTabsModule
+    MatTabsModule,
+		MatFormFieldModule,
+		MatSelectModule,
+		MatCardModule,
+		MatButtonModule,
+		DragScrollModule,
+		FileUploadModule,
+		LazyLoadImageModule.forRoot({
+			preset: intersectionObserverPreset // <-- tell LazyLoadImage that you want to use IntersectionObserver
+		})
 	],
 	declarations: [
 		ErrorsComponent,
@@ -89,7 +106,12 @@ import { ErrorsComponent } from './errors/errors.component';
 		ClientTopicFormComponent,
 		CoachTopicComponent,
 		StudentTopicComponent,
-		ClientTagModalComponent
+	  ClientTagModalComponent,
+    FilterComponent,
+		CartificateCardComponent,
+		VideoComponent,
+		DropzoneComponent,
+		ResourcesComponent,
 	],
 	entryComponents: [
 		MediaComponent,
@@ -123,7 +145,12 @@ import { ErrorsComponent } from './errors/errors.component';
 		ClientTopicComponent,
 		ClientTopicFormComponent,
 		CoachTopicComponent,
-		StudentTopicComponent
+		StudentTopicComponent,
+    FilterComponent,
+		CartificateCardComponent,
+		VideoComponent,
+		DropzoneComponent,
+		ResourcesComponent,
 	],
 	providers: [
 		ProfileComponent

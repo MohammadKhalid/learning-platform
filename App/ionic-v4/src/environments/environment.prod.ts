@@ -4,6 +4,7 @@ export const environment = {
   
   export const SERVER_URL = 'https://api.thrive19.com/v1/';
   export const SOCKET_URL = 'https://api.thrive19.com/';
+  export const IMAGE_URL = 'https://api.thrive19.com/uploads';
   export const RTC_SIGNALLING_SERVER_URL = 'https://thrive19.com:9001/';
   export const ICE_SERVERS = {
     stun: {

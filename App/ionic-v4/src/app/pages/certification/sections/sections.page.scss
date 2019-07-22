@@ -1,0 +1,72 @@
+.example-container {
+  height: calc(100vh - 56px);
+ 
+}
+
+
+  .mat-darawer1{
+      position: relative;
+      z-index: 1;
+      display: block;
+      height: 100%;  
+      overflow: hidden;
+      margin-left: 219px;
+     
+  }
+
+  .certificate-Sbar{
+    background-color: #2e3d49; 
+  --ion-item-background: #2e3d49;
+    
+
+  }
+
+  ion-item.certificate-item{
+      font-size: 13px;
+      color: white;
+      --min-height: 0;
+  }
+  
+  ion-icon.certificate-icon{
+    color: white;
+    font-size: 18px;
+    margin-left: 2%
+  
+  }
+
+  .bordersResources{
+    border-bottom: 2px solid #1a222a;
+    border-top: 2px solid #1a222a;
+  }
+
+  .bordersConcepts{
+    border-bottom: 2px solid #1a222a;
+  }
+
+  .bordersSearch{
+    border-top: 2px solid #1a222a;
+    margin-bottom: -3%
+  }
+
+  .certificateBackground{
+    background-color: 1c262f;
+  }
+
+  .conceptGaps{
+    margin-top: 13px;
+  }
+
+
+  ion-item.certificate-section {
+    --background-hover: none;
+    --color-hover: #bfc0c1
+  }
+
+  ion-icon.bordersResources.certificate-item.certificate-section.hydrated.in-list.ion-activatable.ion-focusable.item.item-label.md {
+    --background-hover: none;
+    --color-hover: #bfc0c1
+  }
+  
+  ion-item.bordersResources.certificate-item.certificate-section.hydrated.in-list.ion-activatable.ion-focusable.item.item-label.md {
+    --background: #1a232b;
+}

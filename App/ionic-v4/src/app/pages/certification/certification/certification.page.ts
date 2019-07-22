@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { RestApiService } from 'src/app/services/http/rest-api.service';
+import { AuthenticationService } from 'src/app/services/user/authentication.service';
 
 @Component({
   selector: 'app-certification',
@@ -6,10 +8,28 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./certification.page.scss'],
 })
 export class CertificationPage implements OnInit {
+  courses: any = [];
+  user: any
+  constructor(
+    private restService: RestApiService,
+    private authService: AuthenticationService,
 
-  constructor() { }
+  ) {
 
-  ngOnInit() {
+    this.user = this.authService.getSessionData().user;
   }
 
+  ngOnInit() {
+    let obj = {
+      coachId: this.user.id,
+      categories: [],
+      searchBy: ''
+    }
+    this.searchByFilterEvent(obj)
+  }
+  searchByFilterEvent(obj) {
+    this.restService.get(`courses`, obj).subscribe((resp: any) => {
+      if (resp.data) this.courses = resp.data;
+    });
+  }
 }

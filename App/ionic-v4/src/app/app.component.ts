@@ -37,7 +37,7 @@ export class AppComponent {
     menu: [
       { title: 'Practice Time', url: '/practice-time', icon: 'fitness', icon_mode: 'ios' },
       { title: 'Show Time', url: '/show-time', icon: 'glasses', icon_mode: 'ios' },
-      { title: 'Certification', url: '#', icon: 'ribbon', icon_mode: 'ios' }
+      { title: 'Certification', url: '/certification', icon: 'ribbon', icon_mode: 'ios' }
     ]
   };
 
@@ -68,7 +68,6 @@ export class AppComponent {
         header: false,
         menu: [
           { title: 'Dashboard', url: '/dashboard', icon: 'apps', icon_mode: 'md' },
-          { title: 'Categories', url: '/category', icon: 'list', icon_mode: 'ios' },
           { title: 'Topics', url: '/topic', icon: 'book', icon_mode: 'ios' },
           { title: 'Coaches', url: '/coach', icon: 'contacts', icon_mode: 'ios' }
         ]
@@ -84,8 +83,9 @@ export class AppComponent {
           { title: 'Dashboard', url: '/dashboard', icon: 'apps', icon_mode: 'md' },
           { title: 'Categories', url: '/category', icon: 'list', icon_mode: 'ios' },
           { title: 'Topics', url: '/topic', icon: 'book', icon_mode: 'ios' },
-          { title: 'Companies', url: '/company', icon: 'business', icon_mode: 'ios' }
-        ]
+          { title: 'Companies', url: '/company', icon: 'business', icon_mode: 'ios' },
+          { title: 'Level Settings', url: '/level-setting', icon: 'book', icon_mode: 'ios' }
+       ]
       },
       {
         header: {

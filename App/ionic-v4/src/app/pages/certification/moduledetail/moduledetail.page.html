@@ -1,0 +1,47 @@
+<ion-header no-border>
+  <ion-toolbar color="primary">
+
+
+    <ion-title>Module Detail</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/certification/addmodule"></ion-back-button>
+
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+
+
+  <ion-list class="ion-padding">
+    <ion-item lines="inset">
+      <ion-label position="floating"> Module Title <ion-text color="danger">*</ion-text>
+      </ion-label>
+      <ion-input type="input" placeholder="placeholder"></ion-input>
+    </ion-item>
+
+    <ion-item lines="inset">
+      <ion-label position="floating"> Description <ion-text color="danger">*</ion-text>
+      </ion-label>
+      <ion-input type="input" placeholder="placeholder"></ion-input>
+    </ion-item>
+
+    <ion-item lines="inset">
+      <ion-label position="floating"> Total Experience <ion-text color="danger">*</ion-text>
+      </ion-label>
+      <ion-input type="input" placeholder="placeholder"></ion-input>
+    </ion-item>
+
+
+
+
+
+
+
+    <ion-item lines="none" class="ion-float-right ion-padding-top">
+      <ion-button routerLink="/certification/sections" routerLinkActive="router-link-active" size="md">Save and Next</ion-button>
+    </ion-item>
+  </ion-list>
+
+
+</ion-content>

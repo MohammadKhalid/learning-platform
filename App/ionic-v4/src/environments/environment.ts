@@ -15,9 +15,10 @@ export const environment = {
  */
 // import 'zone.js/dist/zone-error';  // Included with Angular CLI.
 
-export const SERVER_URL = 'http://api.thrive19.local:3000/v1/';
-export const SOCKET_URL = 'http://api.thrive19.local:3000/';
+export const SERVER_URL = 'https://api.thrive19.com/v1/';
+export const SOCKET_URL = 'https://api.thrive19.com/';
 export const RTC_SIGNALLING_SERVER_URL = 'https://thrive19.com:9001/';
+export const IMAGE_URL = 'https://api.thrive19.local/uploads';
 //export const RTC_SIGNALLING_SERVER_URL = 'https://rtcmulticonnection.herokuapp.com:443/';
 export const ICE_SERVERS = null;
 export const PREFIX_LGT = 'LGT';
