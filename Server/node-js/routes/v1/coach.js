@@ -10,6 +10,7 @@ const MediaController 		        = require(controllerPath + 'media.controller');
 const StudentController		        = require(controllerPath + 'student.controller');
 const ShowTimeController            = require(controllerPath + 'show-time.controller');
 const LiveGroupTrainingController   = require(controllerPath + 'live-group-training.controller');
+const courseController   = require(controllerPath + 'course.controller');
 
 // dashboard
 coachRouter.get('/dashboard', HomeController.dashboard);
@@ -74,5 +75,14 @@ liveGroupTrainingRoutes.put('/:item_id',  LiveGroupTrainingController.update);
 liveGroupTrainingRoutes.put('/start/:item_id',  LiveGroupTrainingController.start);
 liveGroupTrainingRoutes.put('/close/:item_id',  LiveGroupTrainingController.close);
 liveGroupTrainingRoutes.delete('/:item_id',  LiveGroupTrainingController.remove);
+
+
+//course 
+
+const courseRoute = express.Router();
+courseRoute.use('/course',courseRoute)
+
+courseRoute.post('/',courseController.create)
+
 
 module.exports = coachRouter;
