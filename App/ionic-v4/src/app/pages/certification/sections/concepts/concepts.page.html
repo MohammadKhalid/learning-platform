@@ -1,11 +1,12 @@
 <div class="ion-padding">
-  <ion-card>
-    <ion-card-content>
-      <mat-select [(ngModel)]="selectedOption" placeholder="Select option">
-        <mat-option *ngFor='let option of conceptOptions' [value]='option.id'>{{option.value}}</mat-option>
-      </mat-select>
-    </ion-card-content>
-  </ion-card>
+    <ion-card>
+        <ion-card-content>
+            <mat-select [(ngModel)]="selectedOption" placeholder="Select option">
+                <mat-option *ngFor='let option of conceptOptions' [value]='option.id'>{{option.value}}</mat-option>
+            </mat-select>
+        </ion-card-content>
+    </ion-card>
 </div>
 <app-video *ngIf="selectedOption == 0"></app-video>
 <app-resources *ngIf="selectedOption == 3"></app-resources>
+<app-text *ngIf="selectedOption == 1"></app-text>

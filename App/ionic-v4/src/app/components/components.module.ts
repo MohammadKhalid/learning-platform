@@ -54,6 +54,7 @@ import { VideoComponent } from './video/video.component';
 import { FileUploadModule } from 'ng2-file-upload';
 import { DropzoneComponent } from './common/dropzone/dropzone.component';
 import { ResourcesComponent } from './resources/resources.component';
+import { TextComponent } from './text/text.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -112,6 +113,7 @@ import { ResourcesComponent } from './resources/resources.component';
 		VideoComponent,
 		DropzoneComponent,
 		ResourcesComponent,
+		TextComponent
 	],
 	entryComponents: [
 		MediaComponent,
@@ -151,6 +153,7 @@ import { ResourcesComponent } from './resources/resources.component';
 		VideoComponent,
 		DropzoneComponent,
 		ResourcesComponent,
+		TextComponent
 	],
 	providers: [
 		ProfileComponent
