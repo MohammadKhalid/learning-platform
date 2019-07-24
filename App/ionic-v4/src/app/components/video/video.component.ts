@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { RestApiService } from 'src/app/services/http/rest-api.service';
 
 @Component({
   selector: 'app-video',
@@ -12,6 +13,7 @@ export class VideoComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
+    private apiservice : RestApiService
   ) { }
 
   initForm() {
@@ -32,6 +34,10 @@ export class VideoComponent implements OnInit {
   }
 
   addVideo(){
+    this.apiservice.post('video', this.addVideoForm.valid).subscribe(res => {
+      console.log(res);
+    })
+    
     
   }
 
