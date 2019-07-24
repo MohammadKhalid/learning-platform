@@ -1,24 +1,28 @@
-<div ng2FileDrop [ngClass]="{'nv-file-over': hasBaseDropZoneOver}" (fileOver)="fileOverBase($event)"
+<div ng2FileDrop ng2FileSelect [ngClass]="{'nv-file-over': hasBaseDropZoneOver}" (fileOver)="fileOverBase($event)"
   [uploader]="uploader" class="drop-zone">
   Drop files here...
+  <!-- <ion-icon slot="icon-only" name="cloud-upload"></ion-icon>  -->
 </div>
 
-<div class="file-input-container">
+
+<!-- <div class="file-input-container">
   <label>
     <input type="file" ng2FileSelect [uploader]="uploader" multiple />
     Add Files
   </label>
-</div>
+</div> -->
 
-<h2>Files: {{ uploader?.queue?.length }}</h2>
+<!-- <h2>Files: {{ uploader?.queue?.length }}</h2> -->
 
-<ion-list>
-  <ion-reorder-group (ionItemReorder)="reorderFiles($event)" disabled="false">
+<ion-card ion-padding>
+  <ion-list>
     <ion-item *ngFor="let item of uploader.queue">
       <ion-label>
         {{ item?.file?.name }}
       </ion-label>
-      <ion-reorder></ion-reorder>
+      <ion-button fill="clear" (click)="removeFile(item)">
+        <ion-icon slot="icon-only" name="trash"></ion-icon>
+      </ion-button>
     </ion-item>
-  </ion-reorder-group>
-</ion-list>
+  </ion-list>
+</ion-card>

@@ -1,28 +1,11 @@
 <ion-content padding>
-  <ion-card ion-padding>
-    <form [formGroup]="addResourcesForm" (ngSubmit)="addResources()">
-      <app-dropzone></app-dropzone>
-      <!-- <ion-list class="ion-padding">
-              <ion-item lines="inset">
-                <ion-label position="floating"> Title Of Certificate : <ion-text color="danger">*</ion-text>
-                </ion-label>
-                <ion-input type="input" formControlName='title' placeholder="Enter Title"></ion-input>
-              </ion-item>
-        
-              <ion-item lines="inset">
-                <ion-label position="floating">Description
-                </ion-label>
-                <ion-textarea placeholder="placeholder" formControlName='description'></ion-textarea>
-              </ion-item>
-        
-              <ion-item lines="none" class="ion-float-right ion-padding-top">
-                <ion-button type="submit" [disabled]="!addVideoForm.valid" size="md">Save</ion-button>
-              </ion-item>
-        
-        
-            </ion-list> -->
+  <form [formGroup]="addResourcesForm" (ngSubmit)="upload()">
+    <app-dropzone (eventBtnSubmit)="eventBtnSubmit($event)"></app-dropzone>
 
-    </form>
-  </ion-card>
+    <ion-item lines="none" class="ion-float-right ion-padding-top">
+      <ion-button type="submit" [disabled]="submitBtn" size="md">Save</ion-button>
+    </ion-item>
+
+  </form>
 
 </ion-content>
