@@ -11,6 +11,8 @@ const CompanyController 			= require(controllerPath + 'company.controller');
 const ClientController 	            = require(controllerPath + 'client.controller');
 const CoachController 	            = require(controllerPath + 'coach.controller');
 const StudentController 	        = require(controllerPath + 'student.controller');
+const courseCategoryController      = require(controllerPath + 'courseCategory.controller')
+const levelSettingController        = require(controllerPath + 'studentExperienceSetting.controller')
 
 // const ProfileController 	        = require(controllerPath + 'profile.controller');
 // const LiveGroupTrainingController   = require(controllerPath + 'live-group-training.controller');
@@ -94,12 +96,29 @@ coachRoutes.delete('/:item_id', CoachController.remove);
 const studentRoutes = express.Router();
 adminRouter.use('/students', studentRoutes);
 
-studentRoutes.post('/', StudentController.create);
+studentRoutes.post('/' ,StudentController.create);
 studentRoutes.get('/', StudentController.getAll); 
 studentRoutes.get('/form-input-data', StudentController.formInputData);
 studentRoutes.get('/:item_id', StudentController.get);
 studentRoutes.put('/:item_id', StudentController.update);
 studentRoutes.delete('/:item_id', StudentController.remove);
+
+
+// course category
+const courseCategoryRoutes = express.Router();
+adminRouter.use('/courseCategory', courseCategoryRoutes);
+
+courseCategoryRoutes.post('/', courseCategoryController.create);
+courseCategoryRoutes.get('/getAll/:userId', courseCategoryController.getAll);
+courseCategoryRoutes.get('/:item_id', courseCategoryController.get);
+courseCategoryRoutes.put('/:item_id', courseCategoryController.update);
+courseCategoryRoutes.delete('/:item_id', courseCategoryController.remove);
+
+const levelSettingRoutes = express.Router();
+adminRouter.use('/levelSetting', levelSettingRoutes);
+
+levelSettingRoutes.get('/:adminId',levelSettingController.get)
+levelSettingRoutes.post('/',levelSettingController.create)
 
 // // profile
 // const profileRoutes = express.Router();

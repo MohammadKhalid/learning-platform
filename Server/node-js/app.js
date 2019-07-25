@@ -34,7 +34,7 @@ models.sequelize.authenticate().then(() => {
 // db util
 if(CONFIG.app === 'dev') {
   // db sync
-  models.sync();
+  // models.sync();
 }
 
 // CORS
