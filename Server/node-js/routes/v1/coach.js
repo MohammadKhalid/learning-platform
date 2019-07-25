@@ -1,16 +1,35 @@
-const express        = require('express');
-const coachRouter   = express.Router();
+const express = require('express');
+const coachRouter = express.Router();
+
+
+const multer = require('multer');
+const path = require('path')
+
+const CertificationStorage = multer.diskStorage({
+    destination: './uploads/certification',
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname))
+    }
+})
+
+const CertificationUpload = multer({
+    storage: CertificationStorage
+}).single('file')
 
 // controllers
-const controllerPath                = '../../controllers/coach/';
-const HomeController                = require(controllerPath + 'home.controller');
-const CategoryController            = require(controllerPath + 'category.controller');
-const TopicController 		        = require(controllerPath + 'topic.controller');
-const MediaController 		        = require(controllerPath + 'media.controller');
-const StudentController		        = require(controllerPath + 'student.controller');
-const ShowTimeController            = require(controllerPath + 'show-time.controller');
-const LiveGroupTrainingController   = require(controllerPath + 'live-group-training.controller');
-const courseController   = require(controllerPath + 'course.controller');
+const controllerPath = '../../controllers/coach/';
+const HomeController = require(controllerPath + 'home.controller');
+const CategoryController = require(controllerPath + 'category.controller');
+const TopicController = require(controllerPath + 'topic.controller');
+const MediaController = require(controllerPath + 'media.controller');
+const StudentController = require(controllerPath + 'student.controller');
+const ShowTimeController = require(controllerPath + 'show-time.controller');
+const LiveGroupTrainingController = require(controllerPath + 'live-group-training.controller');
+const courseController = require(controllerPath + 'course.controller');
+const sectionController = require(controllerPath + 'section.controller');
+const lessonController = require(controllerPath + 'lesson.controller');
+const textController = require(controllerPath + 'text.controller');
+const resourceController = require(controllerPath + 'resource.controller');
 
 // dashboard
 coachRouter.get('/dashboard', HomeController.dashboard);
@@ -70,19 +89,57 @@ coachRouter.use('/live-group-trainings', liveGroupTrainingRoutes);
 liveGroupTrainingRoutes.post('/', LiveGroupTrainingController.create);
 liveGroupTrainingRoutes.get('/', LiveGroupTrainingController.getAll);
 liveGroupTrainingRoutes.get('/form-input-data', LiveGroupTrainingController.formInputData);
-liveGroupTrainingRoutes.get('/:item_id',  LiveGroupTrainingController.get);
-liveGroupTrainingRoutes.put('/:item_id',  LiveGroupTrainingController.update);
-liveGroupTrainingRoutes.put('/start/:item_id',  LiveGroupTrainingController.start);
-liveGroupTrainingRoutes.put('/close/:item_id',  LiveGroupTrainingController.close);
-liveGroupTrainingRoutes.delete('/:item_id',  LiveGroupTrainingController.remove);
+liveGroupTrainingRoutes.get('/:item_id', LiveGroupTrainingController.get);
+liveGroupTrainingRoutes.put('/:item_id', LiveGroupTrainingController.update);
+liveGroupTrainingRoutes.put('/start/:item_id', LiveGroupTrainingController.start);
+liveGroupTrainingRoutes.put('/close/:item_id', LiveGroupTrainingController.close);
+liveGroupTrainingRoutes.delete('/:item_id', LiveGroupTrainingController.remove);
 
 
 //course 
 
 const courseRoute = express.Router();
-courseRoute.use('/course',courseRoute)
+coachRouter.use('/course', courseRoute)
 
-courseRoute.post('/',courseController.create)
+courseRoute.post('/', CertificationUpload, courseController.create)
+courseRoute.get('/getCoachesCourse', courseController.getCourse)
+
+// Section
+const sectionRoute = express.Router();
+coachRouter.use('/section', sectionRoute)
+
+sectionRoute.post('/', sectionController.create)
+sectionRoute.get('/getSections/:courseId', sectionController.getSections)
+sectionRoute.put('/:sectionId', sectionController.updateSection)
+sectionRoute.delete('/:sectionId', sectionController.removeSection)
+
+
+// lessons
+const lessonRoutes = express.Router();
+coachRouter.use('/lesson', lessonRoutes)
+
+lessonRoutes.post('/', lessonController.create)
+lessonRoutes.get('/getLessons/:sectionId', lessonController.getLessons)
+lessonRoutes.put('/:lessonId', lessonController.updateLesson)
+lessonRoutes.delete('/:lessonId', lessonController.removeLesson)
+
+// text
+const textRoutes = express.Router();
+coachRouter.use('/text', textRoutes)
+
+textRoutes.post('/', textController.create)
+textRoutes.get('/getText/:sectionId', textController.getText)
+textRoutes.put('/:textId', textController.updateText)
+textRoutes.delete('/:textId', textController.removeText)
+
+// resource
+const resourceRoutes = express.Router();
+coachRouter.use('/resource', resourceRoutes)
+
+resourceRoutes.post('/', resourceController.create)
+resourceRoutes.get('/getResources/:sectionId', resourceController.getResources)
+resourceRoutes.put('/:textId', resourceController.update)
+resourceRoutes.delete('/:textId', resourceController.remove)
 
 
 module.exports = coachRouter;
