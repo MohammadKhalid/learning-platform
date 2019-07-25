@@ -29,8 +29,8 @@ export class TimerService {
 			time.text = moment(date, "HH:mm").fromNow();
 		} else {
 			let now = moment.utc();
-			let currentTimeZoneOff = moment.tz.zone(moment.tz.guess()).offset(Number(now));
-			let serverTimeZoneOff = moment.tz.zone(timezone).offset(Number(now));
+			let currentTimeZoneOff = moment.tz.zone(moment.tz.guess()).utcOffset(Number(now));
+			let serverTimeZoneOff = moment.tz.zone(timezone).utcOffset(Number(now));
 			let difference = (serverTimeZoneOff - currentTimeZoneOff) / 60
 			time.text = moment(date, "YYYY-MM-DD HH:mm").add(difference, 'hours').fromNow();
 		}
