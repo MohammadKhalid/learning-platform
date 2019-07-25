@@ -13,7 +13,15 @@ export class DropzoneComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
+      console.log('FileUpload:uploaded:', item, status, response);
+      alert('File uploaded successfully');
+    };
+  }
+  public onFileSelected(event: EventEmitter<File[]>) {
+    this.eventBtnSubmit.next(this.uploader.queue.length);
+  }
   getFiles(): FileLikeObject[] {
     return this.uploader.queue.map((fileItem) => {
       return fileItem.file;
@@ -22,16 +30,16 @@ export class DropzoneComponent implements OnInit {
 
   fileOverBase(ev): void {
     this.hasBaseDropZoneOver = ev;
-    // this.uploader ? this.eventBtnSubmit.next(this.uploader.queue.length) : null;
   }
 
-  // reorderFiles(reorderEvent: CustomEvent): void {
-  //   let element = this.uploader.queue.splice(reorderEvent.detail.from, 1)[0];
-  //   this.uploader.queue.splice(reorderEvent.detail.to, 0, element);
-  // }
   removeFile(file) {
     this.uploader.removeFromQueue(file);
-    // this.eventBtnSubmit.next(this.uploader.queue.length);
+    this.onFileSelected(file);
+  }
 
+  removeAll() {
+    this.uploader.clearQueue();
+    this.eventBtnSubmit.next(0);
+    // this.uploader = new FileUploader({});
   }
 }

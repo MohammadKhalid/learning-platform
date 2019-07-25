@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DropzoneComponent } from '../common/dropzone/dropzone.component';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { RestApiService } from 'src/app/services/http/rest-api.service';
+import { NotificationService } from 'src/app/services/notification/notification.service';
 @Component({
   selector: 'app-resources',
   templateUrl: './resources.component.html',
@@ -11,12 +13,15 @@ export class ResourcesComponent implements OnInit {
   addResourcesForm: FormGroup;
   submitBtn: boolean = true;
   files: any = [];
-  constructor() { }
+  constructor(
+    private restApi: RestApiService,
+    private notificationService: NotificationService,
+
+  ) { }
 
   ngOnInit() {
   }
   upload() {
-    debugger;
     this.files = this.fileField.getFiles();
     console.log(this.files);
     let formData = new FormData();
@@ -24,11 +29,19 @@ export class ResourcesComponent implements OnInit {
     this.files.forEach((file) => {
       formData.append('files[]', file.rawFile, file.name);
     });
-    // POST formData to Server
+    this.fileField.removeAll();
+
+    // this.restApi.postPromise('', formData)
+    //   .then(res => {
+    //     this.fileField.removeAll();
+    //     this.notificationService.showMsg("Saved Successfully");
+    //   }).catch(err => {
+    //     this.notificationService.showMsg("Error inserting resources");
+    //   })
+    // // POST formData to Server
   }
 
   eventBtnSubmit(count) {
-    debugger;
     this.submitBtn = count > 0 ? false : true;
   }
 }

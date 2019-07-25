@@ -1,11 +1,10 @@
 <ion-content padding>
-  <form [formGroup]="addResourcesForm" (ngSubmit)="upload()">
-    <app-dropzone (eventBtnSubmit)="eventBtnSubmit($event)"></app-dropzone>
+    <form style="margin-bottom: 200px">
+        <app-dropzone (eventBtnSubmit)="eventBtnSubmit($event)"></app-dropzone>
 
-    <ion-item lines="none" class="ion-float-right ion-padding-top">
-      <ion-button type="submit" [disabled]="submitBtn" size="md">Save</ion-button>
-    </ion-item>
+        <ion-item lines="none" class="ion-float-right">
+            <ion-button (click)="upload()" [disabled]="submitBtn" size="md">Save</ion-button>
+        </ion-item>
 
-  </form>
-
+    </form>
 </ion-content>
