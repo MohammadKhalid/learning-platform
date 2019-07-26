@@ -1,4 +1,4 @@
-const { Course, Category, StudentCourse } = require('../../models');
+const { Course, CourseCategory, StudentCourse } = require('../../models');
 const { to, ReE, ReS } = require('../../services/util.service');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -36,12 +36,11 @@ const getStudentCourse = async (req, res) => {
 
     let courseIds = studentCourseIds.map(val => val.CourseId);
 
-    console.log(studentCourseIds);
 
     const studentCourses = await Course.findAll({
         attributes: [['id', 'courseId'], 'title', 'description', 'image', 'createdby'],
         include: [{
-            model: Category,
+            model: CourseCategory,
             as: "category",
             attributes: [['id', 'categoryId'], 'title']
         }],
@@ -104,7 +103,7 @@ const getCourse = async (req, res) => {
         }
     }
 
-    const course = await Category.findAll({
+    const course = await CourseCategory.findAll({
         attributes: [['id', 'categoryId'], 'title'],
         include: [{
             model: Course,
