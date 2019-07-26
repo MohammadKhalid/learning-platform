@@ -86,10 +86,7 @@
 }
 
 // video box
-.participant-video-controls-container, .participant-video-label-container, .participant-video-speak-indicator-container { position: absolute; }
-.participant-video-controls-container { top: 0; right:0; }
-.participant-video-label-container { bottom: 5px; width:100%; }
-.participant-video-speak-indicator-container { top: 5px; left:5px; }
+.participant-video-container {
     position: relative;
 }
 
