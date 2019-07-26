@@ -379,6 +379,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	chromeScreenShare(recallRecord: boolean) {
 		let video = document.querySelector('video');
 		if (this.screenVar == "sharescreen") {
+			
 			let objBrowserScreen: any = navigator.mediaDevices;
 			objBrowserScreen.getDisplayMedia({
 				video: true
@@ -395,7 +396,7 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 				// console.log('connection length', this.connection.attachStreams.length);
 				// let videoStream = this.connection.streamEvents[this.connection.attachStreams[0].streamid];
 				// console.log('video Stream: ', videoStream.stream.getAudioTracks()[0]);
-
+            
 				// externalStream.addTrack(videoStream.stream.getAudioTracks()[0]);//new functionality for audio
 				externalStream.addTrack(this.connection.attachStreams[0].getAudioTracks()[0]);//new functionality for audio
 				externalStream.getVideoTracks()[0].addEventListener('ended', () => {

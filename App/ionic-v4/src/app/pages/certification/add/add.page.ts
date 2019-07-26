@@ -32,6 +32,7 @@ export class AddPage implements OnInit {
     this.authService.authenticationState.subscribe((state) => {
       this.sessionData = state ? this.authService.getSessionData() : null;
     });
+    debugger;
     this.user = this.sessionData.user
   }
   // @ViewChild('element') elment : ElementRef
@@ -43,7 +44,7 @@ export class AddPage implements OnInit {
   }
 
   fetchCategories() {
-    this.restApi.getPromise(`categories/${this.user.createdBy}`)
+    this.restApi.getPromise(`courseCategory/getAll/${this.user.createdBy}`)
       .then(res => {
         let { success, data } = res
         if (success) {
