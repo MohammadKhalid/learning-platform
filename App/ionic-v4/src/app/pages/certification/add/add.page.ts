@@ -43,14 +43,13 @@ export class AddPage implements OnInit {
   }
 
   fetchCategories() {
-    this.restApi.getPromise(`categories/${this.user.createdBy}`)
+    this.restApi.getPromise(`course-category/get-all/${this.user.createdBy}`)
       .then(res => {
         let { success, data } = res
         if (success) {
           this.categoryList = data
         }
       }).catch(err => {
-
       })
   }
 
@@ -81,9 +80,8 @@ export class AddPage implements OnInit {
     obj.append('categoryId',this.addCourseForm.get('categoryId').value)
     obj.append('description',this.addCourseForm.get('description').value)
     obj.append('createdBy',this.addCourseForm.get('createdBy').value)
-    this.restApi.postPromise('courses',obj)
-    .then(res=>{
-      debugger;
+    this.restApi.postPromise('course',obj)
+    .then(res=>{ 
       this.notificationService.showMsg("Saved Successfully");
       this.navCtrl.navigateRoot('/certification/addmodule/' + res.data.id)
       

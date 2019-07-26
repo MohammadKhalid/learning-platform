@@ -30,10 +30,10 @@ export class NotificationService {
   showMsg(msg: string, duration: number = 2000) {
 		return this.toastController.create({
 			message: msg,
-			position: 'bottom',
+			position: 'top',
 			closeButtonText: 'Close',
 			duration: duration,
-			cssClass: 'toast-fullwidth toast-danger toast-text-center'
+			cssClass: 'toast-fullwidth toast-danger toast-text-center toast-top-right'
 		}).then((toast) => {
 			this.toast = toast;
       this.toast.present();
