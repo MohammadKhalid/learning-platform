@@ -16,6 +16,18 @@ const CertificationUpload = multer({
     storage: CertificationStorage
 }).single('file')
 
+// resources upload
+const resourcesStorage = multer.diskStorage({
+    destination: './uploads/resources',
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname))
+    }
+})
+
+const resourcesUpload = multer({
+    storage: resourcesStorage
+}).array('file')
+
 // controllers
 const controllerPath = '../../controllers/coach/';
 const HomeController = require(controllerPath + 'home.controller');
@@ -121,6 +133,8 @@ sectionRoute.get('/get-sections/:courseId', sectionController.getSections)
 sectionRoute.put('/:sectionId', sectionController.updateSection)
 sectionRoute.delete('/:sectionId', sectionController.removeSection)
 
+sectionRoute.get('/get-section-details/:sectionId',courseCategoryController.sectionDetails)
+
 
 // lessons
 const lessonRoutes = express.Router();
@@ -136,7 +150,7 @@ const textRoutes = express.Router();
 coachRouter.use('/text', textRoutes)
 
 textRoutes.post('/', textController.create)
-textRoutes.get('/getText/:sectionId', textController.getText)
+textRoutes.get('/get-text/:sectionId', textController.getText)
 textRoutes.put('/:textId', textController.updateText)
 textRoutes.delete('/:textId', textController.removeText)
 
@@ -144,8 +158,8 @@ textRoutes.delete('/:textId', textController.removeText)
 const resourceRoutes = express.Router();
 coachRouter.use('/resource', resourceRoutes)
 
-resourceRoutes.post('/', resourceController.create)
-resourceRoutes.get('/getResources/:sectionId', resourceController.getResources)
+resourceRoutes.post('/', resourcesUpload,resourceController.create)
+resourceRoutes.get('/get-resources/:sectionId', resourceController.getResources)
 resourceRoutes.put('/:textId', resourceController.update)
 resourceRoutes.delete('/:textId', resourceController.remove)
 
