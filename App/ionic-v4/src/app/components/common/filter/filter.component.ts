@@ -26,7 +26,7 @@ export class FilterComponent implements OnInit {
   }
 
   fetchCategories() {
-    this.restApi.getPromise(`categories/${this.user.createdBy}`)
+    this.restApi.getPromise(`course-category/get-all/${this.user.createdBy}`)
       .then(res => {
         let { success, data } = res;
         if (success) {

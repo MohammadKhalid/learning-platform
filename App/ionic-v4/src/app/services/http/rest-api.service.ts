@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import { LoadingController } from '@ionic/angular';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class RestApiService {
 
@@ -20,7 +20,7 @@ export class RestApiService {
 		public loadingController: LoadingController
 	) {
 		this.authService.authenticationState.subscribe((state) => {
-			if(state) {
+			if (state) {
 				this.sessionData = this.authService.getSessionData();
 				this.url = this.url + this.sessionData.user.type + '/';
 			} else {
@@ -31,19 +31,19 @@ export class RestApiService {
 	}
 
 	get(endpoint: string, params?: any, reqOpts?: any): Observable<ArrayBuffer> {
-		if(!reqOpts) reqOpts = { headers: {} };
+		if (!reqOpts) reqOpts = { headers: {} };
 
 		// append token
-		if(this.sessionData && this.sessionData.token) reqOpts.headers.Authorization = this.sessionData.token;
+		if (this.sessionData && this.sessionData.token) reqOpts.headers.Authorization = this.sessionData.token;
 
 		// Support easy query params for GET requests
 		reqOpts.params = new HttpParams();
 
 		if (params) {
 			reqOpts.params = new HttpParams();
-		  	for (let k in params) {
+			for (let k in params) {
 				reqOpts.params = reqOpts.params.set(k, params[k]);
-		  	}
+			}
 		}
 
 		let req = this.http.get(this.url + endpoint, reqOpts);
@@ -56,10 +56,10 @@ export class RestApiService {
 	}
 
 	post(endpoint: string, body: any, reqOpts?: any): Observable<ArrayBuffer> {
-		if(!reqOpts) reqOpts = { headers: {} };
+		if (!reqOpts) reqOpts = { headers: {} };
 
 		// append token
-		if(this.sessionData && this.sessionData.token) reqOpts.headers.Authorization = this.sessionData.token;
+		if (this.sessionData && this.sessionData.token) reqOpts.headers.Authorization = this.sessionData.token;
 
 		let req = this.http.post(this.url + endpoint, body, reqOpts);
 
@@ -73,7 +73,7 @@ export class RestApiService {
 
 	postPromise(endpoint: string, body: any, reqOpts?: any): Promise<any> {
 
-		if(!reqOpts) reqOpts = { headers: {} };
+		if (!reqOpts) reqOpts = { headers: {} };
 		if (this.sessionData && this.sessionData.token) reqOpts.headers.Authorization = this.sessionData.token;
 
 		return new Promise((resolve, reject) => {
@@ -96,7 +96,7 @@ export class RestApiService {
 
 		if (!reqOpts) reqOpts = { headers: {} };
 		if (this.sessionData && this.sessionData.token) reqOpts.headers.Authorization = this.sessionData.token;
-	
+
 		return new Promise((resolve, reject) => {
 
 			this.http.put(this.url + endpoint, body, reqOpts)
@@ -114,23 +114,22 @@ export class RestApiService {
 
 	async presentLoading() {
 		const loading = await this.loadingController.create({
-		  message: 'Please wait...',
-		  duration: 2000
+			message: 'Please wait...',
+			duration: 2000
 		});
 		await loading.present();
-	
+
 		const { role, data } = await loading.onDidDismiss();
-	
-	  }
-	
+
+	}
+
 
 	getPromise(endpoint: string, params?: any, reqOpts?: any): Promise<any> {
-
 		if (!reqOpts) reqOpts = { headers: {} };
 		if (this.sessionData && this.sessionData.token) reqOpts.headers.Authorization = this.sessionData.token;
 
 		return new Promise((resolve, reject) => {
-			let url = params ? `${this.url}/${endpoint}/${params}` : `${this.url}/${endpoint}`;
+			let url = params ? `${this.url}${endpoint}/${params}` : `${this.url}${endpoint}`;
 			this.http.get(url, reqOpts)
 				.toPromise()
 				.then(
@@ -153,18 +152,18 @@ export class RestApiService {
 		});
 
 		const reqOption = new HttpRequest('POST', this.url + endpoint, body, {
-	        reportProgress: true,
-	        headers: httpHeaders
-	    });
+			reportProgress: true,
+			headers: httpHeaders
+		});
 
-	    return this.http.request(reqOption);
+		return this.http.request(reqOption);
 	}
 
 	postBlob(endpoint: string, body: any, reqOpts?: any) {
-		if(!reqOpts) reqOpts = { headers: {} };
+		if (!reqOpts) reqOpts = { headers: {} };
 
 		// append token
-		if(this.sessionData && this.sessionData.token) reqOpts.headers.Authorization = this.sessionData.token;
+		if (this.sessionData && this.sessionData.token) reqOpts.headers.Authorization = this.sessionData.token;
 
 		// appent header option
 		//reqOpts.headers['Content-Type'] = 'application/json';
@@ -181,10 +180,10 @@ export class RestApiService {
 	}
 
 	put(endpoint: string, body: any, reqOpts?: any): Observable<ArrayBuffer> {
-		if(!reqOpts) reqOpts = { headers: {} };
+		if (!reqOpts) reqOpts = { headers: {} };
 
 		// append token
-		if(this.sessionData && this.sessionData.token) reqOpts.headers.Authorization = this.sessionData.token;
+		if (this.sessionData && this.sessionData.token) reqOpts.headers.Authorization = this.sessionData.token;
 
 		let req = this.http.put(this.url + endpoint, body, reqOpts);
 
@@ -196,10 +195,10 @@ export class RestApiService {
 	}
 
 	delete(endpoint: string, reqOpts?: any): Observable<ArrayBuffer> {
-		if(!reqOpts) reqOpts = { headers: {} };
+		if (!reqOpts) reqOpts = { headers: {} };
 
 		// append token
-		if(this.sessionData && this.sessionData.token) reqOpts.headers.Authorization = this.sessionData.token;
+		if (this.sessionData && this.sessionData.token) reqOpts.headers.Authorization = this.sessionData.token;
 
 		let req = this.http.delete(this.url + endpoint, reqOpts);
 
@@ -208,18 +207,18 @@ export class RestApiService {
 		// 	return err;
 		// });
 		return req;
- 	}
+	}
 
 	setSessionData(data) {
 		this.sessionData = data;
 	}
 
-	getConceptsOptins(){
+	getConceptsOptins() {
 		return [
-			{id: 0 , value: 'video'},
-			{id: 1 , value: 'Text'},
-			{id: 2 , value: 'Quiz'},
-			{id: 3 , value: 'Recources'},
+			{ id: 0, value: 'video' },
+			{ id: 1, value: 'Text' },
+			{ id: 2, value: 'Quiz' },
+			{ id: 3, value: 'Recources' },
 		]
 	}
 }
