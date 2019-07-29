@@ -6,12 +6,17 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        description: {
+        title: {
             type: DataTypes.TEXT,
         },
         experience: {
             type: DataTypes.INTEGER,
             allowNull: false
+        },
+        type: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            defaultValue: "Lesson"
         },
         sectionId: {
             type: DataTypes.INTEGER,

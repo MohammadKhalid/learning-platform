@@ -5,8 +5,9 @@ const Op = Sequelize.Op;
 
 
 const create = async (req, res) => {
-    let {description, sectionId } = req.body
+    let { description, title, sectionId } = req.body
     const text = await Text.create({
+        title: title,
         description: description,
         sectionId: sectionId,
     })
@@ -16,10 +17,10 @@ const create = async (req, res) => {
 module.exports.create = create;
 
 const getText = async (req, res) => {
-    
+
     let { sectionId } = req.params
     const texts = await Text.findAll({
-        attributes: [['id', 'textId'], 'description' ],
+        attributes: [['id', 'textId'], 'title','description'],
         include: [{
             model: Section,
             as: "section",
@@ -48,8 +49,9 @@ module.exports.removeText = removeText;
 
 const updateText = async (req, res) => {
     let { textId } = req.params
-    let { description } = req.body
+    let { description, title } = req.body
     const text = await Text.update({
+        title: title,
         description: description,
     }, {
             where: {

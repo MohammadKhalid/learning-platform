@@ -10,6 +10,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.TEXT,
             allowNull: false
         },
+        type: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            defaultValue: "Text"
+        },
         sectionId: {
             type: DataTypes.INTEGER,
             allowNull: false
