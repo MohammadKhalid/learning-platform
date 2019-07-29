@@ -25,7 +25,7 @@ export class AddmodulePage implements OnInit {
   serverUrl: string = "./assets/img/";
   forms: FormGroup
   ngOnInit() {
-
+debugger;
     this.id = this.actroute.snapshot.paramMap.get('id');
     this.forms = this.fb.group({
       title: new FormControl(''),

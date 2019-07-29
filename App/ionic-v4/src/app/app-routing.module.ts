@@ -2,6 +2,7 @@ import { AuthGuardService } from './services/user/auth-guard.service';
 
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { CoachStudentRoleGuard } from './services/coach-student-role/coach-student-role.guard';
 
 const routes: Routes = [
   { path: 'setup', loadChildren: './setup/setup.module#SetupPageModule' },
@@ -17,7 +18,7 @@ const routes: Routes = [
   },
   { 
     path: 'certification', 
-    canActivate: [AuthGuardService],
+    canActivate: [CoachStudentRoleGuard],
     loadChildren: './pages/certification/certification-routing.module#CertificationRoutingModule'
   },
    { 

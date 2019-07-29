@@ -379,25 +379,12 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 	chromeScreenShare(recallRecord: boolean) {
 		let video = document.querySelector('video');
 		if (this.screenVar == "sharescreen") {
-			
 			let objBrowserScreen: any = navigator.mediaDevices;
 			objBrowserScreen.getDisplayMedia({
 				video: true
 			}).then(externalStream => {
-				//add end event for chrome
-
-				// for upcoming users
-				// var audioTrack = this.connection.attachStreams[0].getTracks().filter(function (s) {
-				// 	return s.kind === 'audio'
-				// })[0];
-				// if (audioTrack) {
-				// 	externalStream.addTrack(audioTrack); //replaceTrack ?!!!
-				// }
-				// console.log('connection length', this.connection.attachStreams.length);
-				// let videoStream = this.connection.streamEvents[this.connection.attachStreams[0].streamid];
-				// console.log('video Stream: ', videoStream.stream.getAudioTracks()[0]);
-            
-				// externalStream.addTrack(videoStream.stream.getAudioTracks()[0]);//new functionality for audio
+				console.log(this.connection.attachStreams[0].getAudioTracks()[0])
+				console.log(this.connection.attachStreams[0])
 				externalStream.addTrack(this.connection.attachStreams[0].getAudioTracks()[0]);//new functionality for audio
 				externalStream.getVideoTracks()[0].addEventListener('ended', () => {
 					if (this.connection.attachStreams[this.connection.attachStreams.length - 1].isVideo === undefined) {
@@ -1649,4 +1636,4 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		});
 		this.screenSharing.present();
 	}
-}
+}			
