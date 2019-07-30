@@ -1,0 +1,46 @@
+
+    <!-- <form (ngSubmit)="addQuiz()"> -->
+    <ion-list class="ion-padding">
+
+
+      <div *ngFor="let quize of quizes;let quizIndex=index">
+
+        <ion-item lines="none" class="ion-float-right ion-padding-top">
+          <ion-button (click)="deleteQuestion(quizIndex)" size="md">Remove</ion-button>
+        </ion-item>
+        <ion-item lines="inset">
+          <ion-label position="floating">Please enter Question that you want to ask
+            <ion-text color="danger">*</ion-text>
+          </ion-label>
+          <ion-input type="input" [(ngModel)]="quize.question" placeholder="Please enter Question that you want to ask">
+          </ion-input>
+        </ion-item>
+
+        <div *ngFor="let option of quize.options;let optionIndex=index;">
+          <ion-item>
+            <ion-input [(ngModel)]="option.text"></ion-input>
+            <ion-checkbox slot="start" [(ngModel)]="option.answer"></ion-checkbox>
+          </ion-item>
+          <ion-item>
+            <ion-button (click)="quize.options.splice(optionIndex,1)" size="md">remove option</ion-button>
+          </ion-item>
+
+        </div>
+        <ion-item lines="inset">
+          <ion-label position="floating">Exprience
+            <ion-text color="danger">*</ion-text>
+          </ion-label>
+          <ion-input [(ngModel)]="quize.experience"></ion-input>
+        </ion-item>
+        <ion-item lines="none" class="ion-float-right ion-padding-top">
+          <ion-button (click)="addOption(quize.options)" size="md">Add More</ion-button>
+        </ion-item>
+
+      </div>
+
+      <ion-item lines="none" class="ion-float-right ion-padding-top">
+        <ion-button (click)="addQuestion()" size="md">Add More</ion-button>
+      </ion-item>
+    </ion-list>
+    <!-- 
+  {{quizes | json}} -->
