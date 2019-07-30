@@ -42,6 +42,7 @@ const sectionController = require(controllerPath + 'section.controller');
 const lessonController = require(controllerPath + 'lesson.controller');
 const textController = require(controllerPath + 'text.controller');
 const resourceController = require(controllerPath + 'resource.controller');
+const quizController = require(controllerPath + 'quiz.controller');
 const courseCategoryController = require('../../controllers/common/course.controller');
 
 // dashboard
@@ -162,6 +163,15 @@ resourceRoutes.post('/', resourcesUpload,resourceController.create)
 resourceRoutes.get('/get-resources/:sectionId', resourceController.getResources)
 resourceRoutes.put('/:textId', resourceController.update)
 resourceRoutes.delete('/:textId', resourceController.remove)
+
+
+// Quiz
+
+const quizRoutes = express.Router();
+coachRouter.use('/quiz', quizRoutes)
+
+quizRoutes.post('/',quizController.create)
+
 
 
 module.exports = coachRouter;

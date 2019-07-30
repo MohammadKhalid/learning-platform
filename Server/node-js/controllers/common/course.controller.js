@@ -29,8 +29,11 @@ const sectionDetails = async (req, res) => {
             id: sectionId
         }
     })
-    
-    return ReS(res, { data: [...sectionDetail[0].Text,...sectionDetail[0].Lesson] }, 200);
+    if(sectionDetail.length > 0){
+        return ReS(res, { data: [...sectionDetail[0].Text,...sectionDetail[0].Lesson] }, 200);
+    }else{
+        return ReS(res, { data: [] }, 200);
+    }
 
 }
 module.exports.sectionDetails = sectionDetails;

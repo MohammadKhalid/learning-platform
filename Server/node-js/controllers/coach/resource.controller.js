@@ -3,17 +3,19 @@ const { to, ReE, ReS } = require('../../services/util.service');
 
 const create = async function (req, res) {
 
-    console.log(req.files)
-    // let { sectionId } = req.body
-    // const resources = await Resource.create({
-    //     sectionId: sectionId,
-    //     url: req.file.filename
-    // })
+    let { sectionId } = req.body
+    let bulkObj = req.files.map(fileItem => {
+        return {
+            sectionId: sectionId,
+            url: fileItem.filename
+        }
+    })
+        const resources = await Resource.bulkCreate(bulkObj)
 
-    // if (resources) return ReS(res, { data: resources }, 200);
-    // else return ReE(res, { message: 'Unable to insert resources.' }, 500)
+        if (resources) return ReS(res, { data: resources }, 200);
+        else return ReE(res, { message: 'Unable to insert resources.' }, 500)
 }
-module.exports.create = create;     
+module.exports.create = create;
 
 const getResources = async function (req, res) {
     let { sectionId } = req.params
@@ -39,7 +41,7 @@ const update = async function (req, res) {
             where: {
                 id: resourceId
             }
-    })
+        })
     if (resources) return ReS(res, { data: resources }, 200);
     else return ReE(res, { message: 'Unable to update resources.' }, 500)
 }
@@ -48,13 +50,13 @@ module.exports.update = update;
 const remove = async function (req, res) {
     let { resourceId } = req.params
     const resource = Resource.destroy({
-        where:{
+        where: {
             id: resourceId
         }
     })
-    if(resource){
+    if (resource) {
         return ReS(res, { data: "Deleted." });
-    }else{
+    } else {
         return ReS(res, { data: "Unable to Deleted." });
     }
 }
