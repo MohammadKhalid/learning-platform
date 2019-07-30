@@ -21,7 +21,6 @@ export class ResourcesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    debugger;
     // alert(this.actroute.snapshot.paramMap.get('id'))
     //  this.actroute.snapshot.paramMap.get('type');
 

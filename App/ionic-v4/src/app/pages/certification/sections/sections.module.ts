@@ -16,8 +16,10 @@ const routes: Routes = [
     component: SectionsPage,
 
     children: [
-      { path: 'concepts', loadChildren: './concepts/concepts.module#ConceptsPageModule' },
-      { path: 'resources', loadChildren: './resources/resources.module#ResourcesPageModule' },
+      { path: 'concepts/:id', loadChildren: './concepts/concepts.module#ConceptsPageModule' },
+      { path: 'concepts/:id/:recordid/:type', loadChildren: './concepts/concepts.module#ConceptsPageModule' },
+      { path: 'resources/:id', loadChildren: './resources/resources.module#ResourcesPageModule' },
+      { path: 'resources/:id/:recordid/:type', loadChildren: './resources/resources.module#ResourcesPageModule' },
       // { path: 'resources/:id/:type', loadChildren: './resources/resources.module#ResourcesPageModule' },
 
       // { path: 'concepts/:type/:id', loadChildren: './concepts/concepts.module#ConceptsPageModule' },

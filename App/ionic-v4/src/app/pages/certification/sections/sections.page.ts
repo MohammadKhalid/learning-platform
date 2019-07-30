@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MenuController, NavController } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-sections',
@@ -12,6 +13,7 @@ export class SectionsPage implements OnInit {
 
   constructor(private menu: MenuController, private reouter: Router, private apiSrv: RestApiService, private actRoute: ActivatedRoute, private navCntrl: NavController) { }
   public searchTerm: string = "";
+  private subscription: Subscription;
   public items: any;
   listData: any;
   id: any
@@ -28,11 +30,19 @@ export class SectionsPage implements OnInit {
 
 
   ngOnInit() {
-    this.id = this.actRoute.snapshot.paramMap.get('id')
-    this.apiSrv.getPromise(`section/get-section-details`, this.id).then(res => {
-      this.listData = res.data;
+    this.subscription = this.apiSrv.getSectionMenuData().subscribe(value => {
 
-    })
+      value ? this.listData = value : '';
+
+      if (value) {
+        debugger;
+        value.sort((a, b) => { 
+          debugger;
+          a.createdAt.valueOf() - b.createdAt.valueOf() })
+
+      }
+
+    });
   }
   back() {
     this.menu.enable(true, 'mainMenu')

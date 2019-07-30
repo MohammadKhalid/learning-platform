@@ -30,7 +30,6 @@ this.id  = this.actroute.snapshot.paramMap.get('id');
 
 addText(){
   this.serviceApi.post('text', this.addTextForm.value).subscribe(res=> {
-     debugger
     console.log(res);
     
   })
