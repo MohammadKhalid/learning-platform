@@ -18,7 +18,8 @@ export class QuizComponent implements OnInit {
       question: '',
       options: [
         { option: '', answer: false }
-      ]
+      ],
+      experience: ''
     }];
     /* Initiate the form structure */
     // this.quizForm = this.fb.group({
@@ -56,7 +57,8 @@ export class QuizComponent implements OnInit {
       question: '',
       options: [
         { text: '', answer: false }
-      ]
+      ],
+      experience:''
     });
   }
   // addQuestion() {
