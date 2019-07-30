@@ -1,97 +1,51 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { RestApiService } from 'src/app/services/http/rest-api.service';
 @Component({
   selector: 'app-quiz',
   templateUrl: './quiz.component.html',
   styleUrls: ['./quiz.component.scss'],
 })
 export class QuizComponent implements OnInit {
-  name: string;
-  quizes: any[];
-  // options: [];
+  quizes: any = [];
 
-  quizForm: FormGroup;
-  constructor(private fb: FormBuilder) { }
+  constructor(
+    private restApi: RestApiService,
+  ) { }
 
   ngOnInit() {
-    this.quizes = [{
-      question: '',
-      options: [
-        { option: '', answer: false }
-      ],
-      experience: ''
-    }];
-    /* Initiate the form structure */
-    // this.quizForm = this.fb.group({
-    //   quizes: this.fb.array([
-    //     this.fb.group(
-    //       { question: '', options: '' }
-    //     )
-    //   ])
-    // })
-    // this.quizForm = this.fb.group({
-    //   quizes: this.fb.array([
-    //     this.fb.group(
-    //       {
-    //         question: '',
-    //         options:
-    //           this.fb.array([
-    //             this.fb.group(
-    //               { option: '' }
-    //             )
-    //           ])
-    //       }
-    //     )
-    //   ])
-    // })
+    this.quizes = []
+    this.addQuestion()
   }
 
-  // get quizesQues() {
-  //   return this.quizForm.get('quizes') as FormArray;
-  // }
+
   addOption(obj) {
-    obj.push({ text: '', answer: false });
+    obj.push({ text: '', correctOption: false });
   }
   addQuestion() {
     this.quizes.push({
       question: '',
       options: [
-        { text: '', answer: false }
+        { text: '', correctOption: false }
       ],
-      experience:''
+      experience: ''
     });
   }
-  // addQuestion() {
-  //   this.quizesQues.push(
-  //     this.fb.group(
-  //       {
-  //         question: '', options:
-  //           this.fb.array([
-  //             this.fb.group(
-  //               { option: '' }
-  //             )
-  //           ])
-  //       }
-  //     ));
-  // }
 
   deleteQuestion(index) {
     this.quizes.splice(index, 1);
   }
 
+  saveQuestion() {
+    let obj = {
+      sectionId: 1,
+      quizes: this.quizes
+    }
+    this.restApi.postPromise('quiz', obj)
+      .then(response => {
+        this.quizes = []
+        this.addQuestion();
+      }).catch(error => {
 
-  // // get set option
-  // get optionsQues() {
-  //   return this.quizForm.get('options') as FormArray;
-  // }
-
-  // //add option
-  // addOption() {
-  //   this.optionsQues.push(this.fb.group({ option: '' }));
-  // }
-
-  // //delete option
-  // deleteOption(index) {
-  //   this.optionsQues.removeAt(index);
-  // }
+      })
+  }
 }

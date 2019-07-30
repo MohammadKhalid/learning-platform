@@ -10,10 +10,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.TEXT,
             allowNull: false
         },
-        correctOption: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        },
         questionType: {
             type: DataTypes.INTEGER,
             allowNull: false
@@ -21,9 +17,6 @@ module.exports = (sequelize, DataTypes) => {
         experience:{
             type: DataTypes.INTEGER,
             allowNull: false
-        },
-        detail:{
-            type: DataTypes.TEXT,
         },
         sectionId:{
             type: DataTypes.INTEGER,
