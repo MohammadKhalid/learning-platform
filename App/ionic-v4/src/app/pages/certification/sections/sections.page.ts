@@ -31,17 +31,8 @@ export class SectionsPage implements OnInit {
 
   ngOnInit() {
     this.subscription = this.apiSrv.getSectionMenuData().subscribe(value => {
-
       value ? this.listData = value : '';
-
-      if (value) {
-        debugger;
-        value.sort((a, b) => { 
-          debugger;
-          a.createdAt.valueOf() - b.createdAt.valueOf() })
-
-      }
-
+      
     });
   }
   back() {

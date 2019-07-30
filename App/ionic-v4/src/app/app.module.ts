@@ -26,11 +26,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { NotificationService } from './services/notification/notification.service';
 import { MatFormFieldModule } from '@angular/material';
+import { OrderByDatePipe } from './pipes/order-by-date.pipe';
 // import { AvailableCertificationsComponent } from './pages/certification/certification/available-certifications/available-certifications.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    // OrderByDatePipe
   ],
   entryComponents: [],
   imports: [

@@ -8,7 +8,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 
 import { SectionsPage } from './sections.page';
 import { MatSelectModule } from '@angular/material';
-
+import { OrderByDatePipe } from 'src/app/pipes/order-by-date.pipe';
 
 const routes: Routes = [
   {
@@ -37,7 +37,7 @@ const routes: Routes = [
     MatSidenavModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [SectionsPage]
+  declarations: [SectionsPage, OrderByDatePipe]
 })
 export class SectionsPageModule {
 
