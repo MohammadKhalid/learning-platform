@@ -1636,4 +1636,4 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 		});
 		this.screenSharing.present();
 	}
-}
+}			

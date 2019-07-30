@@ -49,7 +49,7 @@ export class LevelSettingsPage implements OnInit {
 
         adminId:this.adminId
   });
-    this.restApi.getPromise(`studentExperienceSettings/${this.adminId}`).then(
+    this.restApi.getPromise(`levelSetting/${this.adminId}`).then(
       res => { // Success
         let { data } = res;
         console.log(res.length);
@@ -80,7 +80,7 @@ export class LevelSettingsPage implements OnInit {
     //   adminId: this.adminId
     // }
 
-    this.restApi.postPromise('studentExperienceSettings', this.submitToLevelSettingsForm.value).then(
+    this.restApi.postPromise('levelSetting', this.submitToLevelSettingsForm.value).then(
       res => { // Success
         this.notificationService.showMsg("Saved Successfully");
       }

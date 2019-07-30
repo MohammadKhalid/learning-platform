@@ -16,6 +16,18 @@ const CertificationUpload = multer({
     storage: CertificationStorage
 }).single('file')
 
+// resources upload
+const resourcesStorage = multer.diskStorage({
+    destination: './uploads/resources',
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname))
+    }
+})
+
+const resourcesUpload = multer({
+    storage: resourcesStorage
+}).array('file')
+
 // controllers
 const controllerPath = '../../controllers/coach/';
 const HomeController = require(controllerPath + 'home.controller');
@@ -100,9 +112,9 @@ liveGroupTrainingRoutes.delete('/:item_id', LiveGroupTrainingController.remove);
 //course Category
 
 const courseCategory = express.Router();
-coachRouter.use('/courseCategory',courseCategory)
+coachRouter.use('/course-category',courseCategory)
 
-courseCategory.get('/getAll/:userId',courseCategoryController.getAll)
+courseCategory.get('/get-all/:userId',courseCategoryController.getAll)
 
 //course 
 
@@ -110,16 +122,18 @@ const courseRoute = express.Router();
 coachRouter.use('/course', courseRoute)
 
 courseRoute.post('/', CertificationUpload, courseController.create)
-courseRoute.get('/getCoachesCourse', courseController.getCourse)
+courseRoute.get('/get-coaches-course', courseController.getCourse)
 
 // Section
 const sectionRoute = express.Router();
 coachRouter.use('/section', sectionRoute)
 
 sectionRoute.post('/', sectionController.create)
-sectionRoute.get('/getSections/:courseId', sectionController.getSections)
+sectionRoute.get('/get-sections/:courseId', sectionController.getSections)
 sectionRoute.put('/:sectionId', sectionController.updateSection)
 sectionRoute.delete('/:sectionId', sectionController.removeSection)
+
+sectionRoute.get('/get-section-details/:sectionId',courseCategoryController.sectionDetails)
 
 
 // lessons
@@ -127,7 +141,7 @@ const lessonRoutes = express.Router();
 coachRouter.use('/lesson', lessonRoutes)
 
 lessonRoutes.post('/', lessonController.create)
-lessonRoutes.get('/getLessons/:sectionId', lessonController.getLessons)
+lessonRoutes.get('/get-lessons/:sectionId', lessonController.getLessons)
 lessonRoutes.put('/:lessonId', lessonController.updateLesson)
 lessonRoutes.delete('/:lessonId', lessonController.removeLesson)
 
@@ -136,7 +150,7 @@ const textRoutes = express.Router();
 coachRouter.use('/text', textRoutes)
 
 textRoutes.post('/', textController.create)
-textRoutes.get('/getText/:sectionId', textController.getText)
+textRoutes.get('/get-text/:sectionId', textController.getText)
 textRoutes.put('/:textId', textController.updateText)
 textRoutes.delete('/:textId', textController.removeText)
 
@@ -144,8 +158,8 @@ textRoutes.delete('/:textId', textController.removeText)
 const resourceRoutes = express.Router();
 coachRouter.use('/resource', resourceRoutes)
 
-resourceRoutes.post('/', resourceController.create)
-resourceRoutes.get('/getResources/:sectionId', resourceController.getResources)
+resourceRoutes.post('/', resourcesUpload,resourceController.create)
+resourceRoutes.get('/get-resources/:sectionId', resourceController.getResources)
 resourceRoutes.put('/:textId', resourceController.update)
 resourceRoutes.delete('/:textId', resourceController.remove)
 

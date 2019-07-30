@@ -3,14 +3,15 @@ const { to, ReE, ReS } = require('../../services/util.service');
 
 const create = async function (req, res) {
 
-    let { sectionId } = req.body
-    const resources = await Resource.create({
-        sectionId: sectionId,
-        url: req.file.filename
-    })
+    console.log(req.files)
+    // let { sectionId } = req.body
+    // const resources = await Resource.create({
+    //     sectionId: sectionId,
+    //     url: req.file.filename
+    // })
 
-    if (resources) return ReS(res, { data: resources }, 200);
-    else return ReE(res, { message: 'Unable to insert resources.' }, 500)
+    // if (resources) return ReS(res, { data: resources }, 200);
+    // else return ReE(res, { message: 'Unable to insert resources.' }, 500)
 }
 module.exports.create = create;     
 

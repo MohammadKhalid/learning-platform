@@ -19,9 +19,11 @@ const VideoController = require('../../controllers/video.controller');
 
 apiRoutes.use('/img',  express.static(path.join(__dirname, '/../public/img')));
 apiRoutes.get('/uploads/:folder/:filename', VideoController.get);
-
 // user
 apiRoutes.use("/auth", require("./auth"));
+console.log(__dirname+'/../uploads')
+apiRoutes.use('/uploads',express.static('../uploads'))
+// apiRoutes.use('/uploads',express.static(path.join(__dirname, '/../uploads')))
 
 const userTypes = ['admin', 'client', 'student', 'coach'];
 for (let index = 0; index < userTypes.length; index++) {
