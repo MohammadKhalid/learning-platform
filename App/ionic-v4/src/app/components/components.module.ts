@@ -55,6 +55,7 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { DropzoneComponent } from './common/dropzone/dropzone.component';
 import { ResourcesComponent } from './resources/resources.component';
 import { TextComponent } from './text/text.component';
+import { QuizComponent } from './quiz/quiz.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -65,7 +66,7 @@ import { TextComponent } from './text/text.component';
 		FileDropModule,
 		SimplePdfViewerModule,
 		RouterModule,
-    MatTabsModule,
+		MatTabsModule,
 		MatFormFieldModule,
 		MatSelectModule,
 		MatCardModule,
@@ -107,13 +108,14 @@ import { TextComponent } from './text/text.component';
 		ClientTopicFormComponent,
 		CoachTopicComponent,
 		StudentTopicComponent,
-	  ClientTagModalComponent,
-    FilterComponent,
+		ClientTagModalComponent,
+		FilterComponent,
 		CartificateCardComponent,
 		VideoComponent,
 		DropzoneComponent,
 		ResourcesComponent,
-		TextComponent
+		TextComponent,
+		QuizComponent,
 	],
 	entryComponents: [
 		MediaComponent,
@@ -148,15 +150,16 @@ import { TextComponent } from './text/text.component';
 		ClientTopicFormComponent,
 		CoachTopicComponent,
 		StudentTopicComponent,
-    FilterComponent,
+		FilterComponent,
 		CartificateCardComponent,
 		VideoComponent,
 		DropzoneComponent,
 		ResourcesComponent,
-		TextComponent
+		QuizComponent,
+		TextComponent,
 	],
 	providers: [
 		ProfileComponent
 	]
 })
-export class ComponentsModule {}
+export class ComponentsModule { }
