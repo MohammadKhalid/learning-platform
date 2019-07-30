@@ -25,6 +25,7 @@ export class ConceptsPage implements OnInit {
   }
 
   ngOnInit() {
+    debugger;
     this.conceptOptions = this.restApi.getConceptsOptins();
   }
 

@@ -3,6 +3,7 @@ import { DropzoneComponent } from '../common/dropzone/dropzone.component';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
 import { NotificationService } from 'src/app/services/notification/notification.service';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-resources',
   templateUrl: './resources.component.html',
@@ -16,10 +17,14 @@ export class ResourcesComponent implements OnInit {
   constructor(
     private restApi: RestApiService,
     private notificationService: NotificationService,
-
+    private actroute: ActivatedRoute
   ) { }
 
   ngOnInit() {
+    debugger;
+    // alert(this.actroute.snapshot.paramMap.get('id'))
+    //  this.actroute.snapshot.paramMap.get('type');
+
   }
   upload() {
     this.files = this.fileField.getFiles();

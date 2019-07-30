@@ -9,8 +9,11 @@ const routes: Routes = [
   { path: 'add', loadChildren: './add/add.module#AddPageModule' },
   { path: 'addmodule/:id', loadChildren: './addmodule/addmodule.module#AddmodulePageModule' },
   { path: 'moduledetail', loadChildren: './moduledetail/moduledetail.module#ModuledetailPageModule' },
+  { path: 'sections', loadChildren: './sections/sections.module#SectionsPageModule'},
   { path: 'sections/:id', loadChildren: './sections/sections.module#SectionsPageModule'},
 
+  // { path: 'sections/:type/:id', loadChildren: './sections/sections.module#SectionsPageModule'},
+  
 ];
 
 @NgModule({

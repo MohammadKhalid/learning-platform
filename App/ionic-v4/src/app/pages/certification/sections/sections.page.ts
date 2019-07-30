@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuController } from '@ionic/angular';
+import { MenuController, NavController } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
 
@@ -9,12 +9,12 @@ import { RestApiService } from 'src/app/services/http/rest-api.service';
   styleUrls: ['./sections.page.scss'],
 })
 export class SectionsPage implements OnInit {
- 
-  constructor(private menu: MenuController, private reouter: Router, private apiSrv : RestApiService,private actRoute : ActivatedRoute) { }
+
+  constructor(private menu: MenuController, private reouter: Router, private apiSrv: RestApiService, private actRoute: ActivatedRoute, private navCntrl: NavController) { }
   public searchTerm: string = "";
   public items: any;
-  listData : any;
-  id : any
+  listData: any;
+  id: any
   searchBy: string;
   public item: any = [
     { title: "one" },
@@ -29,8 +29,7 @@ export class SectionsPage implements OnInit {
 
   ngOnInit() {
     this.id = this.actRoute.snapshot.paramMap.get('id')
-    this.apiSrv.getPromise(`section/get-section-details`,this.id).then(res => {
-      debugger;
+    this.apiSrv.getPromise(`section/get-section-details`, this.id).then(res => {
       this.listData = res.data;
 
     })
@@ -47,8 +46,15 @@ export class SectionsPage implements OnInit {
 
   }
 
-  goto(route) {
-    this.reouter.navigate([`/certification/sections/${route}`])
+  goto() {
+    this.reouter.navigate([`/certification/sections/resources`])
+  }
+  goto1() {
+    this.reouter.navigate([`/certification/sections/concepts`])
+  }
+  check(id, type) {
+    console.log(id, type);
+    this.navCntrl.navigateRoot(['certification/sections/' + type + '/' + id])
   }
 
 }
