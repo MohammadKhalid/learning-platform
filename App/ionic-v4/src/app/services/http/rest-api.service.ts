@@ -5,12 +5,13 @@ import { AuthenticationService } from '../user/authentication.service';
 import { SERVER_URL } from '../../../environments/environment';
 import { Observable } from 'rxjs/Observable';
 import { LoadingController } from '@ionic/angular';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class RestApiService {
-
+	private sectionMenuData = new BehaviorSubject(null);
 	sessionData: any;
 	url: string = SERVER_URL;
 
@@ -221,4 +222,11 @@ export class RestApiService {
 			{ id: 3, value: 'Recources' },
 		]
 	}
+	getSectionMenuData(): Observable<any> {
+		return this.sectionMenuData.asObservable();
+	  }
+	
+	  setSectionMenuData(val: any) {
+		this.sectionMenuData.next(val);
+	  }
 }

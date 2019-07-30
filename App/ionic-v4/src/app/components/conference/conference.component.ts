@@ -262,7 +262,6 @@ export class ConferenceComponent implements OnInit, OnDestroy {
 								remote: true
 							}).forEach(function (remoteStreamEvent) {
 								if (remoteStreamEvent.stream.isVideo) {
-									debugger;
 									console.log(videoTag.nativeElement.srcObject.getAudioTracks()[0]);
 									externalStream.addTrack(videoTag.nativeElement.srcObject.getAudioTracks()[0]);
 									// remoteStreamEvent.stream.getAudioTracks()[0];

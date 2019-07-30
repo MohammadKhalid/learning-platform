@@ -47,7 +47,6 @@ export class AddPage implements OnInit {
     this.restApi.getPromise(`course-category/get-all/${this.user.createdBy}`)
     
       .then(res => {
-        debugger
         let { success, data } = res
         if (success) {
           this.categoryList = data

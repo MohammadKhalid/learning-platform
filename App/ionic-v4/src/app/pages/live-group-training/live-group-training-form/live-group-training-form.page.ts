@@ -123,7 +123,6 @@ export class LiveGroupTrainingFormPage implements OnInit {
 	}
 
 	save() {
-		debugger;
 		let time = this.form.get('time').value;
 		time = moment(time).format('HH:mm');
 		this.form.get('time').setValue(time);

@@ -29,15 +29,16 @@
             </ion-item>
 
             <ion-list lines="none">
-                <ion-item class="bordersResources certificate-item certificate-section" (click)="goto('resources')">
+                <ion-item class="bordersResources certificate-item certificate-section" (click)="goto()">
                     <ion-label>RESOURCES</ion-label>
                 </ion-item>
-                <ion-item class="bordersConcepts certificate-item certificate-section" (click)="goto('concepts')">
+                <ion-item class="bordersConcepts certificate-item certificate-section" (click)="goto1()">
                     <ion-label> CONCEPTS</ion-label>
                     <ion-icon class="certificate-icon certificate-section-icon" name="add"></ion-icon>
                 </ion-item>
-                <ion-item *ngFor="let dataRow of listData" class="conceptGaps certificate-item certificate-section" href="#">
-                    <ion-label>{{dataRow.title}}</ion-label>
+                <ion-item *ngFor="let dataRow of listData" class="conceptGaps certificate-item certificate-section">
+
+                    <ion-label (click)="check(dataRow.type,dataRow.id)">{{dataRow.title}}</ion-label>
 
 
                     <ion-icon href="#" class="certificate-icon certificate-section-icon" name="create"></ion-icon>

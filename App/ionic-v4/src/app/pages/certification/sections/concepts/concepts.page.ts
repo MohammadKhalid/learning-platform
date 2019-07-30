@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RestApiService } from '../../../../services/http/rest-api.service';
 import { AuthenticationService } from '../../../../services/user/authentication.service';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-concepts',
   templateUrl: './concepts.page.html',
@@ -17,6 +18,7 @@ export class ConceptsPage implements OnInit {
   constructor(
     private restApi: RestApiService,
     private authService: AuthenticationService,
+    private actRoute: ActivatedRoute
   ) {
     this.authService.authenticationState.subscribe((state) => {
       this.sessionData = state ? this.authService.getSessionData() : null;
@@ -25,6 +27,10 @@ export class ConceptsPage implements OnInit {
   }
 
   ngOnInit() {
+    let id = this.actRoute.snapshot.paramMap.get('id')
+    this.restApi.getPromise(`section/get-section-details`, id).then(res => {
+      this.restApi.setSectionMenuData(res.data);
+    })
     this.conceptOptions = this.restApi.getConceptsOptins();
   }
 
