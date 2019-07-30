@@ -25,7 +25,6 @@ export class AddmodulePage implements OnInit {
   serverUrl: string = "./assets/img/";
   forms: FormGroup
   ngOnInit() {
-debugger;
     this.id = this.actroute.snapshot.paramMap.get('id');
     this.forms = this.fb.group({
       title: new FormControl(''),
@@ -39,10 +38,11 @@ debugger;
 
     console.log(this.actroute.snapshot.paramMap.get('id'));
 
-    this.service.getPromise('sections', this.id).then(res => {
+    this.service.getPromise('section/get-sections', this.id).then(res => {
       this.data = res.data;
+      this.notifictation.showMsg('text added')
     }).catch(err => {
-
+       
     })
 
   }
@@ -58,8 +58,8 @@ debugger;
   }
 
   addModule() {
-    this.service.postPromise('sections', this.forms.value).then(res => {
-      debugger;
+    this.service.postPromise('section', this.forms.value).then(res => {
+     
       this.data.push(res.data);
       this.addModelbutton = !this.addModelbutton;
       this.moduleDetail = !this.moduleDetail
