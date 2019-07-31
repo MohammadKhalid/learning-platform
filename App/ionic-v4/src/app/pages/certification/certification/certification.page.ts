@@ -26,23 +26,34 @@ export class CertificationPage implements OnInit {
       coachId: '',
       adminId: ''
     }
-    if(this.user.type == 'coach'){
-      obj.coachId = this.user.id
-      this.searchByFilterEventCoach(obj)
-    }else{
-      obj.adminId = this.user.createdBy
-      this.searchByFilterEventStudent(obj)
+    this.user.type == 'coach' ? obj.coachId = this.user.id : obj.adminId = this.user.createdBy;
+    this.searchByFilterEvent(obj);
+  }
+  searchByFilterEvent(obj) {
+    if (this.user.type == "coach") {
+      this.restService.get(`course/get-coaches-course`, obj).subscribe((resp: any) => {
+        if (resp.data) this.courses = resp.data;
+      });
     }
+    else {
+      this.restService.get(`course`, obj).subscribe((resp: any) => {
+        if (resp.data) this.courses = resp.data;
+      });
+    }
+
+    // this.restService.get(`course/get-coaches-course`, obj).subscribe((resp: any) => {
+    //   if (resp.data) this.courses = resp.data;
+    // });
   }
-  searchByFilterEventCoach(obj) {
-    this.restService.get(`course/get-coaches-course`, obj).subscribe((resp: any) => {
-      if (resp.data) this.courses = resp.data;
-    });
-  }
-  
-  searchByFilterEventStudent(obj) {
-    this.restService.get(`course`, obj).subscribe((resp: any) => {
-      if (resp.data) this.courses = resp.data;
-    });
-  }
+  // searchByFilterEventCoach(obj) {
+  //   this.restService.get(`course/get-coaches-course`, obj).subscribe((resp: any) => {
+  //     if (resp.data) this.courses = resp.data;
+  //   });
+  // }
+
+  // searchByFilterEventStudent(obj) {
+  //   this.restService.get(`course`, obj).subscribe((resp: any) => {
+  //     if (resp.data) this.courses = resp.data;
+  //   });
+  // }
 }
