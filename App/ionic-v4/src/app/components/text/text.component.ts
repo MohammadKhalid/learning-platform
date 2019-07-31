@@ -23,7 +23,7 @@ export class TextComponent implements OnInit {
      private serviceApi : RestApiService,
      private actroute : ActivatedRoute,
      private noti : NotificationService,
-     private section : ActivatedRoute
+     private activeRoute : ActivatedRoute
       ) { }
 
   ngOnInit() {
@@ -37,7 +37,7 @@ this.id  = this.actroute.snapshot.paramMap.get('id');
     })
     if(this.recordId) {
       this.btnTxt = "update"
-      let id = this.section.snapshot.paramMap.get('id')
+      let id = this.activeRoute.snapshot.paramMap.get('id')
       this.sectionId = id
       this.serviceApi.getPromise('text/get-by-id', this.recordId).then(res=> {
         this.addTextForm.controls['title'].setValue(res.data[0].title),

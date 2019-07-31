@@ -18,7 +18,7 @@ export class ResourcesComponent implements OnInit {
   constructor(
     private restApi: RestApiService,
     private notificationService: NotificationService,
-    private actroute: ActivatedRoute
+    private actRoute: ActivatedRoute
   ) { }
 
   ngOnInit() {
@@ -30,14 +30,23 @@ export class ResourcesComponent implements OnInit {
     this.files = this.fileField.getFiles();
     console.log(this.files);
     let formData = new FormData();
+    // let test = [];
+
     // formData.append('somekey', 'some value') // Add any other data you want to send
     this.files.forEach((file) => {
-      formData.append('files[]', file.rawFile, file.name);
+      formData.append('file', file.rawFile);
+      // test.push(file.rawFile);
     });
-    this.fileField.removeAll();
+    // formData.append('file', JSON.stringify(test));
+    // debugger;
+    // formData.append('file', this.files);
+    formData.append('sectionId', this.actRoute.snapshot.paramMap.get('id'));
+
+    // this.fileField.removeAll();
 
     this.restApi.postPromise('resource', formData)
       .then(res => {
+
         this.files = res.data;
         this.fileField.removeAll();
         this.notificationService.showMsg("Saved Successfully");
