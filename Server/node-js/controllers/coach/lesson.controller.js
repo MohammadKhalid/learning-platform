@@ -51,8 +51,9 @@ module.exports.removeLesson = removeLesson;
 
 const updateLesson = async (req, res) => {
     let { lessonId } = req.params
-    let { url, description, experience, } = req.body
+    let { url, title, description, experience, } = req.body
     const lesson = await Lesson.update({
+        title: title,
         url: url,
         description: description,
         experience: experience,
