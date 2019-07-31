@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { DropzoneComponent } from '../common/dropzone/dropzone.component';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
@@ -11,6 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ResourcesComponent implements OnInit {
   @ViewChild(DropzoneComponent) fileField: DropzoneComponent;
+  @Input() recordId;
   addResourcesForm: FormGroup;
   submitBtn: boolean = true;
   files: any = [];
@@ -35,13 +36,14 @@ export class ResourcesComponent implements OnInit {
     });
     this.fileField.removeAll();
 
-    // this.restApi.postPromise('', formData)
-    //   .then(res => {
-    //     this.fileField.removeAll();
-    //     this.notificationService.showMsg("Saved Successfully");
-    //   }).catch(err => {
-    //     this.notificationService.showMsg("Error inserting resources");
-    //   })
+    this.restApi.postPromise('resource', formData)
+      .then(res => {
+        this.files = res.data;
+        this.fileField.removeAll();
+        this.notificationService.showMsg("Saved Successfully");
+      }).catch(err => {
+        this.notificationService.showMsg("Error inserting resources");
+      })
     // // POST formData to Server
   }
 

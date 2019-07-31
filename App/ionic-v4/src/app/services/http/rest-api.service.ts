@@ -14,6 +14,7 @@ export class RestApiService {
 	private sectionMenuData = new BehaviorSubject(null);
 	sessionData: any;
 	url: string = SERVER_URL;
+	_sectionId: any;
 
 	constructor(
 		private authService: AuthenticationService,
@@ -216,17 +217,43 @@ export class RestApiService {
 
 	getConceptsOptins() {
 		return [
-			{ id: 0, value: 'video' },
+			{ id: 0, value: 'Video' },
 			{ id: 1, value: 'Text' },
 			{ id: 2, value: 'Quiz' },
 			{ id: 3, value: 'Recources' },
 		]
 	}
+	getConceptsOptionsByname(value: string) {
+		switch (value) {
+			case "Lesson":
+				return 0
+				break;
+			case "Text":
+				return 1
+				break;
+			case "Quiz":
+				return 2
+				break;
+			case "Recources":
+				return 3
+				break;
+			default:
+				return null
+				break;
+		}
+	}
 	getSectionMenuData(): Observable<any> {
 		return this.sectionMenuData.asObservable();
-	  }
-	
-	  setSectionMenuData(val: any) {
+	}
+
+	setSectionMenuData(val: any) {
 		this.sectionMenuData.next(val);
-	  }
+	}
+	set sectionId(id: any) {
+		this._sectionId = id;
+	}
+	get sectionId() {
+		return this._sectionId;
+	}
+
 }

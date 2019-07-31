@@ -14,6 +14,7 @@ export class ConceptsPage implements OnInit {
   sessionData: any;
   user: any;
   selectedOption: any;
+  recordId: any;
 
   constructor(
     private restApi: RestApiService,
@@ -27,11 +28,17 @@ export class ConceptsPage implements OnInit {
   }
 
   ngOnInit() {
-    let id = this.actRoute.snapshot.paramMap.get('id')
+    let id = this.actRoute.snapshot.paramMap.get('id');
+    this.recordId = this.actRoute.snapshot.paramMap.get('recordid');
+    let type = this.actRoute.snapshot.paramMap.get('type');
+    this.restApi.sectionId = id;
     this.restApi.getPromise(`section/get-section-details`, id).then(res => {
       this.restApi.setSectionMenuData(res.data);
     })
     this.conceptOptions = this.restApi.getConceptsOptins();
+       if (this.recordId && type) { 
+      this.selectedOption = this.restApi.getConceptsOptionsByname(type);
+    }
   }
 
 }

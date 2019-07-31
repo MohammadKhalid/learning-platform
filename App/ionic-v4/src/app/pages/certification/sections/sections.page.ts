@@ -32,7 +32,6 @@ export class SectionsPage implements OnInit {
   ngOnInit() {
     this.subscription = this.apiSrv.getSectionMenuData().subscribe(value => {
       value ? this.listData = value : '';
-      
     });
   }
   back() {
@@ -47,15 +46,12 @@ export class SectionsPage implements OnInit {
 
   }
 
-  goto() {
-    this.reouter.navigate([`/certification/sections/resources`])
+  goto(route) {
+    this.reouter.navigate([`/certification/sections/${route}`])
   }
-  goto1() {
-    this.reouter.navigate([`/certification/sections/concepts`])
-  }
-  check(id, type) {
-    console.log(id, type);
-    this.navCntrl.navigateRoot(['certification/sections/' + type + '/' + id])
+  gotoConceptType(recordId, type) {
+    let sectionId = this.apiSrv.sectionId;
+    this.reouter.navigate([`certification/sections/concepts/${sectionId}/${recordId}/${type}`])
   }
 
 }
