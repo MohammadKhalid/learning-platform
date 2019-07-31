@@ -143,6 +143,7 @@ coachRouter.use('/lesson', lessonRoutes)
 
 lessonRoutes.post('/', lessonController.create)
 lessonRoutes.get('/get-lessons/:sectionId', lessonController.getLessons)
+lessonRoutes.get('/get-lesson-by-id/:lessonId', lessonController.getLessonById)
 lessonRoutes.put('/:lessonId', lessonController.updateLesson)
 lessonRoutes.delete('/:lessonId', lessonController.removeLesson)
 
