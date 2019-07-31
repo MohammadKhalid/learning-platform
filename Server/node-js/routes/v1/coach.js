@@ -155,6 +155,8 @@ textRoutes.post('/', textController.create)
 textRoutes.get('/get-text/:sectionId', textController.getText)
 textRoutes.put('/:textId', textController.updateText)
 textRoutes.delete('/:textId', textController.removeText)
+textRoutes.get('/get-by-id/:id', textController.getById)
+
 
 // resource
 const resourceRoutes = express.Router();
