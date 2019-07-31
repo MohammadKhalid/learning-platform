@@ -3,10 +3,16 @@
 
         <ion-list class="ion-padding">
             <ion-item lines="inset">
+                <ion-label position="floating">Title
+                    <ion-text color="danger">*</ion-text>
+                </ion-label>
+                <ion-input type="input" formControlName='title' placeholder="Enter Title"></ion-input>
+            </ion-item>
+            <ion-item lines="inset">
                 <ion-label position="floating">URL
                     <ion-text color="danger">*</ion-text>
                 </ion-label>
-                <ion-input type="input" formControlName='url' placeholder="Enter Title"></ion-input>
+                <ion-input type="input" formControlName='url' placeholder="Enter Url"></ion-input>
             </ion-item>
 
             <ion-item lines="inset">
@@ -23,7 +29,7 @@
             </ion-item>
 
             <ion-item lines="none" class="ion-float-right ion-padding-top">
-                <ion-button type="submit" [disabled]="!addVideoForm.valid" size="md">Save</ion-button>
+                <ion-button type="submit" [disabled]="!addVideoForm.valid" size="md">{{btnText}}</ion-button>
             </ion-item>
 
 

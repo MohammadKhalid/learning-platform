@@ -20,7 +20,7 @@ const getText = async (req, res) => {
 
     let { sectionId } = req.params
     const texts = await Text.findAll({
-        attributes: [['id', 'textId'], 'title','description'],
+        attributes: [['id', 'textId'], 'title', 'description'],
         include: [{
             model: Section,
             as: "section",
@@ -62,3 +62,13 @@ const updateText = async (req, res) => {
     else return ReE(res, { message: 'Unable to insert Text.' }, 500)
 }
 module.exports.updateText = updateText;
+
+const getById = async (req, res) => {
+    const { id } = req.params;
+    const text = await Text.findAll({
+        where: { id: id }
+    })
+    if (text) return ReS(res, { data: text }, 200);
+    else return ReE(res, { message: 'Unable to get Text.' }, 500);
+}
+module.exports.getById = getById;
