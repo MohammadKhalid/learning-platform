@@ -21,13 +21,16 @@ export class CertificationPage implements OnInit {
 
   ngOnInit() {
     let obj = {
-      coachId: (this.user.type == 'coach')? this.user.id: this.user.createdBy,
       categories: [],
-      searchBy: ''
+      searchBy: '',
+      coachId: '',
+      adminId: ''
     }
     if(this.user.type == 'coach'){
+      obj.coachId = this.user.id
       this.searchByFilterEventCoach(obj)
     }else{
+      obj.adminId = this.user.createdBy
       this.searchByFilterEventStudent(obj)
     }
   }
@@ -38,7 +41,6 @@ export class CertificationPage implements OnInit {
   }
   
   searchByFilterEventStudent(obj) {
-    debugger
     this.restService.get(`course`, obj).subscribe((resp: any) => {
       if (resp.data) this.courses = resp.data;
     });
