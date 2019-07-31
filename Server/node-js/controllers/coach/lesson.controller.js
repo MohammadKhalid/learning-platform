@@ -21,7 +21,7 @@ const getLessons = async (req, res) => {
     
     let { sectionId } = req.params
     const lessons = await Lesson.findAll({
-        attributes: [['id', 'lessonId'], 'url', 'description', 'experience'],
+        attributes: [['id', 'lessonId'], 'url','title' ,'description', 'experience'],
         include: [{
             model: Section,
             as: "section",
