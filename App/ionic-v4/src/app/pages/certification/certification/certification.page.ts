@@ -21,14 +21,27 @@ export class CertificationPage implements OnInit {
 
   ngOnInit() {
     let obj = {
-      coachId: this.user.id,
       categories: [],
-      searchBy: ''
+      searchBy: '',
+      coachId: '',
+      adminId: ''
     }
-    this.searchByFilterEvent(obj)
+    if(this.user.type == 'coach'){
+      obj.coachId = this.user.id
+      this.searchByFilterEventCoach(obj)
+    }else{
+      obj.adminId = this.user.createdBy
+      this.searchByFilterEventStudent(obj)
+    }
   }
-  searchByFilterEvent(obj) {
+  searchByFilterEventCoach(obj) {
     this.restService.get(`course/get-coaches-course`, obj).subscribe((resp: any) => {
+      if (resp.data) this.courses = resp.data;
+    });
+  }
+  
+  searchByFilterEventStudent(obj) {
+    this.restService.get(`course`, obj).subscribe((resp: any) => {
       if (resp.data) this.courses = resp.data;
     });
   }
