@@ -4,70 +4,32 @@ const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 
-const enrollCourse = async (req, res) => {
-    let { userId, courseId } = req.body
-    const studentCourse = await StudentCourse.create({
-        status: 0,
-        UserId: userId,
-        CourseId: courseId,
-    })
-    if (studentCourse) return ReS(res, { data: studentCourse }, 200);
-    else return ReE(res, { message: 'Unable to insert Course.' }, 500)
-}
-module.exports.enrollCourse = enrollCourse;
+// const enrollCourse = async (req, res) => {
+//     let { userId, courseId } = req.body
+//     const studentCourse = await StudentCourse.create({
+//         status: 0,
+//         UserId: userId,
+//         CourseId: courseId,
+//     })
+//     if (studentCourse) return ReS(res, { data: studentCourse }, 200);
+//     else return ReE(res, { message: 'Unable to insert Course.' }, 500)
+// }
+// module.exports.enrollCourse = enrollCourse;
 
 
-const getStudentCourse = async (req, res) => {
-    let { userId } = req.params
-    const studentCourseIds = await StudentCourse.findAll({
-        // attributes: [['CourseId', 'courseId']],
-        // include: [{
-        //     model: Course,
-        //     as: "course",
-        //     attributes: [['id', 'categoryId'], 'title', 'description', 'image', 'createdBy'],
-        //     where:{
-        //         courseId: courseId
-        //     }
-        // }],
-        where: {
-            UserId: userId
-        }
-    })
-
-    let courseIds = studentCourseIds.map(val => val.CourseId);
 
 
-    const studentCourses = await Course.findAll({
-        attributes: [['id', 'courseId'], 'title', 'description', 'image', 'createdby'],
-        include: [{
-            model: CourseCategory,
-            as: "category",
-            attributes: [['id', 'categoryId'], 'title']
-        }],
-        where: {
-            id: {
-                [Op.notIn]: courseIds
-            }
-        }
-    })
-
-    if (studentCourses) return ReS(res, { data: studentCourses }, 200);
-    else return ReE(res, { message: 'Unable to get Course.' }, 500)
-}
-module.exports.getStudentCourse = getStudentCourse;
-
-
-const updateStudentCourse = async (req, res) => {
-    let { userId, courseId } = req.body
-    const studentCourse = await StudentCourse.create({
-        status: 1,
-        UserId: userId,
-        CourseId: courseId,
-    })
-    if (course) return ReS(res, { data: course }, 200);
-    else return ReE(res, { message: 'Unable to insert Course.' }, 500)
-}
-module.exports.updateStudentCourse = updateStudentCourse;
+// const updateStudentCourse = async (req, res) => {
+//     let { userId, courseId } = req.body
+//     const studentCourse = await StudentCourse.create({
+//         status: 1,
+//         UserId: userId,
+//         CourseId: courseId,
+//     })
+//     if (course) return ReS(res, { data: course }, 200);
+//     else return ReE(res, { message: 'Unable to insert Course.' }, 500)
+// }
+// module.exports.updateStudentCourse = updateStudentCourse;
 
 
 const create = async (req, res) => {

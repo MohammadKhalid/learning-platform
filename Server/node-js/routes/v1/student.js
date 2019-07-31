@@ -1,15 +1,19 @@
-const express        = require('express');
-const studentRouter   = express.Router();
+const express = require('express');
+const studentRouter = express.Router();
 
 // controllers
-const controllerPath                = '../../controllers/student/';
-const HomeController                = require(controllerPath + 'home.controller');
-const CategoryController            = require(controllerPath + 'category.controller');
-const TopicController 		        = require(controllerPath + 'topic.controller');
-const MediaController 		        = require(controllerPath + 'media.controller');
-const CoachController 		        = require(controllerPath + 'coach.controller');
-const ShowTimeController            = require(controllerPath + 'show-time.controller');
-const LiveGroupTrainingController   = require(controllerPath + 'live-group-training.controller');
+const controllerPath = '../../controllers/student/';
+const HomeController = require(controllerPath + 'home.controller');
+const CategoryController = require(controllerPath + 'category.controller');
+const TopicController = require(controllerPath + 'topic.controller');
+const MediaController = require(controllerPath + 'media.controller');
+const CoachController = require(controllerPath + 'coach.controller');
+const ShowTimeController = require(controllerPath + 'show-time.controller');
+const LiveGroupTrainingController = require(controllerPath + 'live-group-training.controller');
+const courseContoller = require(controllerPath + 'course.controller');
+
+const courseCategoryController = require('../../controllers/common/course.controller');
+
 
 // dashboard
 studentRouter.get('/dashboard', HomeController.dashboard);
@@ -75,6 +79,21 @@ const liveGroupTrainingRoutes = express.Router();
 studentRouter.use('/live-group-trainings', liveGroupTrainingRoutes);
 
 liveGroupTrainingRoutes.get('/', LiveGroupTrainingController.getAll);
-liveGroupTrainingRoutes.get('/:item_id',  LiveGroupTrainingController.get);
+liveGroupTrainingRoutes.get('/:item_id', LiveGroupTrainingController.get);
+
+//course category
+
+const courseCategory = express.Router();
+studentRouter.use('/course-category', courseCategory)
+
+courseCategory.get('/get-all/:userId', courseCategoryController.getAll)
+
+//courses 
+
+const course = express.Router();
+studentRouter.use('/course', course)
+
+course.get('/', courseContoller.getCourses)
+
 
 module.exports = studentRouter;
