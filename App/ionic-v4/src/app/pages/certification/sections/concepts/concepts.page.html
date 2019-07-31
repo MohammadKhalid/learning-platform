@@ -8,8 +8,17 @@
     </ion-card>
 </div>
 <ion-content ion-padding style="height: calc(100vh - 160px);">
-    <app-video *ngIf="selectedOption == 0"></app-video>
-    <app-resources *ngIf="selectedOption == 3"></app-resources>
-    <app-text *ngIf="selectedOption == 1"></app-text>
-    <app-quiz *ngIf="selectedOption == 2"></app-quiz>
+    <div *ngIf="selectedOption == 0">
+        <app-video [recordId]="recordId"></app-video>
+    </div>
+    <div *ngIf="selectedOption == 1">
+        <app-text [recordId]="recordId"></app-text>
+    </div>
+    <div *ngIf="selectedOption == 2">
+        <app-quiz></app-quiz>
+    </div>
+    <div *ngIf="selectedOption == 3">
+        <app-resources></app-resources>
+    </div>
+
 </ion-content>
