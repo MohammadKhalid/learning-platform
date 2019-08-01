@@ -13,6 +13,7 @@ const LiveGroupTrainingController = require(controllerPath + 'live-group-trainin
 const courseContoller = require(controllerPath + 'course.controller');
 
 const courseCategoryController = require('../../controllers/common/course.controller');
+const commonSectionController = require('../../controllers/common/section.controller');
 
 
 // dashboard
@@ -90,10 +91,14 @@ courseCategory.get('/get-all/:userId', courseCategoryController.getAll)
 
 //courses 
 
+
 const course = express.Router();
 studentRouter.use('/course', course)
-
 course.get('/', courseContoller.getCourses)
 
+// section
+const section = express.Router();
+studentRouter.use('/section', section)
+section.get('/get-sections/:courseId', commonSectionController.getSections)
 
 module.exports = studentRouter;
