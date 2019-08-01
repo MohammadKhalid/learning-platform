@@ -17,24 +17,6 @@ const create = async (req, res) => {
 }
 module.exports.create = create;
 
-const getSections = async (req, res) => {
-    let { courseId } = req.params
-    const section = await Section.findAll({
-        attributes: ['id', 'title', 'description', 'totalExperience'],
-        include: [{
-            model: Course,
-            as: "course",
-            attributes: [['id', 'courseId'], 'title', 'description']
-        }],
-        where: {
-            courseId: courseId
-        }
-    })
-    if (section) return ReS(res, { data: section }, 200);
-    else return ReE(res, { message: 'Unable to insert Course.' }, 500)
-}
-module.exports.getSections = getSections;
-
 const removeSection = async (req, res) => {
     let { sectionId } = req.params
     const section = await Section.destroy({
