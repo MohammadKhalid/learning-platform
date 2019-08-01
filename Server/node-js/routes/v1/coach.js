@@ -164,8 +164,8 @@ coachRouter.use('/resource', resourceRoutes)
 
 resourceRoutes.post('/', resourcesUpload,resourceController.create)
 resourceRoutes.get('/get-resources/:sectionId', resourceController.getResources)
-resourceRoutes.put('/:textId', resourceController.update)
-resourceRoutes.delete('/:textId', resourceController.remove)
+resourceRoutes.put('/:resourceId', resourceController.update)
+resourceRoutes.delete('/:resourceId', resourceController.remove)
 
 
 // Quiz
