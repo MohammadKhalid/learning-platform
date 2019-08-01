@@ -18,6 +18,7 @@ export class SectionsPage implements OnInit {
   listData: any;
   id: any
   searchBy: string;
+  panelOpenState = false;
   public item: any = [
     { title: "one" },
     { title: "two" },
