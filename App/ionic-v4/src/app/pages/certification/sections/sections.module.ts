@@ -7,8 +7,14 @@ import { IonicModule } from '@ionic/angular';
 import { MatSidenavModule } from '@angular/material/sidenav';
 
 import { SectionsPage } from './sections.page';
-import { MatSelectModule } from '@angular/material';
+import { MatSelectModule, MatAutocompleteModule, MatBadgeModule, MatBottomSheetModule, MatButtonModule, MatButtonToggleModule, MatCardModule, MatChipsModule, MatCheckboxModule, MatDatepickerModule, MatStepperModule, MatDialogModule, MatExpansionModule, MatIconModule, MatInputModule, MatListModule, MatDividerModule, MatGridListModule, MatMenuModule, MatNativeDateModule, MatPaginatorModule, MatProgressBarModule, MatProgressSpinnerModule, MatRadioModule, MatRippleModule, MatSliderModule, MatSlideToggleModule, MatSnackBarModule, MatSortModule, MatTableModule, MatTabsModule, MatToolbarModule, MatTreeModule, MatTooltipModule } from '@angular/material';
 import { OrderByDatePipe } from 'src/app/pipes/order-by-date.pipe';
+import { A11yModule } from '@angular/cdk/a11y';
+import { CdkStepperModule } from '@angular/cdk/stepper';
+import { CdkTableModule } from '@angular/cdk/table';
+import { CdkTreeModule } from '@angular/cdk/tree';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { PortalModule } from '@angular/cdk/portal';
 
 const routes: Routes = [
   {
@@ -34,7 +40,9 @@ const routes: Routes = [
     FormsModule,
     IonicModule,
     MatSelectModule,
-    MatSidenavModule,
+    MatSidenavModule,   
+    MatExpansionModule,
+    MatInputModule,
     RouterModule.forChild(routes)
   ],
   declarations: [SectionsPage, OrderByDatePipe]

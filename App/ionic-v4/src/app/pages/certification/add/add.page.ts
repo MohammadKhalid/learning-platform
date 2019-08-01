@@ -85,7 +85,7 @@ export class AddPage implements OnInit {
     this.restApi.postPromise('course',obj)
     .then(res=>{ 
       this.notificationService.showMsg("Saved Successfully");
-      this.navCtrl.navigateRoot('/certification/addmodule/' + res.data.id)
+      this.navCtrl.navigateRoot('/certification/module/' + res.data.id)
       
     }).catch(err=>{
       this.notificationService.showMsg("Error inserting Course");

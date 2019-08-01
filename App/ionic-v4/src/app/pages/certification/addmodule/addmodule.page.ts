@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormGroup, FormArray, FormControl, FormBuilder,Validators } from '@angular/forms';
+import { FormGroup, FormArray, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
 import { NotificationService } from 'src/app/services/notification/notification.service';
+import { AuthenticationService } from 'src/app/services/user/authentication.service';
 
 
 @Component({
@@ -15,21 +16,23 @@ export class AddmodulePage implements OnInit {
 
   moduleDetail: boolean = false;
   id: any;
-
-  constructor(private router: Router, 
+  user: any;
+  constructor(private router: Router,
     private fb: FormBuilder,
-     private actroute: ActivatedRoute,
-      private service: RestApiService,
-      private notifictation : NotificationService) { }
+    private actroute: ActivatedRoute,
+    private service: RestApiService,
+    private authService: AuthenticationService,
+    private notifictation: NotificationService) { }
   data: any;
   serverUrl: string = "./assets/img/";
   forms: FormGroup
   ngOnInit() {
+    this.user = this.authService.getSessionData().user;
     this.id = this.actroute.snapshot.paramMap.get('id');
     this.forms = this.fb.group({
       title: new FormControl(''),
       description: new FormControl(''),
-      totalExperience: new FormControl('',Validators.compose([
+      totalExperience: new FormControl('', Validators.compose([
         Validators.required,
         Validators.pattern('^[0-9]*$')
       ])),
@@ -42,12 +45,12 @@ export class AddmodulePage implements OnInit {
       this.data = res.data;
       this.notifictation.showMsg('text added')
     }).catch(err => {
-       
+
     })
 
   }
-  
-  Cancel(){
+
+  Cancel() {
     this.addModelbutton = !this.addModelbutton;
     this.moduleDetail = !this.moduleDetail;
   }
@@ -59,14 +62,14 @@ export class AddmodulePage implements OnInit {
 
   addModule() {
     this.service.postPromise('section', this.forms.value).then(res => {
-     
+
       this.data.push(res.data);
       this.addModelbutton = !this.addModelbutton;
       this.moduleDetail = !this.moduleDetail
       this.notifictation.showMsg("Successfully Added");
 
     }).catch(res => {
-          this.notifictation.showMsg('Error to Add ');
+      this.notifictation.showMsg('Error to Add ');
     })
 
   }
