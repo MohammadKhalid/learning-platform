@@ -55,6 +55,34 @@
         </ion-card>
 
     </div>
+    <div *ngIf="user.type == 'coach'">
+        <div *ngIf="addModelbutton" [ngClass]="{'container4':data.length == 0,'container3':data.length > 0}"
+            (click)="loadmoduledetail()">
+            <span>+ Add Module</span>
+        </div>
+        <form [formGroup]="forms" (ngSubmit)="addModule()">
+
+            <ion-list class="ion-padding" *ngIf="moduleDetail">
+                <ion-item lines="inset">
+                    <ion-label position="floating"> Module Title
+                        <ion-text color="danger">*</ion-text>
+                    </ion-label>
+                    <ion-input type="input" formControlName="title" placeholder="placeholder"></ion-input>
+                </ion-item>
+
+                <ion-item lines="inset">
+                    <ion-label position="floating"> Description
+                        <ion-text color="danger">*</ion-text>
+                    </ion-label>
+                    <ion-textarea placeholder="placeholder" formControlName='description'></ion-textarea>
+                </ion-item>
+
+                <ion-item lines="inset">
+                    <ion-label position="floating"> Total Experience
+                        <ion-text color="danger">*</ion-text>
+                    </ion-label>
+                    <ion-input type="input" formControlName="totalExperience" placeholder="placeholder"></ion-input>
+                </ion-item>
 
 
 
@@ -62,61 +90,15 @@
 
 
 
+                <ion-item lines="none" class="ion-float-right ion-padding-top">
+                    <ion-button size="md" (click)="Cancel()">Cancel </ion-button>
+                    <ion-button type="submit" size="md" [disabled]="!forms.valid">Save </ion-button>
+                </ion-item>
+            </ion-list>
 
-
-
-
-
-
-
-
-
-    <div *ngIf="addModelbutton" [ngClass]="{'container4':data.length == 0,'container3':data.length > 0}"
-        (click)="loadmoduledetail()">
-        <span>+ Add Module</span>
+        </form>
+        <!-- </ion-grid> -->
     </div>
-
-    <form [formGroup]="forms" (ngSubmit)="addModule()">
-
-        <ion-list class="ion-padding" *ngIf="moduleDetail">
-            <ion-item lines="inset">
-                <ion-label position="floating"> Module Title
-                    <ion-text color="danger">*</ion-text>
-                </ion-label>
-                <ion-input type="input" formControlName="title" placeholder="placeholder"></ion-input>
-            </ion-item>
-
-            <ion-item lines="inset">
-                <ion-label position="floating"> Description
-                    <ion-text color="danger">*</ion-text>
-                </ion-label>
-                <ion-textarea placeholder="placeholder" formControlName='description'></ion-textarea>
-            </ion-item>
-
-            <ion-item lines="inset">
-                <ion-label position="floating"> Total Experience
-                    <ion-text color="danger">*</ion-text>
-                </ion-label>
-                <ion-input type="input" formControlName="totalExperience" placeholder="placeholder"></ion-input>
-            </ion-item>
-
-
-
-
-
-
-
-            <ion-item lines="none" class="ion-float-right ion-padding-top">
-                <ion-button size="md" (click)="Cancel()">Cancel </ion-button>
-                <ion-button type="submit" size="md" [disabled]="!forms.valid">Save </ion-button>
-            </ion-item>
-        </ion-list>
-
-    </form>
-    <!-- </ion-grid> -->
-
-
-
 
 
 </ion-content>
