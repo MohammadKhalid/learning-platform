@@ -1,5 +1,7 @@
 const { Resource } = require('../../models');
 const { to, ReE, ReS } = require('../../services/util.service');
+const fs = require('fs');
+var path = require('path');
 
 const create = async function (req, res) {
 
@@ -10,10 +12,10 @@ const create = async function (req, res) {
             url: fileItem.filename
         }
     })
-        const resources = await Resource.bulkCreate(bulkObj)
+    const resources = await Resource.bulkCreate(bulkObj)
 
-        if (resources) return ReS(res, { data: resources }, 200);
-        else return ReE(res, { message: 'Unable to insert resources.' }, 500)
+    if (resources) return ReS(res, { data: resources }, 200);
+    else return ReE(res, { message: 'Unable to insert resources.' }, 500)
 }
 module.exports.create = create;
 
@@ -48,7 +50,11 @@ const update = async function (req, res) {
 module.exports.update = update;
 
 const remove = async function (req, res) {
-    let { resourceId } = req.params
+    let { resourceId } = req.params;
+    let { filename } = req.body;
+    const filePath = path.join(__dirname, '../../uploads/resources/');
+    fs.existsSync(`${filePath}${filename}`) == true ? fs.unlinkSync(`${filePath}${filename}`) : null;
+
     const resource = Resource.destroy({
         where: {
             id: resourceId
