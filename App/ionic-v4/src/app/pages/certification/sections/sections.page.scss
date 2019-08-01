@@ -21,13 +21,13 @@
 
   }
 
-  ion-item.certificate-item{
+  .certificate-item{
       font-size: 13px;
       color: white;
       --min-height: 0;
   }
   
-  ion-icon.certificate-icon{
+  .certificate-icon{
     color: white;
     font-size: 18px;
     margin-left: 2%
@@ -41,6 +41,7 @@
 
   .bordersConcepts{
     border-bottom: 2px solid #1a222a;
+    background: transparent;
   }
 
   .bordersSearch{
@@ -57,16 +58,39 @@
   }
 
 
-  ion-item.certificate-section {
-    --background-hover: none;
-    --color-hover: #bfc0c1
-  }
+  // ion-item.certificate-section {
+  //   --background-hover: none;
+  //   --color-hover: #bfc0c1
+  // }
 
-  ion-icon.bordersResources.certificate-item.certificate-section.hydrated.in-list.ion-activatable.ion-focusable.item.item-label.md {
+  .bordersResources.certificate-item.certificate-section.hydrated.in-list.ion-activatable.ion-focusable.item.item-label.md {
     --background-hover: none;
     --color-hover: #bfc0c1
   }
   
-  ion-item.bordersResources.certificate-item.certificate-section.hydrated.in-list.ion-activatable.ion-focusable.item.item-label.md {
+.bordersResources.certificate-item.certificate-section.hydrated.in-list.ion-activatable.ion-focusable.item.item-label.md {
     --background: #1a232b;
 }
+
+.mat-accordation{
+  background: transparent;
+}
+
+.res-space{
+  padding-left: 6px;
+  cursor: pointer;
+}
+
+.mat-expansion-panel:not([class*=mat-elevation-z]){
+  box-shadow: none;
+}
+
+.add-spacing{
+  padding-right: 9px;
+}
+
+.mat-expansion-indicator::after, .mat-expansion-panel-header-description{
+  border: white ;
+
+}
+
