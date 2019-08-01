@@ -44,6 +44,7 @@ const textController = require(controllerPath + 'text.controller');
 const resourceController = require(controllerPath + 'resource.controller');
 const quizController = require(controllerPath + 'quiz.controller');
 const courseCategoryController = require('../../controllers/common/course.controller');
+const commonSectionController = require('../../controllers/common/section.controller');
 
 // dashboard
 coachRouter.get('/dashboard', HomeController.dashboard);
@@ -113,9 +114,9 @@ liveGroupTrainingRoutes.delete('/:item_id', LiveGroupTrainingController.remove);
 //course Category
 
 const courseCategory = express.Router();
-coachRouter.use('/course-category',courseCategory)
+coachRouter.use('/course-category', courseCategory)
 
-courseCategory.get('/get-all/:userId',courseCategoryController.getAll)
+courseCategory.get('/get-all/:userId', courseCategoryController.getAll)
 
 //course 
 
@@ -130,11 +131,11 @@ const sectionRoute = express.Router();
 coachRouter.use('/section', sectionRoute)
 
 sectionRoute.post('/', sectionController.create)
-sectionRoute.get('/get-sections/:courseId', sectionController.getSections)
+sectionRoute.get('/get-sections/:courseId', commonSectionController.getSections)
 sectionRoute.put('/:sectionId', sectionController.updateSection)
 sectionRoute.delete('/:sectionId', sectionController.removeSection)
 
-sectionRoute.get('/get-section-details/:sectionId',courseCategoryController.sectionDetails)
+sectionRoute.get('/get-section-details/:sectionId', courseCategoryController.sectionDetails)
 
 
 // lessons
@@ -162,7 +163,7 @@ textRoutes.get('/get-by-id/:id', textController.getById)
 const resourceRoutes = express.Router();
 coachRouter.use('/resource', resourceRoutes)
 
-resourceRoutes.post('/', resourcesUpload,resourceController.create)
+resourceRoutes.post('/', resourcesUpload, resourceController.create)
 resourceRoutes.get('/get-resources/:sectionId', resourceController.getResources)
 resourceRoutes.put('/:resourceId', resourceController.update)
 resourceRoutes.delete('/:resourceId/:filename', resourceController.remove)
@@ -173,7 +174,7 @@ resourceRoutes.delete('/:resourceId/:filename', resourceController.remove)
 const quizRoutes = express.Router();
 coachRouter.use('/quiz', quizRoutes)
 
-quizRoutes.post('/',quizController.create)
+quizRoutes.post('/', quizController.create)
 
 
 

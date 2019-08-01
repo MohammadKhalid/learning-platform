@@ -14,64 +14,50 @@
 
     <mat-drawer-container class="example-container">
         <mat-drawer mode="side" opened class="certificate-Sbar">
-
-            <mat-accordion>
-                <mat-expansion-panel>
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>
-                            Personal data
-                        </mat-panel-title>
-                        <mat-panel-description>
-                            Type your name and age
-                        </mat-panel-description>
-                    </mat-expansion-panel-header>
-
-                    <mat-form-field>
-                        <input matInput placeholder="First name">
-                    </mat-form-field>
-
-                    <mat-form-field>
-                        <input matInput placeholder="Age">
-                    </mat-form-field>
-                </mat-expansion-panel>
-                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>
-                            Self aware panel
-                        </mat-panel-title>
-                        <mat-panel-description>
-                            Currently I am {{panelOpenState ? 'open' : 'closed'}}
-                        </mat-panel-description>
-                    </mat-expansion-panel-header>
-                    <p>I'm visible because I am open</p>
-                </mat-expansion-panel>
-            </mat-accordion>
-
-            <!-- old code -->
-            <!-- <ion-item lines="none" class="certificate-item bordersSearch">
+            <ion-item lines="none" class="certificate-item bordersSearch">
                 <ion-input class="send-box" type="text" placeholder="SEARCH" [(ngModel)]="searchBy"></ion-input>
                 <ion-icon name="search" class="icon-color certificate-icon certificate-section-icon"></ion-icon>
             </ion-item>
-
             <ion-list lines="none">
                 <ion-item class="bordersResources certificate-item certificate-section" (click)="goto('resources')">
-                    <ion-label>RESOURCES</ion-label>
-                </ion-item>
-                <ion-item class="bordersConcepts certificate-item certificate-section" (click)="goto('concepts')">
-                    <ion-label> CONCEPTS</ion-label>
-                    <ion-icon class="certificate-icon certificate-section-icon" name="add"></ion-icon>
-                </ion-item>
-                <ion-item *ngFor="let dataRow of listData | orderByDate" class="conceptGaps certificate-item certificate-section">
-
-                    <ion-label (click)="gotoConceptType(dataRow.id,dataRow.type)">{{dataRow.title}}</ion-label>
-
-
-                    <ion-icon href="#" class="certificate-icon certificate-section-icon" name="create"></ion-icon>
-                    <ion-icon href="#" class="certificate-icon certificate-section-icon" name="trash"></ion-icon>
+                    <ion-label class="res-space">RESOURCES</ion-label>
                 </ion-item>
 
 
-            </ion-list> -->
+                <mat-accordion>
+                    <mat-expansion-panel class="mat-accordation" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                        <mat-expansion-panel-header class="bordersConcepts">
+                            <mat-panel-title class="certificate-item">
+                                <ion-label> CONCEPTS</ion-label>        
+                            </mat-panel-title>
+                                <ion-icon class="certificate-icon certificate-section-icon add-spacing" name="add"></ion-icon>
+                        </mat-expansion-panel-header>
+                            
+                            <ion-item *ngFor="let dataRow of listData | orderByDate" class="conceptGaps certificate-item certificate-section">
+                                <ion-label (click)="gotoConceptType(dataRow.id,dataRow.type)">{{dataRow.title}}</ion-label>
+                                <ion-icon href="#" class="certificate-icon certificate-section-icon" name="create"></ion-icon>
+                                <ion-icon href="#" class="certificate-icon certificate-section-icon" name="trash"></ion-icon>
+                            </ion-item>
+                            
+                        </mat-expansion-panel>
+                    </mat-accordion>
+        
+
+            
+
+
+
+        
+
+    
+    
+                </ion-list>
+
+           
+            <!-- old code -->
+
+
+
         </mat-drawer>
 
 
