@@ -51,9 +51,6 @@ this.id  = this.actroute.snapshot.paramMap.get('id');
   
 
 addText(){
-  debugger;
- 
-
   if(this.recordId) {
     this.serviceApi.putPromise(`text/${this.recordId}`,this.addTextForm.value).then(res => {
       this.noti.showMsg("update Record")
@@ -69,8 +66,6 @@ addText(){
        this.serviceApi.getPromise(`section/get-section-details`, id).then(resSec => {
         this.serviceApi.setSectionMenuData(resSec.data);
       })
-  
-  
     }).catch(err=>{
       this.noti.showMsg(err);
   
