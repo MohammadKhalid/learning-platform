@@ -245,11 +245,7 @@ export class AppComponent {
         if(this.sockets) this.sockets.emit('set-offline', { user_id: this.authenticationService.getSessionData().user.id })
   }
   ngOnInit(){
-    debugger
-    if(this.router.url === 'certification/sections/concepts'){
-      this.menuCtrl.enable(false);
-
-    }
+   
   }
   ngAfterViewInit() {
     if(this.sockets) {
