@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
-import {MatCardModule} from '@angular/material/card';
+import { MatCardModule } from '@angular/material/card';
 
-import {RoundProgressModule} from 'angular-svg-round-progressbar';
+import { RoundProgressModule } from 'angular-svg-round-progressbar';
 import { NgCircleProgressModule } from 'ng-circle-progress';
 
 import { IonicModule } from '@ionic/angular';
@@ -30,7 +30,7 @@ const routes: Routes = [
     // BrowserModule,
     NgCircleProgressModule.forRoot({
       "radius": 40,
-      
+
       "space": -10,
       "outerStrokeGradient": true,
       "outerStrokeWidth": 10,
@@ -42,14 +42,15 @@ const routes: Routes = [
       "animateTitle": true,
       "animationDuration": 200,
       "showTitle": false,
-      "showSubtitle" : true,
+      "showSubtitle": true,
       "showUnits": false,
       "showBackground": false,
       "startFromZero": false
     }),
-    
+
     RouterModule.forChild(routes)
   ],
   declarations: [AddmodulePage]
 })
-export class AddmodulePageModule {}
+export class AddmodulePageModule {
+}

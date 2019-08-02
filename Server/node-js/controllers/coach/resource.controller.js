@@ -50,8 +50,7 @@ const update = async function (req, res) {
 module.exports.update = update;
 
 const remove = async function (req, res) {
-    let { resourceId } = req.params;
-    let { filename } = req.body;
+    let { resourceId,filename } = req.params;
     const filePath = path.join(__dirname, '../../uploads/resources/');
     fs.existsSync(`${filePath}${filename}`) == true ? fs.unlinkSync(`${filePath}${filename}`) : null;
 

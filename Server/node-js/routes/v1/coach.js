@@ -166,7 +166,7 @@ coachRouter.use('/resource', resourceRoutes)
 resourceRoutes.post('/', resourcesUpload, resourceController.create)
 resourceRoutes.get('/get-resources/:sectionId', resourceController.getResources)
 resourceRoutes.put('/:resourceId', resourceController.update)
-resourceRoutes.delete('/:resourceId', resourceController.remove)
+resourceRoutes.delete('/:resourceId/:filename', resourceController.remove)
 
 
 // Quiz
@@ -175,7 +175,6 @@ const quizRoutes = express.Router();
 coachRouter.use('/quiz', quizRoutes)
 
 quizRoutes.post('/', quizController.create)
-
-
+quizRoutes.get('/:sectionId', quizController.getQuize)
 
 module.exports = coachRouter;
