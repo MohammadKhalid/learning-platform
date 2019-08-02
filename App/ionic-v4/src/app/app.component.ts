@@ -246,7 +246,7 @@ export class AppComponent {
   }
   ngOnInit(){
     debugger
-    if(this.router.url === '/certification/sections'){
+    if(this.router.url === 'certification/sections/concepts'){
       this.menuCtrl.enable(false);
 
     }
