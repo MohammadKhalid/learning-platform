@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RestApiService } from '../../../../services/http/rest-api.service';
 import { AuthenticationService } from '../../../../services/user/authentication.service';
 import { ActivatedRoute } from '@angular/router';
+import { MenuController } from '@ionic/angular';
 @Component({
   selector: 'app-concepts',
   templateUrl: './concepts.page.html',
@@ -19,12 +20,17 @@ export class ConceptsPage implements OnInit {
   constructor(
     private restApi: RestApiService,
     private authService: AuthenticationService,
-    private actRoute: ActivatedRoute
+    private actRoute: ActivatedRoute,
+    private menu : MenuController
   ) {
     this.authService.authenticationState.subscribe((state) => {
       this.sessionData = state ? this.authService.getSessionData() : null;
     });
     this.user = this.sessionData.user
+  }
+  ionViewWillEnter() {
+    this.menu.enable(false, 'mainMenu')
+
   }
 
   ngOnInit() {
