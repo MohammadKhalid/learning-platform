@@ -43,7 +43,7 @@ export class AddmodulePage implements OnInit {
 
     this.service.getPromise('section/get-sections', this.id).then(res => {
       this.data = res.data;
-      this.notifictation.showMsg('text added')
+      
     }).catch(err => {
 
     })
