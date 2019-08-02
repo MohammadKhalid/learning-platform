@@ -176,5 +176,6 @@ coachRouter.use('/quiz', quizRoutes)
 
 quizRoutes.post('/', quizController.create)
 quizRoutes.get('/:sectionId', quizController.getQuize)
+quizRoutes.get('/get-title/:sectionId/:title', quizController.getTitle)
 
 module.exports = coachRouter;
