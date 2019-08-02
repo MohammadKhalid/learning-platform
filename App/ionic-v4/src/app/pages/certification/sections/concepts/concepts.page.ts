@@ -30,6 +30,10 @@ export class ConceptsPage implements OnInit {
     });
     this.user = this.sessionData.user
   }
+  ionViewWillEnter() {
+    this.menu.enable(false, 'mainMenu')
+
+  }
 
   ngOnInit() {
     debugger;

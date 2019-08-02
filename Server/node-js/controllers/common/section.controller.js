@@ -1,4 +1,4 @@
-const { Sequelize, CourseCategory, Section, Text, Lesson } = require('../../models');
+const { Sequelize, CourseCategory, Section, Text, Lesson,Course } = require('../../models');
 const { to, ReE, ReS } = require('../../services/util.service');
 const Op = Sequelize.Op;
 

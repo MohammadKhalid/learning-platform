@@ -244,6 +244,9 @@ export class AppComponent {
   unloadHandler(event: any): void {
         if(this.sockets) this.sockets.emit('set-offline', { user_id: this.authenticationService.getSessionData().user.id })
   }
+  ngOnInit(){
+   
+  }
   ngAfterViewInit() {
     if(this.sockets) {
       this.sockets.on('connect', () => {
@@ -313,4 +316,5 @@ export class AppComponent {
   getRouterConfig() {
     return this.router.config;
   }
+  
 }
