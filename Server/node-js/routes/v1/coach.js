@@ -175,7 +175,6 @@ const quizRoutes = express.Router();
 coachRouter.use('/quiz', quizRoutes)
 
 quizRoutes.post('/', quizController.create)
-
-
+quizRoutes.get('/:sectionId', quizController.getQuize)
 
 module.exports = coachRouter;

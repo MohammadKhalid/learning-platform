@@ -5,9 +5,9 @@ const Op = Sequelize.Op;
 
 
 const create = async (req, res) => {
-    let {quizes,sectionId} = req.body
+    let { quizes, sectionId } = req.body
 
-    let bulkQuizes = quizes.map(quiz =>{
+    let bulkQuizes = quizes.map(quiz => {
         return {
             question: quiz.question,
             options: JSON.stringify(quiz.options),
@@ -21,3 +21,12 @@ const create = async (req, res) => {
     else return ReE(res, { message: 'Unable to insert Quiz.' }, 500)
 }
 module.exports.create = create;
+const getQuize = async (req, res) => {
+    let { sectionId } = req.params;
+    const quizesResult = await Quiz.findAll({
+        where: { sectionId: sectionId }
+    })
+    if (quizesResult) return ReS(res, { data: quizesResult }, 200);
+    else return ReE(res, { message: 'Unable to get Quiz.' }, 500)
+}
+module.exports.getQuize = getQuize;
