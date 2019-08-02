@@ -21,12 +21,27 @@ const create = async (req, res) => {
     else return ReE(res, { message: 'Unable to insert Quiz.' }, 500)
 }
 module.exports.create = create;
+
+
 const getQuize = async (req, res) => {
-    let { sectionId } = req.params;
+    let { sectionId, title } = req.params;
     const quizesResult = await Quiz.findAll({
-        where: { sectionId: sectionId }
+        where: {
+            sectionId: sectionId,
+            title: title
+        }
     })
     if (quizesResult) return ReS(res, { data: quizesResult }, 200);
     else return ReE(res, { message: 'Unable to get Quiz.' }, 500)
 }
 module.exports.getQuize = getQuize;
+
+const getTitle = async (req, res) => {
+    let { title, sectionId } = req.params;
+    const quizesResult = await Quiz.findAll({
+        where: { sectionId: sectionId, title: title }
+    })
+    if (quizesResult) return ReS(res, { data: quizesResult }, 200);
+    else return ReE(res, { message: 'Unable to get by title.' }, 500)
+}
+module.exports.getTitle = getTitle;

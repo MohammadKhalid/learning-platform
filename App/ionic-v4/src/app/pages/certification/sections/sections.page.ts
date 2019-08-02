@@ -50,9 +50,14 @@ export class SectionsPage implements OnInit {
   goto(route) {
     this.reouter.navigate([`/certification/sections/${route}`])
   }
-  gotoConceptType(recordId, type) {
+  gotoConceptType(data) {
     let sectionId = this.apiSrv.sectionId;
-    this.reouter.navigate([`certification/sections/concepts/${sectionId}/${recordId}/${type}`])
+    if (data.type == "Quiz") {
+      this.reouter.navigate([`certification/sections/concepts/${sectionId}/${data.title}/${data.type}`])
+    }
+    else {
+      this.reouter.navigate([`certification/sections/concepts/${sectionId}/${data.id}/${data.type}`])
+    }
   }
 
 }
