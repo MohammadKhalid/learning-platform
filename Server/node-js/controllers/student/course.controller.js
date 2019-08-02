@@ -5,11 +5,17 @@ const Op = Sequelize.Op;
 
 
 const getCourses = async (req, res) => {
-    let { adminId, categories, searchBy } = req.query;
+    let { adminId, categories, searchBy, userId } = req.query;
     let coachIds = await User.findAll({
         where: { createdBy: adminId, type: 'coach' },
         attributes: ['id']
     });
+    let courseIds = await StudentCourse.findAll({
+        attributes: ['CourseId'],
+        where: {
+            UserId: userId
+        }
+    })
 
     let condition = {}
     let categoryCondition = {}
@@ -21,6 +27,12 @@ const getCourses = async (req, res) => {
         categories = categories.split(',')
         categoryCondition.id = {
             [Op.in]: categories
+        }
+    }
+
+    if (courseIds.length > 0) {
+        condition.id = {
+            [Op.notIn]: courseIds.map(x => x.CourseId)
         }
     }
 
@@ -96,3 +108,18 @@ const getCourses = async (req, res) => {
     // else return ReE(res, { message: 'Unable to get Course.' }, 500)
 }
 module.exports.getCourses = getCourses;
+
+
+const enrollCourse = async (req, res) => {
+    let { userId, courseId } = req.body
+
+    let enrolledResult = await StudentCourse.create({
+        UserId: userId,
+        CourseId: courseId
+    })
+
+    if (enrolledResult) return ReS(res, { data: enrolledResult }, 200);
+    else return ReE(res, { message: 'Unable to insert Course.' }, 500)
+}
+
+module.exports.enrollCourse = enrollCourse;

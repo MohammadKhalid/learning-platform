@@ -95,6 +95,7 @@ courseCategory.get('/get-all/:userId', courseCategoryController.getAll)
 const course = express.Router();
 studentRouter.use('/course', course)
 course.get('/', courseContoller.getCourses)
+course.post('/enroll-course', courseContoller.enrollCourse)
 
 // section
 const section = express.Router();

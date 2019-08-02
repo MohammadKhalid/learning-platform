@@ -5,10 +5,20 @@ const Op = Sequelize.Op;
 
 
 const create = async (req, res) => {
-    let { quizes, sectionId } = req.body
+    let { quizes, sectionId, title, oldTitle } = req.body
+
+    if (oldTitle) {
+        let removedQuiz = await Quiz.destroy({
+            where: {
+                title: oldTitle,
+                sectionId: sectionId
+            }
+        })
+    }
 
     let bulkQuizes = quizes.map(quiz => {
         return {
+            title: title,
             question: quiz.question,
             options: JSON.stringify(quiz.options),
             experience: quiz.experience,

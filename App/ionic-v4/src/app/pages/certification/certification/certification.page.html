@@ -15,15 +15,36 @@
 </ion-header>
 
 <ion-content padding>
+  <div *ngIf="user.type == 'student'">
+    <mat-tab-group mat-stretch-tabs>
+      <mat-tab label="Available Certifications">
+        <app-filter (searchByFilterEvent)="searchByFilterEvent($event)"></app-filter>
+        <div *ngIf="courses.length > 0">
+          <div *ngFor="let obj of courses">
 
-  <app-filter (searchByFilterEvent)="searchByFilterEvent($event)"></app-filter>
-  <div *ngIf="courses.length > 0">
-    <div *ngFor="let obj of courses">
+            <h2 class="certficate-title">
+              <span>{{obj.title}}</span>
+            </h2>
+            <certificate-card [courses]="obj.subCategories"></certificate-card>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="In progress Certifications"> Content 2 </mat-tab>
+      <mat-tab label="Completed Certifications"> Content 3 </mat-tab>
+    </mat-tab-group>
+  </div>
 
-      <h2 class="certficate-title">
-        <span>{{obj.title}}</span>
-      </h2>
-      <certificate-card [courses]="obj.subCategories"></certificate-card>
+  <div *ngIf="user.type == 'coach'">
+    <app-filter (searchByFilterEvent)="searchByFilterEvent($event)"></app-filter>
+    <div *ngIf="courses.length > 0">
+      <div *ngFor="let obj of courses">
+
+        <h2 class="certficate-title">
+          <span>{{obj.title}}</span>
+        </h2>
+        <certificate-card [courses]="obj.subCategories"></certificate-card>
+      </div>
     </div>
   </div>
+
 </ion-content>
