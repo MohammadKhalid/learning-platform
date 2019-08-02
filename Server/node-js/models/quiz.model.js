@@ -6,19 +6,24 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
+        title: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
         options: {
             type: DataTypes.TEXT,
             allowNull: false
         },
-        questionType: {
+        type: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            defaultValue: 'Quiz'
+        },
+        experience: {
             type: DataTypes.INTEGER,
             allowNull: false
         },
-        experience:{
-            type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        sectionId:{
+        sectionId: {
             type: DataTypes.INTEGER,
             allowNull: false
         }

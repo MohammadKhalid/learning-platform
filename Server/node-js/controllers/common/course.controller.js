@@ -1,4 +1,4 @@
-const { Sequelize, CourseCategory, Section, Text, Lesson } = require('../../models');
+const { Sequelize, CourseCategory, Section, Text, Lesson, Quiz } = require('../../models');
 const { to, ReE, ReS } = require('../../services/util.service');
 const Op = Sequelize.Op;
 // const uuidv4 = require('uuid/v4')
@@ -29,9 +29,15 @@ const sectionDetails = async (req, res) => {
             id: sectionId
         }
     })
-    if(sectionDetail.length > 0){
-        return ReS(res, { data: [...sectionDetail[0].Text,...sectionDetail[0].Lesson] }, 200);
-    }else{
+    const quizDetail = await Quiz.findAll({
+        where:{
+            sectionId: sectionId
+        },
+        group: ['title']
+    })
+    if (sectionDetail.length > 0) {
+        return ReS(res, { data: [...sectionDetail[0].Text,...sectionDetail[0].Lesson,...quizDetail] }, 200);
+    } else {
         return ReS(res, { data: [] }, 200);
     }
 
