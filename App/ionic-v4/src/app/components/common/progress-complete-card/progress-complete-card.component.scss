@@ -1,0 +1,54 @@
+.img-adjustment{
+    width: 20%;
+    height: auto;
+    padding-left: 2%;
+
+}
+
+.font-sizing{
+    font-size: 22px;
+    font-weight: bolder;
+}
+
+.description-Adjustment{
+    word-wrap: break-word;
+}
+
+.progress-bar-adjustment{
+    width: 92%;
+    height: 17px;
+    border-radius: 31px;
+    margin-top: 11px;
+}
+
+.play-btn-adjustment{
+    padding-top: 0px;
+    padding-right: 8px;
+    font-size: 33px;
+    margin-top: -28px;
+    color: #CCE0F0;
+}
+
+
+.clamp-adjustment{
+    text-overflow: inherit;
+    overflow: inherit;
+    display: -webkit-box;
+    display: -webkit-box;
+    display: -moz-box;
+    -webkit-line-clamp: 3;
+    width: 100%;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    
+}
+
+.for-clamp-adjustment{
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 2px;
+    font-size: 14px;
+    line-height: 20px;
+}
+
