@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RestApiService } from '../../../../services/http/rest-api.service';
 import { AuthenticationService } from '../../../../services/user/authentication.service';
 import { ActivatedRoute } from '@angular/router';
+import { MenuController } from '@ionic/angular';
 @Component({
   selector: 'app-concepts',
   templateUrl: './concepts.page.html',
@@ -15,11 +16,14 @@ export class ConceptsPage implements OnInit {
   user: any;
   selectedOption: any;
   recordId: any;
+  quizTitle: any;
+  sectionId: any;
 
   constructor(
     private restApi: RestApiService,
     private authService: AuthenticationService,
-    private actRoute: ActivatedRoute
+    private actRoute: ActivatedRoute,
+    private menu: MenuController
   ) {
     this.authService.authenticationState.subscribe((state) => {
       this.sessionData = state ? this.authService.getSessionData() : null;
@@ -28,7 +32,9 @@ export class ConceptsPage implements OnInit {
   }
 
   ngOnInit() {
-    let id = this.actRoute.snapshot.paramMap.get('id');
+    debugger;
+    this.menu.enable(false);
+    let id = this.sectionId = this.actRoute.snapshot.paramMap.get('id');
     this.recordId = this.actRoute.snapshot.paramMap.get('recordid');
     let type = this.actRoute.snapshot.paramMap.get('type');
     this.restApi.sectionId = id;
@@ -36,9 +42,8 @@ export class ConceptsPage implements OnInit {
       this.restApi.setSectionMenuData(res.data);
     })
     this.conceptOptions = this.restApi.getConceptsOptins();
-       if (this.recordId && type) { 
+    if (this.recordId && type) {
       this.selectedOption = this.restApi.getConceptsOptionsByname(type);
     }
   }
-
 }

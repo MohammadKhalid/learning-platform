@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
 import { NotificationService } from 'src/app/services/notification/notification.service';
 import { forEach } from '@angular/router/src/utils/collection';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-quiz',
   templateUrl: './quiz.component.html',
@@ -10,28 +11,47 @@ import { forEach } from '@angular/router/src/utils/collection';
 export class QuizComponent implements OnInit {
   quizes: any = [];
   @Input() sectionId: any;
+  @Input() quizTitle: any;
   btnTxt: string = 'Save'
-
+  title: any;
+  oldTitle: string;
 
   constructor(
     private restApi: RestApiService,
     private notificationService: NotificationService,
+    private router: Router,
   ) { }
 
   ngOnInit() {
     this.quizes = []
-    this.addQuestion();
-    if (this.sectionId) {
-      this.btnTxt = "update"
-      this.restApi.getPromise('quiz', this.sectionId).then(res => {
-        debugger;
-        this.quizes = res.data
-        res.data.forEach(el => {
 
-        });
+
+    if (this.sectionId && this.quizTitle) {
+      this.btnTxt = "Update";
+      this.oldTitle = this.title = this.quizTitle;
+
+      this.restApi.getPromise(`quiz/${this.sectionId}/${this.quizTitle}`).then(res => {
+        for (const item of res.data) {
+          let alterObj = {
+            question: '',
+            options: [
+              { text: '', correctOption: false }
+            ],
+            experience: ''
+          };
+          alterObj.question = item.question;
+          alterObj.options = JSON.parse(item.options);
+          alterObj.experience = item.experience;
+
+          this.quizes.push(alterObj);
+        }
+
       }).catch(err => {
         this.notificationService.showMsg(`Server down ${err}.`);
       })
+    }
+    else {
+      this.addQuestion();
     }
   }
 
@@ -54,15 +74,18 @@ export class QuizComponent implements OnInit {
 
   saveQuestion() {
     let obj = {
-      sectionId: 1,
-      quizes: this.quizes
+      sectionId: this.sectionId,
+      title: this.title,
+      quizes: this.quizes,
+      oldTitle: this.oldTitle
     }
     this.restApi.postPromise('quiz', obj)
       .then(response => {
-        this.quizes = []
-        this.addQuestion();
-      }).catch(error => {
+        this.router.navigate([`certification/sections/concepts/${this.sectionId}/${this.title}/Quiz`])
+        this.notificationService.showMsg('Record Insert');
 
+      }).catch(err => {
+        this.notificationService.showMsg(err);
       })
   }
 }

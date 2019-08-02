@@ -28,27 +28,27 @@ export class SectionsPage implements OnInit {
     { title: "six" }
   ];
 
-
-
   ngOnInit() {
     this.subscription = this.apiSrv.getSectionMenuData().subscribe(value => {
       value ? this.listData = value : '';
     });
   }
   back() {
-    this.menu.enable(true, 'mainMenu')
+    // this.menu.enable(true, 'mainMenu')
   }
   setFilteredItems() {
     this.items = this.item.filterItems(this.searchTerm);
   }
 
   ionViewWillEnter() {
-    this.menu.enable(false, 'mainMenu')
-
+    // this.menu.enable(false);
+    // this.menu.enable(false, 'mainMenu')
   }
-
   goto(route) {
     this.reouter.navigate([`/certification/sections/${route}`])
+  }
+  goToConcept() {
+    this.reouter.navigate([`/certification/sections/concepts/${this.apiSrv.sectionId}`])
   }
   gotoConceptType(data) {
     let sectionId = this.apiSrv.sectionId;

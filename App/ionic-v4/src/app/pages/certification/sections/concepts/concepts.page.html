@@ -2,7 +2,8 @@
     <ion-card>
         <ion-card-content>
             <mat-select [(ngModel)]="selectedOption" placeholder="Select option">
-                <mat-option *ngFor='let option of conceptOptions' [value]='option.id'>{{option.value}}</mat-option>
+                <mat-option *ngFor='let option of conceptOptions' [disabled]="recordId ? true : false"
+                    [value]='option.id'>{{option.value}}</mat-option>
             </mat-select>
         </ion-card-content>
     </ion-card>
@@ -15,7 +16,7 @@
         <app-text [recordId]="recordId"></app-text>
     </div>
     <div *ngIf="selectedOption == 2">
-        <app-quiz [sectionId]="sectionId"></app-quiz>
+        <app-quiz [sectionId]="sectionId" [quizTitle]="recordId"></app-quiz>
     </div>
     <div *ngIf="selectedOption == 3">
         <app-resources [recordId]="recordId"></app-resources>
