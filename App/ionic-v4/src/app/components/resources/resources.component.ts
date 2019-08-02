@@ -29,8 +29,7 @@ export class ResourcesComponent implements OnInit {
     //  this.actroute.snapshot.paramMap.get('type');
     let sectionId = this.actRoute.snapshot.paramMap.get('id');
     this.restApi.getPromise('resource/get-resources', sectionId).then(res => {
-      debugger;
-
+     
       // for(var i=0; i <= res.data.length; i++){
 
       // }     

@@ -56,6 +56,7 @@ import { DropzoneComponent } from './common/dropzone/dropzone.component';
 import { ResourcesComponent } from './resources/resources.component';
 import { TextComponent } from './text/text.component';
 import { QuizComponent } from './quiz/quiz.component';
+import { ProgressCompleteCardComponent } from './common/progress-complete-card/progress-complete-card.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -116,6 +117,7 @@ import { QuizComponent } from './quiz/quiz.component';
 		ResourcesComponent,
 		TextComponent,
 		QuizComponent,
+		ProgressCompleteCardComponent,
 	],
 	entryComponents: [
 		MediaComponent,
@@ -157,6 +159,7 @@ import { QuizComponent } from './quiz/quiz.component';
 		ResourcesComponent,
 		QuizComponent,
 		TextComponent,
+		ProgressCompleteCardComponent,
 	],
 	providers: [
 		ProfileComponent

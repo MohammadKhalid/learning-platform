@@ -9,6 +9,8 @@ const routes: Routes = [
   { path: 'module/:id', loadChildren: './addmodule/addmodule.module#AddmodulePageModule' },
   { path: 'moduledetail', loadChildren: './moduledetail/moduledetail.module#ModuledetailPageModule' },
   { path: 'sections', loadChildren: './sections/sections.module#SectionsPageModule' },
+   { path: 'test-certificate', loadChildren: './test-certificate/test-certificate.module#TestCertificatePageModule' },
+
 
 ];
 
