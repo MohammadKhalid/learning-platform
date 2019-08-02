@@ -70,8 +70,9 @@ export class VideoComponent implements OnInit {
       })
     } else {
       this.apiservice.postPromise('lesson', this.addVideoForm.value).then(res => {
-        debugger
+        
         this.noti.showMsg('video Created successfully');
+        this.addVideoForm.reset();
         //section side menu service need to call.
       }).catch(err => {
         this.noti.showMsg(err);
