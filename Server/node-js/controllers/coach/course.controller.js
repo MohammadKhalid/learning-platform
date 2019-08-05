@@ -47,10 +47,10 @@ const create = async (req, res) => {
 module.exports.create = create;
 
 const getCourse = async (req, res) => {
-    let { categories, searchBy, coachId } = req.query
+    let { categories, searchBy, userId } = req.query
     let condition = {}
     let categoryCondition = {}
-    condition.createdBy = coachId
+    condition.createdBy = userId
 
     if (categories) {
         categories = categories.split(',')

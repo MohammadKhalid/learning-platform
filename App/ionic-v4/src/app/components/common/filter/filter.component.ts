@@ -39,7 +39,7 @@ export class FilterComponent implements OnInit {
 
   search() {
     let obj = {
-      coachId: this.user.id,
+      userId: this.user.id,
       categories: this.categories,
       searchBy: this.searchBy
     }

@@ -23,10 +23,10 @@ export class CertificationPage implements OnInit {
     let obj = {
       categories: [],
       searchBy: '',
-      coachId: '',
-      adminId: ''
+      userId: '',
+      adminId: '',
     }
-    this.user.type == 'coach' ? obj.coachId = this.user.id : obj.adminId = this.user.createdBy;
+    obj.userId = this.user.id
     this.searchByFilterEvent(obj);
   }
   searchByFilterEvent(obj) {
@@ -36,6 +36,7 @@ export class CertificationPage implements OnInit {
       });
     }
     else {
+      obj.adminId = this.user.createdBy;
       this.restService.get(`course`, obj).subscribe((resp: any) => {
         if (resp.data) this.courses = resp.data;
       });
