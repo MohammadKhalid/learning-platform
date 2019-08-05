@@ -25,20 +25,17 @@
 
 
                 <mat-accordion>
-                    <mat-expansion-panel class="mat-accordation" (opened)="panelOpenState = true"
-                        (closed)="panelOpenState = false">
+                    <mat-expansion-panel class="mat-accordation" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
                         <mat-expansion-panel-header class="bordersConcepts">
                             <mat-panel-title class="certificate-item">
                                 <ion-label> CONCEPTS</ion-label>
                             </mat-panel-title>
                             <!--  -->
-                            <ion-icon (click)="goToConcept();$event.stopPropagation()"
-                                class="certificate-icon certificate-section-icon add-spacing" name="add"></ion-icon>
+                            <ion-icon (click)="goToConcept();$event.stopPropagation()" class="certificate-icon certificate-section-icon add-spacing" name="add"></ion-icon>
                         </mat-expansion-panel-header>
 
-                        <ion-item *ngFor="let dataRow of listData | orderByDate"
-                            class="conceptGaps certificate-item certificate-section">
-                            <ion-label (click)="gotoConceptType(dataRow)">{{dataRow.title}}</ion-label>
+                        <ion-item *ngFor="let dataRow of listData | orderByDate" class="conceptGaps certificate-item certificate-section">
+                            <ion-label (click)="gotoConceptType(dataRow)">{{dataRow.title.length > 15 ? dataRow.title.substring(0,15)+'...': dataRow.title}}</ion-label>
                             <ion-icon href="#" class="certificate-icon certificate-section-icon" name="create">
                             </ion-icon>
                             <ion-icon href="#" class="certificate-icon certificate-section-icon" name="trash">

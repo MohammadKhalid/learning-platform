@@ -15,6 +15,7 @@ export class QuizComponent implements OnInit {
   btnTxt: string = 'Save'
   title: any;
   oldTitle: string;
+  isBtnDisable: boolean = true;
 
   constructor(
     private restApi: RestApiService,
@@ -23,8 +24,8 @@ export class QuizComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.quizes = []
-
+    this.quizes = [];
+    this.isBtnDisable = true;
 
     if (this.sectionId && this.quizTitle) {
       this.btnTxt = "Update";
@@ -53,6 +54,7 @@ export class QuizComponent implements OnInit {
     else {
       this.addQuestion();
     }
+    // this.validate();
   }
 
   addOption(obj) {
@@ -88,4 +90,10 @@ export class QuizComponent implements OnInit {
         this.notificationService.showMsg(err);
       })
   }
+  // validate() {
+  //   setTimeout(() => {
+  //     this.isBtnDisable = !this.isBtnDisable;
+  //   }, 5000);
+    
+  // }
 }

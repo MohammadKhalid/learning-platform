@@ -50,6 +50,7 @@ import { CartificateCardComponent } from './common/cartificate-card/cartificate-
 import { DragScrollModule } from 'ngx-drag-scroll';
 
 import { LazyLoadImageModule, intersectionObserverPreset } from 'ng-lazyload-image';
+import { NgCircleProgressModule } from 'ng-circle-progress';
 import { VideoComponent } from './video/video.component';
 import { FileUploadModule } from 'ng2-file-upload';
 import { DropzoneComponent } from './common/dropzone/dropzone.component';
@@ -57,6 +58,7 @@ import { ResourcesComponent } from './resources/resources.component';
 import { TextComponent } from './text/text.component';
 import { QuizComponent } from './quiz/quiz.component';
 import { ProgressCompleteCardComponent } from './common/progress-complete-card/progress-complete-card.component';
+import { RoundProgressModule } from 'angular-svg-round-progressbar';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -77,7 +79,22 @@ import { ProgressCompleteCardComponent } from './common/progress-complete-card/p
 		MatIconModule,
 		LazyLoadImageModule.forRoot({
 			preset: intersectionObserverPreset // <-- tell LazyLoadImage that you want to use IntersectionObserver
-		})
+		}),
+		NgCircleProgressModule.forRoot({
+			"radius": 40,
+			"space": -15,
+			"outerStrokeGradient": true,
+			"outerStrokeColor": "#4882c2",
+			"outerStrokeGradientStopColor": "#0065b3",
+			"innerStrokeColor": "#e7e8ea",
+			"animateTitle": true,
+			"animationDuration": 200,
+			"showTitle": true,
+			"showSubtitle": true,
+			"showUnits": false,
+			"showBackground": false,
+			"startFromZero": false
+		}),
 	],
 	declarations: [
 		ErrorsComponent,
@@ -126,6 +143,7 @@ import { ProgressCompleteCardComponent } from './common/progress-complete-card/p
 	],
 	exports: [
 		ConferenceComponent,
+		RoundProgressModule,
 		ShowTimeComponent,
 		ShowTimeDetailComponent,
 		ChatBoxComponent,
@@ -160,7 +178,8 @@ import { ProgressCompleteCardComponent } from './common/progress-complete-card/p
 		ResourcesComponent,
 		QuizComponent,
 		TextComponent,
-		ProgressCompleteCardComponent,
+		ProgressCompleteCardComponent
+
 	],
 	providers: [
 		ProfileComponent
