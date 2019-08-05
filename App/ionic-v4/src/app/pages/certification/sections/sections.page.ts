@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MenuController, NavController } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
-import { Subscription } from 'rxjs';
+import { Subscription, interval } from 'rxjs';
 
 @Component({
   selector: 'app-sections',
@@ -32,30 +32,32 @@ export class SectionsPage implements OnInit {
     this.subscription = this.apiSrv.getSectionMenuData().subscribe(value => {
       debugger
       value ? this.listData = value : '';
-     
+
 
     });
     this.menu.enable(false);
     this.menu.enable(false, 'mainMenu')
 
   }
-  title(data){
-    
+  ngAfterViewInit() {
+    setInterval(()=>{
+      this.menu.enable(false);
+      this.menu.enable(false, 'mainMenu')
+    },100)
+  }
+  title(data) {
+
     return data;
 
   }
   back() {
- this.menu.enable(true, 'mainMenu')
+    this.menu.enable(true, 'mainMenu')
   }
   setFilteredItems() {
     this.items = this.item.filterItems(this.searchTerm);
   }
 
-  ngAfterViewInit()
-  {
-    // debugger
-   
-  }
+
   goto(route) {
     this.reouter.navigate([`/certification/sections/${route}`])
   }

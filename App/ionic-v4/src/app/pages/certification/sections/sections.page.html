@@ -36,8 +36,7 @@
 
                         <ion-item *ngFor="let dataRow of listData | orderByDate" class="conceptGaps certificate-item certificate-section">
                             <ion-label (click)="gotoConceptType(dataRow)">{{dataRow.title.length > 15 ? dataRow.title.substring(0,15)+'...': dataRow.title}}</ion-label>
-                            <ion-icon href="#" class="certificate-icon certificate-section-icon" name="create">
-                            </ion-icon>
+                           
                             <ion-icon href="#" class="certificate-icon certificate-section-icon" name="trash">
                             </ion-icon>
                         </ion-item>

@@ -49,5 +49,6 @@ export class ConceptsPage implements OnInit {
     if (this.recordId && type) {
       this.selectedOption = this.restApi.getConceptsOptionsByname(type);
     }
+    
   }
 }
