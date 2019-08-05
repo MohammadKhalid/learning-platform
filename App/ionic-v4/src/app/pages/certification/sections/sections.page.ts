@@ -30,19 +30,31 @@ export class SectionsPage implements OnInit {
 
   ngOnInit() {
     this.subscription = this.apiSrv.getSectionMenuData().subscribe(value => {
+      debugger
       value ? this.listData = value : '';
+     
+
     });
+    this.menu.enable(false);
+    this.menu.enable(false, 'mainMenu')
+
+  }
+  title(data){
+    
+    return data;
+
   }
   back() {
-    // this.menu.enable(true, 'mainMenu')
+ this.menu.enable(true, 'mainMenu')
   }
   setFilteredItems() {
     this.items = this.item.filterItems(this.searchTerm);
   }
 
-  ionViewWillEnter() {
-    // this.menu.enable(false);
-    // this.menu.enable(false, 'mainMenu')
+  ngAfterViewInit()
+  {
+    // debugger
+   
   }
   goto(route) {
     this.reouter.navigate([`/certification/sections/${route}`])
