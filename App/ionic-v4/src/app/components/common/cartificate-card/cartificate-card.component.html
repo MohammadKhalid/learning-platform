@@ -1,36 +1,33 @@
 <drag-scroll drag-scroll-y-disabled="true" scroll-x-wheel-enabled="true" style="height: 132px;">
 
     <div class="card-main" *ngFor="let x of courses" drag-scroll-item>
-        <ion-card (click)="goTo(x.courseId)">
-                <ion-item lines="none" routerDirection="root" [routerLink]="['module/',x.courseId]" class="item" no-padding>
-                    <ion-thumbnail class="left-img" slot="start">
-                        <img [defaultImage]="defaultImage" [lazyLoad]="serverUrl+x.image"
-                            [errorImage]="imageToShowOnError">
-                    </ion-thumbnail>
-                    <ion-label class="content">
+        <ion-card>
+            <ion-item lines="none" routerDirection="forward" [routerLink]="'/certification/module/'+x.courseId" class="item" no-padding>
+                <ion-thumbnail class="left-img" slot="start">
+                    <img [defaultImage]="defaultImage" [lazyLoad]="serverUrl+x.image" [errorImage]="imageToShowOnError">
+                </ion-thumbnail>
+                <ion-label class="content">
 
-                        <div class="header">
-                            <h3 class="title"> {{x.title}} </h3>
-                            <!-- <div class="xp">
+                    <div class="header">
+                        <h3 class="title"> {{x.title}} </h3>
+                        <!-- <div class="xp">
                                     <h3>
                                         {{x.xp}}
                                     </h3>
                                 </div> -->
-                        </div>
+                    </div>
 
-                        <div class="description"
-                            style="-webkit-box-orient: vertical;box-orient: vertical;-moz-box-orient: vertical;">
-                            <p>
-                                {{x.description}}
-                            </p>
-                        </div>
-                        <a href="#" class="learn-more" slot="end">Learn More
-                            <ion-icon name="arrow-round-forward"></ion-icon>
-                        </a>
-                    </ion-label>
-                </ion-item>
-
-
+                    <div class="description"
+                        style="-webkit-box-orient: vertical;box-orient: vertical;-moz-box-orient: vertical;">
+                        <p>
+                            {{x.description}}
+                        </p>
+                    </div>
+                    <a href="#" class="learn-more" slot="end">Learn More
+                        <ion-icon name="arrow-round-forward"></ion-icon>
+                    </a>
+                </ion-label>
+            </ion-item>
         </ion-card>
 
     </div>
