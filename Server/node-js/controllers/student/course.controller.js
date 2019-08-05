@@ -76,11 +76,29 @@ const getUncompletedCourse = async (req, res) => {
     let { userId } = req.query;
 
 
-    let uncompleteCourse = await StudentCourse.findAll({
+    let uncompleteCourseIds = await StudentCourse.findAll({
+        attributes: ['CourseId'],
         where: {
-            UserId: userId
+            UserId: userId,
+            status: 0
         }
     })
+    console.log(uncompleteCourseIds.map(x => x.id))
+    let uncompleteCourse = await Course.findAll({
+        attributes: [['id','courseId'],'title','description','image'],
+        where:{
+            id: uncompleteCourseIds.map(x => x.CourseId)
+        }
+    })
+    // let uncompleteCourse = await Course.findAll({
+    //     attributes: [['id','courseId'],'title','description','image'],
+    //     include: [{
+    //         model: User,
+    //         where:{
+    //             id: userId
+    //         }
+    //     }]
+    // })
 
     if (uncompleteCourse) return ReS(res, { data: uncompleteCourse }, 200);
     else return ReE(res, { message: 'Unable to insert Course.' }, 500)
