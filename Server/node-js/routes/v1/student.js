@@ -96,6 +96,7 @@ const course = express.Router();
 studentRouter.use('/course', course)
 course.get('/', courseContoller.getCourses)
 course.post('/enroll-course', courseContoller.enrollCourse)
+course.get('/uncomplete-course', courseContoller.getUncompletedCourse)
 
 // section
 const section = express.Router();
