@@ -2,7 +2,8 @@
 
     <div class="card-main" *ngFor="let x of courses" drag-scroll-item>
         <ion-card>
-            <ion-item lines="none" routerDirection="forward" [routerLink]="'/certification/module/'+x.courseId" class="item" no-padding>
+            <ion-item lines="none" routerDirection="forward" [routerLink]="'/certification/module/'+x.courseId"
+                class="item" no-padding>
                 <ion-thumbnail class="left-img" slot="start">
                     <img [defaultImage]="defaultImage" [lazyLoad]="serverUrl+x.image" [errorImage]="imageToShowOnError">
                 </ion-thumbnail>
@@ -10,11 +11,11 @@
 
                     <div class="header">
                         <h3 class="title"> {{x.title}} </h3>
-                        <!-- <div class="xp">
-                                    <h3>
-                                        {{x.xp}}
-                                    </h3>
-                                </div> -->
+                        <div class="xp">
+                            <h3>
+                                {{x.xp}}
+                            </h3>
+                        </div>
                     </div>
 
                     <div class="description"

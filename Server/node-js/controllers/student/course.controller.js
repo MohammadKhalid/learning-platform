@@ -54,58 +54,6 @@ const getCourses = async (req, res) => {
     })
     if (course) return ReS(res, { data: course }, 200);
     else return ReE(res, { message: 'Unable to insert Course.' }, 500)
-    // let courses = await Course.findAll({
-    //     where: {
-    //         createdBy: {
-    //             [Op.in]: coachIds.map(x => x.id)
-    //         },
-    //         attributes:['id','title','description','image',]
-    //     },
-    //     include: [
-    //         {
-    //             model: User,
-    //             as: 'coach',
-    //             attributes: [[Sequelize.fn("CONCAT", Sequelize.col('firstName'), ' ', Sequelize.col('lastName')), "fullName"]]
-
-    //         }
-    //     ]
-    // });
-    // res.send(courses);
-    // let { userId } = req.params
-    // const studentCourseIds = await StudentCourse.findAll({
-    //     // attributes: [['CourseId', 'courseId']],
-    //     // include: [{
-    //     //     model: Course,
-    //     //     as: "course",
-    //     //     attributes: [['id', 'categoryId'], 'title', 'description', 'image', 'createdBy'],
-    //     //     where:{
-    //     //         courseId: courseId
-    //     //     }
-    //     // }],
-    //     where: {
-    //         UserId: userId
-    //     }
-    // })
-
-    // let courseIds = studentCourseIds.map(val => val.CourseId);
-
-
-    // const studentCourses = await Course.findAll({
-    //     attributes: [['id', 'courseId'], 'title', 'description', 'image', 'createdby'],
-    //     include: [{
-    //         model: CourseCategory,
-    //         as: "category",
-    //         attributes: [['id', 'categoryId'], 'title']
-    //     }],
-    //     where: {
-    //         id: {
-    //             [Op.notIn]: courseIds
-    //         }
-    //     }
-    // })
-
-    // if (studentCourses) return ReS(res, { data: studentCourses }, 200);
-    // else return ReE(res, { message: 'Unable to get Course.' }, 500)
 }
 module.exports.getCourses = getCourses;
 
@@ -123,3 +71,37 @@ const enrollCourse = async (req, res) => {
 }
 
 module.exports.enrollCourse = enrollCourse;
+
+const getUncompletedCourse = async (req, res) => {
+    let { userId } = req.query;
+
+
+    let uncompleteCourseIds = await StudentCourse.findAll({
+        attributes: ['CourseId'],
+        where: {
+            UserId: userId,
+            status: 0
+        }
+    })
+    console.log(uncompleteCourseIds.map(x => x.id))
+    let uncompleteCourse = await Course.findAll({
+        attributes: [['id','courseId'],'title','description','image'],
+        where:{
+            id: uncompleteCourseIds.map(x => x.CourseId)
+        }
+    })
+    // let uncompleteCourse = await Course.findAll({
+    //     attributes: [['id','courseId'],'title','description','image'],
+    //     include: [{
+    //         model: User,
+    //         where:{
+    //             id: userId
+    //         }
+    //     }]
+    // })
+
+    if (uncompleteCourse) return ReS(res, { data: uncompleteCourse }, 200);
+    else return ReE(res, { message: 'Unable to insert Course.' }, 500)
+}
+
+module.exports.getUncompletedCourse = getUncompletedCourse;

@@ -6,8 +6,9 @@
 }
 
 .font-sizing{
-    font-size: 22px;
-    font-weight: bolder;
+    width: 50%;
+    font-size: 16px;
+    font-weight: bold;
 }
 
 .description-Adjustment{
@@ -52,3 +53,63 @@
     line-height: 20px;
 }
 
+.card-heading{
+    font-size: 15px; 
+    text-align: left
+}
+
+.blue-heading{
+    color: #29618c; 
+}
+.grey-heading{
+    color: #838383;
+}
+.bold-heading{
+    font-weight: bolder; 
+}
+
+.thin-heigth{
+    height: 10px;
+    width: 72%;
+}
+
+.fraction-text{
+    padding-bottom: 0;
+    margin-bottom: 0;
+    margin: auto;
+    margin-top: 4px;
+    text-align: right;
+    font-size: 12px;
+    color: grey;
+}
+
+// .card-xp{
+//     background-image: url('../../../../assets/img/xp.svg');
+//     background-repeat: no-repeat;
+//        background-size: contain;
+//     text-align: right;
+//     width: 50%;
+// }
+
+
+.header-progress{
+    font-weight: bold;
+    display: flex;
+}
+
+.header-progress .xp {
+    background-image: url('../../../../assets/img/xp.svg');
+     background-repeat: no-repeat;
+    background-size: contain;
+    text-align: right;
+    width: 50%;
+    height: 16px;
+    background-position: right;
+}
+
+.header-progress .xp h3 {
+    text-align: right;
+    font-size: 10px;
+    padding-top: 1px;
+    padding-right: 27px;
+}
