@@ -12,8 +12,6 @@
 
 <ion-content padding>
     <div class="card-main" *ngFor="let x of data">
-
-
         <ion-card [routerLink]="['/certification/sections/concepts',x.id]">
             <ion-item lines="none" class="item" no-padding class="itemN">
 
@@ -64,24 +62,24 @@
 
             <ion-list class="ion-padding" *ngIf="moduleDetail">
                 <ion-item lines="inset">
-                    <ion-label position="floating"> Module Title
+                    <ion-label position="floating"> Title
                         <ion-text color="danger">*</ion-text>
                     </ion-label>
-                    <ion-input type="input" formControlName="title" placeholder="placeholder"></ion-input>
+                    <ion-input type="input" formControlName="title" placeholder="Title"></ion-input>
                 </ion-item>
 
                 <ion-item lines="inset">
                     <ion-label position="floating"> Description
                         <ion-text color="danger">*</ion-text>
                     </ion-label>
-                    <ion-textarea placeholder="placeholder" formControlName='description'></ion-textarea>
+                    <ion-textarea placeholder="Description" formControlName='description'></ion-textarea>
                 </ion-item>
 
                 <ion-item lines="inset">
                     <ion-label position="floating"> Total Experience
                         <ion-text color="danger">*</ion-text>
                     </ion-label>
-                    <ion-input type="input" formControlName="totalExperience" placeholder="placeholder"></ion-input>
+                    <ion-input type="input" formControlName="totalExperience" placeholder="Total Experience"></ion-input>
                 </ion-item>
 
 
