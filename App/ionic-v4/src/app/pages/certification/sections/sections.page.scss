@@ -21,6 +21,10 @@
 
   }
 
+  ::ng-deep .mat-expansion-panel-body{
+    padding: 0 0 16px 24px !important;
+  }
+
   .certificate-item{
       font-size: 13px;
       color: white;
