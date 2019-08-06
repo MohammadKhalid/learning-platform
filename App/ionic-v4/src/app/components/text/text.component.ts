@@ -45,7 +45,6 @@ export class TextComponent implements OnInit {
 
 
   ngOnChanges() {
-    debugger;
     this.formInitialize();
   }
   formInitialize() {
@@ -59,28 +58,25 @@ export class TextComponent implements OnInit {
 
   }
   addText() {
-    debugger
     if (this.recordId) {
       this.serviceApi.putPromise(`text/${this.recordId}`, this.addTextForm.value).then(res => {
-        this.noti.showMsg("update Record")
+        this.noti.showMsg("update Record");
+        let id = this.actroute.snapshot.paramMap.get('id');
+        this.serviceApi.populateSectionSubMenu(id);
       }).catch(err => {
         this.noti.showMsg(err)
       })
 
     } else {
-      debugger
+
       this.serviceApi.postPromise('text', this.addTextForm.value).then(res => {
         this.noti.showMsg('text Created');
         if (res) {
           this.addTextForm.reset();
           this.formInitialize();
         }
-
         let id = this.actroute.snapshot.paramMap.get('id');
-        this.serviceApi.getPromise(`section/get-section-details`, id).then(resSec => {
-          this.serviceApi.setSectionMenuData(resSec.data);
-
-        })
+        this.serviceApi.populateSectionSubMenu(id);
       }).catch(err => {
         this.noti.showMsg(err);
         console.log(err);

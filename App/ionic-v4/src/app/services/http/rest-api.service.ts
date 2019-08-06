@@ -5,13 +5,17 @@ import { AuthenticationService } from '../user/authentication.service';
 import { SERVER_URL } from '../../../environments/environment';
 import { Observable } from 'rxjs/Observable';
 import { LoadingController } from '@ionic/angular';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, observable } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { NotificationService } from '../notification/notification.service';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class RestApiService {
 	private sectionMenuData = new BehaviorSubject(null);
+	private sectionMenuDataResource = new BehaviorSubject(null);
+
 	sessionData: any;
 	url: string = SERVER_URL;
 	_sectionId: any;
@@ -19,7 +23,9 @@ export class RestApiService {
 	constructor(
 		private authService: AuthenticationService,
 		private http: HttpClient,
-		public loadingController: LoadingController
+		public loadingController: LoadingController,
+		private actroute: ActivatedRoute,
+		private noti: NotificationService,
 	) {
 		this.authService.authenticationState.subscribe((state) => {
 			if (state) {
@@ -220,7 +226,7 @@ export class RestApiService {
 			{ id: 0, value: 'Video' },
 			{ id: 1, value: 'Text' },
 			{ id: 2, value: 'Quiz' },
-			{ id: 3, value: 'Recources' },
+			// { id: 3, value: 'Recources' },
 		]
 	}
 	getConceptsOptionsByname(value: string) {
@@ -245,7 +251,13 @@ export class RestApiService {
 	getSectionMenuData(): Observable<any> {
 		return this.sectionMenuData.asObservable();
 	}
-
+	populateSectionSubMenu(id) {
+		this.getPromise(`section/get-section-details`, id).then(resSec => {
+			this.setSectionMenuData(resSec.data);
+		}).catch(err => {
+			this.noti.showMsg(err);
+		})
+	}
 	setSectionMenuData(val: any) {
 		this.sectionMenuData.next(val);
 	}
@@ -256,4 +268,18 @@ export class RestApiService {
 		return this._sectionId;
 	}
 
+	// for resources observable
+	getSectionMenuDataResource(): Observable<any> {
+		return this.sectionMenuDataResource.asObservable();
+	}
+	populateSectionSubMenuResource(id) {
+		this.getPromise(`resource/get-resources`, id).then(resSec => {
+			this.setSectionMenuDataResource(resSec.data);
+		}).catch(err => {
+			this.noti.showMsg(err);
+		})
+	}
+	setSectionMenuDataResource(val: any) {
+		this.sectionMenuDataResource.next(val);
+	}
 }
