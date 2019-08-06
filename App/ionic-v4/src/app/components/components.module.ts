@@ -59,6 +59,7 @@ import { TextComponent } from './text/text.component';
 import { QuizComponent } from './quiz/quiz.component';
 import { ProgressCompleteCardComponent } from './common/progress-complete-card/progress-complete-card.component';
 import { RoundProgressModule } from 'angular-svg-round-progressbar';
+import { ProgressCircleComponent } from './common/progress-circle/progress-circle.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -135,6 +136,7 @@ import { RoundProgressModule } from 'angular-svg-round-progressbar';
 		TextComponent,
 		QuizComponent,
 		ProgressCompleteCardComponent,
+		ProgressCircleComponent,
 	],
 	entryComponents: [
 		MediaComponent,
@@ -177,7 +179,8 @@ import { RoundProgressModule } from 'angular-svg-round-progressbar';
 		ResourcesComponent,
 		QuizComponent,
 		TextComponent,
-		ProgressCompleteCardComponent
+		ProgressCompleteCardComponent,
+		ProgressCircleComponent
 
 	],
 	providers: [

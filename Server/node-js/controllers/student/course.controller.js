@@ -105,3 +105,38 @@ const getUncompletedCourse = async (req, res) => {
 }
 
 module.exports.getUncompletedCourse = getUncompletedCourse;
+
+
+const getCompletedCourse = async (req, res) => {
+    let { userId } = req.query;
+
+
+    let completeCourseIds = await StudentCourse.findAll({
+        attributes: ['CourseId'],
+        where: {
+            UserId: userId,
+            status: 1
+        }
+    })
+    console.log(completeCourseIds.map(x => x.id))
+    let completeCourse = await Course.findAll({
+        attributes: [['id','courseId'],'title','description','image'],
+        where:{
+            id: completeCourseIds.map(x => x.CourseId)
+        }
+    })
+    // let uncompleteCourse = await Course.findAll({
+    //     attributes: [['id','courseId'],'title','description','image'],
+    //     include: [{
+    //         model: User,
+    //         where:{
+    //             id: userId
+    //         }
+    //     }]
+    // })
+
+    if (completeCourse) return ReS(res, { data: completeCourse }, 200);
+    else return ReE(res, { message: 'Unable to insert Course.' }, 500)
+}
+
+module.exports.getCompletedCourse = getCompletedCourse;

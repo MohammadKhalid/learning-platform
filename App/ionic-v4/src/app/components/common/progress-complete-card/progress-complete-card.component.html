@@ -1,148 +1,31 @@
-<ion-grid>
-  <ion-row>
-    <ion-col size-lg="9" size-sm="12" size-xs="12">
-      <div>
-        <ion-card>
-          <ion-item lines="none" routerDirection="root" no-padding>
-            <ion-thumbnail size-md="12" class="img-adjustment" slot="start">
-              <img src="../../../../assets/img/image-subject.jpg">
-            </ion-thumbnail>
-            <ion-label>
+<ion-card *ngFor="let row of incompleteCourses" routerDirection="forward" [routerLink]="'/certification/module/'+row.courseId"> 
+  <ion-item lines="none" routerDirection="root" no-padding>
+    <ion-thumbnail size-md="12" class="img-adjustment" slot="start">
+      <!-- <img src="../../../../assets/img/image-subject.jpg"> -->
+      <img [defaultImage]="defaultImage" [lazyLoad]="serverUrl+row.image" [errorImage]="imageToShowOnError">
+    </ion-thumbnail>
+    <ion-label class="content-inprogress">
 
-              <div class="header-progress">
-                <h3 class="font-sizing title">Mathamatics</h3>
-                <div class="xp">
-                  <h3>
-                    120
-                  </h3>
-                </div>
-              </div>
-
-              <div class="clamp-adjustment"
-                style="-webkit-box-orient: vertical;box-orient: vertical;-moz-box-orient: vertical;">
-                <p class="ion-text-wrap for-clamp-adjustment">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore id cum vero illum incidunt
-                  architecto eos voluptatem quas necessitatibus vel. Ipsum modi, distinctio non repellat laboriosam
-                  aspernatur possimus illo fugiat. Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore id
-                  cum vero illum incidunt architecto eos voluptatem quas necessitatibus vel.
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore id cum vero illum incidunt
-                  architecto eos voluptatem quas necessitatibus vel. Ipsum modi, distinctio non repellat laboriosam
-                  aspernatur possimus illo fugiat. Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore id
-                  cum vero illum incidunt architecto eos voluptatem quas necessitatibus vel.
-                </p>
-              </div>
-
-              <ion-progress-bar class="progress-bar-adjustment" color="primary" value="0.5"></ion-progress-bar>
-              <ion-icon name="play" class="ion-float-right play-btn-adjustment"></ion-icon>
-            </ion-label>
-          </ion-item>
-
-
-        </ion-card>
-        <ion-card>
-          <ion-item lines="none" routerDirection="root" no-padding>
-            <ion-thumbnail size-md="12" class="img-adjustment" slot="start">
-              <img src="../../../../assets/img/image-subject.jpg">
-            </ion-thumbnail>
-            <ion-label>
-
-              <h3 class="font-sizing">Mathamatics</h3>
-              <div class="xp">
-                <h3>
-                  120
-                </h3>
-              </div>
-              <div class="clamp-adjustment"
-                style="-webkit-box-orient: vertical;box-orient: vertical;-moz-box-orient: vertical;">
-                <p class="ion-text-wrap for-clamp-adjustment">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore id cum vero illum incidunt
-                  architecto eos voluptatem quas necessitatibus vel. Ipsum modi, distinctio non repellat laboriosam
-                  aspernatur possimus illo fugiat. Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore id
-                  cum vero illum incidunt architecto eos voluptatem quas necessitatibus vel.
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore id cum vero illum incidunt
-                  architecto eos voluptatem quas necessitatibus vel. Ipsum modi, distinctio non repellat laboriosam
-                  aspernatur possimus illo fugiat. Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore id
-                  cum vero illum incidunt architecto eos voluptatem quas necessitatibus vel.
-                </p>
-              </div>
-
-              <ion-progress-bar class="progress-bar-adjustment" color="primary" value="0.5"></ion-progress-bar>
-              <ion-icon name="play" class="ion-float-right play-btn-adjustment"></ion-icon>
-            </ion-label>
-          </ion-item>
-
-
-        </ion-card>
-
-        <ion-card>
-          <ion-item lines="none" routerDirection="root" no-padding>
-            <ion-thumbnail size-md="12" class="img-adjustment" slot="start">
-              <img src="../../../../assets/img/image-subject.jpg">
-            </ion-thumbnail>
-            <ion-label>
-
-              <h3 class="font-sizing">Mathamatics</h3>
-              <div class="xp">
-                <h3>
-                  120
-                </h3>
-              </div>
-              <div class="clamp-adjustment"
-                style="-webkit-box-orient: vertical;box-orient: vertical;-moz-box-orient: vertical;">
-                <p class="ion-text-wrap for-clamp-adjustment">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore id cum vero illum incidunt
-                  architecto eos voluptatem quas necessitatibus vel. Ipsum modi, distinctio non repellat laboriosam
-                  aspernatur possimus illo fugiat. Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore id
-                  cum vero illum incidunt architecto eos voluptatem quas necessitatibus vel.
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore id cum vero illum incidunt
-                  architecto eos voluptatem quas necessitatibus vel. Ipsum modi, distinctio non repellat laboriosam
-                  aspernatur possimus illo fugiat. Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore id
-                  cum vero illum incidunt architecto eos voluptatem quas necessitatibus vel.
-                </p>
-              </div>
-              <ion-progress-bar class="progress-bar-adjustment" color="primary" value="0.5"></ion-progress-bar>
-              <ion-icon name="play" class="ion-float-right play-btn-adjustment"></ion-icon>
-            </ion-label>
-          </ion-item>
-        </ion-card>
+      <div class="header-progress">
+        <h3 class="font-sizing title">{{row.title}}</h3>
+        <div class="xp">
+          <h3>
+            120XP
+          </h3>
+        </div>
       </div>
-    </ion-col>
-    <ion-col size-lg="3" size-sm="12" size-xs="12">
-      <div>
-        <ion-card>
-          <ion-item lines="none" routerDirection="root">
-            <ion-label style="text-align: center">
-              <p class="card-heading blue-heading bold-heading">Mathamatics</p>
-              <circle-progress [percent]="50" [maxPercent]="100" [radius]="75" [title]="'LEVEL 1'"
-                [titleColor]="'#bebebe'" [outerStrokeWidth]="15" [innerStrokeWidth]="15" [outerStrokeColor]="'#0065b3'"
-                [subtitle]="'10000XP / 10000XP'" [subtitleFontSize]='13' [innerStrokeColor]="'#d6d7db'"
-                [animation]="true" [animationDuration]="100"></circle-progress>
-              <!-- <ion-progress-bar class="progress-bar-adjustment" color="primary" value="0.5"></ion-progress-bar>
-              <ion-icon name="play" class="ion-float-right play-btn-adjustment"></ion-icon> -->
-            </ion-label>
-          </ion-item>
-        </ion-card>
-        <ion-card>
-          <ion-item lines="none" routerDirection="root">
-            <ion-label style="text-align: center">
-              <p class="card-heading blue-heading bold-heading">Course Name</p>
-              <p class="card-heading grey-heading bold-heading" style="margin-bottom: 15px">Mathamatics</p>
-              <p class="card-heading blue-heading">Lesson</p>
-              <ion-row>
-                <ion-progress-bar class="progress-bar-adjustment thin-heigth" color="primary" value="1">
-                </ion-progress-bar>
-                <p class="fraction-text">60/60</p>
-              </ion-row>
-              <p class="card-heading blue-heading">Quizzes</p>
-              <ion-row>
-                <ion-progress-bar class="progress-bar-adjustment thin-heigth" color="primary" value="0.5">
-                </ion-progress-bar>
-                <p class="fraction-text">60/60</p>
-              </ion-row>
-            </ion-label>
-          </ion-item>
-        </ion-card>
+
+      <div class="clamp-adjustment"
+        style="-webkit-box-orient: vertical;box-orient: vertical;-moz-box-orient: vertical;">
+        <p class="ion-text-wrap for-clamp-adjustment">
+          {{row.description}}
+        </p>
       </div>
-    </ion-col>
-  </ion-row>
-</ion-grid>
+
+      <ion-progress-bar class="progress-bar-adjustment" color="primary" value="0.5"></ion-progress-bar>
+      <ion-icon name="play" class="ion-float-right play-btn-adjustment"></ion-icon>
+    </ion-label>
+  </ion-item>
+
+
+</ion-card>
