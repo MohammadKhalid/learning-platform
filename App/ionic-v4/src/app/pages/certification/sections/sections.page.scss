@@ -1,106 +1,103 @@
 .example-container {
-  height: calc(100vh - 56px);
- 
+    height: calc(100vh - 56px);
 }
 
+.coachSide {
+    height: 100vh;
+}
 
-  .mat-darawer1{
-      position: relative;
-      z-index: 1;
-      display: block;
-      height: 100%;  
-      overflow: hidden;
-      margin-left: 219px;
-     
-  }
+.mat-darawer1 {
+    position: relative;
+    z-index: 1;
+    display: block;
+    height: 100%;
+    overflow: hidden;
+    margin-left: 219px;
+}
 
-  .certificate-Sbar{
-    background-color: #2e3d49; 
-  --ion-item-background: #2e3d49;
-    
+.certificate-Sbar {
+    background-color: #2e3d49;
+    --ion-item-background: #2e3d49;
+}
 
-  }
-
-  ::ng-deep .mat-expansion-panel-body{
+ ::ng-deep .mat-expansion-panel-body {
     padding: 0 0 16px 24px !important;
-  }
+}
 
-  .certificate-item{
-      font-size: 13px;
-      color: white;
-      --min-height: 0;
-  }
-  
-  .certificate-icon{
+.certificate-item {
+    font-size: 13px;
+    color: white;
+    --min-height: 0;
+}
+
+.certificate-icon {
     color: white;
     font-size: 18px;
     margin-left: 2%
-  
-  }
+}
 
-  .bordersResources{
+.bordersResources {
     border-bottom: 2px solid #1a222a;
     border-top: 2px solid #1a222a;
-  }
+}
 
-  .bordersConcepts{
+.bordersConcepts {
     border-bottom: 2px solid #1a222a;
     background: transparent;
-  }
+}
 
-  .bordersSearch{
+.bordersSearch {
     border-top: 2px solid #1a222a;
     margin-bottom: -3%
-  }
+}
 
-  .certificateBackground{
+.certificateBackground {
     background-color: 1c262f;
-  }
+}
 
-  .conceptGaps{
+.conceptGaps {
     margin-top: 13px;
-  }
+}
 
-
-  // ion-item.certificate-section {
-  //   --background-hover: none;
-  //   --color-hover: #bfc0c1
-  // }
-
-  .bordersResources.certificate-item.certificate-section.hydrated.in-list.ion-activatable.ion-focusable.item.item-label.md {
+// ion-item.certificate-section {
+//   --background-hover: none;
+//   --color-hover: #bfc0c1
+// }
+.bordersResources.certificate-item.certificate-section.hydrated.in-list.ion-activatable.ion-focusable.item.item-label.md {
     --background-hover: none;
     --color-hover: #bfc0c1
-  }
-  
+}
+
 .bordersResources.certificate-item.certificate-section.hydrated.in-list.ion-activatable.ion-focusable.item.item-label.md {
     --background: #1a232b;
 }
 
-.mat-accordation{
-  background: transparent;
+.mat-accordation {
+    background: transparent;
 }
 
-.res-space{
-  padding-left: 6px;
-  cursor: pointer;
+.res-space {
+    padding-left: 6px;
+    cursor: pointer;
 }
 
-.mat-expansion-panel:not([class*=mat-elevation-z]){
-  box-shadow: none;
+.mat-expansion-panel:not([class*=mat-elevation-z]) {
+    box-shadow: none;
 }
 
-.add-spacing{
-  padding-right: 9px;
+.add-spacing {
+    padding-right: 9px;
 }
 
-.mat-expansion-indicator::after, .mat-expansion-panel-header-description{
-  border: white ;
-
+.mat-expansion-indicator::after,
+.mat-expansion-panel-header-description {
+    border: white;
 }
 
 ::ng-deep .mat-expansion-indicator::after {
-  color:white !important;
+    color: white !important;
 }
+
 // } {
 //   border-style: solid;
 //   border-width: 0 2px 2px 0;

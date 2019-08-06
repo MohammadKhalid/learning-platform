@@ -12,53 +12,102 @@
 
 <ion-content no-padding>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
     <mat-drawer-container class="example-container">
         <mat-drawer mode="side" opened class="certificate-Sbar">
-            <ion-item lines="none" class="certificate-item bordersSearch">
-                <ion-input class="send-box" type="text" placeholder="SEARCH" [(ngModel)]="searchBy"></ion-input>
-                <ion-icon name="search" class="icon-color certificate-icon certificate-section-icon"></ion-icon>
-            </ion-item>
-            <ion-list lines="none">
-                <ion-item class="bordersResources certificate-item certificate-section" (click)="goto('resources')">
-                    <ion-label class="res-space">RESOURCES</ion-label>
+
+
+            <div *ngIf="user.type == 'coach'; then coach else student"></div>
+
+
+            <ng-template #coach>
+                <ion-item lines="none" class="certificate-item bordersSearch">
+                    <ion-input class="send-box" type="text" placeholder="SEARCH" [(ngModel)]="searchBy"></ion-input>
+                    <ion-icon name="search" class="icon-color certificate-icon certificate-section-icon"></ion-icon>
                 </ion-item>
+                <ion-list lines="none">
+                    <ion-item class="bordersResources certificate-item certificate-section" (click)="goto('resources')">
+                        <ion-label class="res-space">RESOURCES</ion-label>
+                    </ion-item>
 
 
-                <mat-accordion>
-                    <mat-expansion-panel class="mat-accordation" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
-                        <mat-expansion-panel-header class="bordersConcepts">
-                            <mat-panel-title class="certificate-item">
-                                <ion-label> CONCEPTS</ion-label>
-                            </mat-panel-title>
-                            <!--  -->
-                            <ion-icon (click)="goToConcept();$event.stopPropagation()" class="certificate-icon certificate-section-icon add-spacing" name="add"></ion-icon>
-                        </mat-expansion-panel-header>
+                    <mat-accordion>
+                        <mat-expansion-panel class="mat-accordation" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                            <mat-expansion-panel-header class="bordersConcepts">
+                                <mat-panel-title class="certificate-item">
+                                    <ion-label> CONCEPTS</ion-label>
+                                </mat-panel-title>
+                                <!--  -->
+                                <ion-icon (click)="goToConcept();$event.stopPropagation()" class="certificate-icon certificate-section-icon add-spacing" name="add"></ion-icon>
+                            </mat-expansion-panel-header>
 
-                        <ion-item *ngFor="let dataRow of listData | orderByDate" class="conceptGaps certificate-item certificate-section">
-                            <ion-label (click)="gotoConceptType(dataRow)">{{dataRow.title.length > 15 ? dataRow.title.substring(0,15)+'...': dataRow.title}}</ion-label>
-                           
-                            <ion-icon href="#" class="certificate-icon certificate-section-icon" name="trash">
-                            </ion-icon>
-                        </ion-item>
+                            <ion-item *ngFor="let dataRow of listData | orderByDate" class="conceptGaps certificate-item certificate-section">
+                                <ion-label (click)="gotoConceptType(dataRow)">{{dataRow.title.length > 15 ? dataRow.title.substring(0,15)+'...': dataRow.title}}</ion-label>
 
-                    </mat-expansion-panel>
-                </mat-accordion>
+                                <ion-icon href="#" class="certificate-icon certificate-section-icon" name="trash">
+                                </ion-icon>
+                            </ion-item>
 
-
-
-
-
-
-
+                        </mat-expansion-panel>
+                    </mat-accordion>
 
 
 
-            </ion-list>
 
 
-            <!-- old code -->
 
 
+
+
+
+                </ion-list>
+            </ng-template>
+            <ng-template #student>
+
+
+                <ion-item lines="none" class="certificate-item bordersSearch">
+                    <ion-input class="send-box" type="text" placeholder="SEARCH" [(ngModel)]="searchBy"></ion-input>
+                    <ion-icon name="search" class="icon-color certificate-icon certificate-section-icon"></ion-icon>
+                </ion-item>
+                <ion-list lines="none">
+                    <ion-item class="bordersResources certificate-item certificate-section" (click)="goto('resources')">
+                        <ion-label class="res-space">RESOURCES</ion-label>
+                    </ion-item>
+
+
+                    <mat-accordion>
+                        <mat-expansion-panel class="mat-accordation" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                            <mat-expansion-panel-header class="bordersConcepts">
+                                <mat-panel-title class="certificate-item">
+                                    <ion-label> CONCEPTS</ion-label>
+                                </mat-panel-title>
+                                <!--  -->
+                                <ion-icon (click)="goToConcept();$event.stopPropagation()" class="certificate-icon certificate-section-icon add-spacing" name="add"></ion-icon>
+                            </mat-expansion-panel-header>
+
+                            <ion-item class="conceptGaps certificate-item certificate-section">
+                                <ion-label (click)="gotoConceptType(dataRow)">student</ion-label>
+
+                                <ion-icon href="#" class="certificate-icon certificate-section-icon" name="trash">
+                                </ion-icon>
+                            </ion-item>
+
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </ion-list>
+            </ng-template>
 
         </mat-drawer>
 

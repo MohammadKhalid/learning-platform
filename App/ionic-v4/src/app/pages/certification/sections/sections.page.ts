@@ -3,6 +3,7 @@ import { MenuController, NavController } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
 import { Subscription, interval } from 'rxjs';
+import { AuthenticationService } from 'src/app/services/user/authentication.service';
 
 @Component({
   selector: 'app-sections',
@@ -11,14 +12,23 @@ import { Subscription, interval } from 'rxjs';
 })
 export class SectionsPage implements OnInit {
 
-  constructor(private menu: MenuController, private reouter: Router, private apiSrv: RestApiService, private actRoute: ActivatedRoute, private navCntrl: NavController) { }
-  public searchTerm: string = "";
-  private subscription: Subscription;
-  public items: any;
+  constructor(private menu: MenuController, private reouter: Router,
+     private apiSrv: RestApiService, 
+     private actRoute: ActivatedRoute, 
+     private authserver :AuthenticationService,
+     private navCntrl: NavController,) {
+       
+    }
+    public searchTerm: string = "";
+    private subscription: Subscription;
+    public items: any;
+    user : any;
   listData: any;
   id: any
+  
   searchBy: string;
   panelOpenState = false;
+  
   public item: any = [
     { title: "one" },
     { title: "two" },
@@ -27,8 +37,10 @@ export class SectionsPage implements OnInit {
     { title: "five" },
     { title: "six" }
   ];
-
+  
+  
   ngOnInit() {
+    this.user = this.authserver.getSessionData().user;
     this.subscription = this.apiSrv.getSectionMenuData().subscribe(value => {
       debugger
       value ? this.listData = value : '';
@@ -39,6 +51,7 @@ export class SectionsPage implements OnInit {
     this.menu.enable(false, 'mainMenu')
 
   }
+  
   ngAfterViewInit() {
     setInterval(()=>{
       this.menu.enable(false);
