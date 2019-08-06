@@ -5,9 +5,10 @@ var path = require('path');
 
 const create = async function (req, res) {
 
-    let { sectionId } = req.body
+    let { sectionId, title } = req.body
     let bulkObj = req.files.map(fileItem => {
         return {
+            title: title,
             sectionId: sectionId,
             url: fileItem.filename
         }
@@ -19,12 +20,27 @@ const create = async function (req, res) {
 }
 module.exports.create = create;
 
+const getSectionResources = async function (req, res) {
+    let { sectionId, title } = req.params
+    const resources = await Resource.findAll({
+        where: {
+            title: title,
+            sectionId: sectionId
+        }
+    })
+
+    if (resources) return ReS(res, { data: resources }, 200);
+    else return ReE(res, { message: 'Unable to get resources.' }, 500)
+}
+module.exports.getSectionResources = getSectionResources;
+
 const getResources = async function (req, res) {
     let { sectionId } = req.params
     const resources = await Resource.findAll({
         where: {
             sectionId: sectionId
-        }
+        },
+        group: ['title']
     })
 
     if (resources) return ReS(res, { data: resources }, 200);
@@ -34,23 +50,33 @@ module.exports.getResources = getResources;
 
 
 
-const update = async function (req, res) {
-    let { url } = req.body
-    let { resourceId } = req.params
+const updateResource = async function (req, res) {
+    let { title, oldTitle, sectionId } = req.body
     const resources = await Resource.update({
-        url: url
+        title: title
     }, {
             where: {
-                id: resourceId
+                title: oldTitle,
+                sectionId: sectionId
             }
         })
+    if (req.files.length > 0) {
+        let bulkObj = req.files.map(fileItem => {
+            return {
+                title: title,
+                sectionId: sectionId,
+                url: fileItem.filename
+            }
+        })
+        const AddedResources = await Resource.bulkCreate(bulkObj)
+    }
     if (resources) return ReS(res, { data: resources }, 200);
     else return ReE(res, { message: 'Unable to update resources.' }, 500)
 }
-module.exports.update = update;
+module.exports.updateResource = updateResource;
 
 const remove = async function (req, res) {
-    let { resourceId,filename } = req.params;
+    let { resourceId, filename } = req.params;
     const filePath = path.join(__dirname, '../../uploads/resources/');
     fs.existsSync(`${filePath}${filename}`) == true ? fs.unlinkSync(`${filePath}${filename}`) : null;
 
