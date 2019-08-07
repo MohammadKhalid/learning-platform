@@ -44,7 +44,17 @@ export class SectionsPage implements OnInit {
     });
     this.menu.enable(false);
     this.menu.enable(false, 'mainMenu')
+if(this.user.type == 'student'){
+  debugger;
+  let id = this.actRoute.snapshot.paramMap.get('id')
+this.apiSrv.getPromise(`section/get-section-details-for-student`,id).then(res=> {
 
+  this.listData= res.data
+
+})
+
+  
+}
   }
 
   ngAfterViewInit() {
