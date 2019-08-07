@@ -48,7 +48,8 @@
 
 .bordersSearch {
     border-top: 2px solid #1a222a;
-    margin-bottom: -3%
+
+    border-bottom: 2px solid #1a222a;
 }
 
 .certificateBackground {
@@ -74,6 +75,7 @@
 
 .mat-accordation {
     background: transparent;
+
 }
 
 .res-space {
@@ -112,4 +114,19 @@
 .conceptGaps .checkmark-label-adjusment{
     padding-right: 10px;
     color: #0065B3
+}
+
+.conceptGaps .radio-label-adjusment{
+    padding-right: 10px;
+    height: 19px;
+}
+
+.mat-accordation .resource-alignment{
+    margin-top: -8px
+}
+
+.conceptGaps .star-label-adjusment{
+    padding-right: 10px;
+    color: #808080;
+    height: 19px;
 }
