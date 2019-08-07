@@ -11,9 +11,13 @@ const CoachController = require(controllerPath + 'coach.controller');
 const ShowTimeController = require(controllerPath + 'show-time.controller');
 const LiveGroupTrainingController = require(controllerPath + 'live-group-training.controller');
 const courseContoller = require(controllerPath + 'course.controller');
+const quizController = require(controllerPath + 'quiz.controller');
 
 const courseCategoryController = require('../../controllers/common/course.controller');
 const commonSectionController = require('../../controllers/common/section.controller');
+const lessonController = require('../../controllers/student/lesson.controller');
+const textController = require('../../controllers/student/text.controller');
+const resourceController = require('../../controllers/student/resource.controller');
 
 
 // dashboard
@@ -89,6 +93,14 @@ studentRouter.use('/course-category', courseCategory)
 
 courseCategory.get('/get-all/:userId', courseCategoryController.getAll)
 
+//quiz
+
+const quiz = express.Router();
+studentRouter.use('/quiz', quiz)
+
+quiz.get('/:sectionId/:title', quizController.getQuiz)
+quiz.post('/submit-quiz', quizController.submitQuiz)
+
 //courses 
 
 
@@ -103,5 +115,32 @@ course.get('/completed-courses', courseContoller.getCompletedCourse)
 const section = express.Router();
 studentRouter.use('/section', section)
 section.get('/get-sections/:courseId', commonSectionController.getSections)
+
+section.get('/get-section-details-for-student/:sectionId', courseCategoryController.sectionDetailsForStudent)
+
+
+// lessons
+const lessonRoutes = express.Router();
+studentRouter.use('/lesson', lessonRoutes)
+
+lessonRoutes.get('/get-lessons-for-student/:sectionId', lessonController.getLessonsForStudent)
+lessonRoutes.get('/get-lesson-by-id-for-student/:lessonId', lessonController.getLessonByIdForStudent)
+
+
+//text
+const textRoutes = express.Router();
+studentRouter.use('/text', textRoutes)
+
+textRoutes.get('/get-text-for-student/:sectionId', textController.getTextForStudent)
+textRoutes.get('/get-text-by-id-for-student/:id', textController.getTextByIdForStudent)
+
+
+//resource
+const resourceRoutes = express.Router();
+studentRouter.use('/resource', resourceRoutes)
+
+resourceRoutes.get('/get-resources-for-student/:sectionId/:title', resourceController.getSectionResourcesForStudent)
+
+
 
 module.exports = studentRouter;

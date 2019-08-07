@@ -44,6 +44,9 @@
         <div *ngIf="type === 'Video'">
             <app-video-student [recordId]="recordId"></app-video-student>
         </div>
+        <div *ngIf="type === 'Quiz'">
+            <app-quiz-student [recordId]="recordId" [sectionId] = "sectionId"></app-quiz-student>
+        </div>
         <!-- student content -->
     </div>
 </ion-content>
