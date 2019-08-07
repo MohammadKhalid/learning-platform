@@ -1,3 +1,7 @@
+.gridview-padding{
+  padding-top: 15px;
+}
+
 .send-box {
   --placeholder-color: #96979c;
 }
@@ -63,5 +67,23 @@
 
 .apply-button{
   height: 49px;
-  width: 100px;
+  width: 110px;
 }
+
+.btn-adjustment{
+  background: transparent !important;
+}
+
+.gif-adjustment{
+  height: 80px;
+  margin-top: -22px;
+  margin-left: -10px;
+}
+
+.forward-icon-adjustment{
+  height: 41px;
+  width: 30px;
+  color: #B6B6B7;
+  margin-top: -14px;
+}
+

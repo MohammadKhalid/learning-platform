@@ -1,20 +1,38 @@
-<div class="ion-padding">
-    <ion-card>
-        <ion-card-content>
-            <mat-select [(ngModel)]="selectedOption" placeholder="Select option">
-                <mat-option *ngFor='let option of conceptOptions' [disabled]="recordId ? true : false" [value]='option.id'>{{option.value}}</mat-option>
-            </mat-select>
-        </ion-card-content>
-    </ion-card>
+<!-- coach side rendering start -->
+<div *ngIf="user.type ==='coach'">
+    <div class="ion-padding">
+        <ion-card>
+            <ion-card-content>
+                <mat-select [(ngModel)]="selectedOption" placeholder="Select option">
+                    <mat-option *ngFor='let option of conceptOptions' [disabled]="recordId ? true : false"
+                        [value]='option.id'>{{option.value}}</mat-option>
+                </mat-select>
+            </ion-card-content>
+        </ion-card>
+    </div>
 </div>
+<!-- coach side rendering end -->
+
 <ion-content ion-padding style="height: calc(100vh - 160px);">
-    <div *ngIf="selectedOption == 0">
-        <app-video [recordId]="recordId" [sectionId]="sectionId"></app-video>
+    <!-- coach side rendering start -->
+    <div *ngIf="user.type ==='coach'">
+        <div *ngIf="selectedOption == 0">
+            <app-video [recordId]="recordId" [sectionId]="sectionId"></app-video>
+        </div>
+        <div *ngIf="selectedOption == 1">
+            <app-text [recordId]="recordId" [sectionId]="sectionId"></app-text>
+        </div>
+        <div *ngIf="selectedOption == 2">
+            <app-quiz [sectionId]="sectionId" [quizTitle]="recordId"></app-quiz>
+        </div>
     </div>
-    <div *ngIf="selectedOption == 1">
-        <app-text [recordId]="recordId" [sectionId]="sectionId"></app-text>
+    <!-- coach side rendering end -->
+
+    <!-- student side rendering start -->
+    <div *ngIf="user.type ==='student'">
+        student
+        <!-- student content -->
     </div>
-    <div *ngIf="selectedOption == 2">
-        <app-quiz [sectionId]="sectionId" [quizTitle]="recordId"></app-quiz>
-    </div>
+    <!-- student side rendering end -->
+
 </ion-content>

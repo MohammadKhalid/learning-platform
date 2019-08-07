@@ -18,7 +18,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { StudentProfileComponent } from './profile/student-profile/student-profile.component';
 import { CoachProfileComponent } from './profile/coach-profile/coach-profile.component';
 import { ClientProfileComponent } from './profile/client-profile/client-profile.component';
-import { MatTabsModule, MatSelectModule, MatCardModule } from '@angular/material';
+import { MatTabsModule, MatSelectModule, MatCardModule, MatIconModule } from '@angular/material';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { StudentDashboardComponent } from './dashboard/student-dashboard/student-dashboard.component';
 import { CoachDashboardComponent } from './dashboard/coach-dashboard/coach-dashboard.component';
@@ -79,6 +79,7 @@ import { ResourcesStudentComponent } from '../component/resources-student/resour
 		MatButtonModule,
 		DragScrollModule,
 		FileUploadModule,
+		MatIconModule,
 		LazyLoadImageModule.forRoot({
 			preset: intersectionObserverPreset // <-- tell LazyLoadImage that you want to use IntersectionObserver
 		}),
