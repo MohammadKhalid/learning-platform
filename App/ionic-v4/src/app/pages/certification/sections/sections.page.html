@@ -21,15 +21,18 @@
                 </ion-item>
                 <ion-list lines="none">
                     <mat-accordion>
-                        <mat-expansion-panel class="mat-accordation" (opened)="panelResourceOpenState = true" (closed)="panelResourceOpenState = false">
+                        <mat-expansion-panel class="mat-accordation" (opened)="panelResourceOpenState = true"
+                            (closed)="panelResourceOpenState = false">
                             <mat-expansion-panel-header class="bordersConcepts">
                                 <mat-panel-title class="certificate-item">
                                     <ion-label> RESOURCES</ion-label>
                                 </mat-panel-title>
-                                <ion-icon (click)="goToResource();$event.stopPropagation()" class="certificate-icon certificate-section-icon add-spacing" name="add"></ion-icon>
+                                <ion-icon (click)="goToResource();$event.stopPropagation()"
+                                    class="certificate-icon certificate-section-icon add-spacing" name="add"></ion-icon>
                             </mat-expansion-panel-header>
                             <!-- listData.resource -->
-                            <ion-item *ngFor="let dataRow of listResourceData | orderByDate" class="conceptGaps certificate-item certificate-section">
+                            <ion-item *ngFor="let dataRow of listResourceData | orderByDate"
+                                class="conceptGaps certificate-item certificate-section">
                                 <ion-label (click)="gotoConceptType(dataRow)">
                                     {{dataRow.title.length > 15 ? dataRow.title.substring(0,15)+'...': dataRow.title}}
                                 </ion-label>
@@ -42,17 +45,22 @@
                     </mat-accordion>
 
                     <mat-accordion>
-                        <mat-expansion-panel class="mat-accordation" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                        <mat-expansion-panel class="mat-accordation" (opened)="panelOpenState = true"
+                            (closed)="panelOpenState = false">
                             <mat-expansion-panel-header class="bordersConcepts">
                                 <mat-panel-title class="certificate-item">
                                     <ion-label> CONCEPTS</ion-label>
                                 </mat-panel-title>
                                 <!--  -->
-                                <ion-icon (click)="goToConcept();$event.stopPropagation()" class="certificate-icon certificate-section-icon add-spacing" name="add"></ion-icon>
+                                <ion-icon (click)="goToConcept();$event.stopPropagation()"
+                                    class="certificate-icon certificate-section-icon add-spacing" name="add"></ion-icon>
                             </mat-expansion-panel-header>
 
-                            <ion-item *ngFor="let dataRow of listData | orderByDate" class="conceptGaps certificate-item certificate-section">
-                                <ion-label (click)="gotoConceptType(dataRow)">{{dataRow.title.length > 15 ? dataRow.title.substring(0,15)+'...': dataRow.title}}</ion-label>
+                            <ion-item *ngFor="let dataRow of listData | orderByDate"
+                                class="conceptGaps certificate-item certificate-section">
+                                <ion-label (click)="gotoConceptType(dataRow)">
+                                    {{dataRow.title.length > 15 ? dataRow.title.substring(0,15)+'...': dataRow.title}}
+                                </ion-label>
 
                                 <ion-icon href="#" class="certificate-icon certificate-section-icon" name="trash">
                                 </ion-icon>
@@ -81,12 +89,14 @@
                 </ion-item>
                 <ion-list lines="none">
                     <mat-accordion>
-                        <mat-expansion-panel class="mat-accordation" (opened)="panelResourceOpenState = true" (closed)="panelResourceOpenState = false">
+                        <mat-expansion-panel class="mat-accordation" (opened)="panelResourceOpenState = true"
+                            (closed)="panelResourceOpenState = false">
                             <mat-expansion-panel-header class="bordersConcepts">
                                 <mat-panel-title class="certificate-item">
                                     <ion-label> RESOURCES</ion-label>
                                 </mat-panel-title>
-                                <ion-icon (click)="goToResource();$event.stopPropagation()" class="certificate-icon certificate-section-icon add-spacing" name="add"></ion-icon>
+                                <ion-icon (click)="goToResource();$event.stopPropagation()"
+                                    class="certificate-icon certificate-section-icon add-spacing" name="add"></ion-icon>
                             </mat-expansion-panel-header>
                             <!-- listData.resource -->
                             <ion-item class="conceptGaps certificate-item certificate-section">
@@ -102,13 +112,15 @@
                     </mat-accordion>
 
                     <mat-accordion>
-                        <mat-expansion-panel class="mat-accordation" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                        <mat-expansion-panel class="mat-accordation" (opened)="panelOpenState = true"
+                            (closed)="panelOpenState = false">
                             <mat-expansion-panel-header class="bordersConcepts">
                                 <mat-panel-title class="certificate-item">
                                     <ion-label> CONCEPTS</ion-label>
                                 </mat-panel-title>
 
-                                <ion-icon (click)="goToConcept();$event.stopPropagation()" class="certificate-icon certificate-section-icon add-spacing" name="add"></ion-icon>
+                                <ion-icon (click)="goToConcept();$event.stopPropagation()"
+                                    class="certificate-icon certificate-section-icon add-spacing" name="add"></ion-icon>
                             </mat-expansion-panel-header>
 
                             <ion-item class="conceptGaps certificate-item certificate-section">
