@@ -41,6 +41,7 @@ export class ConceptsPage implements OnInit {
     let id = this.sectionId = this.actRoute.snapshot.paramMap.get('id');
     this.recordId = this.actRoute.snapshot.paramMap.get('recordid');
     let type = this.type = this.actRoute.snapshot.paramMap.get('type');
+    debugger;
     this.restApi.sectionId = id;
     this.restApi.populateSectionSubMenu(id);
     this.restApi.populateSectionSubMenuResource(id);

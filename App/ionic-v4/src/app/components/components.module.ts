@@ -63,6 +63,7 @@ import { ProgressCircleComponent } from './common/progress-circle/progress-circl
 import { VideoStudentComponent } from './video-student/video-student.component';
 import { ResourcesStudentComponent } from '../component/resources-student/resources-student.component';
 import { StudentTextComponent } from './student-text/student-text.component';
+import { QuizStudentComponent } from './quiz-student/quiz-student.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -143,7 +144,8 @@ import { StudentTextComponent } from './student-text/student-text.component';
 		ProgressCircleComponent,
 		VideoStudentComponent,
 		ResourcesStudentComponent,
-		StudentTextComponent
+		StudentTextComponent,
+		QuizStudentComponent
 		
 		
 	],
@@ -192,7 +194,8 @@ import { StudentTextComponent } from './student-text/student-text.component';
 		ProgressCircleComponent,
 		VideoStudentComponent,
 		ResourcesStudentComponent,
-		StudentTextComponent
+		StudentTextComponent,
+		QuizStudentComponent
 
 	],
 	providers: [

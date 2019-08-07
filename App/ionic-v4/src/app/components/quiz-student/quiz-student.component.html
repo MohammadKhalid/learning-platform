@@ -1,3 +1,32 @@
-<p>
-  quiz-student works!
-</p>
+<ion-list class="ion-padding">
+  <div *ngFor="let quizRow of quizzesArray;let quizIndex=index">
+
+    <ion-card class="card-sizing">
+      <ion-card-content>
+        <ion-item lines="none" class="ion-float-right ion-padding-top ques-trash-icon">
+        </ion-item>
+        <ion-item lines="inset">
+          <ion-label>
+            {{quizRow.question}}
+          </ion-label>
+        </ion-item>
+        <div *ngFor="let quizRowOption of quizRow.options;let quizIndex=index">
+          <ion-item class="option-answer">
+            <ion-checkbox class="check-box-icon" slot="start" [(ngModel)]='quizRowOption.correctOption'></ion-checkbox>
+            <ion-label>
+              {{quizRowOption.text}}
+            </ion-label>
+          </ion-item>
+        </div>
+
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+  <ion-item lines="none" class="ion-float-right ion-padding-top">
+    <ion-button (click)="submitQuiz()" size="md">
+      <ion-icon class="save-icon-adjust" name="save"></ion-icon>
+      Submit
+    </ion-button>
+  </ion-item>
+</ion-list>

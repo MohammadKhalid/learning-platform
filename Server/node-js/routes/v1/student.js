@@ -96,6 +96,7 @@ const quiz = express.Router();
 studentRouter.use('/quiz', quiz)
 
 quiz.get('/:sectionId/:title', quizController.getQuiz)
+quiz.post('/submit-quiz', quizController.submitQuiz)
 
 //courses 
 
