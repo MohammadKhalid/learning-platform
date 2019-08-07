@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
 import { NotificationService } from 'src/app/services/notification/notification.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-video',
@@ -12,21 +12,19 @@ import { ActivatedRoute } from '@angular/router';
 export class VideoComponent implements OnInit {
 
   addVideoForm: FormGroup
-  sectionId: any;
+  @Input() sectionId: any;
   @Input() recordId: any;
+  response : any
   btnText: string = "Save";
   constructor(
     private formBuilder: FormBuilder,
     private apiservice: RestApiService,
     private noti: NotificationService,
-    private section: ActivatedRoute
+    private section: ActivatedRoute,
+    private router : Router
   ) { }
 
-
-
-
   ngOnInit() {
-
     let id = this.section.snapshot.paramMap.get('id')
     this.addVideoForm = this.formBuilder.group({
       title: new FormControl(''),
@@ -42,7 +40,7 @@ export class VideoComponent implements OnInit {
       sectionId: id
     });
 
-    if (this.recordId) {
+    if (this.recordId && this.sectionId) {
       let id = this.section.snapshot.paramMap.get('id')
       this.sectionId = id
       this.btnText = "Update";
@@ -65,14 +63,20 @@ export class VideoComponent implements OnInit {
       this.apiservice.putPromise(`lesson/${this.recordId}`, this.addVideoForm.value).then(res => {
 
         this.noti.showMsg('updade record');
+        let id = this.section.snapshot.paramMap.get('id')
+        this.apiservice.populateSectionSubMenu(id);
       }).catch(err => {
         this.noti.showMsg(err)
       })
     } else {
       this.apiservice.postPromise('lesson', this.addVideoForm.value).then(res => {
-        
+            this.response = res.data;
+            let id = this.section.snapshot.paramMap.get('id');
+            this.apiservice.populateSectionSubMenu(id);
+        this.router.navigate([`certification/sections/concepts/${this.sectionId}/${res.data.id}/Lesson`])
+
         this.noti.showMsg('video Created successfully');
-        this.addVideoForm.reset();
+        // this.addVideoForm.reset();
         //section side menu service need to call.
       }).catch(err => {
         this.noti.showMsg(err);

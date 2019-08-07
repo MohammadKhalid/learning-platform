@@ -10,7 +10,7 @@ import { MenuController } from '@ionic/angular';
 })
 export class ConceptsPage implements OnInit {
 
-  addMore = [{ data: 'Mohsin' }]
+  
   conceptOptions = [];
   sessionData: any;
   user: any;
@@ -42,9 +42,12 @@ export class ConceptsPage implements OnInit {
     this.recordId = this.actRoute.snapshot.paramMap.get('recordid');
     let type = this.actRoute.snapshot.paramMap.get('type');
     this.restApi.sectionId = id;
-    this.restApi.getPromise(`section/get-section-details`, id).then(res => {
-      this.restApi.setSectionMenuData(res.data);
-    })
+    this.restApi.populateSectionSubMenu(id);
+    this.restApi.populateSectionSubMenuResource(id);
+
+    // this.restApi.getPromise(`section/get-section-details`, id).then(res => {
+    //   this.restApi.setSectionMenuData(res.data);
+    // })
     this.conceptOptions = this.restApi.getConceptsOptins();
     if (this.recordId && type) {
       this.selectedOption = this.restApi.getConceptsOptionsByname(type);

@@ -1,9 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormsModule, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from 'src/app/services/notification/notification.service';
 import { NavController } from '@ionic/angular';
+import { LoadingController } from '@ionic/angular';
+
 
 @Component({
   selector: 'app-text',
@@ -11,11 +13,10 @@ import { NavController } from '@ionic/angular';
   styleUrls: ['./text.component.scss'],
 })
 export class TextComponent implements OnInit {
+  @Input() sectionId: any;
+  @Input() recordId: any;
   addTextForm: FormGroup
-  sectionId: any;
   btnTxt: string = 'Save'
-
-  @Input() recordId;
   title: any;
   description: any;
   id: any;
@@ -23,14 +24,16 @@ export class TextComponent implements OnInit {
     private serviceApi: RestApiService,
     private actroute: ActivatedRoute,
     private noti: NotificationService,
-    private activeRoute: ActivatedRoute
+    private activeRoute: ActivatedRoute,
+    private router : Router,
+    public loadingController: LoadingController
   ) { }
 
   ngOnInit() {
     this.id = this.actroute.snapshot.paramMap.get('id');
 
     this.formInitialize();
-    if (this.recordId) {
+    if (this.recordId && this.sectionId) {
       this.btnTxt = "update"
       let id = this.activeRoute.snapshot.paramMap.get('id')
       this.sectionId = id
@@ -43,44 +46,37 @@ export class TextComponent implements OnInit {
     }
   }
 
-
-  ngOnChanges() {
-    debugger;
-    this.formInitialize();
-  }
   formInitialize() {
     this.addTextForm = this.formValue.group({
-
-
       title: new FormControl('', Validators.required),
       description: new FormControl('', Validators.required),
       sectionId: this.id,
     })
 
   }
+  
   addText() {
-    debugger
+  
+   
     if (this.recordId) {
       this.serviceApi.putPromise(`text/${this.recordId}`, this.addTextForm.value).then(res => {
-        this.noti.showMsg("update Record")
+        
+        this.noti.showMsg("update Record");
+        let id = this.actroute.snapshot.paramMap.get('id');
+        this.serviceApi.populateSectionSubMenu(id);
       }).catch(err => {
         this.noti.showMsg(err)
       })
 
     } else {
-      debugger
+      
       this.serviceApi.postPromise('text', this.addTextForm.value).then(res => {
+        this.loadingController.dismiss()
         this.noti.showMsg('text Created');
-        if (res) {
-          this.addTextForm.reset();
-          this.formInitialize();
-        }
-
         let id = this.actroute.snapshot.paramMap.get('id');
-        this.serviceApi.getPromise(`section/get-section-details`, id).then(resSec => {
-          this.serviceApi.setSectionMenuData(resSec.data);
+        this.serviceApi.populateSectionSubMenu(id);
+        this.router.navigate([`certification/sections/concepts/${this.sectionId}/${res.data.id}/Text`])
 
-        })
       }).catch(err => {
         this.noti.showMsg(err);
         console.log(err);
