@@ -10,8 +10,7 @@
         <ion-card>
             <ion-card-content>
                 <mat-select [(ngModel)]="selectedOption" placeholder="Select option">
-                    <mat-option *ngFor='let option of conceptOptions' [disabled]="recordId ? true : false"
-                        [value]='option.id'>{{option.value}}</mat-option>
+                    <mat-option *ngFor='let option of conceptOptions' [disabled]="recordId ? true : false" [value]='option.id'>{{option.value}}</mat-option>
                 </mat-select>
             </ion-card-content>
         </ion-card>
@@ -39,10 +38,19 @@
 <!-- student side rendering start -->
 <ion-content ion-padding class="content-black" *ngIf="user.type ==='student'">
     <div>
+        <div *ngIf="type === 'Resource'">
+
+            <app-student-resources [sectionId]="sectionId" [title]="recordId"></app-student-resources>
+        </div>
+        <!-- <app-student-text [sectionId]="sectionId"></app-student-text> -->
         <div *ngIf="type === 'Video'">
             <app-video-student (titleEvent)="titleEvent($event)" [recordId]="recordId"></app-video-student>
         </div>
         
+        <div *ngIf="type === 'Quiz'">
+            <app-quiz-student [recordId]="recordId" [sectionId] = "sectionId"></app-quiz-student>
+        </div>
+        <!-- student content -->
     </div>
 </ion-content>
 <!-- student side rendering end -->

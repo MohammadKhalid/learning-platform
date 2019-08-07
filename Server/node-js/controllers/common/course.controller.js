@@ -43,3 +43,34 @@ const sectionDetails = async (req, res) => {
 
 }
 module.exports.sectionDetails = sectionDetails;
+
+
+const sectionDetailsForStudent = async (req, res) => {
+    let { sectionId } = req.params
+    const sectionDetailForStudent = await Section.findAll({
+        attributes: [['id', 'sectionId'], 'title', 'description'],
+        include: [{
+            model: Text,
+            as: 'Text'
+        }, {
+            model: Lesson,
+            as: 'Lesson'
+        }],
+        where: {
+            id: sectionId
+        }
+    })
+    const quizDetail = await Quiz.findAll({
+        where:{
+            sectionId: sectionId
+        },
+        group: ['title']
+    })
+    if (sectionDetailForStudent.length > 0) {
+        return ReS(res, { data: [...sectionDetailForStudent[0].Text,...sectionDetailForStudent[0].Lesson,...quizDetail] }, 200);
+    } else {
+        return ReS(res, { data: [] }, 200);
+    }
+
+}
+module.exports.sectionDetailsForStudent = sectionDetailsForStudent;

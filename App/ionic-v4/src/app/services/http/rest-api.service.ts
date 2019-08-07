@@ -16,6 +16,9 @@ export class RestApiService {
 	private sectionMenuData = new BehaviorSubject(null);
 	private sectionMenuDataResource = new BehaviorSubject(null);
 
+
+	private sectionMenuDataStudent = new BehaviorSubject(null);
+	private sectionMenuDataResourceStudent = new BehaviorSubject(null);
 	sessionData: any;
 	url: string = SERVER_URL;
 	_sectionId: any;
@@ -248,6 +251,7 @@ export class RestApiService {
 				break;
 		}
 	}
+	// concepts coach
 	getSectionMenuData(): Observable<any> {
 		return this.sectionMenuData.asObservable();
 	}
@@ -268,7 +272,7 @@ export class RestApiService {
 		return this._sectionId;
 	}
 
-	// for resources observable
+	// for resources observable coach
 	getSectionMenuDataResource(): Observable<any> {
 		return this.sectionMenuDataResource.asObservable();
 	}
@@ -281,5 +285,35 @@ export class RestApiService {
 	}
 	setSectionMenuDataResource(val: any) {
 		this.sectionMenuDataResource.next(val);
+	}
+
+	// concepts student
+	getSectionMenuDataStudent(): Observable<any> {
+		return this.sectionMenuDataStudent.asObservable();
+	}
+	populateSectionSubMenuStudent(id) {
+		this.getPromise(`section/get-section-details-for-student`, id).then(resSec => {
+			this.setSectionMenuDataStudent(resSec.data);
+		}).catch(err => {
+			this.noti.showMsg(err);
+		})
+	}
+	setSectionMenuDataStudent(val: any) {
+		this.sectionMenuDataStudent.next(val);
+	}
+
+	// for resources observable student
+	getSectionMenuDataResourceStudent(): Observable<any> {
+		return this.sectionMenuDataResourceStudent.asObservable();
+	}
+	populateSectionSubMenuResourceStudent(id) {
+		this.getPromise(`resource/get-resources-for-student`, id).then(resSec => {
+			this.setSectionMenuDataResourceStudent(resSec.data);
+		}).catch(err => {
+			this.noti.showMsg(err);
+		})
+	}
+	setSectionMenuDataResourceStudent(val: any) {
+		this.sectionMenuDataResourceStudent.next(val);
 	}
 }

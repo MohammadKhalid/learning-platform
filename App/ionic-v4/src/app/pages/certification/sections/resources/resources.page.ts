@@ -13,24 +13,36 @@ export class ResourcesPage implements OnInit {
   sectionId: any;
   recordId: any;
   user: any;
+  sessionData: any;
+
   constructor(
     private menu: MenuController,
     private actRoute: ActivatedRoute,
     private restApi: RestApiService,
     private authService: AuthenticationService,
 
-  ) { }
+  ) {
+    this.authService.authenticationState.subscribe((state) => {
+      this.sessionData = state ? this.authService.getSessionData() : null;
+    });
+    this.user = this.sessionData.user
+   }
 
   ngOnInit() {
-    this.user =this.authService.getSessionData().user; 
     debugger;
     this.menu.enable(false);
     let id = this.sectionId = this.actRoute.snapshot.paramMap.get('id');
     this.recordId = this.actRoute.snapshot.paramMap.get('recordid');
     let type = this.actRoute.snapshot.paramMap.get('type');
     
-    this.restApi.populateSectionSubMenu(id);
-    this.restApi.populateSectionSubMenuResource(id);
+     if(this.user.type === 'coach'){
+      this.restApi.populateSectionSubMenu(id);
+      this.restApi.populateSectionSubMenuResource(id);
+    }
+    else if( this.user.type === 'student'){
+      this.restApi.populateSectionSubMenuStudent(id);
+      this.restApi.populateSectionSubMenuResourceStudent(id);
+    }
   }
 
   ionViewWillEnter() {

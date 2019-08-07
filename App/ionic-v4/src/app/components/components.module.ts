@@ -61,9 +61,10 @@ import { ProgressCompleteCardComponent } from './common/progress-complete-card/p
 import { RoundProgressModule } from 'angular-svg-round-progressbar';
 import { ProgressCircleComponent } from './common/progress-circle/progress-circle.component';
 import { VideoStudentComponent } from './video-student/video-student.component';
-import { ResourcesStudentComponent } from '../component/resources-student/resources-student.component';
 import { StudentTextComponent } from './student-text/student-text.component';
 import { SafePipe } from '../pipes/safe.pipe';
+import { QuizStudentComponent } from './quiz-student/quiz-student.component';
+import { StudentResourcesComponent } from './student-resources/student-resources.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -143,7 +144,9 @@ import { SafePipe } from '../pipes/safe.pipe';
 		ProgressCompleteCardComponent,
 		ProgressCircleComponent,
 		VideoStudentComponent,
-		ResourcesStudentComponent,
+		StudentTextComponent,
+		QuizStudentComponent,
+		StudentResourcesComponent,
 		StudentTextComponent,
 		SafePipe
 	],
@@ -191,10 +194,10 @@ import { SafePipe } from '../pipes/safe.pipe';
 		ProgressCompleteCardComponent,
 		ProgressCircleComponent,
 		VideoStudentComponent,
-		ResourcesStudentComponent,
 		StudentTextComponent,
-		SafePipe
-
+		QuizStudentComponent,
+		StudentResourcesComponent,
+		SafePipe,
 	],
 	providers: [
 		ProfileComponent
