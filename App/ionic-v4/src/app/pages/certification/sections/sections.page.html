@@ -43,7 +43,6 @@
 
                         </mat-expansion-panel>
                     </mat-accordion>
-
                     <mat-accordion>
                         <mat-expansion-panel class="mat-accordation" (opened)="panelOpenState = true"
                             (closed)="panelOpenState = false">
@@ -69,17 +68,9 @@
                         </mat-expansion-panel>
                     </mat-accordion>
 
-
-
-
-
-
-
-
-
-
                 </ion-list>
             </ng-template>
+            <!-- student type -->
             <ng-template #student>
 
 
@@ -119,10 +110,7 @@
                                 <!--  -->
                             </mat-expansion-panel-header>
 
-                            <ion-item no-padding class="conceptGaps certificate-item certificate-section">
-                                <ion-icon class="checkmark-label-adjusment" name="checkmark"></ion-icon>
-                                <ion-label (click)="gotoConceptType(dataRow)">1. What will we Create</ion-label>
-                            </ion-item>
+                            
 
                             <ion-item no-padding class="conceptGaps certificate-item certificate-section">
                                     <ion-icon class="radio-label-adjusment" src="assets/img/quiz.svg"></ion-icon>
