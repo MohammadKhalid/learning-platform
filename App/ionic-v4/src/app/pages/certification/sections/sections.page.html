@@ -80,10 +80,26 @@
                     <ion-icon name="search" class="icon-color certificate-icon certificate-section-icon"></ion-icon>
                 </ion-item>
                 <ion-list lines="none">
-                    <ion-item class="bordersResources certificate-item certificate-section" (click)="goto('resources')">
-                        <ion-label class="res-space">RESOURCES</ion-label>
-                    </ion-item>
+                    <mat-accordion>
+                        <mat-expansion-panel class="mat-accordation" (opened)="panelResourceOpenState = true" (closed)="panelResourceOpenState = false">
+                            <mat-expansion-panel-header class="bordersConcepts">
+                                <mat-panel-title class="certificate-item">
+                                    <ion-label> RESOURCES</ion-label>
+                                </mat-panel-title>
+                                <ion-icon (click)="goToResource();$event.stopPropagation()" class="certificate-icon certificate-section-icon add-spacing" name="add"></ion-icon>
+                            </mat-expansion-panel-header>
+                            <!-- listData.resource -->
+                            <ion-item class="conceptGaps certificate-item certificate-section">
+                                <ion-label (click)="gotoConceptType(dataRow)">
+                                    student
+                                </ion-label>
 
+                                <ion-icon href="#" class="certificate-icon certificate-section-icon" name="trash">
+                                </ion-icon>
+                            </ion-item>
+
+                        </mat-expansion-panel>
+                    </mat-accordion>
 
                     <mat-accordion>
                         <mat-expansion-panel class="mat-accordation" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
@@ -91,7 +107,7 @@
                                 <mat-panel-title class="certificate-item">
                                     <ion-label> CONCEPTS</ion-label>
                                 </mat-panel-title>
-                                <!--  -->
+
                                 <ion-icon (click)="goToConcept();$event.stopPropagation()" class="certificate-icon certificate-section-icon add-spacing" name="add"></ion-icon>
                             </mat-expansion-panel-header>
 
