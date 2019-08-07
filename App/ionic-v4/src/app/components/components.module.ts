@@ -61,7 +61,6 @@ import { ProgressCompleteCardComponent } from './common/progress-complete-card/p
 import { RoundProgressModule } from 'angular-svg-round-progressbar';
 import { ProgressCircleComponent } from './common/progress-circle/progress-circle.component';
 import { VideoStudentComponent } from './video-student/video-student.component';
-import { ResourcesStudentComponent } from '../component/resources-student/resources-student.component';
 import { StudentTextComponent } from './student-text/student-text.component';
 @NgModule({
 	imports: [
@@ -142,7 +141,6 @@ import { StudentTextComponent } from './student-text/student-text.component';
 		ProgressCompleteCardComponent,
 		ProgressCircleComponent,
 		VideoStudentComponent,
-		ResourcesStudentComponent,
 		StudentTextComponent
 		
 		
@@ -191,7 +189,6 @@ import { StudentTextComponent } from './student-text/student-text.component';
 		ProgressCompleteCardComponent,
 		ProgressCircleComponent,
 		VideoStudentComponent,
-		ResourcesStudentComponent,
 		StudentTextComponent
 
 	],
