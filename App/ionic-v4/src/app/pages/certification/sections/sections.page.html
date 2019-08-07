@@ -40,7 +40,6 @@
 
                         </mat-expansion-panel>
                     </mat-accordion>
-
                     <mat-accordion>
                         <mat-expansion-panel class="mat-accordation" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
                             <mat-expansion-panel-header class="bordersConcepts">
@@ -61,17 +60,9 @@
                         </mat-expansion-panel>
                     </mat-accordion>
 
-
-
-
-
-
-
-
-
-
                 </ion-list>
             </ng-template>
+            <!-- student type -->
             <ng-template #student>
 
 
@@ -112,7 +103,7 @@
                             </mat-expansion-panel-header>
 
                             <ion-item class="conceptGaps certificate-item certificate-section">
-                                <ion-label (click)="gotoConceptType(dataRow)">student</ion-label>
+                                <ion-label (click)="gotoConceptType(dataRow)" [routerLink]="certification/sections/concepts/1/1/Text">student</ion-label>
 
                                 <ion-icon href="#" class="certificate-icon certificate-section-icon" name="trash">
                                 </ion-icon>

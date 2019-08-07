@@ -4,8 +4,7 @@
         <ion-card>
             <ion-card-content>
                 <mat-select [(ngModel)]="selectedOption" placeholder="Select option">
-                    <mat-option *ngFor='let option of conceptOptions' [disabled]="recordId ? true : false"
-                        [value]='option.id'>{{option.value}}</mat-option>
+                    <mat-option *ngFor='let option of conceptOptions' [disabled]="recordId ? true : false" [value]='option.id'>{{option.value}}</mat-option>
                 </mat-select>
             </ion-card-content>
         </ion-card>
@@ -30,7 +29,7 @@
 
     <!-- student side rendering start -->
     <div *ngIf="user.type ==='student'">
-        student
+        <app-student-text [sectionId]="sectionId"></app-student-text>
         <!-- student content -->
     </div>
     <!-- student side rendering end -->

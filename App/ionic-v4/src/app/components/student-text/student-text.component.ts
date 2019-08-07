@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-student-text',
@@ -6,9 +7,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./student-text.component.scss'],
 })
 export class StudentTextComponent implements OnInit {
+  @Input() sectionId: any;
+  @Input() recordId: any;
 
-  constructor() { }
+  constructor(private activateroute : ActivatedRoute) { }
 
-  ngOnInit() {}
-
+  ngOnInit() {
+    let id = this.activateroute.snapshot.paramMap.get('id');
+    this.sectionId = id;
+  }
+   
 }
