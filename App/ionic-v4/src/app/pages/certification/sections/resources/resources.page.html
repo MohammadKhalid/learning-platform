@@ -1,3 +1,15 @@
 <ion-content ion-padding>
-  <app-resources [resourceTitle]="recordId" [sectionId]="sectionId"></app-resources>
+    <!-- coach side rendering start -->
+    <div *ngIf="user.type ==='coach'">
+        <app-resources [resourceTitle]="recordId" [sectionId]="sectionId"></app-resources>
+    </div>
+    <!-- coach side rendering end -->
+
+    <!-- student side rendering start -->
+    <div *ngIf="user.type ==='student'">
+        <app-resources [resourceTitle]="recordId" [sectionId]="sectionId"></app-resources>
+
+        <!-- student content -->
+    </div>
+    <!-- student side rendering end -->
 </ion-content>
