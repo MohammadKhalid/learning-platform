@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
+import { AuthenticationService } from 'src/app/services/user/authentication.service';
 
 @Component({
   selector: 'app-page-resources',
@@ -11,12 +12,21 @@ import { RestApiService } from 'src/app/services/http/rest-api.service';
 export class ResourcesPage implements OnInit {
   sectionId: any;
   recordId: any;
+  user: any;
+  sessionData: any;
 
   constructor(
     private menu: MenuController,
     private actRoute: ActivatedRoute,
     private restApi: RestApiService,
-  ) { }
+    private authService: AuthenticationService,
+
+  ) {
+    this.authService.authenticationState.subscribe((state) => {
+      this.sessionData = state ? this.authService.getSessionData() : null;
+    });
+    this.user = this.sessionData.user
+   }
 
   ngOnInit() {
     debugger;
@@ -25,8 +35,14 @@ export class ResourcesPage implements OnInit {
     this.recordId = this.actRoute.snapshot.paramMap.get('recordid');
     let type = this.actRoute.snapshot.paramMap.get('type');
     
-    this.restApi.populateSectionSubMenu(id);
-    this.restApi.populateSectionSubMenuResource(id);
+     if(this.user.type === 'coach'){
+      this.restApi.populateSectionSubMenu(id);
+      this.restApi.populateSectionSubMenuResource(id);
+    }
+    else if( this.user.type === 'student'){
+      this.restApi.populateSectionSubMenuStudent(id);
+      this.restApi.populateSectionSubMenuResourceStudent(id);
+    }
   }
 
   ionViewWillEnter() {

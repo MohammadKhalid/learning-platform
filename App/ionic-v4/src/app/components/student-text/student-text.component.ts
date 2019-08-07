@@ -13,8 +13,7 @@ export class StudentTextComponent implements OnInit {
   constructor(private activateroute : ActivatedRoute) { }
 
   ngOnInit() {
-    let id = this.activateroute.snapshot.paramMap.get('id');
-    this.sectionId = id;
+    
   }
    
 }

@@ -34,27 +34,28 @@ export class SectionsPage implements OnInit {
 
   ngOnInit() {
     this.user = this.authService.getSessionData().user;
+    //coach menu popupate start
     this.subscription = this.apiSrv.getSectionMenuData().subscribe(value => {
       value ? this.listData = value : '';
     });
-
-    debugger;
     this.subscriptionResource = this.apiSrv.getSectionMenuDataResource().subscribe(value => {
       value ? this.listResourceData = value : '';
     });
+    //coach menu popupate end
+
+    //student menu popupate start
+    this.subscription = this.apiSrv.getSectionMenuDataStudent().subscribe(value => {
+      value ? this.listData = value : '';
+    });
+    this.subscriptionResource = this.apiSrv.getSectionMenuDataResourceStudent().subscribe(value => {
+      value ? this.listResourceData = value : '';
+    });
+    //student menu popupate end
+
+
     this.menu.enable(false);
     this.menu.enable(false, 'mainMenu')
-if(this.user.type == 'student'){
-  debugger;
-  let id = this.actRoute.snapshot.paramMap.get('id')
-this.apiSrv.getPromise(`section/get-section-details-for-student`,id).then(res=> {
 
-  this.listData= res.data
-
-})
-
-  
-}
   }
 
   ngAfterViewInit() {
