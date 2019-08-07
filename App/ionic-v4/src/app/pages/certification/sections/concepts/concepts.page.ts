@@ -10,12 +10,13 @@ import { MenuController } from '@ionic/angular';
 })
 export class ConceptsPage implements OnInit {
 
-  
+
   conceptOptions = [];
   sessionData: any;
   user: any;
   selectedOption: any;
   recordId: any;
+  type: any;
   quizTitle: any;
   sectionId: any;
 
@@ -36,11 +37,10 @@ export class ConceptsPage implements OnInit {
   }
 
   ngOnInit() {
-    debugger;
     this.menu.enable(false);
     let id = this.sectionId = this.actRoute.snapshot.paramMap.get('id');
     this.recordId = this.actRoute.snapshot.paramMap.get('recordid');
-    let type = this.actRoute.snapshot.paramMap.get('type');
+    let type = this.type = this.actRoute.snapshot.paramMap.get('type');
     this.restApi.sectionId = id;
     this.restApi.populateSectionSubMenu(id);
     this.restApi.populateSectionSubMenuResource(id);
@@ -52,6 +52,6 @@ export class ConceptsPage implements OnInit {
     if (this.recordId && type) {
       this.selectedOption = this.restApi.getConceptsOptionsByname(type);
     }
-    
+
   }
 }
