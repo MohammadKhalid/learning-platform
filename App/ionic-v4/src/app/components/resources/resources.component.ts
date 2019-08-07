@@ -3,7 +3,7 @@ import { DropzoneComponent } from '../common/dropzone/dropzone.component';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
 import { NotificationService } from 'src/app/services/notification/notification.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 @Component({
   selector: 'app-resources',
@@ -12,7 +12,11 @@ import { AlertController } from '@ionic/angular';
 })
 export class ResourcesComponent implements OnInit {
   @ViewChild(DropzoneComponent) fileField: DropzoneComponent;
-  @Input() recordId;
+  @Input() resourceTitle: any;
+  @Input() sectionId: any;
+  btnTxt: string = 'Save';
+  oldTitle: string;
+  title: string;
   addResourcesForm: FormGroup;
   submitBtn: boolean = true;
   files: any = [];
@@ -21,23 +25,27 @@ export class ResourcesComponent implements OnInit {
     private restApi: RestApiService,
     private notificationService: NotificationService,
     private actRoute: ActivatedRoute,
-		private alertCtrl: AlertController,
+    private alertCtrl: AlertController,
+    private router: Router,
 
   ) { }
   ngOnInit() {
+    debugger;
+    this.title = "";
     // alert(this.actroute.snapshot.paramMap.get('id'))
     //  this.actroute.snapshot.paramMap.get('type');
-    let sectionId = this.actRoute.snapshot.paramMap.get('id');
-    this.restApi.getPromise('resource/get-resources', sectionId).then(res => {
-     
-      // for(var i=0; i <= res.data.length; i++){
+    // let sectionId = this.actRoute.snapshot.paramMap.get('id');
+    if (this.sectionId && this.resourceTitle) {
+      this.btnTxt = "Update";
+      this.oldTitle = this.title = this.resourceTitle;
 
-      // }     
-      this.fileData = res.data;
-      console.log(res.data)
-    }).catch(err => {
-      this.notificationService.showMsg('server down');
-    })
+      this.restApi.getPromise(`resource/get-section-resources/${this.sectionId}/${this.oldTitle}`).then(res => {
+        this.fileData = res.data;
+      }).catch(err => {
+        this.notificationService.showMsg('server down');
+      })
+    }
+
 
 
   }
@@ -54,60 +62,86 @@ export class ResourcesComponent implements OnInit {
   //   }
   // }
   upload() {
-
-
     this.files = this.fileField.getFiles();
     console.log(this.files);
     let formData = new FormData();
     // let test = [];
-
     // formData.append('somekey', 'some value') // Add any other data you want to send
     this.files.forEach((file) => {
       formData.append('file', file.rawFile);
     });
     // formData.append('file', JSON.stringify(test));
-    // debugger;
     // formData.append('file', this.files);
-    formData.append('sectionId', this.actRoute.snapshot.paramMap.get('id'));
-
+    formData.append('sectionId', this.sectionId);
+    formData.append('title', this.title);
     // this.fileField.removeAll();
+    if (this.oldTitle) {
+      formData.append('oldTitle', this.oldTitle);
+      this.restApi.putPromise('resource/update-section-resources', formData)
+        .then(res => {
+          this.files = res.data;
+          this.fileField.removeAll();
+          let id = this.actRoute.snapshot.paramMap.get('id');
+          this.restApi.populateSectionSubMenuResource(id);
 
-    this.restApi.postPromise('resource', formData)
-      .then(res => {
+          this.notificationService.showMsg("Update Successfully");
+         
+          // this.router.navigateByUrl(`certification/sections/resources/${this.sectionId}/${this.title}/Recources`).then(e => {
+          //   if (e) {
+          //     console.log("Navigation is successful!");
+          //   } else {
+          //     console.log("Navigation has failed!");
+          //   }
+          // });
+          this.router.navigate([`certification/sections/resources/${this.sectionId}/${this.title}/Recources`])
+        }).catch(err => {
+          this.notificationService.showMsg("Error Updating resources");
+        })
+    }
+    else {
+      this.restApi.postPromise('resource', formData)
+        .then(res => {
 
-        this.files = res.data;
-        this.fileField.removeAll();
-        this.notificationService.showMsg("Saved Successfully");
-      }).catch(err => {
-        this.notificationService.showMsg("Error inserting resources");
-      })
+          this.files = res.data;
+          this.fileField.removeAll();
+          let id = this.actRoute.snapshot.paramMap.get('id');
+          this.restApi.populateSectionSubMenuResource(id);
+
+          this.notificationService.showMsg("Saved Successfully");
+          this.router.navigate([`certification/sections/concepts/${this.sectionId}/${this.resourceTitle}/Recources`])
+        }).catch(err => {
+          this.notificationService.showMsg("Error inserting resources");
+        })
+    }
+
+
     // // POST formData to Server
   }
 
   eventBtnSubmit(count) {
     this.submitBtn = count > 0 ? false : true;
   }
-  deletePrompt(file){
+  deletePrompt(file) {
     this.alertCtrl.create({
-			header: 'Alert!',
-			message: 'Are you sure you want to delete?',
-			buttons: [
-				{
-					text: 'Cancel',
-					role: 'cancel',
-					cssClass: 'secondary',
-					handler: () => { }
-				},
-				{
-					text: 'Yes',
-					handler: () => {
-					this.deleteFile(file);
-					}
-				}
-			]
-		}).then((alert) => {
-			alert.present();
-		});
+      header: 'Alert!',
+      message: 'Are you sure you want to delete?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => { }
+        },
+        {
+          text: 'Yes',
+          handler: () => {
+            this.deleteFile(file);
+          }
+        }
+      ]
+    }).then((alert) => {
+      alert.present();
+    });
   }
   deleteFile(file) {
     this.restApi.delete(`resource/${file.id}/${file.url}`).subscribe(res => {

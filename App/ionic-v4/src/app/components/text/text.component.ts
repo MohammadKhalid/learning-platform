@@ -62,6 +62,8 @@ export class TextComponent implements OnInit {
       this.serviceApi.putPromise(`text/${this.recordId}`, this.addTextForm.value).then(res => {
         
         this.noti.showMsg("update Record");
+        let id = this.actroute.snapshot.paramMap.get('id');
+        this.serviceApi.populateSectionSubMenu(id);
       }).catch(err => {
         this.noti.showMsg(err)
       })
@@ -71,19 +73,10 @@ export class TextComponent implements OnInit {
       this.serviceApi.postPromise('text', this.addTextForm.value).then(res => {
         this.loadingController.dismiss()
         this.noti.showMsg('text Created');
-        
+        let id = this.actroute.snapshot.paramMap.get('id');
+        this.serviceApi.populateSectionSubMenu(id);
         this.router.navigate([`certification/sections/concepts/${this.sectionId}/${res.data.id}/Text`])
 
-        // if (res) {
-        //   this.addTextForm.reset();
-        //   this.formInitialize();
-        // }
-
-        let id = this.actroute.snapshot.paramMap.get('id');
-        this.serviceApi.getPromise(`section/get-section-details`, id).then(resSec => {
-          this.serviceApi.setSectionMenuData(resSec.data);
-
-        })
       }).catch(err => {
         this.noti.showMsg(err);
         console.log(err);

@@ -24,11 +24,7 @@ export class VideoComponent implements OnInit {
     private router : Router
   ) { }
 
-
-
-
   ngOnInit() {
-
     let id = this.section.snapshot.paramMap.get('id')
     this.addVideoForm = this.formBuilder.group({
       title: new FormControl(''),
@@ -67,13 +63,16 @@ export class VideoComponent implements OnInit {
       this.apiservice.putPromise(`lesson/${this.recordId}`, this.addVideoForm.value).then(res => {
 
         this.noti.showMsg('updade record');
+        let id = this.section.snapshot.paramMap.get('id')
+        this.apiservice.populateSectionSubMenu(id);
       }).catch(err => {
         this.noti.showMsg(err)
       })
     } else {
       this.apiservice.postPromise('lesson', this.addVideoForm.value).then(res => {
-        debugger
-        this.response = res.data
+            this.response = res.data;
+            let id = this.section.snapshot.paramMap.get('id');
+            this.apiservice.populateSectionSubMenu(id);
         this.router.navigate([`certification/sections/concepts/${this.sectionId}/${res.data.id}/Lesson`])
 
         this.noti.showMsg('video Created successfully');

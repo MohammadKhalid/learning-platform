@@ -30,7 +30,8 @@ const routes: Routes = [
 
       // { path: 'concepts/:type/:id', loadChildren: './concepts/concepts.module#ConceptsPageModule' },
       // { path: 'concepts', loadChildren: './concepts/concepts.module#ConceptsPageModule' },
-    ]
+    ],
+    runGuardsAndResolvers: 'always'
   }
 ];
 
