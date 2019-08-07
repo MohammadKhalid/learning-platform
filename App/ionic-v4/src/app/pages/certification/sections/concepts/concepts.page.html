@@ -13,9 +13,10 @@
 </div>
 <!-- coach side rendering end -->
 
-<ion-content ion-padding style="height: calc(100vh - 160px);">
-    <!-- coach side rendering start -->
-    <div *ngIf="user.type ==='coach'">
+
+<!-- coach side rendering start -->
+<ion-content *ngIf="user.type ==='coach'" ion-padding style="height: calc(100vh - 160px);">
+    <div>
         <div *ngIf="selectedOption == 0">
             <app-video [recordId]="recordId" [sectionId]="sectionId"></app-video>
         </div>
@@ -26,13 +27,20 @@
             <app-quiz [sectionId]="sectionId" [quizTitle]="recordId"></app-quiz>
         </div>
     </div>
-    <!-- coach side rendering end -->
+</ion-content>
+<!-- coach side rendering end -->
 
-    <!-- student side rendering start -->
-    <div *ngIf="user.type ==='student'">
-        student
+
+
+
+
+<!-- student side rendering start -->
+<ion-content ion-padding *ngIf="user.type ==='student'">
+    <div>
+        <div *ngIf="type === 'Video'">
+            <app-video-student [recordId]="recordId"></app-video-student>
+        </div>
         <!-- student content -->
     </div>
-    <!-- student side rendering end -->
-
 </ion-content>
+<!-- student side rendering end -->
