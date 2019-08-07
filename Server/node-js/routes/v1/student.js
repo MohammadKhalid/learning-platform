@@ -11,6 +11,7 @@ const CoachController = require(controllerPath + 'coach.controller');
 const ShowTimeController = require(controllerPath + 'show-time.controller');
 const LiveGroupTrainingController = require(controllerPath + 'live-group-training.controller');
 const courseContoller = require(controllerPath + 'course.controller');
+const quizController = require(controllerPath + 'quiz.controller');
 
 const courseCategoryController = require('../../controllers/common/course.controller');
 const commonSectionController = require('../../controllers/common/section.controller');
@@ -88,6 +89,13 @@ const courseCategory = express.Router();
 studentRouter.use('/course-category', courseCategory)
 
 courseCategory.get('/get-all/:userId', courseCategoryController.getAll)
+
+//quiz
+
+const quiz = express.Router();
+studentRouter.use('/quiz', quiz)
+
+quiz.get('/:sectionId/:title', quizController.getQuiz)
 
 //courses 
 
