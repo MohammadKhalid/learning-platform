@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
 import { NotificationService } from 'src/app/services/notification/notification.service';
+import { IMAGE_URL } from 'src/environments/environment';
 
 
 @Component({
@@ -11,18 +12,17 @@ import { NotificationService } from 'src/app/services/notification/notification.
 })
 export class StudentResourcesComponent implements OnInit {
   @Input() sectionId
-  @Input() title
+  @Input() resourceTitle
   filename: any
   fileData: any = [];
+  serverUrl: string = `${IMAGE_URL}/resources/`;
 
   constructor(private activateroute: ActivatedRoute, private restapi: RestApiService, private notification: NotificationService) { }
 
   ngOnInit() {
-    debugger;
-    if (this.sectionId && this.title)
-      this.restapi.getPromise(`get-resources-for-student/${this.sectionId}/${this.title}`).then(res => {
-        this.filename = res.data;
-        this.notification.showMsg('Successfully Done ')
+    if (this.sectionId && this.resourceTitle)
+      this.restapi.getPromise(`resource/get-resources-for-student/${this.sectionId}/${this.resourceTitle}`).then(res => {
+        this.fileData = res.data;
       }).catch(err => {
         this.notification.showMsg('server err')
       })

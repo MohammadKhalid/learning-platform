@@ -251,20 +251,6 @@ export class RestApiService {
 				break;
 		}
 	}
-	// concepts coach
-	getSectionMenuData(): Observable<any> {
-		return this.sectionMenuData.asObservable();
-	}
-	populateSectionSubMenu(id) {
-		this.getPromise(`section/get-section-details`, id).then(resSec => {
-			this.setSectionMenuData(resSec.data);
-		}).catch(err => {
-			this.noti.showMsg(err);
-		})
-	}
-	setSectionMenuData(val: any) {
-		this.sectionMenuData.next(val);
-	}
 	set sectionId(id: any) {
 		this._sectionId = id;
 	}
@@ -272,19 +258,19 @@ export class RestApiService {
 		return this._sectionId;
 	}
 
-	// for resources observable coach
-	getSectionMenuDataResource(): Observable<any> {
-		return this.sectionMenuDataResource.asObservable();
+	// concepts coach
+	getSectionMenuData(): Observable<any> {
+		return this.sectionMenuData.asObservable();
 	}
-	populateSectionSubMenuResource(id) {
-		this.getPromise(`resource/get-resources`, id).then(resSec => {
-			this.setSectionMenuDataResource(resSec.data);
+	populateSectionSubMenu(id) {
+		this.getPromise(`section/get-section-details`, id).then(resSec => {
+			this.setSectionMenuData(resSec);
 		}).catch(err => {
 			this.noti.showMsg(err);
 		})
 	}
-	setSectionMenuDataResource(val: any) {
-		this.sectionMenuDataResource.next(val);
+	setSectionMenuData(val: any) {
+		this.sectionMenuData.next(val);
 	}
 
 	// concepts student
@@ -293,27 +279,12 @@ export class RestApiService {
 	}
 	populateSectionSubMenuStudent(id) {
 		this.getPromise(`section/get-section-details-for-student`, id).then(resSec => {
-			this.setSectionMenuDataStudent(resSec.data);
+			this.setSectionMenuDataStudent(resSec);
 		}).catch(err => {
 			this.noti.showMsg(err);
 		})
 	}
 	setSectionMenuDataStudent(val: any) {
 		this.sectionMenuDataStudent.next(val);
-	}
-
-	// for resources observable student
-	getSectionMenuDataResourceStudent(): Observable<any> {
-		return this.sectionMenuDataResourceStudent.asObservable();
-	}
-	populateSectionSubMenuResourceStudent(id) {
-		this.getPromise(`resource/get-resources-for-student`, id).then(resSec => {
-			this.setSectionMenuDataResourceStudent(resSec.data);
-		}).catch(err => {
-			this.noti.showMsg(err);
-		})
-	}
-	setSectionMenuDataResourceStudent(val: any) {
-		this.sectionMenuDataResourceStudent.next(val);
 	}
 }

@@ -5,6 +5,7 @@ import { RestApiService } from 'src/app/services/http/rest-api.service';
 import { NotificationService } from 'src/app/services/notification/notification.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import { IMAGE_URL } from 'src/environments/environment';
 @Component({
   selector: 'app-resources',
   templateUrl: './resources.component.html',
@@ -21,6 +22,8 @@ export class ResourcesComponent implements OnInit {
   submitBtn: boolean = true;
   files: any = [];
   fileData: any = [];
+  serverUrl: string = `${IMAGE_URL}/resources/`;
+
   constructor(
     private restApi: RestApiService,
     private notificationService: NotificationService,
@@ -30,11 +33,7 @@ export class ResourcesComponent implements OnInit {
 
   ) { }
   ngOnInit() {
-    debugger;
     this.title = "";
-    // alert(this.actroute.snapshot.paramMap.get('id'))
-    //  this.actroute.snapshot.paramMap.get('type');
-    // let sectionId = this.actRoute.snapshot.paramMap.get('id');
     if (this.sectionId && this.resourceTitle) {
       this.btnTxt = "Update";
       this.oldTitle = this.title = this.resourceTitle;
@@ -82,7 +81,7 @@ export class ResourcesComponent implements OnInit {
           this.files = res.data;
           this.fileField.removeAll();
           let id = this.actRoute.snapshot.paramMap.get('id');
-          this.restApi.populateSectionSubMenuResource(id);
+          this.restApi.populateSectionSubMenu(id);
 
           this.notificationService.showMsg("Update Successfully");
          
@@ -105,7 +104,7 @@ export class ResourcesComponent implements OnInit {
           this.files = res.data;
           this.fileField.removeAll();
           let id = this.actRoute.snapshot.paramMap.get('id');
-          this.restApi.populateSectionSubMenuResource(id);
+          this.restApi.populateSectionSubMenu(id);
 
           this.notificationService.showMsg("Saved Successfully");
           this.router.navigate([`certification/sections/concepts/${this.sectionId}/${this.resourceTitle}/Recources`])
