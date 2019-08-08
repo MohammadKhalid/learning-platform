@@ -78,8 +78,8 @@ const submitQuiz = async function (req, res) {
     })
 
     let studentAnswerResult = await StudentAnswer.bulkCreate(bulkQuizRes)
-    // if (quiz) return ReS(res, { data: quizRes }, 200);
-    // else return ReE(res, { message: 'Unable to insert Course.' }, 500)
+    if (studentAnswerResult) return ReS(res, { data: studentAnswerResult }, 200);
+    else return ReE(res, { message: 'Unable to insert Course.' }, 500)
 }
 module.exports.submitQuiz = submitQuiz;
 

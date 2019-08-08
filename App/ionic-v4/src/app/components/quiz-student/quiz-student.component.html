@@ -30,7 +30,7 @@
     <ion-item lines="none" class="ion-float-right ion-padding-top">
       <ion-button (click)="submitQuiz()" size="md">
         <ion-icon class="save-icon-adjust" name="save"></ion-icon>
-        Submit
+        Finish
       </ion-button>
     </ion-item>
   </ion-list>
@@ -59,7 +59,7 @@
           </div>
           <ion-item lines="inset">
             <ion-label>
-              Corretion Option(s): {{asd}}
+              Corretion Answer(s): {{todo(questionRow.correctOptions)}}
             </ion-label>
           </ion-item>
         </ion-card-content>
