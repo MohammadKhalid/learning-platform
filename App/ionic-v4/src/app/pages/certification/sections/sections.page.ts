@@ -25,7 +25,7 @@ export class SectionsPage implements OnInit {
   private subscriptionResource: Subscription;
   public items: any;
   listData: any;
-  listResourceData: any;
+  listResourceData: any = [];
   id: any
 
   searchBy: string;

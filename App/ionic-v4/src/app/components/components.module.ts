@@ -65,6 +65,8 @@ import { StudentTextComponent } from './student-text/student-text.component';
 import { SafePipe } from '../pipes/safe.pipe';
 import { QuizStudentComponent } from './quiz-student/quiz-student.component';
 import { StudentResourcesComponent } from './student-resources/student-resources.component';
+import { HttpClientModule } from '@angular/common/http';
+import { AngularEditorModule } from '@kolkov/angular-editor';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -83,6 +85,8 @@ import { StudentResourcesComponent } from './student-resources/student-resources
 		DragScrollModule,
 		FileUploadModule,
 		MatIconModule,
+		HttpClientModule, 
+		AngularEditorModule,
 		LazyLoadImageModule.forRoot({
 			preset: intersectionObserverPreset // <-- tell LazyLoadImage that you want to use IntersectionObserver
 		}),

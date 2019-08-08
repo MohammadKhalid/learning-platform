@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from 'src/app/services/notification/notification.service';
 import { NavController } from '@ionic/angular';
 import { LoadingController } from '@ionic/angular';
-
+import { AngularEditorConfig } from '@kolkov/angular-editor';
 
 @Component({
   selector: 'app-text',
@@ -20,12 +20,52 @@ export class TextComponent implements OnInit {
   title: any;
   description: any;
   id: any;
+  editorConfig: AngularEditorConfig = {
+    editable: true,
+    spellcheck: true,
+    height: '15rem',
+    minHeight: '5rem',
+    maxHeight: 'auto',
+    width: 'auto',
+    minWidth: '0',
+    translate: 'no',
+    enableToolbar: true,
+    showToolbar: true,
+    placeholder: 'Enter description here...',
+    defaultParagraphSeparator: '',
+    defaultFontName: '',
+    defaultFontSize: '',
+    fonts: [
+      { class: 'arial', name: 'Arial' },
+      { class: 'times-new-roman', name: 'Times New Roman' },
+      { class: 'calibri', name: 'Calibri' },
+      { class: 'comic-sans-ms', name: 'Comic Sans MS' }
+    ],
+    //   customClasses: [
+    //   {
+    //     name: 'quote',
+    //     class: 'quote',
+    //   },
+    //   {
+    //     name: 'redText',
+    //     class: 'redText'
+    //   },
+    //   {
+    //     name: 'titleText',
+    //     class: 'titleText',
+    //     tag: 'h1',
+    //   },
+    // ],
+    // uploadUrl: 'v1/image',
+    sanitize: true,
+    toolbarPosition: 'top',
+  };
   constructor(private formValue: FormBuilder,
     private serviceApi: RestApiService,
     private actroute: ActivatedRoute,
     private noti: NotificationService,
     private activeRoute: ActivatedRoute,
-    private router : Router,
+    private router: Router,
     public loadingController: LoadingController
   ) { }
 
@@ -54,13 +94,13 @@ export class TextComponent implements OnInit {
     })
 
   }
-  
+
   addText() {
-  
-   
+
+
     if (this.recordId) {
       this.serviceApi.putPromise(`text/${this.recordId}`, this.addTextForm.value).then(res => {
-        
+
         this.noti.showMsg("update Record");
         let id = this.actroute.snapshot.paramMap.get('id');
         this.serviceApi.populateSectionSubMenu(id);
@@ -69,7 +109,7 @@ export class TextComponent implements OnInit {
       })
 
     } else {
-      
+
       this.serviceApi.postPromise('text', this.addTextForm.value).then(res => {
         this.loadingController.dismiss()
         this.noti.showMsg('text Created');

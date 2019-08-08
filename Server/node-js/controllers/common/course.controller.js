@@ -30,13 +30,19 @@ const sectionDetails = async (req, res) => {
         }
     })
     const quizDetail = await Quiz.findAll({
-        where:{
+        where: {
+            sectionId: sectionId
+        },
+        group: ['title']
+    })
+    const resourceDetails = await Resource.findAll({
+        where: {
             sectionId: sectionId
         },
         group: ['title']
     })
     if (sectionDetail.length > 0) {
-        return ReS(res, { data: [...sectionDetail[0].Text,...sectionDetail[0].Lesson,...quizDetail] }, 200);
+        return ReS(res, { concept: [...sectionDetail[0].Text, ...sectionDetail[0].Lesson, ...quizDetail], resource: resourceDetails }, 200);
     } else {
         return ReS(res, { data: [] }, 200);
     }
@@ -61,7 +67,7 @@ const sectionDetailsForStudent = async (req, res) => {
         }
     })
     const quizDetail = await Quiz.findAll({
-        where:{
+        where: {
             sectionId: sectionId
         },
         group: ['title']
