@@ -14,6 +14,7 @@ export class QuizStudentComponent implements OnInit {
   quizzesArray: any = []
   optionsCopy: any = []
   user: any
+  attempted: Boolean = false;
   constructor(
     private restApi: RestApiService,
     private auth: AuthenticationService
@@ -22,13 +23,29 @@ export class QuizStudentComponent implements OnInit {
     this.user = this.auth.getSessionData().user
     this.restApi.getPromise(`quiz/${this.sectionId}/${this.recordId}`)
       .then(response => {
-        for (const item of response.data) {
-          this.quizzesArray.push({
-            id: item.id,
-            question: item.question,
-            options: JSON.parse(item.options),
-            experience: item.experience
-          })
+        debugger
+        this.attempted = response.attempted
+        if (this.attempted) {
+          
+          for (const item of response.data) {
+            this.quizzesArray.push({
+              id: item.id,
+              questionId: item.question.id,
+              correctOptions: JSON.parse(item.question.options), 
+              question: item.question.question,
+              studentOptions : JSON.parse(item.answer),
+            })
+          }
+          debugger;
+        } else {
+          for (const item of response.data) {
+            this.quizzesArray.push({
+              id: item.id,
+              question: item.question,
+              options: JSON.parse(item.options),
+              experience: item.experience
+            })
+          }
         }
       }).catch(error => {
 

@@ -29,7 +29,7 @@
                                     <ion-icon (click)="goToResource();$event.stopPropagation()" class="certificate-icon certificate-section-icon add-spacing" name="add"></ion-icon>
                                 </mat-expansion-panel-header>
                                 <!-- listData.resource -->
-                                <ion-item *ngFor="let dataRow of listResourceData | orderByDate" class="conceptGaps certificate-item certificate-section">
+                                <ion-item  *ngFor="let dataRow of listResourceData | orderByDate" class="conceptGaps certificate-item certificate-section">
                                     <ion-label (click)="gotoConceptType(dataRow)">
                                         {{dataRow.title.length > 15 ? dataRow.title.substring(0,15)+'...': dataRow.title}}
                                     </ion-label>
@@ -80,15 +80,18 @@
                                     <!-- <ion-icon (click)="goToResource();$event.stopPropagation()" class="certificate-icon certificate-section-icon add-spacing" name="add"></ion-icon> -->
                                 </mat-expansion-panel-header>
                                 <!-- listData.resource -->
-                                <ion-item class="conceptGaps certificate-item certificate-section" *ngFor="let dataRow of listResourceData | orderByDate">
-                                    <ion-label (click)="gotoConceptType(dataRow)">
-                                        <ion-icon class="checkmark-label-adjusment" name="checkmark"></ion-icon>
+                                <ng-template *ngIf="listResourceData.length > 0">
+                                    <ion-item  class="conceptGaps certificate-item certificate-section" *ngFor="let dataRow of listResourceData | orderByDate">
                                         <ion-label (click)="gotoConceptType(dataRow)">
-                                            {{dataRow.title.length > 15 ? dataRow.title.substring(0,15)+'...': dataRow.title}}
+                                            <ion-icon class="checkmark-label-adjusment" name="checkmark"></ion-icon>
+                                            <ion-label (click)="gotoConceptType(dataRow)">
+                                                {{dataRow.title.length > 15 ? dataRow.title.substring(0,15)+'...': dataRow.title}}
+                                            </ion-label>
                                         </ion-label>
-                                    </ion-label>
-    
-                                </ion-item>
+        
+                                    </ion-item>
+
+                                </ng-template>
     
                             </mat-expansion-panel>
                         </mat-accordion>

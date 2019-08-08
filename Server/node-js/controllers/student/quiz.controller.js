@@ -38,10 +38,10 @@ const getQuiz = async function (req, res) {
             }
         })
 
-        if (quizRes) return ReS(res, { data: quizRes }, 200);
+        if (quizRes) return ReS(res, { data: quizRes, attempted: false }, 200);
         else return ReE(res, { message: 'Unable to insert Course.' }, 500)
     } else {
-        if (studentAnswerResult) return ReS(res, { data: studentAnswerResult }, 200);
+        if (studentAnswerResult) return ReS(res, { data: studentAnswerResult, attempted: true }, 200);
         else return ReE(res, { message: 'Unable to insert Course.' }, 500)
     }
 
