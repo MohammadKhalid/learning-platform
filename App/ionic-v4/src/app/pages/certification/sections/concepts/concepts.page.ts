@@ -19,6 +19,7 @@ export class ConceptsPage implements OnInit {
   type: any;
   quizTitle: any;
   sectionId: any;
+  titleEmiter: any;
 
   constructor(
     private restApi: RestApiService,
@@ -60,5 +61,8 @@ export class ConceptsPage implements OnInit {
       this.selectedOption = this.restApi.getConceptsOptionsByname(type);
     }
 
+  }
+  titleEvent(title) {
+    this.titleEmiter = title;
   }
 }
