@@ -11,11 +11,11 @@
 
                     <div class="header">
                         <h3 class="title"> {{x.title}} </h3>
-                        <!-- <div class="xp">
+                        <div class="xp" *ngIf="x.Section.length > 0">
                             <h3>
-                                {{x.xp}}
+                                {{x.Section[0]?.totalExperience}}XP
                             </h3>
-                        </div> -->
+                        </div>
                     </div>
 
                     <div class="description"

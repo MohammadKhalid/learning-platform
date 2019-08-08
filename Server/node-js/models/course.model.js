@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     Model.associate = function (models) {
         this.belongsTo(models.CourseCategory, { as: 'category', foreignKey: 'categoryId' });
         this.belongsTo(models.User, { as: 'coach', foreignKey: 'createdBy' });
+        this.hasMany(models.Section, { as: 'Section', foreignKey: 'courseId' });
     };
 
 

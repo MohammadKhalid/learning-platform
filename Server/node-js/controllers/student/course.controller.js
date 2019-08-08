@@ -1,4 +1,4 @@
-const { Course, CourseCategory, StudentCourse, User } = require('../../models');
+const { Course, CourseCategory, StudentCourse, Section, User } = require('../../models');
 const { to, ReE, ReS } = require('../../services/util.service');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -48,9 +48,15 @@ const getCourses = async (req, res) => {
             model: Course,
             as: "subCategories",
             attributes: [['id', 'courseId'], 'title', 'description', 'image'],
-            where: condition
+            where: condition,
+            include: [{
+                attributes: [[Sequelize.fn('SUM', Sequelize.col('totalExperience')), 'totalExperience']],
+                model: Section,
+                as: 'Section',
+            }]
         }],
-        where: categoryCondition
+        where: categoryCondition,
+        group: ['courseId']
     })
     if (course) return ReS(res, { data: course }, 200);
     else return ReE(res, { message: 'Unable to insert Course.' }, 500)
@@ -85,8 +91,8 @@ const getUncompletedCourse = async (req, res) => {
     })
     console.log(uncompleteCourseIds.map(x => x.id))
     let uncompleteCourse = await Course.findAll({
-        attributes: [['id','courseId'],'title','description','image'],
-        where:{
+        attributes: [['id', 'courseId'], 'title', 'description', 'image'],
+        where: {
             id: uncompleteCourseIds.map(x => x.CourseId)
         }
     })
@@ -120,8 +126,8 @@ const getCompletedCourse = async (req, res) => {
     })
     console.log(completeCourseIds.map(x => x.id))
     let completeCourse = await Course.findAll({
-        attributes: [['id','courseId'],'title','description','image'],
-        where:{
+        attributes: [['id', 'courseId'], 'title', 'description', 'image'],
+        where: {
             id: completeCourseIds.map(x => x.CourseId)
         }
     })
