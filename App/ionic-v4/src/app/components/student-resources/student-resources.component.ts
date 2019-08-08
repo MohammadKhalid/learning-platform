@@ -12,17 +12,18 @@ import { NotificationService } from 'src/app/services/notification/notification.
 export class StudentResourcesComponent implements OnInit {
   @Input() sectionId
   @Input() title
-  filename : any
+  filename: any
+  fileData: any = [];
 
-  constructor(private activateroute: ActivatedRoute, private restapi: RestApiService,private notification: NotificationService) { }
+  constructor(private activateroute: ActivatedRoute, private restapi: RestApiService, private notification: NotificationService) { }
 
   ngOnInit() {
     debugger;
     if (this.sectionId && this.title)
       this.restapi.getPromise(`get-resources-for-student/${this.sectionId}/${this.title}`).then(res => {
         this.filename = res.data;
-     this.notification.showMsg('Successfully Done ')
-      }).catch(err=>{
+        this.notification.showMsg('Successfully Done ')
+      }).catch(err => {
         this.notification.showMsg('server err')
       })
   }

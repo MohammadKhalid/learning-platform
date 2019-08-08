@@ -36,7 +36,7 @@
 <!-- coach side rendering end -->
 
 <!-- student side rendering start -->
-<ion-content ion-padding class="content-black" *ngIf="user.type ==='student'">
+<ion-content ion-padding [ngClass]="{'content-black':type === 'Video'}" *ngIf="user.type ==='student'">
     <div>
         <div *ngIf="type === 'Resource'">
 
