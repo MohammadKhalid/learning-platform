@@ -9,9 +9,11 @@
                 </ion-label>
                 <ion-input type="input" formControlName='title' placeholder="Enter Title"></ion-input>
             </ion-item>
-
+            <br />
             <ion-item lines="none">
-                <angular-editor formControlName="description" [config]="editorConfig"></angular-editor>
+                <ion-label position="floating">
+                </ion-label>
+                <angular-editor id="angularEditor" formControlName="description" [config]="editorConfig"></angular-editor>
                 <!-- <ion-textarea placeholder="placeholder" rows="6" cols="20" formControlName="description"></ion-textarea> -->
             </ion-item>
 
