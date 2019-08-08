@@ -25,8 +25,7 @@ export class VideoStudentComponent implements OnInit {
 
   getById(recordId) {
     this.restApi.getPromise(`lesson/get-lesson-by-id-for-student/${recordId}`).then(res => {
-      debugger;
-      if (res.data.url.match(/(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=|\/user\/\S+|\/ytscreeningroom\?v=))([\w\-]{10,12})\b/)) {
+        if (res.data.url.match(/(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=|\/user\/\S+|\/ytscreeningroom\?v=))([\w\-]{10,12})\b/)) {
         this.titleEvent.next(res.data.title);
         let videoKey = res.data.url.match(/(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=|\/user\/\S+|\/ytscreeningroom\?v=))([\w\-]{10,12})\b/)[1];
         this.youtubeKey = `${this.youtubeUrl}${videoKey}?rel=0`;
