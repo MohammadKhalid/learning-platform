@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
         this.hasMany(models.Text, { as: 'Text', foreignKey: 'sectionId' });
         this.hasMany(models.Lesson, { as: 'Lesson', foreignKey: 'sectionId' });
         this.hasMany(models.Quiz, { as: 'Quiz', foreignKey: 'sectionId' });
+        this.hasMany(models.Resource, { as: 'Resource', foreignKey: 'sectionId' });
     };
 
 

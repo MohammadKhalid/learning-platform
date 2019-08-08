@@ -1,32 +1,70 @@
-<ion-list class="ion-padding">
-  <div *ngFor="let quizRow of quizzesArray;let quizIndex=index">
+<div *ngIf='attempted; then attemptedRow else notAttemptedRow'></div>
 
-    <ion-card class="card-sizing">
-      <ion-card-content>
-        <ion-item lines="none" class="ion-float-right ion-padding-top ques-trash-icon">
-        </ion-item>
-        <ion-item lines="inset">
-          <ion-label>
-            {{quizRow.question}}
-          </ion-label>
-        </ion-item>
-        <div *ngFor="let quizRowOption of quizRow.options;let quizIndex=index">
-          <ion-item class="option-answer">
-            <ion-checkbox class="check-box-icon" slot="start" [(ngModel)]='quizRowOption.correctOption'></ion-checkbox>
+<ng-template #notAttemptedRow>
+  <ion-list class="ion-padding">
+    <div *ngFor="let quizRow of quizzesArray;let quizIndex=index">
+
+      <ion-card class="card-sizing">
+        <ion-card-content>
+          <ion-item lines="none" class="ion-float-right ion-padding-top ques-trash-icon">
+          </ion-item>
+          <ion-item lines="inset">
             <ion-label>
-              {{quizRowOption.text}}
+              {{quizRow.question}}
             </ion-label>
           </ion-item>
-        </div>
+          <div *ngFor="let quizRowOption of quizRow.options;let quizIndex=index">
+            <ion-item class="option-answer">
+              <ion-checkbox class="check-box-icon" slot="start" [(ngModel)]='quizRowOption.correctOption'>
+              </ion-checkbox>
+              <ion-label>
+                {{quizRowOption.text}}
+              </ion-label>
+            </ion-item>
+          </div>
 
-      </ion-card-content>
-    </ion-card>
+        </ion-card-content>
+      </ion-card>
 
-  </div>
-  <ion-item lines="none" class="ion-float-right ion-padding-top">
-    <ion-button (click)="submitQuiz()" size="md">
-      <ion-icon class="save-icon-adjust" name="save"></ion-icon>
-      Submit
-    </ion-button>
-  </ion-item>
-</ion-list>
+    </div>
+    <ion-item lines="none" class="ion-float-right ion-padding-top">
+      <ion-button (click)="submitQuiz()" size="md">
+        <ion-icon class="save-icon-adjust" name="save"></ion-icon>
+        Finish
+      </ion-button>
+    </ion-item>
+  </ion-list>
+</ng-template>
+
+<ng-template #attemptedRow>
+  <ion-list class="ion-padding">
+    <div *ngFor="let questionRow of quizzesArray;let questionIndex=index">
+      <ion-card class="card-sizing">
+        <ion-card-content>
+          <ion-item lines="none" class="ion-float-right ion-padding-top ques-trash-icon">
+          </ion-item>
+          <ion-item lines="inset">
+            <ion-label>
+              Q{{questionIndex+1}}) {{questionRow.question}}
+            </ion-label>
+          </ion-item>
+          <div *ngFor="let options of questionRow.studentOptions" class="ion-padding-start">
+            <ion-item class="option-answer">
+              <ion-checkbox [(ngModel)]='options.correctOption' class="check-box-icon" disabled='true' slot="start">
+              </ion-checkbox>
+              <ion-label disabled='false'>
+                {{options.text}}
+              </ion-label>
+            </ion-item>
+          </div>
+          <ion-item lines="inset">
+            <ion-label>
+              Corretion Answer(s): {{todo(questionRow.correctOptions)}}
+            </ion-label>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+
+    </div>
+  </ion-list>
+</ng-template>
