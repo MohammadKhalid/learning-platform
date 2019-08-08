@@ -40,12 +40,15 @@
 
             <app-student-resources [sectionId]="sectionId" [title]="recordId"></app-student-resources>
         </div>
-        <!-- <app-student-text [sectionId]="sectionId"></app-student-text> -->
+        <div *ngIf="type === 'Text'">
+
+            <app-student-text [sectionId]="sectionId" [recordId]="recordId"></app-student-text>
+        </div>
         <div *ngIf="type === 'Video'">
             <app-video-student [recordId]="recordId"></app-video-student>
         </div>
         <div *ngIf="type === 'Quiz'">
-            <app-quiz-student [recordId]="recordId" [sectionId] = "sectionId"></app-quiz-student>
+            <app-quiz-student [recordId]="recordId" [sectionId]="sectionId"></app-quiz-student>
         </div>
         <!-- student content -->
     </div>
