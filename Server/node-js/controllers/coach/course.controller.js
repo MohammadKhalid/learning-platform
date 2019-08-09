@@ -79,7 +79,7 @@ const getCourse = async (req, res) => {
             where: condition,
         }],
         where: categoryCondition,
-        group: ['courseId']
+        group: ['subCategories.title']
 
     })
     if (course) return ReS(res, { data: course }, 200);

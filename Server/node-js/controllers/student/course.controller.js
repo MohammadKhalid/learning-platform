@@ -53,10 +53,12 @@ const getCourses = async (req, res) => {
                 attributes: [[Sequelize.fn('SUM', Sequelize.col('totalExperience')), 'totalExperience']],
                 model: Section,
                 as: 'Section',
-            }]
+                required: false
+            }],
+            required: false
         }],
         where: categoryCondition,
-        group: ['courseId']
+        group: ['subCategories.title']
     })
     if (course) return ReS(res, { data: course }, 200);
     else return ReE(res, { message: 'Unable to insert Course.' }, 500)

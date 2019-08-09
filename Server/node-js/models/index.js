@@ -1,9 +1,9 @@
 'use strict';
-const fs        = require('fs');
-const path      = require('path');
+const fs = require('fs');
+const path = require('path');
 const Sequelize = require('sequelize');
-const basename  = path.basename(__filename);
-const db        = {};
+const basename = path.basename(__filename);
+const db = {};
 const CONFIG = require('../config/config');
 
 const sequelize = new Sequelize(CONFIG.db_name, CONFIG.db_user, CONFIG.db_password, {
@@ -29,16 +29,16 @@ Object.keys(db).forEach((modelName) => {
   }
 });
 
-db.sync = function() {
-    // default
-    sequelize.sync({ alter: true, force: false }).then((res) => {
-      console.log('SYNC DONE');
-    }).catch((e) => {
-      console.log('ERROR SYNC');
-    });
-          
-    // deletes all tables then recreates them useful for testing and development purposes
-    // deleteAll();
+db.sync = function () {
+  // default
+  sequelize.sync({ alter: true, force: false }).then((res) => {
+    console.log('SYNC DONE');
+  }).catch((e) => {
+    console.log('ERROR SYNC');
+  });
+
+  // deletes all tables then recreates them useful for testing and development purposes
+  // deleteAll();
 }
 
 function deleteAll() {
@@ -78,35 +78,35 @@ function deleteAll() {
     ]).then((users) => {
       // default subscription packages
       db.SubscriptionPackage.bulkCreate([
-          {
-            name: 'Starter',
-            description: 'Up to 10 Individual Licenses',
-            price: 50,
-            priceBasis: 'month',
-            priceCurrency: 'AU'
-          },
-          {
-            name: 'Business',
-            description: 'Up to 10-100 Individual Licenses',
-            price: 80,
-            priceBasis: 'month',
-            priceCurrency: 'AU'
-          },
-          {
-            name: 'Pro',
-            description: 'Up to 100-500 Individual Licenses',
-            price: 100,
-            priceBasis: 'month',
-            priceCurrency: 'AU'
-          },
-          {
-            name: 'Elite',
-            description: 'Up to 500-5000 Individual Licenses',
-            price: 40,
-            priceBasis: 'month',
-            priceCurrency: 'AU'
-          }
-        ]
+        {
+          name: 'Starter',
+          description: 'Up to 10 Individual Licenses',
+          price: 50,
+          priceBasis: 'month',
+          priceCurrency: 'AU'
+        },
+        {
+          name: 'Business',
+          description: 'Up to 10-100 Individual Licenses',
+          price: 80,
+          priceBasis: 'month',
+          priceCurrency: 'AU'
+        },
+        {
+          name: 'Pro',
+          description: 'Up to 100-500 Individual Licenses',
+          price: 100,
+          priceBasis: 'month',
+          priceCurrency: 'AU'
+        },
+        {
+          name: 'Elite',
+          description: 'Up to 500-5000 Individual Licenses',
+          price: 40,
+          priceBasis: 'month',
+          priceCurrency: 'AU'
+        }
+      ]
       ).then((packages) => {
         // package modules
         db.Module.bulkCreate([
@@ -138,7 +138,7 @@ function deleteAll() {
         var c = new Date(year + 3, month, day);
 
         users.forEach((user) => {
-          if(user.type === 'client') {
+          if (user.type === 'client') {
             db.Subscription.create({
               subscriptionPackageId: 1,
               startedAt: d,
@@ -146,7 +146,7 @@ function deleteAll() {
               userId: user.id
             }).then((subscription) => {
               // add client subscription
-              
+
             });
           }
         });
