@@ -53,17 +53,16 @@ export class SectionsPage implements OnInit {
     });
     //student menu popupate end
 
-    this.menu.enable(false);
-    this.menu.enable(false, 'mainMenu')
+    
 
   }
 
-  ngAfterViewInit() {
-    setInterval(() => {
-      this.menu.enable(false);
-      this.menu.enable(false, 'mainMenu')
-    }, 100)
-  }
+  // ngAfterViewInit() {
+  //   setInterval(() => {
+  //     this.menu.enable(false);
+  //     this.menu.enable(false, 'mainMenu')
+  //   }, 100)
+  // }
   back() {
     this.menu.enable(true, 'mainMenu')
   }
