@@ -15,14 +15,14 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: 'Resource'
         },
-        sectionId: {
+        sectionPageId: {
             type: DataTypes.INTEGER,
             allowNull: false
         }
     });
 
     Model.associate = function (models) {
-        this.belongsTo(models.Section, { as: 'section', foreignKey: 'sectionId' });
+        this.belongsTo(models.SectionPage, { as: 'section', foreignKey: 'sectionPageId' });
     };
 
 
