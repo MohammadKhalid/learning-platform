@@ -13,8 +13,7 @@ const LiveGroupTrainingController = require(controllerPath + 'live-group-trainin
 const courseContoller = require(controllerPath + 'course.controller');
 const quizController = require(controllerPath + 'quiz.controller');
 
-const courseCategoryController = require('../../controllers/common/course.controller');
-const commonSectionController = require('../../controllers/common/section.controller');
+const commonController = require('../../controllers/common/common.controller');
 const lessonController = require('../../controllers/student/lesson.controller');
 const textController = require('../../controllers/student/text.controller');
 const resourceController = require('../../controllers/student/resource.controller');
@@ -91,7 +90,7 @@ liveGroupTrainingRoutes.get('/:item_id', LiveGroupTrainingController.get);
 const courseCategory = express.Router();
 studentRouter.use('/course-category', courseCategory)
 
-courseCategory.get('/get-all/:userId', courseCategoryController.getAll)
+courseCategory.get('/get-all/:userId', commonController.getAll)
 
 //quiz
 
@@ -114,9 +113,9 @@ course.get('/completed-courses', courseContoller.getCompletedCourse)
 // section
 const section = express.Router();
 studentRouter.use('/section', section)
-section.get('/get-sections/:courseId', commonSectionController.getSections)
+// section.get('/get-sections/:courseId', commonController.getSections)
 
-section.get('/get-section-details-for-student/:sectionId', courseCategoryController.sectionDetailsForStudent)
+section.get('/get-section-details-for-student/:sectionId', commonController.sectionDetailsForStudent)
 
 
 // lessons

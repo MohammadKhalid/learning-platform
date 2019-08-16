@@ -44,8 +44,7 @@ const textController = require(controllerPath + 'text.controller');
 const resourceController = require(controllerPath + 'resource.controller');
 const quizController = require(controllerPath + 'quiz.controller');
 const sectionPageController = require(controllerPath + 'sectionPage.controller');
-const courseCategoryController = require('../../controllers/common/course.controller');
-const commonSectionController = require('../../controllers/common/section.controller');
+const commonController = require('../../controllers/common/common.controller');
 
 // dashboard
 coachRouter.get('/dashboard', HomeController.dashboard);
@@ -117,7 +116,7 @@ liveGroupTrainingRoutes.delete('/:item_id', LiveGroupTrainingController.remove);
 const courseCategory = express.Router();
 coachRouter.use('/course-category', courseCategory)
 
-courseCategory.get('/get-all/:userId', courseCategoryController.getAll)
+courseCategory.get('/get-all/:userId', commonController.getAll)
 
 //course 
 
@@ -127,14 +126,14 @@ coachRouter.use('/course', courseRoute)
 courseRoute.post('/', CertificationUpload, courseController.create)
 courseRoute.get('/get-coaches-course', courseController.getCourse)
 
-// Section
+// SectionPage
 const sectionPageRoute = express.Router();
 coachRouter.use('/section-page', sectionPageRoute)
 
 sectionPageRoute.post('/', sectionPageController.create)
-// sectionPageRoute.get('/get-sections/:courseId', sectionPageController.getSections)
-// sectionPageRoute.put('/:sectionId', sectionPageController.updateSection)
-// sectionPageRoute.delete('/:sectionId', sectionPageController.removeSection)
+sectionPageRoute.get('/get-section-pages/:sectionId', commonController.getSideMenuItems)
+sectionPageRoute.put('/:sectionPageId', sectionPageController.updateSectionPage)
+sectionPageRoute.delete('/:sectionPageId', sectionPageController.removeSectionPage)
 
 
 // Section
@@ -142,11 +141,11 @@ const sectionRoute = express.Router();
 coachRouter.use('/section', sectionRoute)
 
 sectionRoute.post('/', sectionController.create)
-sectionRoute.get('/get-sections/:courseId', commonSectionController.getSections)
+sectionRoute.get('/get-sections/:courseId', commonController.getSections)
 sectionRoute.put('/:sectionId', sectionController.updateSection)
 sectionRoute.delete('/:sectionId', sectionController.removeSection)
 
-sectionRoute.get('/get-section-details/:sectionId', courseCategoryController.sectionDetails)
+// sectionRoute.get('/get-section-details/:sectionId', commonController.sectionDetails)
 
 
 // lessons
