@@ -115,7 +115,12 @@ const getSideMenuItems = async (req, res) => {
             sectionId: sectionId
         }
     })
-    if (sectionpage) return ReS(res, { concept: sectionpage, resource: [] }, 200);
+    const resources = await Resource.findAll({
+        where: {
+            sectionPageId: sectionId
+        }
+    })
+    if (sectionpage) return ReS(res, { concept: sectionpage, resource: resources }, 200);
     else return ReE(res, { message: 'Unable to get Section Page.' }, 500)
 }
 module.exports.getSideMenuItems = getSideMenuItems;
