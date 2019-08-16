@@ -1,17 +1,10 @@
-<!-- <ion-header no-border>
-        <ion-toolbar color="primary">
-                  <ion-title>{{titleEmiter}}</ion-title>
-        </ion-toolbar>
-      </ion-header> -->
-
 <!-- coach side rendering start -->
 <div *ngIf="user.type ==='coach'">
     <div class="ion-padding">
         <ion-card>
             <ion-card-content>
                 <mat-select [(ngModel)]="selectedOption" placeholder="Select option">
-                    <mat-option *ngFor='let option of conceptOptions' [disabled]="recordId ? true : false"
-                        [value]='option.id'>{{option.value}}</mat-option>
+                    <mat-option *ngFor='let option of conceptOptions' [disabled]="recordId ? true : false" [value]='option.id'>{{option.value}}</mat-option>
                 </mat-select>
             </ion-card-content>
         </ion-card>
