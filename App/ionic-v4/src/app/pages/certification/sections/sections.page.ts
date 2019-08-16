@@ -38,6 +38,7 @@ export class SectionsPage implements OnInit {
     //coach menu popupate start
     this.subscription = this.apiSrv.getSectionMenuData().subscribe(res => {
       if (res) {
+        debugger
         res.concept ? this.listData = res.concept : '';
         res.resource ? this.listResourceData = res.resource : '';
       }
