@@ -6,10 +6,9 @@ var path = require('path');
 
 
 const getSectionResourcesForStudent = async function (req, res) {
-    let { sectionId, title } = req.params
+    let { sectionId } = req.params
     const resources = await Resource.findAll({
         where: {
-            title: title,
             sectionId: sectionId
         }
     })
@@ -19,16 +18,16 @@ const getSectionResourcesForStudent = async function (req, res) {
 }
 module.exports.getSectionResourcesForStudent = getSectionResourcesForStudent;
 
-const getResourcesForStudent = async function (req, res) {
-    let { sectionId } = req.params
-    const resources = await Resource.findAll({
-        where: {
-            sectionId: sectionId,
-        },
-        group: ['title']
-    })
+// const getResourcesForStudent = async function (req, res) {
+//     let { sectionId } = req.params
+//     const resources = await Resource.findAll({
+//         where: {
+//             sectionId: sectionId,
+//         },
+//         group: ['title']
+//     })
 
-    if (resources) return ReS(res, { data: resources }, 200);
-    else return ReE(res, { message: 'Unable to get resources.' }, 500)
-}
-module.exports.getResourcesForStudent = getResourcesForStudent;
+//     if (resources) return ReS(res, { data: resources }, 200);
+//     else return ReE(res, { message: 'Unable to get resources.' }, 500)
+// }
+// module.exports.getResourcesForStudent = getResourcesForStudent;

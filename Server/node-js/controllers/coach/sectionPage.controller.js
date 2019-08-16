@@ -1,47 +1,43 @@
-const { Section, Course } = require('../../models');
+const { Section, Course, SectionPage } = require('../../models');
 const { to, ReE, ReS } = require('../../services/util.service');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 
 const create = async (req, res) => {
-    let { title, description, totalExperience, courseId } = req.body
-    const section = await Section.create({
+    let { title, sectionId } = req.body
+    const sectionpage = await SectionPage.create({
         title: title,
-        description: description,
-        totalExperience: totalExperience,
-        courseId: courseId,
+        sectionId: sectionId
     })
-    if (section) return ReS(res, { data: section }, 200);
-    else return ReE(res, { message: 'Unable to insert Course.' }, 500)
+    if (sectionpage) return ReS(res, { data: sectionpage }, 200);
+    else return ReE(res, { message: 'Unable to insert Section Page.' }, 500)
 }
 module.exports.create = create;
 
-const removeSection = async (req, res) => {
-    let { sectionId } = req.params
-    const section = await Section.destroy({
+const removeSectionPage = async (req, res) => {
+    let { sectionPageId } = req.params
+    const sectionpage = await SectionPage.destroy({
         where: {
-            id: sectionId
+            id: sectionPageId
         }
     })
-    if (section) return ReS(res, { data: section }, 200);
-    else return ReE(res, { message: 'Unable to insert Course.' }, 500)
+    if (sectionpage) return ReS(res, { data: sectionpage }, 200);
+    else return ReE(res, { message: 'Unable to delete ' }, 500)
 }
-module.exports.removeSection = removeSection;
+module.exports.removeSectionPage = removeSectionPage;
 
-const updateSection = async (req, res) => {
-    let { sectionId } = req.params
-    let { title, description, totalExperience } = req.body
-    const course = await Section.update({
+const updateSectionPage = async (req, res) => {
+    let { sectionPageId } = req.params
+    let { title } = req.body
+    const course = await SectionPage.update({
         title: title,
-        description: description,
-        totalExperience: totalExperience,
     }, {
-        where: {
-            id: sectionId
-        }
-    })
+            where: {
+                id: sectionPageId
+            }
+        })
     if (course) return ReS(res, { data: course }, 200);
     else return ReE(res, { message: 'Unable to insert Course.' }, 500)
 }
-module.exports.updateSection = updateSection;
+module.exports.updateSectionPage = updateSectionPage;
