@@ -18,7 +18,7 @@ apiRoutes.get('/', function(req, res, next) {
 const VideoController = require('../../controllers/video.controller');
 
 apiRoutes.use('/img',  express.static(path.join(__dirname, '/../public/img')));
-apiRoutes.get('/uploads/:folder/:filename', VideoController.get);
+// apiRoutes.get('/uploads/:folder/:filename', VideoController.get);  
 // user
 apiRoutes.use("/auth", require("./auth"));
 
