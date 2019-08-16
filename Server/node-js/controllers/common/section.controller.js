@@ -3,7 +3,7 @@ const { to, ReE, ReS } = require('../../services/util.service');
 const Op = Sequelize.Op;
 
 
-const getSections = async (req, res) => {
+const getCoachSections = async (req, res) => {
     let { courseId } = req.params
     const section = await Section.findAll({
         attributes: ['id', 'title', 'description', 'totalExperience'],
@@ -19,4 +19,4 @@ const getSections = async (req, res) => {
     if (section) return ReS(res, { data: section }, 200);
     else return ReE(res, { message: 'Unable to insert Course.' }, 500)
 }
-module.exports.getSections = getSections;
+module.exports.getCoachSections = getCoachSections;
