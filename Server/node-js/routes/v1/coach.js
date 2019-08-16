@@ -176,7 +176,7 @@ coachRouter.use('/resource', resourceRoutes)
 
 resourceRoutes.post('/', resourcesUpload, resourceController.create)
 // resourceRoutes.get('/get-section-resources/:sectionId/:title', resourceController.getSectionResources)
-resourceRoutes.get('/get-resources/:sectionId', resourceController.getResources)
+resourceRoutes.get('/get-resources/:sectionPageId', resourceController.getResources)
 // resourceRoutes.put('/update-section-resources', resourcesUpload, resourceController.updateResource)
 resourceRoutes.delete('/:resourceId/:filename', resourceController.remove)
 

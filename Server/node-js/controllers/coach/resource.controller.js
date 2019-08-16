@@ -5,11 +5,11 @@ var path = require('path');
 
 const create = async function (req, res) {
 
-    let { sectionId } = req.body
+    let { sectionPageId } = req.body
     let bulkObj = req.files.map(fileItem => {
         return {
-            sectionId: sectionId,
-            url: fileItem.filename
+            sectionPageId: sectionPageId,
+            title: fileItem.filename
         }
     })
     const resources = await Resource.bulkCreate(bulkObj)

@@ -3,7 +3,7 @@ const { TE, to } = require('../services/util.service');
 module.exports = (sequelize, DataTypes) => {
     var Model = sequelize.define('Resource', {
         
-        url: {
+        title: {
             type: DataTypes.STRING,
             allowNull: false
         },

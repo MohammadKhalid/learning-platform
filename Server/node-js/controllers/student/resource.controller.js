@@ -9,7 +9,7 @@ const getSectionResourcesForStudent = async function (req, res) {
     let { sectionId } = req.params
     const resources = await Resource.findAll({
         where: {
-            sectionId: sectionId
+            sectionPageId: sectionId
         }
     })
 
