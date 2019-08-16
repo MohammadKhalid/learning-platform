@@ -139,7 +139,7 @@ textRoutes.get('/get-text-by-id-for-student/:id', textController.getTextByIdForS
 const resourceRoutes = express.Router();
 studentRouter.use('/resource', resourceRoutes)
 
-resourceRoutes.get('/get-resources-for-student/:sectionId/:title', resourceController.getSectionResourcesForStudent)
+resourceRoutes.get('/get-resources-for-student/:sectionId', resourceController.getSectionResourcesForStudent)
 
 
 
