@@ -23,7 +23,7 @@ export class AddmodulePage implements OnInit {
     private service: RestApiService,
     private authService: AuthenticationService,
     private notifictation: NotificationService) { }
-  data: any = [];
+  data: any[] = [];
   serverUrl: string = "./assets/img/";
   forms: FormGroup
   ngOnInit() {
@@ -38,14 +38,14 @@ export class AddmodulePage implements OnInit {
       ])),
       courseId: this.id
     })
-
-    console.log(this.actroute.snapshot.paramMap.get('id'));
+ 
 
     this.service.getPromise('section/get-sections', this.id).then(res => {
+      debugger;
       this.data = res.data;
-      
-    }).catch(err => {
 
+    }).catch(err => {
+      debugger
     })
 
   }

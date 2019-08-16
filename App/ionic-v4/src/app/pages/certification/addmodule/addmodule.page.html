@@ -11,48 +11,52 @@
 </ion-header>
 
 <ion-content padding>
-    <div class="card-main" *ngFor="let x of data">
-        <ion-card [routerLink]="['/certification/sections/concepts',x.id]">
-            <ion-item lines="none" class="item" no-padding class="itemN">
+    <div *ngIf="data.length > 0">
+        <div class="card-main" *ngFor="let x of data">
+            <ion-card [routerLink]="['/certification/sections/concepts',x.id]">
+                <ion-item lines="none" class="item" no-padding class="itemN">
 
-                <ion-label class="content" padding>
+                    <ion-label class="content" padding>
 
-                    <div class="header">
+                        <div class="header">
 
-                        <h3 class="title">{{x.title | titlecase}} </h3>
-                        <div class="xp">
-                            <h3>
-                                {{x.totalExperience}}XP
-                            </h3>
-                        </div>
-                    </div>
-
-                    <div class="mainDiv">
-                        <div class="description"
-                            style="-webkit-box-orient: vertical;box-orient: vertical;-moz-box-orient: vertical;">
-                            <p>
-                                {{x.description}}
-                            </p>
-
-                        </div>
-                        <div class="circle">
-                            <circle-progress [percent]="50" [maxPercent]="x.totalExperience" [radius]="30"
-                                [showTitle]="false" [showSubtitle]="false" [outerStrokeWidth]="10"
-                                [innerStrokeWidth]="10" [outerStrokeColor]="'#0065b3'" [innerStrokeColor]="'#d6d7db'"
-                                [animation]="true" [animationDuration]="100"></circle-progress>
+                            <h3 class="title">{{x.title | titlecase}} </h3>
+                            <div class="xp">
+                                <h3>
+                                    {{x.totalExperience}}XP
+                                </h3>
+                            </div>
                         </div>
 
-                    </div>
-                    <div class="btnbtn">
-                        <ion-button size="small" class="ionBtn" fill="outline">Start Lesson</ion-button>
+                        <div class="mainDiv">
+                            <div class="description"
+                                style="-webkit-box-orient: vertical;box-orient: vertical;-moz-box-orient: vertical;">
+                                <p>
+                                    {{x.description}}
+                                </p>
 
-                    </div>
-                </ion-label>
-            </ion-item>
+                            </div>
+                            <div class="circle">
+                                <circle-progress [percent]="50" [maxPercent]="x.totalExperience" [radius]="30"
+                                    [showTitle]="false" [showSubtitle]="false" [outerStrokeWidth]="10"
+                                    [innerStrokeWidth]="10" [outerStrokeColor]="'#0065b3'"
+                                    [innerStrokeColor]="'#d6d7db'" [animation]="true" [animationDuration]="100">
+                                </circle-progress>
+                            </div>
 
-        </ion-card>
+                        </div>
+                        <div class="btnbtn">
+                            <ion-button size="small" class="ionBtn" fill="outline">Start Lesson</ion-button>
 
+                        </div>
+                    </ion-label>
+                </ion-item>
+
+            </ion-card>
+
+        </div>
     </div>
+
     <div *ngIf="user.type == 'coach'">
         <div *ngIf="addModelbutton" [ngClass]="{'container4':data.length == 0,'container3':data.length > 0}"
             (click)="loadmoduledetail()">
@@ -79,7 +83,8 @@
                     <ion-label position="floating"> Total Experience
                         <ion-text color="danger">*</ion-text>
                     </ion-label>
-                    <ion-input type="input" formControlName="totalExperience" placeholder="Total Experience"></ion-input>
+                    <ion-input type="input" formControlName="totalExperience" placeholder="Total Experience">
+                    </ion-input>
                 </ion-item>
 
 
