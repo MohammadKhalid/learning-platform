@@ -43,6 +43,7 @@ const lessonController = require(controllerPath + 'lesson.controller');
 const textController = require(controllerPath + 'text.controller');
 const resourceController = require(controllerPath + 'resource.controller');
 const quizController = require(controllerPath + 'quiz.controller');
+const sectionPageController = require(controllerPath + 'sectionPage.controller');
 const courseCategoryController = require('../../controllers/common/course.controller');
 const commonSectionController = require('../../controllers/common/section.controller');
 
@@ -125,6 +126,16 @@ coachRouter.use('/course', courseRoute)
 
 courseRoute.post('/', CertificationUpload, courseController.create)
 courseRoute.get('/get-coaches-course', courseController.getCourse)
+
+// Section
+const sectionPageRoute = express.Router();
+coachRouter.use('/section-page', sectionPageRoute)
+
+sectionPageRoute.post('/', sectionPageController.create)
+// sectionPageRoute.get('/get-sections/:courseId', sectionPageController.getSections)
+// sectionPageRoute.put('/:sectionId', sectionPageController.updateSection)
+// sectionPageRoute.delete('/:sectionId', sectionPageController.removeSection)
+
 
 // Section
 const sectionRoute = express.Router();

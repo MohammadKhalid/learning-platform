@@ -1,134 +1,133 @@
 <ion-header no-border>
-        <ion-toolbar color="primary">
-    
-    
-            <ion-title>Sections</ion-title>
-            <ion-buttons slot="start">
-                <ion-back-button defaultHref="/certification/moduledetail" (click)="back()"></ion-back-button>
-    
-            </ion-buttons>
-        </ion-toolbar>
-    </ion-header>
-    
-    <ion-content no-padding>
-        <mat-drawer-container class="example-container">
-            <mat-drawer mode="side" opened class="certificate-Sbar">
-                <div *ngIf="user.type == 'coach'; then coach else student"></div>
-                <ng-template #coach>
-                    <ion-item lines="none" class="certificate-item bordersSearch">
-                        <ion-input class="send-box" type="text" placeholder="SEARCH" [(ngModel)]="searchBy"></ion-input>
-                        <ion-icon name="search" class="icon-color certificate-icon certificate-section-icon"></ion-icon>
-                    </ion-item>
-                    <ion-list lines="none">
-                        <mat-accordion>
-                            <mat-expansion-panel class="mat-accordation" (opened)="panelResourceOpenState = true" (closed)="panelResourceOpenState = false">
-                                <mat-expansion-panel-header class="bordersConcepts">
-                                    <mat-panel-title class="certificate-item">
-                                        <ion-label> RESOURCES</ion-label>
-                                    </mat-panel-title>
-                                    <ion-icon (click)="goToResource();$event.stopPropagation()" class="certificate-icon certificate-section-icon add-spacing" name="add"></ion-icon>
-                                </mat-expansion-panel-header>
-                                <!-- listData.resource -->
-                                <ion-item  *ngFor="let dataRow of listResourceData | orderByDate" class="conceptGaps certificate-item certificate-section">
-                                    <ion-label (click)="gotoConceptType(dataRow)">
-                                        {{dataRow.title.length > 15 ? dataRow.title.substring(0,15)+'...': dataRow.title}}
-                                    </ion-label>
-    
-                                    <ion-icon href="#" class="certificate-icon certificate-section-icon" name="trash">
-                                    </ion-icon>
-                                </ion-item>
-    
-                            </mat-expansion-panel>
-                        </mat-accordion>
-                        <mat-accordion>
-                            <mat-expansion-panel class="mat-accordation" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
-                                <mat-expansion-panel-header class="bordersConcepts">
-                                    <mat-panel-title class="certificate-item">
-                                        <ion-label> CONCEPTS</ion-label>
-                                    </mat-panel-title>
-                                    <!--  -->
-                                    <ion-icon (click)="goToConcept();$event.stopPropagation()" class="certificate-icon certificate-section-icon add-spacing" name="add"></ion-icon>
-                                </mat-expansion-panel-header>
-    
-                                <ion-item *ngFor="let dataRow of listData | orderByDate" class="conceptGaps certificate-item certificate-section">
-                                    <ion-label (click)="gotoConceptType(dataRow)">
-                                        {{dataRow.title.length > 15 ? dataRow.title.substring(0,15)+'...': dataRow.title}}
-                                    </ion-label>
-    
-                                    <ion-icon href="#" class="certificate-icon certificate-section-icon" name="trash">
-                                    </ion-icon>
-                                </ion-item>
-    
-                            </mat-expansion-panel>
-                        </mat-accordion>
-    
-                    </ion-list>
-                </ng-template>
-                <!-- student type -->
-                <ng-template #student>
-                    <ion-item lines="none" class="certificate-item bordersSearch">
-                        <ion-input class="send-box" type="text" placeholder="SEARCH" [(ngModel)]="searchBy"></ion-input>
-                        <ion-icon name="search" class="icon-color certificate-icon certificate-section-icon"></ion-icon>
-                    </ion-item>
-                    <ion-list lines="none">
-                        <mat-accordion>
-                            <mat-expansion-panel class="mat-accordation" (opened)="panelResourceOpenState = true" (closed)="panelResourceOpenState = false">
-                                <mat-expansion-panel-header class="bordersConcepts resource-alignment">
-                                    <mat-panel-title class="certificate-item">
-                                        <ion-label> RESOURCES</ion-label>
-                                    </mat-panel-title>
-                                    <!-- <ion-icon (click)="goToResource();$event.stopPropagation()" class="certificate-icon certificate-section-icon add-spacing" name="add"></ion-icon> -->
-                                </mat-expansion-panel-header>
-                                <!-- listData.resource -->
-                                <ng-template *ngIf="listResourceData.length > 0">
-                                    <ion-item  class="conceptGaps certificate-item certificate-section" *ngFor="let dataRow of listResourceData | orderByDate">
-                                        <ion-label (click)="gotoConceptType(dataRow)">
-                                            <ion-icon class="checkmark-label-adjusment" name="checkmark"></ion-icon>
-                                            <ion-label (click)="gotoConceptType(dataRow)">
-                                                {{dataRow.title.length > 15 ? dataRow.title.substring(0,15)+'...': dataRow.title}}
-                                            </ion-label>
-                                        </ion-label>
-        
-                                    </ion-item>
+    <ion-toolbar color="primary">
 
-                                </ng-template>
-    
-                            </mat-expansion-panel>
-                        </mat-accordion>
-    
-                        <mat-accordion>
-                            <mat-expansion-panel class="mat-accordation" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
-                                <mat-expansion-panel-header class="bordersConcepts resource-header-border">
-                                    <mat-panel-title no-padding class="certificate-item">
-                                        <ion-label> CONCEPTS</ion-label>
-                                    </mat-panel-title>
-    
-                                </mat-expansion-panel-header>
-    
-                                <ion-item no-padding class="conceptGaps certificate-item certificate-section" *ngFor="let dataRow of listData | orderByDate">
+
+        <ion-title>Sections</ion-title>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/certification/moduledetail" (click)="back()"></ion-back-button>
+
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content no-padding>
+    <mat-drawer-container class="example-container">
+        <mat-drawer mode="side" opened class="certificate-Sbar">
+            <div *ngIf="user.type == 'coach'; then coach else student"></div>
+            <ng-template #coach>
+                <ion-item lines="none" class="certificate-item bordersSearch">
+                    <ion-input class="send-box" type="text" placeholder="SEARCH" [(ngModel)]="searchBy"></ion-input>
+                    <ion-icon name="search" class="icon-color certificate-icon certificate-section-icon"></ion-icon>
+                </ion-item>
+                <ion-list lines="none">
+                    <mat-accordion>
+                        <mat-expansion-panel class="mat-accordation" (opened)="panelResourceOpenState = true" (closed)="panelResourceOpenState = false">
+                            <mat-expansion-panel-header class="bordersConcepts">
+                                <mat-panel-title class="certificate-item">
+                                    <ion-label> RESOURCES</ion-label>
+                                </mat-panel-title>
+                                <ion-icon (click)="goToResource();$event.stopPropagation()" class="certificate-icon certificate-section-icon add-spacing" name="add"></ion-icon>
+                            </mat-expansion-panel-header>
+                            <!-- listData.resource -->
+                            <ion-item *ngFor="let dataRow of listResourceData | orderByDate | filter : searchBy" class="conceptGaps certificate-item certificate-section">
+                                <ion-label (click)="gotoConceptType(dataRow)">
+                                    {{dataRow.title.length > 15 ? dataRow.title.substring(0,15)+'...': dataRow.title}}
+                                </ion-label>
+
+                                <ion-icon href="#" class="certificate-icon certificate-section-icon" name="trash">
+                                </ion-icon>
+                            </ion-item>
+
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                    <mat-accordion>
+                        <mat-expansion-panel class="mat-accordation" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                            <mat-expansion-panel-header class="bordersConcepts">
+                                <mat-panel-title class="certificate-item">
+                                    <ion-label> CONCEPTS</ion-label>
+                                </mat-panel-title>
+                                <!--  -->
+                                <ion-icon (click)="goToConcept();$event.stopPropagation()" class="certificate-icon certificate-section-icon add-spacing" name="add"></ion-icon>
+                            </mat-expansion-panel-header>
+
+                            <ion-item *ngFor="let dataRow of listData | orderByDate | filter : searchBy" class="conceptGaps certificate-item certificate-section">
+                                <ion-label (click)="gotoConceptType(dataRow)">
+                                    {{dataRow.title.length > 15 ? dataRow.title.substring(0,15)+'...': dataRow.title}}
+                                </ion-label>
+
+                                <ion-icon href="#" class="certificate-icon certificate-section-icon" name="trash">
+                                </ion-icon>
+                            </ion-item>
+
+                        </mat-expansion-panel>
+                    </mat-accordion>
+
+                </ion-list>
+            </ng-template>
+            <!-- student type -->
+            <ng-template #student>
+                <ion-item lines="none" class="certificate-item bordersSearch">
+                    <ion-input class="send-box" type="text" placeholder="SEARCH" [(ngModel)]="searchBy"></ion-input>
+                    <ion-icon name="search" class="icon-color certificate-icon certificate-section-icon"></ion-icon>
+                </ion-item>
+                <ion-list lines="none">
+                    <mat-accordion>
+                        <mat-expansion-panel class="mat-accordation" (opened)="panelResourceOpenState = true" (closed)="panelResourceOpenState = false">
+                            <mat-expansion-panel-header class="bordersConcepts resource-alignment">
+                                <mat-panel-title class="certificate-item">
+                                    <ion-label> RESOURCES</ion-label>
+                                </mat-panel-title>
+                                <!-- <ion-icon (click)="goToResource();$event.stopPropagation()" class="certificate-icon certificate-section-icon add-spacing" name="add"></ion-icon> -->
+                            </mat-expansion-panel-header>
+                            <!-- listData.resource -->
+                            <ion-item class="conceptGaps certificate-item certificate-section" *ngFor="let dataRow of listResourceData | orderByDate | filter : searchBy">
+
+                                <ion-label (click)="gotoConceptType(dataRow)">
                                     <ion-icon class="checkmark-label-adjusment" name="checkmark"></ion-icon>
                                     <ion-label (click)="gotoConceptType(dataRow)">
                                         {{dataRow.title.length > 15 ? dataRow.title.substring(0,15)+'...': dataRow.title}}
                                     </ion-label>
-                                </ion-item>
-    
-    
-    
-    
-                            </mat-expansion-panel>
-                        </mat-accordion>
-                    </ion-list>
-                </ng-template>
-    
-            </mat-drawer>
-    
-    
-    
-    
-            <mat-drawer-content class="mat-darawer1">
-    
-                <router-outlet></router-outlet>
-            </mat-drawer-content>
-        </mat-drawer-container>
-    
-    </ion-content>
+                                </ion-label>
+
+                            </ion-item>
+
+
+                        </mat-expansion-panel>
+                    </mat-accordion>
+
+                    <mat-accordion>
+                        <mat-expansion-panel class="mat-accordation" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                            <mat-expansion-panel-header class="bordersConcepts resource-header-border">
+                                <mat-panel-title no-padding class="certificate-item">
+                                    <ion-label> CONCEPTS</ion-label>
+                                </mat-panel-title>
+
+                            </mat-expansion-panel-header>
+
+                            <ion-item no-padding class="conceptGaps certificate-item certificate-section" *ngFor="let dataRow of listData | orderByDate | filter : searchBy">
+                                <ion-icon class="checkmark-label-adjusment" name="checkmark"></ion-icon>
+                                <ion-label (click)="gotoConceptType(dataRow)">
+                                    {{dataRow.title.length > 15 ? dataRow.title.substring(0,15)+'...': dataRow.title}}
+                                </ion-label>
+                            </ion-item>
+
+
+
+
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </ion-list>
+            </ng-template>
+
+        </mat-drawer>
+
+
+
+
+        <mat-drawer-content class="mat-darawer1">
+
+            <router-outlet></router-outlet>
+        </mat-drawer-content>
+    </mat-drawer-container>
+
+</ion-content>

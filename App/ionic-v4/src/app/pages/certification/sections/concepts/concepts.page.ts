@@ -42,15 +42,12 @@ export class ConceptsPage implements OnInit {
     let id = this.sectionId = this.actRoute.snapshot.paramMap.get('id');
     this.recordId = this.actRoute.snapshot.paramMap.get('recordid');
     let type = this.type = this.actRoute.snapshot.paramMap.get('type');
-    debugger;
     this.restApi.sectionId = id;
-    if(this.user.type === 'coach'){
+    if (this.user.type === 'coach') {
       this.restApi.populateSectionSubMenu(id);
-      this.restApi.populateSectionSubMenuResource(id);
     }
-    else if( this.user.type === 'student'){
+    else if (this.user.type === 'student') {
       this.restApi.populateSectionSubMenuStudent(id);
-      this.restApi.populateSectionSubMenuResourceStudent(id);
     }
 
     // this.restApi.getPromise(`section/get-section-details`, id).then(res => {

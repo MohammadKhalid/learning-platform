@@ -5,7 +5,6 @@
                 <ion-item lines="none" class="item">
                     <div class="mainDiv">
                         <div class="fileName">
-                            <!-- <ion-icon name="{{show(filename.url)}}"></ion-icon> -->
                             <h4>{{filename.url}}</h4>
                         </div>
                         <div>
@@ -31,7 +30,9 @@
 
     <app-dropzone (eventBtnSubmit)="eventBtnSubmit($event)"></app-dropzone>
     <ion-item lines="none" class="ion-float-right">
-        <ion-button (click)="upload()" [disabled]="btnTxt == 'Save' ? (submitBtn || title == '') : (fileData.length < 0 ||  title == '')" size="md">{{btnTxt}}</ion-button>
+        <ion-button (click)="upload()"
+            [disabled]="btnTxt == 'Save' ? (submitBtn || title == '') : (fileData.length < 0 ||  title == '')"
+            size="md">{{btnTxt}}</ion-button>
     </ion-item>
-    
+
 </form>

@@ -24,46 +24,46 @@ export class SectionsPage implements OnInit {
   private subscription: Subscription;
   private subscriptionResource: Subscription;
   public items: any;
-  listData: any;
+  listData: any = [];
   listResourceData: any = [];
   id: any
 
-  searchBy: string;
+  searchBy: string = "";
   panelOpenState = false;
   panelResourceOpenState = false;
 
   ngOnInit() {
+    this.searchBy = "";
     this.user = this.authService.getSessionData().user;
     //coach menu popupate start
-    this.subscription = this.apiSrv.getSectionMenuData().subscribe(value => {
-      value ? this.listData = value : '';
-    });
-    this.subscriptionResource = this.apiSrv.getSectionMenuDataResource().subscribe(value => {
-      value ? this.listResourceData = value : '';
+    this.subscription = this.apiSrv.getSectionMenuData().subscribe(res => {
+      if (res) {
+        debugger
+        res.concept ? this.listData = res.concept : '';
+        res.resource ? this.listResourceData = res.resource : '';
+      }
     });
     //coach menu popupate end
 
     //student menu popupate start
-    this.subscription = this.apiSrv.getSectionMenuDataStudent().subscribe(value => {
-      value ? this.listData = value : '';
-    });
-    this.subscriptionResource = this.apiSrv.getSectionMenuDataResourceStudent().subscribe(value => {
-      value ? this.listResourceData = value : '';
+    this.subscription = this.apiSrv.getSectionMenuDataStudent().subscribe(res => {
+      if (res) {
+        res.concept ? this.listData = res.concept : '';
+        res.resource ? this.listResourceData = res.resource : '';
+      }
     });
     //student menu popupate end
 
-
-    this.menu.enable(false);
-    this.menu.enable(false, 'mainMenu')
+    
 
   }
 
-  ngAfterViewInit() {
-    setInterval(() => {
-      this.menu.enable(false);
-      this.menu.enable(false, 'mainMenu')
-    }, 100)
-  }
+  // ngAfterViewInit() {
+  //   setInterval(() => {
+  //     this.menu.enable(false);
+  //     this.menu.enable(false, 'mainMenu')
+  //   }, 100)
+  // }
   back() {
     this.menu.enable(true, 'mainMenu')
   }
@@ -79,13 +79,11 @@ export class SectionsPage implements OnInit {
     this.reouter.navigate([`/certification/sections/resources/${this.apiSrv.sectionId}`])
   }
   gotoConceptType(data) {
-    debugger;
     let sectionId = this.apiSrv.sectionId;
     if (data.type == "Quiz") {
       this.reouter.navigate([`certification/sections/concepts/${sectionId}/${data.title}/${data.type}`])
     }
     else if (data.type == "Resource") {
-      debugger;
       this.reouter.navigate([`certification/sections/resources/${sectionId}/${data.title}/${data.type}`])
     }
     else {

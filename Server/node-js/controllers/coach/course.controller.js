@@ -1,4 +1,4 @@
-const { Course, CourseCategory, StudentCourse } = require('../../models');
+const { Course, CourseCategory, StudentCourse, Section } = require('../../models');
 const { to, ReE, ReS } = require('../../services/util.service');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -58,7 +58,7 @@ const getCourse = async (req, res) => {
             [Op.in]: categories
         }
     }
-    
+
     if (searchBy) {
         condition.title = {
             [Op.like]: `%${searchBy}%`
@@ -71,9 +71,16 @@ const getCourse = async (req, res) => {
             model: Course,
             as: "subCategories",
             attributes: [['id', 'courseId'], 'title', 'description', 'image'],
-            where: condition
+            include: [{
+                attributes: [[Sequelize.fn('SUM',Sequelize.col('totalExperience')),'totalExperience']],
+                model: Section,
+                as: 'Section',
+            }],
+            where: condition,
         }],
-        where: categoryCondition
+        where: categoryCondition,
+        group: ['subCategories.title']
+
     })
     if (course) return ReS(res, { data: course }, 200);
     else return ReE(res, { message: 'Unable to insert Course.' }, 500)
