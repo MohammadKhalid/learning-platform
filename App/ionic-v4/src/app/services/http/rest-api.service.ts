@@ -263,7 +263,7 @@ export class RestApiService {
 		return this.sectionMenuData.asObservable();
 	}
 	populateSectionSubMenu(id) {
-		this.getPromise(`section/get-section-details`, id).then(resSec => {
+		this.getPromise(`section-page/get-section-pages`, id).then(resSec => {
 			this.setSectionMenuData(resSec);
 		}).catch(err => {
 			this.noti.showMsg(err);
