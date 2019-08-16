@@ -6,15 +6,14 @@
     height: 100vh;
 }
 
-.mat-darawer1 {
-    position: relative;
-    z-index: 1;
-    display: block;
-    height: 100%;
-    overflow: hidden;
-    margin-left: 219px;
-}
-
+// .mat-darawer1 {
+//     position: relative;
+//     z-index: 1;
+//     display: block;
+//     height: 100%;
+//     overflow: hidden;
+//     margin-left: 219px;
+// }
 .certificate-Sbar {
     background-color: #2e3d49;
     --ion-item-background: #2e3d49;
@@ -48,7 +47,6 @@
 
 .bordersSearch {
     border-top: 2px solid #1a222a;
-
     border-bottom: 2px solid #1a222a;
 }
 
@@ -75,11 +73,9 @@
 
 .mat-accordation {
     background: transparent;
-
 }
 
 .res-space {
-
     cursor: pointer;
 }
 
@@ -110,22 +106,21 @@
 //   vertical-align: middle;
 //   color: white;
 // }
-
-.conceptGaps .checkmark-label-adjusment{
+.conceptGaps .checkmark-label-adjusment {
     padding-right: 10px;
     color: #0065B3
 }
 
-.conceptGaps .radio-label-adjusment{
+.conceptGaps .radio-label-adjusment {
     padding-right: 10px;
     height: 19px;
 }
 
-.mat-accordation .resource-alignment{
+.mat-accordation .resource-alignment {
     margin-top: -8px
 }
 
-.conceptGaps .star-label-adjusment{
+.conceptGaps .star-label-adjusment {
     padding-right: 10px;
     color: #808080;
     height: 19px;
