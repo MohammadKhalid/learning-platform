@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MenuController, NavController } from '@ionic/angular';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { MenuController, NavController, IonInput } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
 import { Subscription, interval } from 'rxjs';
@@ -11,7 +11,6 @@ import { AuthenticationService } from 'src/app/services/user/authentication.serv
   styleUrls: ['./sections.page.scss'],
 })
 export class SectionsPage implements OnInit {
-
 
   constructor(private menu: MenuController,
     private reouter: Router,
@@ -27,10 +26,15 @@ export class SectionsPage implements OnInit {
   listData: any = [];
   listResourceData: any = [];
   id: any
+  isDeletedClicked: boolean = false
+  isAddClicked: boolean = false
+  pageTitle = ''
+  deleteId = 0
 
   searchBy: string = "";
   panelOpenState = false;
   panelResourceOpenState = false;
+  showField: boolean = false;
 
   ngOnInit() {
     this.searchBy = "";
@@ -38,7 +42,6 @@ export class SectionsPage implements OnInit {
     //coach menu popupate start
     this.subscription = this.apiSrv.getSectionMenuData().subscribe(res => {
       if (res) {
-        debugger
         res.concept ? this.listData = res.concept : '';
         res.resource ? this.listResourceData = res.resource : '';
       }
@@ -53,9 +56,30 @@ export class SectionsPage implements OnInit {
       }
     });
     //student menu popupate end
+  }
 
-    
+  addSectionPage() {
+    let obj = {
+      title: this.pageTitle,
+      sectionId: this.apiSrv.sectionId
+    }
+    this.apiSrv.postPromise('section-page', obj).then(respone => {
+      this.listData.push(respone.data)
+      this.showField = false
+      this.pageTitle = ''
+      this.isAddClicked = false
+    }).catch(error => {
 
+    })
+  }
+
+  deleteSectionPage(data) {
+    this.deleteId = data.id
+    this.apiSrv.delete(`section-page/${data.id}`).subscribe(response => {
+      this.listData = this.listData.filter(x => x.id != data.id)
+      this.isDeletedClicked = false
+      this.deleteId = 0
+    })
   }
 
   ngAfterViewInit() {
@@ -70,9 +94,6 @@ export class SectionsPage implements OnInit {
 
   goto(route) {
     this.reouter.navigate([`/certification/sections/${route}`])
-  }
-  goToConcept() {
-    this.reouter.navigate([`/certification/sections/concepts/${this.apiSrv.sectionId}`])
   }
 
   goToResource() {
