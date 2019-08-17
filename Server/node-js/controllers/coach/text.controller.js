@@ -5,11 +5,12 @@ const Op = Sequelize.Op;
 
 
 const create = async (req, res) => {
-    let { description, title, sectionId } = req.body
+    let { description, title, sectionPageId, experience } = req.body
     const text = await Text.create({
         title: title,
         description: description,
-        sectionId: sectionId,
+        sectionPageId: sectionPageId,
+        experience: experience
     })
     if (text) return ReS(res, { data: text }, 200);
     else return ReE(res, { message: 'Unable to insert Text.' }, 500)

@@ -99,6 +99,7 @@ studentRouter.use('/quiz', quiz)
 
 quiz.get('/:sectionId/:title', quizController.getQuiz)
 quiz.post('/submit-quiz', quizController.submitQuiz)
+quiz.put('/update-quiz-experience/:studentId/:textId', quizController.updateExperience)
 
 //courses 
 
@@ -124,6 +125,7 @@ studentRouter.use('/lesson', lessonRoutes)
 
 lessonRoutes.get('/get-lessons-for-student/:sectionId', lessonController.getLessonsForStudent)
 lessonRoutes.get('/get-lesson-by-id-for-student/:lessonId', lessonController.getLessonByIdForStudent)
+lessonRoutes.put('/update-lesson-experience/:studentId/:textId', lessonController.updateExperience)
 
 
 //text
@@ -132,6 +134,7 @@ studentRouter.use('/text', textRoutes)
 
 textRoutes.get('/get-text-for-student/:sectionId', textController.getTextForStudent)
 textRoutes.get('/get-text-by-id-for-student/:id', textController.getTextByIdForStudent)
+textRoutes.put('/update-text-experience/:studentId/:textId', textController.updateExperience)
 
 
 //resource

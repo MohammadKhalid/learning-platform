@@ -18,7 +18,12 @@ module.exports = (sequelize, DataTypes) => {
         sectionPageId: {
             type: DataTypes.INTEGER,
             allowNull: false
-        }
+        },
+        experience: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+
     });
 
     Model.associate = function (models) {
