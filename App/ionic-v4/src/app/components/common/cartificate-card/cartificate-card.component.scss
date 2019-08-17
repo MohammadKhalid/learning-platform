@@ -1,110 +1,109 @@
-// .scrolling-wrapper {
-//     overflow-x: scroll;
-//     overflow-y: hidden;
-//     white-space: nowrap;
-// }
+.certificate-card {
+    position: relative;
 
-.card-main {
-    width: 336px;
-}
+    drag-scroll {
+        height: 132px;
+    }
 
-.left-img {
-    width: 100px;
-    height: 100px;
-    margin-top: 0;
-    margin-bottom: 0;
-    padding-left: 7px;
-}
+    .card-main {
+        width: 336px;
+    }
 
-.left-img ion-img {
-    object-fit: fill;
-}
+    .left-img {
+        width: 100px;
+        height: 100px;
+        margin-top: 0;
+        margin-bottom: 0;
+        padding-left: 7px;
+    }
 
-.content {
-    min-height: 92px;
-}
+    .left-img ion-img {
+        object-fit: fill;
+    }
 
-.content .header {
-    display: flex;
-}
+    .content {
+        min-height: 92px;
+    }
 
-.content .header .title {
-    width: 50%;
-    font-weight: bold;
-}
+    .content .header {
+        display: flex;
+    }
 
-.content .header .xp {
-    background-image: url('../../../../assets/img/xp.svg');
-    background-repeat: no-repeat;
-    // background-image: url(./assets/img/xp.svg) no-repeat;
-    background-size: contain;
-    text-align: right;
-    width: 50%;
-    background-position: right;
-}
+    .content .header .title {
+        width: 50%;
+        font-weight: bold;
+    }
 
-.content .header .xp h3 {
-    text-align: center;
-    font-size: 10px;
-    padding-top: 3px;
-}
+    .content .header .xp {
+        background-image: url('../../../../assets/img/xp.svg');
+        background-repeat: no-repeat;
+        // background-image: url(./assets/img/xp.svg) no-repeat;
+        background-size: contain;
+        text-align: right;
+        width: 50%;
+        background-position: right;
+    }
 
-.content .description {
-    display: -webkit-box;
-    display: -moz-box;
-    -webkit-line-clamp: 3;
-    width: 100%;
-    overflow: hidden;
+    .content .header .xp h3 {
+        text-align: center;
+        font-size: 10px;
+        padding-top: 3px;
+    }
 
-}
+    .content .description {
+        display: -webkit-box;
+        display: -moz-box;
+        -webkit-line-clamp: 3;
+        width: 100%;
+        overflow: hidden;
 
-.content .description p {
-    white-space: pre-line !important;
-    line-height: 15px;
-    color: #787878;
-    font-size: 12px;
-}
+    }
 
-.content .learn-more {
-    float: right;
-    font-size: 12px;
-    text-decoration: none;
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    padding: 10px;
-}
+    .content .description p {
+        white-space: pre-line !important;
+        line-height: 15px;
+        color: #787878;
+        font-size: 12px;
+    }
 
-.content .learn-more ion-icon {
-    vertical-align: bottom;
-}
+    .content .learn-more {
+        float: right;
+        font-size: 12px;
+        text-decoration: none;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        padding: 10px;
+    }
 
-// ::-webkit-scrollbar { 
-//     display: none; 
-// } 
-// ::-webkit-scrollbar{
-//     width: 0px;
-// }
-// .item .item-native{
-//     padding-left: 7px!important;
-//     -webkit-padding-start: 7px;
-// }
+    .content .learn-more ion-icon {
+        vertical-align: bottom;
+    }
 
-// .scroll-hide::-webkit-scrollbar {
-//     width: 15px;
-//     height: 15px;
-// }
+    ::-webkit-scrollbar {
+        display: none;
+        overflow-x: hidden
+    }
 
-// .scroll-hide::-webkit-scrollbar-track-piece {
-//     background-color: #C2D2E4;
-// }
+    .left-button {
+        border-bottom-right-radius: 36px;
+        border-top-right-radius: 36px;
+        box-shadow: 1px 0 6px rgba(0, 0, 0, 0.2);
+        opacity: 1;
+        height: 70px;
+        position: absolute;
+        top: 27px;
+        left: -28px;
+    }
 
-// .scroll-hide::-webkit-scrollbar-thumb:vertical {
-//     height: 30px;
-//     background-color: #0A4C95;
-// }
-
-::-webkit-scrollbar {
-    display: none;
-    overflow-x: hidden
+    .right-button {
+        right: -28px;
+        border-bottom-left-radius: 36px;
+        border-top-left-radius: 36px;
+        box-shadow: 1px 0 6px rgba(0, 0, 0, 0.2);
+        opacity: 1;
+        height: 70px;
+        position: absolute;
+        top: 27px;
+    }
 }

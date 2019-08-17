@@ -1,35 +1,45 @@
-<drag-scroll drag-scroll-y-disabled="true" scroll-x-wheel-enabled="true" style="height: 132px;">
+<div class="certificate-card">
+    <drag-scroll (indexChanged)="indexChanged($event)" scrollbar-hidden="true" #nav drag-scroll-y-disabled="true"
+        scroll-x-wheel-enabled="true">
+        <div class="card-main" *ngFor="let x of courses" drag-scroll-item>
+            <ion-card>
+                <ion-item lines="none" routerDirection="forward" [routerLink]="'/certification/module/'+x.courseId"
+                    class="item" no-padding>
+                    <ion-thumbnail class="left-img" slot="start">
+                        <img [defaultImage]="defaultImage" [lazyLoad]="serverUrl+x.image"
+                            [errorImage]="imageToShowOnError">
+                    </ion-thumbnail>
+                    <ion-label class="content">
 
-    <div class="card-main" *ngFor="let x of courses" drag-scroll-item>
-        <ion-card>
-            <ion-item lines="none" routerDirection="forward" [routerLink]="'/certification/module/'+x.courseId"
-                class="item" no-padding>
-                <ion-thumbnail class="left-img" slot="start">
-                    <img [defaultImage]="defaultImage" [lazyLoad]="serverUrl+x.image" [errorImage]="imageToShowOnError">
-                </ion-thumbnail>
-                <ion-label class="content">
-
-                    <div class="header">
-                        <h3 class="title"> {{x.title}} </h3>
-                        <div class="xp" *ngIf="x.Section.length > 0">
-                            <h3>
-                                {{x.Section[0]?.totalExperience}}XP
-                            </h3>
+                        <div class="header">
+                            <h3 class="title"> {{x.title}} </h3>
+                            <div class="xp" *ngIf="x.Section.length > 0">
+                                <h3>
+                                    {{x.Section[0]?.totalExperience}}XP
+                                </h3>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="description"
-                        style="-webkit-box-orient: vertical;box-orient: vertical;-moz-box-orient: vertical;">
-                        <p>
-                            {{x.description}}
-                        </p>
-                    </div>
-                    <a href="#" class="learn-more" slot="end">Learn More
-                        <ion-icon name="arrow-round-forward"></ion-icon>
-                    </a>
-                </ion-label>
-            </ion-item>
-        </ion-card>
+                        <div class="description"
+                            style="-webkit-box-orient: vertical;box-orient: vertical;-moz-box-orient: vertical;">
+                            <p>
+                                {{x.description}}
+                            </p>
+                        </div>
+                        <a href="#" class="learn-more" slot="end">Learn More
+                            <ion-icon name="arrow-round-forward"></ion-icon>
+                        </a>
+                    </ion-label>
+                </ion-item>
+            </ion-card>
 
-    </div>
-</drag-scroll>
+        </div>
+    </drag-scroll>
+    <ion-button expand="full" [disabled]="leftBtn" class="left-button" (click)="moveLeft()" fill="clear">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+    </ion-button>
+    <ion-button expand="full" [disabled]="rightBtn" class="right-button" (click)="moveRight()" fill="clear">
+        <ion-icon name="arrow-forward" slot="icon-only"></ion-icon>
+    </ion-button>
+
+</div>

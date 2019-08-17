@@ -1,4 +1,4 @@
-const { Text, Section } = require('../../models');
+const { Text, Section, Level } = require('../../models');
 const { to, ReE, ReS } = require('../../services/util.service');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -35,3 +35,38 @@ const getTextByIdForStudent = async (req, res) => {
     else return ReE(res, { message: 'Unable to get Text.' }, 500);
 }
 module.exports.getTextByIdForStudent = getTextByIdForStudent;
+
+const updateExperience = async function (req, res) {
+    let nextExperience, studentLevel;
+    let { studentId, textId } = req.params
+    const currentLevel = await Level.findOne({
+        where: {
+            studentId: studentId
+        }
+    })
+
+    const text = await Text.findAll({
+        where: { id: textId }
+    })
+
+    currentExperience = text.experience + currentLevel.currentExperience;
+
+    if(text.experience == currentLevel.nextExperience ||
+        text.experience > currentLevel.nextExperience){
+            nextExperience = currentLevel.nextExperience * 1.5;
+            studentLevel = currentLevel.currentLevel + 1;
+         }
+    
+    const level = await Level.update({
+        nextExperience: nextExperience,
+        currentExperience: text.experience,
+        currentLevel: studentLevel
+    }, {
+            where: {
+                studentId: studentId
+            }
+        })
+    if (level) return ReS(res, { data: level }, 200);
+    else return ReE(res, { message: 'Unable to update settings.' }, 500)
+}
+module.exports.updateExperience = updateExperience;

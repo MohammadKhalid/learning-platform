@@ -3,45 +3,57 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/certification"></ion-back-button>
     </ion-buttons>
-    <ion-title>Add</ion-title>
+    <ion-title>New Certificate</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content padding class="certification-add">
 
   <form [formGroup]="addCourseForm" (ngSubmit)="addCourse()">
-
     <ion-list class="ion-padding">
+
+      <ion-list-header>
+        <ion-label color="primary">Certification Info</ion-label>
+      </ion-list-header>
+
       <ion-item lines="inset">
-        <ion-label position="floating"> Title Of Certificate : <ion-text color="danger">*</ion-text>
+        <ion-label position="floating"> Title <ion-text color="danger">*</ion-text>
         </ion-label>
-        <ion-input type="input" formControlName='title' placeholder="Enter Title"></ion-input>
+        <ion-input type="input" formControlName="title" placeholder="Enter Certification Title"></ion-input>
+      </ion-item>
+
+      <ion-item lines="inset">
+        <ion-label position="floating">Category<ion-text color="danger">*</ion-text>
+        </ion-label>
+        <ion-select formControlName="categoryId" placeholder="Select Category">
+          <ion-select-option *ngFor="let category of categoryList" [value]="category.id">{{category.title}}
+          </ion-select-option>
+
+        </ion-select>
+      </ion-item>
+
+      <ion-item lines="inset">
+        <span *ngIf="files">{{files}}</span>
+        <span *ngIf="!files">
+          <label class="Namespan">File Upload
+            <ion-text color="danger">*</ion-text>
+          </label></span>
+        <input accept=".png,.jpeg,.jpg" id="uinput" #fileInput formControlName='file' type="file"
+          (change)="onFileChanged($event)">
+        <div class="elment">
+          <i class="fa fa-upload" (click)="fileInput.click()"></i>
+        </div>
+        <div class="extra-pace"></div>
       </ion-item>
 
       <ion-item lines="inset">
         <ion-label position="floating">Description
+          <ion-text color="danger">*</ion-text>
         </ion-label>
-        <ion-textarea placeholder="placeholder" formControlName='description'></ion-textarea>
+        <ion-textarea placeholder="Write short description for Certification" formControlName='description'>
+        </ion-textarea>
       </ion-item>
 
-      <ion-item lines="inset">
-        <mat-form-field style="width: 100%;">
-          <mat-label>Category</mat-label>
-          <mat-select formControlName="categoryId">
-            <mat-option *ngFor="let category of categoryList" [value]="category.id">{{category.title}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </ion-item>
-
-      <ion-item>
-        <span *ngIf="files">{{files}}</span>
-        <span *ngIf="!files"><label class="Namespan">File Upload</label></span>
-        <input id="uinput" #fileInput formControlName='file' type="file" (change)="onFileChanged($event)">
-        <div class="elment">
-          <i class="fa fa-upload" (click)="fileInput.click()"></i>
-        </div>
-
-      </ion-item>
 
       <ion-item lines="none" class="ion-float-right ion-padding-top">
         <ion-button type="submit" [disabled]="!addCourseForm.valid" routerLinkActive="router-link-active" size="md">Save
