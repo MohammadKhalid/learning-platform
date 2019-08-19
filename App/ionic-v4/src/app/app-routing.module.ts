@@ -26,6 +26,11 @@ const routes: Routes = [
     canActivate: [AuthGuardService],
     loadChildren: './pages/level-settings/level-settings.module#LevelSettingsPageModule'
   },
+  {
+    path:'Course-Category',
+    canActivate:[AuthGuardService],
+    loadChildren:'./pages/cource-catogary/cource-catogary.module#CourceCatogaryPageModule'
+  },
   { 
     path: 'company', 
     canActivate: [AuthGuardService],
@@ -109,7 +114,10 @@ const routes: Routes = [
 
   { path: 'error', loadChildren: './pages/public/error/error.module#ErrorPageModule' },
   { path: '**', loadChildren: './pages/public/error/error.module#ErrorPageModule', data: { error: 404 } },
- { path: 'level-settings', loadChildren: './pages/level-settings/level-settings.module#LevelSettingsPageModule' }
+ { path: 'level-settings', loadChildren: './pages/level-settings/level-settings.module#LevelSettingsPageModule' },
+ { path: 'course-category', loadChildren: './pages/cource-catogary/cource-catogary.module#CourceCatogaryPageModule' },
+  { path: 'course-list', loadChildren: './pages/cource-catogary/course-list/course-list.module#CourseListPageModule' }
+
 ];
 
 @NgModule({
