@@ -1,0 +1,49 @@
+<ion-header translucent="true">
+  <ion-toolbar mode="ios">
+    <ion-buttons slot="start">
+      <ion-button (click)="close()">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{title}}</ion-title>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content padding fullscreen>
+  <form [formGroup]="forms" (ngSubmit)="save()">
+    <input type="text" formControlName="id" type="hidden">
+    <ion-list class="ion-padding">
+      <ion-item lines="inset">
+        <ion-label position="floating"> Title
+          <ion-text color="danger">*</ion-text>
+        </ion-label>
+        <ion-input type="input" formControlName="title" placeholder="Title"></ion-input>
+      </ion-item>
+
+      <ion-item lines="inset">
+        <ion-label position="floating"> Description
+          <ion-text color="danger">*</ion-text>
+        </ion-label>
+        <ion-textarea placeholder="Description" formControlName='description'></ion-textarea>
+      </ion-item>
+
+      <ion-item lines="inset">
+        <ion-label position="floating"> Total Experience
+          <ion-text color="danger">*</ion-text>
+        </ion-label>
+        <ion-input type="input" formControlName="totalExperience" placeholder="Total Experience">
+        </ion-input>
+      </ion-item>
+
+      <ion-item lines="none" class="ion-float-right ion-padding-top">
+        <ion-button type="submit" size="md" [disabled]="!forms.valid">{{btnTxt}} </ion-button>
+
+        <ion-button size="md" [hidden]="forms.controls.id.value" [disabled]="!forms.valid" (click)="saveAndNext()"> Save
+          &
+          Next </ion-button>
+      </ion-item>
+    </ion-list>
+
+  </form>
+</ion-content>

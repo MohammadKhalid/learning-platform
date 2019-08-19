@@ -4,7 +4,9 @@ import { FormGroup, FormArray, FormControl, FormBuilder, Validators } from '@ang
 import { RestApiService } from 'src/app/services/http/rest-api.service';
 import { NotificationService } from 'src/app/services/notification/notification.service';
 import { AuthenticationService } from 'src/app/services/user/authentication.service';
-
+import { ModalController, PopoverController } from '@ionic/angular';
+import { AddEditModelComponent } from './add-edit-model/add-edit-model.component';
+import { AddEditPopoverComponent } from 'src/app/components/common/add-edit-popover/add-edit-popover.component';
 
 @Component({
   selector: 'app-addmodule',
@@ -12,60 +14,45 @@ import { AuthenticationService } from 'src/app/services/user/authentication.serv
   styleUrls: ['./addmodule.page.scss'],
 })
 export class AddmodulePage implements OnInit {
-  addModelbutton: boolean = true;
 
-  moduleDetail: boolean = false;
-  id: any;
+  id: any = "";
   user: any;
   constructor(private router: Router,
     private fb: FormBuilder,
     private actroute: ActivatedRoute,
     private service: RestApiService,
     private authService: AuthenticationService,
-    private notifictation: NotificationService) { }
+    public modalcontroler: ModalController,
+    private notifictation: NotificationService,
+    public popoverController: PopoverController) { }
   data: any[] = [];
   serverUrl: string = "./assets/img/";
   forms: FormGroup
   ngOnInit() {
     this.user = this.authService.getSessionData().user;
     this.id = this.actroute.snapshot.paramMap.get('id');
-    this.forms = this.fb.group({
-      title: new FormControl(''),
-      description: new FormControl(''),
-      totalExperience: new FormControl('', Validators.compose([
-        Validators.required,
-        Validators.pattern('^[0-9]*$')
-      ])),
-      courseId: this.id
-    })
- 
+    // this.forms = this.fb.group({
+    //   title: new FormControl(''),
+    //   description: new FormControl(''),
+    //   totalExperience: new FormControl('', Validators.compose([
+    //     Validators.required,
+    //     Validators.pattern('^[0-9]*$')
+    //   ])),
+    //   courseId: this.id
+    // })
+
 
     this.service.getPromise('section/get-sections', this.id).then(res => {
-      debugger;
       this.data = res.data;
 
     }).catch(err => {
-      debugger
     })
 
-  }
-
-  Cancel() {
-    this.addModelbutton = !this.addModelbutton;
-    this.moduleDetail = !this.moduleDetail;
-  }
-  loadmoduledetail() {
-    this.addModelbutton = !this.addModelbutton;
-    this.moduleDetail = !this.moduleDetail;
-    // this.router.navigate(['/certification/moduledetail']);
   }
 
   addModule() {
     this.service.postPromise('section', this.forms.value).then(res => {
-
       this.data.push(res.data);
-      this.addModelbutton = !this.addModelbutton;
-      this.moduleDetail = !this.moduleDetail
       this.notifictation.showMsg("Successfully Added");
 
     }).catch(res => {
@@ -73,6 +60,54 @@ export class AddmodulePage implements OnInit {
     })
 
   }
+  async openModal(data?: any) {
+    const modal: HTMLIonModalElement =
+      await this.modalcontroler.create({
+        component: AddEditModelComponent,
+        componentProps: {
+          courseId: this.id,
+          addToList: this.addToList.bind(this),
+          data: data,
+          updateList: this.updateList.bind(this)
+        }
+      });
 
-
+    modal.onDidDismiss().then(() => {
+    });
+    await modal.present();
+  }
+  addToList(res) {
+    this.data.push(res.data);
+    this.notifictation.showMsg("Successfully Added");
+  }
+  updateList(res) {
+    var index = this.data.findIndex(item => item.id === res.data.id);
+    this.data.splice(index, 1, res.data);
+  }
+  deleteModule(id) {
+    this.service.delete(`courses/${id}`).subscribe(res => {
+      if (res) {
+        this.notifictation.showMsg("Successfully delete record");
+      }
+    }, error => {
+      this.notifictation.showMsg(error);
+    })
+  }
+  editModule(data) {
+    this.openModal(data)
+  }
+  async addEditPopOver(ev: any, item: any) {
+    const popover = await this.popoverController.create({
+      component: AddEditPopoverComponent,
+      componentProps: {
+        delete: this.deleteModule.bind(this),
+        edit: this.editModule.bind(this),
+        item: item
+      },
+      event: ev,
+      animated: true,
+      showBackdrop: true,
+    });
+    return await popover.present();
+  }
 }
