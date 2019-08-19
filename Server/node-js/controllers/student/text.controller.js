@@ -5,7 +5,6 @@ const Op = Sequelize.Op;
 
 
 
-
 const getTextForStudent = async (req, res) => {
 
     let { sectionId } = req.params

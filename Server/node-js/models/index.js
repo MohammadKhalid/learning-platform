@@ -34,7 +34,7 @@ db.sync = function () {
   sequelize.sync({ alter: true, force: false }).then((res) => {
     console.log('SYNC DONE');
   }).catch((e) => {
-    console.log('ERROR SYNC');
+    console.log('ERROR SYNC',e);
   });
 
   // deletes all tables then recreates them useful for testing and development purposes

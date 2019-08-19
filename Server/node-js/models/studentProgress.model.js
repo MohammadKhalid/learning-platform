@@ -6,11 +6,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.UUID,
             allowNull: false
         },
-        lessonId: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        sectionId: {
+        sectionPageId: {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
@@ -18,8 +14,7 @@ module.exports = (sequelize, DataTypes) => {
 
     Model.associate = function (models) {
         this.belongsTo(models.User, { as: 'student', foreignKey: 'studentId' });
-        this.belongsTo(models.Section, { as: 'section', foreignKey: 'sectionId' });
-        this.belongsTo(models.Lesson, { as: 'lesson', foreignKey: 'lessonId' });
+        this.belongsTo(models.Section, { as: 'section', foreignKey: 'sectionPageId' });
     };
 
 
