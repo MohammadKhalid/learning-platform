@@ -1,5 +1,5 @@
 <ion-header no-border>
-    <ion-toolbar color="dark">
+    <ion-toolbar class="toolbar-Background">
         <ion-buttons slot="start">
             <ion-icon class="back-button" defaultHref="/certification/moduledetail" (click)="back()"
                 ios="ios-arrow-dropleft" md="md-arrow-dropleft"></ion-icon>
@@ -11,7 +11,7 @@
             <ion-icon name="menu" class="toggle-button-menu" (click)="drawer.toggle()"></ion-icon>
 
         </ion-buttons>
-        <p slot="end" class="send-feedBack"> SEND FEEDBACK</p>
+        <ion-icon name="add" slot="end" class="add-feedBack"></ion-icon>
     </ion-toolbar>
 </ion-header>
 
@@ -147,14 +147,17 @@
                                 </ion-item>
 
                                 <ion-item *ngFor="let dataRow of listData | orderByDate | filter : searchBy"
-                                    class="conceptGaps certificate-item certificate-section">
+                                    class="conceptGaps certificate-item certificate-section concept-title-adjustment">
                                     <ion-label (click)="gotoConceptType(dataRow)">
                                         {{dataRow.title.length > 15 ? dataRow.title.substring(0,15)+'...': dataRow.title}}
                                     </ion-label>
                                     <div *ngIf="dataRow.id != deleteId">
+                                            <ion-icon
+                                            class="certificate-icon" name="create">
+                                        </ion-icon>
                                         <ion-icon
                                             (click)="deleteSectionPage(dataRow);isDeletedClicked=true;deleteId=dataRow.id"
-                                            class="certificate-icon certificate-section-icon" name="trash">
+                                            class="certificate-icon" name="trash">
                                         </ion-icon>
                                     </div>
                                     <ion-spinner *ngIf="isDeletedClicked && dataRow.id == deleteId" name="lines-small"
