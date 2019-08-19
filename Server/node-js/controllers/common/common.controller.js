@@ -92,7 +92,7 @@ module.exports.sectionDetailsForStudent = sectionDetailsForStudent;
 const getSections = async (req, res) => {
     let { courseId } = req.params
     const section = await Section.findAll({
-        attributes: ['id', 'title', 'description', 'totalExperience'],
+        attributes: ['id', 'title', 'description', 'totalExperience','courseId'],
         include: [{
             model: Course,
             as: "course",
