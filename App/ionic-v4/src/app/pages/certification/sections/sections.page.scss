@@ -2,24 +2,18 @@
     height: calc(100vh - 56px);
 }
 
-.setWidth{
-    width: 194px
-}
 .coachSide {
     height: 100vh;
 }
 
-// .mat-darawer1 {
-//     position: relative;
-//     z-index: 1;
-//     display: block;
-//     height: 100%;
-//     overflow: hidden;
-//     margin-left: 219px;
-// }
 .certificate-Sbar {
     background-color: #2e3d49;
     --ion-item-background: #2e3d49;
+}
+
+.back-button {
+    font-size: 32px;
+    color: #02b3e7;
 }
 
  ::ng-deep .mat-expansion-panel-body {
@@ -35,7 +29,7 @@
 .certificate-icon {
     color: white;
     font-size: 18px;
-    margin-left: 2%
+    margin-left: 10%
 }
 
 .bordersResources {
@@ -57,14 +51,6 @@
     background-color: 1c262f;
 }
 
-.conceptGaps {
-    margin-top: 13px;
-}
-
-// ion-item.certificate-section {
-//   --background-hover: none;
-//   --color-hover: #bfc0c1
-// }
 .bordersResources.certificate-item.certificate-section.hydrated.in-list.ion-activatable.ion-focusable.item.item-label.md {
     --background-hover: none;
     --color-hover: #bfc0c1
@@ -87,7 +73,8 @@
 }
 
 .add-spacing {
-    padding-right: 9px;
+    float: right;
+    padding-right: 15px;
 }
 
 .mat-expansion-indicator::after,
@@ -99,16 +86,6 @@
     color: white !important;
 }
 
-// } {
-//   border-style: solid;
-//   border-width: 0 2px 2px 0;
-//   content: '';
-//   display: inline-block;
-//   padding: 3px;
-//   transform: rotate(45deg);
-//   vertical-align: middle;
-//   color: white;
-// }
 .conceptGaps .checkmark-label-adjusment {
     padding-right: 10px;
     color: #0065B3
@@ -127,4 +104,96 @@
     padding-right: 10px;
     color: #808080;
     height: 19px;
+}
+
+.title {
+    font-size: 12px;
+    padding-top: 7px;
+}
+
+.title-name {
+    padding-left: 19px;
+}
+
+.title-div {
+    height: 50px;
+}
+
+.toggle-button-menu {
+    padding-left: 67px;
+    font-size: 26px;
+    color: #318ca9;
+}
+
+.send-feedBack {
+    font-size: 13px;
+    padding-top: 17px;
+    padding-right: 12px;
+    color: #318ca9;
+    font-weight: 700;
+}
+
+@media only screen and (max-width: 600px) {
+    .toggle-button-menu {
+        font-size: 26px;
+        color: #318ca9;
+        padding-left: 40px;
+    }
+    .certificate-Sbar {
+        width: 49%;
+    }
+    .send-feedBack {
+        font-size: 10px;
+    }
+}
+
+.check {
+    display: block;
+    position: relative;
+    text-decoration: none;
+    color: #ffff;
+    font-size: 12px;
+}
+
+.check:after {
+    content: "\f078";
+    font-family: 'FontAwesome';
+    position: absolute;
+    right: 0;
+}
+
+.card-header {
+    background: #2e3d49;
+}
+
+.check[aria-expanded="true"]:after {
+    content: "\f077";
+}
+
+.card {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-clip: border-box;
+    border: none;
+}
+
+.card-body {
+    background: #2e3d49;
+    color: #ffff;
+    font-size: 12px;
+    padding-bottom: 0;
+    display: flex;
+    padding-top: 12px;
+}
+
+.setWidth {
+    width: 218px;
 }
