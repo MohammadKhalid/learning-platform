@@ -13,6 +13,7 @@ const CoachController 	            = require(controllerPath + 'coach.controller'
 const StudentController 	        = require(controllerPath + 'student.controller');
 const courseCategoryController      = require(controllerPath + 'courseCategory.controller')
 const levelSettingController        = require(controllerPath + 'studentExperienceSetting.controller')
+const courseClientController        = require(controllerPath + 'courseClient.controller')
 
 // const ProfileController 	        = require(controllerPath + 'profile.controller');
 // const LiveGroupTrainingController   = require(controllerPath + 'live-group-training.controller');
@@ -102,6 +103,13 @@ studentRoutes.get('/form-input-data', StudentController.formInputData);
 studentRoutes.get('/:item_id', StudentController.get);
 studentRoutes.put('/:item_id', StudentController.update);
 studentRoutes.delete('/:item_id', StudentController.remove);
+
+// course Client
+const courseClientRoutes = express.Router();
+adminRouter.use('/course-client-company', courseClientRoutes);
+
+courseClientRoutes.get('/clients' ,courseClientController.getClients)
+courseClientRoutes.get('/companies/:clientId' ,courseClientController.getClientCompany)
 
 
 // course category
