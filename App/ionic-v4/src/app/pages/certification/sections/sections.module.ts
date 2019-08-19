@@ -15,7 +15,7 @@ import { CdkTableModule } from '@angular/cdk/table';
 import { CdkTreeModule } from '@angular/cdk/tree';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { PortalModule } from '@angular/cdk/portal';
-import { FilterPipe } from 'src/app/pipes/filter.pipe';
+import { PipesModule } from 'src/app/pipes/pipes.module';
 
 const routes: Routes = [
   {
@@ -45,9 +45,10 @@ const routes: Routes = [
     MatSidenavModule,   
     MatExpansionModule,
     MatInputModule,
+    PipesModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [SectionsPage, OrderByDatePipe, FilterPipe]
+  declarations: [SectionsPage, OrderByDatePipe]
 })
 export class SectionsPageModule {
 
