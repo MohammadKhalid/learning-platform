@@ -1,4 +1,4 @@
-const { Sequelize, CourseCategory, Section, Text, Lesson, Resource, Quiz, Course, SectionPage } = require('../../models');
+const { Sequelize, CourseCategory, Section, Text, Lesson, Resource, Quiz, Course, SectionPage, StudentProgress } = require('../../models');
 const { to, ReE, ReS } = require('../../services/util.service');
 const Op = Sequelize.Op;
 // const uuidv4 = require('uuid/v4')
@@ -126,7 +126,7 @@ const getSideMenuItems = async (req, res) => {
 module.exports.getSideMenuItems = getSideMenuItems;
 
 const getSectionItems = async (req, res) => {
-    let { sectionPageId } = req.params
+    let { sectionPageId, studentId } = req.params
     const sectionpage = await SectionPage.findAll({
         include: [{
             model: Lesson,
@@ -142,6 +142,18 @@ const getSectionItems = async (req, res) => {
             id: sectionPageId
         }
     })
+
+
+    
+
+    if (req.user.type == "student") {
+        console.log(req.user.type);
+        const studentProgress = await StudentProgress.create({
+            studentId: studentId,
+            sectionPageId: sectionPageId
+        })
+    }
+
     if (sectionpage) return ReS(res, { data: sectionpage }, 200);
     else return ReE(res, { message: 'Unable to get Section Page.' }, 500)
 }

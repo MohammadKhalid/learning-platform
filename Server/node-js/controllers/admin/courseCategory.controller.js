@@ -1,26 +1,37 @@
-const { Sequelize,CourseCategory } = require('../../models');
+const { Sequelize, CourseCategory, User, Company } = require('../../models');
 const { to, ReE, ReS } = require('../../services/util.service');
 const Op = Sequelize.Op;
 // const uuidv4 = require('uuid/v4')
 
-const create = async function(req, res){
-    let { title, description, userId } = req.body
+const create = async function (req, res) {
+    let { title, description, userId, companyId } = req.body
     const category = await CourseCategory.create({
         title: title,
         description: description,
-        createdBy: userId
+        clientId: userId,
+        companyId: companyId
     })
 
     return ReS(res, { data: category }, 200);
 }
 module.exports.create = create;
 
-const getAll = async function(req, res){
-    let { userId } = req.params;
+const getAll = async function (req, res) {
+    let { userId, companyId } = req.params;
     const categories = await CourseCategory.findAll({
-        where: {
-            createdBy:userId
-        }
+
+        include: [{
+            model: User,
+            as: "admin",
+            attributes: [['id', 'userId'], 'firstName', 'lastName']
+    
+        },
+        {
+            model: Company,
+            as: "company",
+            attributes: [['id', 'companyId'], 'name']
+
+        }],
     })
     return ReS(res, { data: categories }, 200);
 }
@@ -39,7 +50,7 @@ const get = async function (req, res) {
 module.exports.get = get;
 
 const update = async function (req, res) {
-    let { title,description } = req.body
+    let { title, description } = req.body
     let { item_id } = req.params
     const category = await CourseCategory.update({
         title: title,
@@ -48,7 +59,7 @@ const update = async function (req, res) {
             where: {
                 id: item_id
             }
-    })
+        })
     return ReS(res, { data: category });
 }
 module.exports.update = update;
@@ -56,13 +67,13 @@ module.exports.update = update;
 const remove = async function (req, res) {
     let { item_id } = req.params
     const category = CourseCategory.destroy({
-        where:{
+        where: {
             id: item_id
         }
     })
-    if(category){
+    if (category) {
         return ReS(res, { data: "Deleted." });
-    }else{
+    } else {
         return ReS(res, { data: "Unable to Deleted." });
     }
 }

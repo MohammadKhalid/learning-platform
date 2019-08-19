@@ -117,7 +117,7 @@ const courseCategoryRoutes = express.Router();
 adminRouter.use('/course-category', courseCategoryRoutes);
 
 courseCategoryRoutes.post('/', courseCategoryController.create);
-courseCategoryRoutes.get('/get-all/:userId', courseCategoryController.getAll);
+courseCategoryRoutes.get('/get-all', courseCategoryController.getAll);
 courseCategoryRoutes.get('/:item_id', courseCategoryController.get);
 courseCategoryRoutes.put('/:item_id', courseCategoryController.update);
 courseCategoryRoutes.delete('/:item_id', courseCategoryController.remove);

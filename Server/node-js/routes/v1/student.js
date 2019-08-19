@@ -118,6 +118,8 @@ studentRouter.use('/section', section)
 
 section.get('/get-section-details-for-student/:sectionId', commonController.sectionDetailsForStudent)
 
+section.get('/get-section-items/:sectionPageId/:studentId', commonController.getSectionItems)
+
 
 // lessons
 const lessonRoutes = express.Router();
