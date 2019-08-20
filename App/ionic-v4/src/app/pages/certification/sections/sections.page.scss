@@ -48,7 +48,7 @@
 }
 
 .bordersSearch {
-    border-top: 2px solid #1a222a;
+    // border-top: 2px solid #1a222a;
     border-bottom: 2px solid #1a222a;
 }
 
@@ -170,6 +170,7 @@
 
 .card-header {
     background: #2e3d49;
+    padding-top: 1px;
 }
 
 .check[aria-expanded="true"]:after {
