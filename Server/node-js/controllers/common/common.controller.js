@@ -1,18 +1,25 @@
-const { Sequelize, CourseCategory, Section, Text, Lesson, Resource, Quiz, Course, SectionPage, StudentProgress } = require('../../models');
+const { Sequelize, CourseCategory,UserCompany, Section, Text, Lesson, Resource, Quiz, Course, SectionPage, StudentProgress } = require('../../models');
 const { to, ReE, ReS } = require('../../services/util.service');
 const Op = Sequelize.Op;
 // const uuidv4 = require('uuid/v4')
 
-const getAll = async function (req, res) {
+const getAllCourse = async function (req, res) {
     let { userId } = req.params;
+    const company = await UserCompany.findAll({
+        attributes: ['companyId'],
+        where:{
+            userId: userId
+        }
+    })
+    let userCompanyId = company[0].companyId
     const categories = await CourseCategory.findAll({
         where: {
-            createdBy: userId
+            companyId: userCompanyId
         }
     })
     return ReS(res, { data: categories }, 200);
 }
-module.exports.getAll = getAll;
+module.exports.getAllCourse = getAllCourse;
 
 const sectionDetails = async (req, res) => {
     let { sectionId } = req.params

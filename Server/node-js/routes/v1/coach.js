@@ -116,7 +116,7 @@ liveGroupTrainingRoutes.delete('/:item_id', LiveGroupTrainingController.remove);
 const courseCategory = express.Router();
 coachRouter.use('/course-category', courseCategory)
 
-courseCategory.get('/get-all/:userId', commonController.getAll)
+courseCategory.get('/get-all/:userId', commonController.getAllCourse)
 
 //course 
 
