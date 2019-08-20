@@ -5,13 +5,19 @@
                 ios="ios-arrow-dropleft" md="md-arrow-dropleft"></ion-icon>
             <div class="title-div">
 
-                <ion-title class="title">Lesson no 1</ion-title>
-                <p class="title-name">Introduction</p>
+                <ion-title class="title">
+                    <!-- {{lessonName}} -->
+                    lesson 1
+                </ion-title>
             </div>
             <ion-icon name="menu" class="toggle-button-menu" (click)="drawer.toggle()"></ion-icon>
 
         </ion-buttons>
-        <ion-icon name="add" slot="end" class="add-feedBack"></ion-icon>
+        <ion-buttons slot="end">
+            <ion-button *ngIf="isConcept" strong="true" routerDirection="root" (click)="addConcept()">
+                <ion-icon name="add" class="top-icon-default"></ion-icon>
+            </ion-button>
+        </ion-buttons>
     </ion-toolbar>
 </ion-header>
 
@@ -25,28 +31,7 @@
                     <ion-icon name="search" class="icon-color certificate-icon certificate-section-icon"></ion-icon>
                 </ion-item>
                 <ion-list lines="none">
-                    <!-- <mat-accordion>
-                        <mat-expansion-panel class="mat-accordation" (opened)="panelResourceOpenState = true"
-                            (closed)="panelResourceOpenState = false">
-                            <mat-expansion-panel-header class="bordersConcepts">
-                                <mat-panel-title class="certificate-item">
-                                    <ion-label> RESOURCES</ion-label>
-                                </mat-panel-title>
-                                <ion-icon (click)="goToResource();$event.stopPropagation()"
-                                    class="certificate-icon certificate-section-icon add-spacing" name="add"></ion-icon>
-                            </mat-expansion-panel-header>
-                            <ion-item *ngFor="let dataRow of listResourceData | orderByDate | filter : searchBy"
-                                class="conceptGaps certificate-item certificate-section">
-                                <ion-label (click)="gotoConceptType(dataRow)">
-                                    {{dataRow.title.length > 15 ? dataRow.title.substring(0,15)+'...': dataRow.title}}
-                                </ion-label>
 
-                                <ion-icon href="#" class="certificate-icon certificate-section-icon" name="trash">
-                                </ion-icon>
-                            </ion-item>
-
-                        </mat-expansion-panel>
-                    </mat-accordion> -->
                     <div id="accordion">
 
                         <div class="card">
@@ -70,53 +55,11 @@
                         </div>
 
                     </div>
-                    <!-- <mat-accordion>
-                        <mat-expansion-panel class="mat-accordation" (opened)="panelOpenState = true"
-                            (closed)="panelOpenState = false">
-                            <mat-expansion-panel-header class="bordersConcepts">
-                                <mat-panel-title class="certificate-item">
-                                    <ion-label> CONCEPTS</ion-label>
-                                </mat-panel-title>
-                                <ion-icon [attr.disabled]="showField" (click)="showField=true;$event.stopPropagation()"
-                                    class="certificate-icon certificate-section-icon add-spacing" name="add"></ion-icon>
-                            </mat-expansion-panel-header>
 
-                            <ion-item class="conceptGaps certificate-item certificate-section setWidth"
-                                *ngIf="showField">
-                                <ion-input [(ngModel)]="pageTitle" autofocus
-                                    (keyup.enter)="addSectionPage();isAddClicked = true" placeholder="Enter Title">
-                                </ion-input>
-                                <ion-icon *ngIf="isAddClicked == false" href="#"
-                                    (click)='addSectionPage();isAddClicked = true'
-                                    class="certificate-icon certificate-section-icon" name="checkbox-outline">
-                                </ion-icon>
-                                <ion-icon *ngIf="isAddClicked == false" href="#"
-                                    class="certificate-icon certificate-section-icon" (click)="showField=false;"
-                                    name="close">
-                                </ion-icon>
-                                <ion-spinner *ngIf="isAddClicked" name="lines-small" color="light"></ion-spinner>
-                            </ion-item>
-                            <ion-item *ngFor="let dataRow of listData | orderByDate | filter : searchBy"
-                                class="conceptGaps certificate-item certificate-section">
-                                <ion-label (click)="gotoConceptType(dataRow)">
-                                    {{dataRow.title.length > 15 ? dataRow.title.substring(0,15)+'...': dataRow.title}}
-                                </ion-label>
-                                <div *ngIf="dataRow.id != deleteId">
-                                    <ion-icon href="#"
-                                        (click)="deleteSectionPage(dataRow);isDeletedClicked=true;deleteId=dataRow.id"
-                                        class="certificate-icon certificate-section-icon" name="trash">
-                                    </ion-icon>
-                                </div>
-                                <ion-spinner *ngIf="isDeletedClicked && dataRow.id == deleteId" name="lines-small"
-                                    color="light"></ion-spinner>
-                            </ion-item>
-
-                        </mat-expansion-panel>
-                    </mat-accordion> -->
                     <div id="accordion1">
 
                         <div class="card">
-                            <div class="card-header" id="heading-2">
+                            <div class="card-header bordersResources" id="heading-2">
                                 <h5 class="mb-0">
                                     <a class="collapsed check" role="button" data-toggle="collapse" href="#collapse-1"
                                         aria-expanded="false" aria-controls="collapse-1">
@@ -148,12 +91,11 @@
 
                                 <ion-item *ngFor="let dataRow of listData | orderByDate | filter : searchBy"
                                     class="conceptGaps certificate-item certificate-section concept-title-adjustment">
-                                    <ion-label (click)="gotoConceptType(dataRow)">
+                                    <ion-label (click)="gotoConceptType(dataRow);">
                                         {{dataRow.title.length > 15 ? dataRow.title.substring(0,15)+'...': dataRow.title}}
                                     </ion-label>
                                     <div *ngIf="dataRow.id != deleteId">
-                                            <ion-icon
-                                            class="certificate-icon" name="create">
+                                        <ion-icon class="certificate-icon" name="create">
                                         </ion-icon>
                                         <ion-icon
                                             (click)="deleteSectionPage(dataRow);isDeletedClicked=true;deleteId=dataRow.id"

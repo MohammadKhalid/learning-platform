@@ -1,82 +1,82 @@
 <ion-header no-border>
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-menu-button color="light"></ion-menu-button>
-    </ion-buttons>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-menu-button color="light"></ion-menu-button>
+        </ion-buttons>
 
-    <ion-title>Certification</ion-title>
-    <ion-buttons slot="end">
+        <ion-title>Certification</ion-title>
+        <ion-buttons slot="end">
 
-      <ion-button *ngIf="user.type == 'coach'" strong="true" routerDirection="root" routerLink="/certification/add">
-        <ion-icon name="add"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
+            <ion-button *ngIf="user.type == 'coach'" strong="true" routerDirection="root" routerLink="/certification/add">
+                <ion-icon name="add"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-  <div *ngIf="user.type == 'student'">
-    <mat-tab-group mat-stretch-tabs>
-      <mat-tab label="Available Certifications">
+    <div *ngIf="user.type == 'student'">
+        <mat-tab-group mat-stretch-tabs>
+            <mat-tab label="Available Certifications">
+                <app-filter (searchByFilterEvent)="searchByFilterEvent($event)"></app-filter>
+                <div *ngIf="courses.length > 0">
+                    <div *ngFor="let obj of courses">
+
+                        <h2 class="certficate-title">
+                            <span>{{obj.title}}</span>
+                        </h2>
+                        <certificate-card [courses]="obj.subCategories"></certificate-card>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="In progress Certifications">
+
+                <ion-grid>
+                    <ion-row>
+                        <ion-col size-lg="9" size-sm="12" size-xs="12">
+                            <app-progress-complete-card [tabType]="'inprogress'"></app-progress-complete-card>
+                        </ion-col>
+
+                        <ion-col size-lg="3" size-sm="12" size-xs="12">
+                            <app-progress-circle></app-progress-circle>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+
+
+
+
+            </mat-tab>
+            <!-- content 3 start -->
+            <mat-tab label="Completed Certifications">
+
+                <ion-grid>
+                    <ion-row>
+                        <ion-col size-lg="9" size-sm="12" size-xs="12">
+                            <app-progress-complete-card [tabType]="'completed'"></app-progress-complete-card>
+                        </ion-col>
+
+                        <ion-col size-lg="3" size-sm="12" size-xs="12">
+                            <app-progress-circle></app-progress-circle>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+            </mat-tab>
+            <!-- content 3 end -->
+        </mat-tab-group>
+    </div>
+
+    <div *ngIf="user.type == 'coach'">
         <app-filter (searchByFilterEvent)="searchByFilterEvent($event)"></app-filter>
         <div *ngIf="courses.length > 0">
-          <div *ngFor="let obj of courses">
+            <div *ngFor="let obj of courses">
 
-            <h2 class="certficate-title">
-              <span>{{obj.title}}</span>
-            </h2>
-            <certificate-card [courses]="obj.subCategories"></certificate-card>
-          </div>
+                <h2 class="certficate-title">
+                    <span>{{obj.title}}</span>
+                </h2>
+                <certificate-card [courses]="obj.subCategories"></certificate-card>
+            </div>
         </div>
-      </mat-tab>
-      <mat-tab label="In progress Certifications">
-
-        <ion-grid>
-          <ion-row>
-            <ion-col size-lg="9" size-sm="12" size-xs="12">
-              <app-progress-complete-card [tabType]="'inprogress'"></app-progress-complete-card>
-            </ion-col>
-
-            <ion-col size-lg="3" size-sm="12" size-xs="12">
-                <app-progress-circle></app-progress-circle>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-
-
-
-
-      </mat-tab>
-      <!-- content 3 start -->
-      <mat-tab label="Completed Certifications">
-        
-          <ion-grid>
-              <ion-row>
-                <ion-col size-lg="9" size-sm="12" size-xs="12">
-                  <app-progress-complete-card [tabType]="'completed'"></app-progress-complete-card>
-                </ion-col>
-    
-                <ion-col size-lg="3" size-sm="12" size-xs="12">
-                    <app-progress-circle></app-progress-circle>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-      </mat-tab>
-      <!-- content 3 end -->
-    </mat-tab-group>
-  </div>
-
-  <div *ngIf="user.type == 'coach'">
-    <app-filter (searchByFilterEvent)="searchByFilterEvent($event)"></app-filter>
-    <div *ngIf="courses.length > 0">
-      <div *ngFor="let obj of courses">
-
-        <h2 class="certficate-title">
-          <span>{{obj.title}}</span>
-        </h2>
-        <certificate-card [courses]="obj.subCategories"></certificate-card>
-      </div>
     </div>
-  </div>
 
 </ion-content>

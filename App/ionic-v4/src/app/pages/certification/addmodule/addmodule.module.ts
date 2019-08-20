@@ -11,6 +11,8 @@ import { IonicModule } from '@ionic/angular';
 
 import { AddmodulePage } from './addmodule.page';
 import { BrowserModule } from '@angular/platform-browser';
+import { AddEditModelComponent } from './add-edit-model/add-edit-model.component';
+import { AddEditPopoverComponent } from 'src/app/components/common/add-edit-popover/add-edit-popover.component';
 
 const routes: Routes = [
   {
@@ -27,7 +29,6 @@ const routes: Routes = [
     IonicModule,
     RoundProgressModule,
     ReactiveFormsModule,
-    // BrowserModule,
     NgCircleProgressModule.forRoot({
       "radius": 40,
 
@@ -50,7 +51,8 @@ const routes: Routes = [
 
     RouterModule.forChild(routes)
   ],
-  declarations: [AddmodulePage]
+  declarations: [AddmodulePage, AddEditModelComponent, AddEditPopoverComponent],
+  entryComponents: [AddEditModelComponent, AddEditPopoverComponent],
 })
 export class AddmodulePageModule {
 }

@@ -84,7 +84,9 @@ export class AppComponent {
           { title: 'Categories', url: '/category', icon: 'list', icon_mode: 'ios' },
           { title: 'Topics', url: '/topic', icon: 'book', icon_mode: 'ios' },
           { title: 'Companies', url: '/company', icon: 'business', icon_mode: 'ios' },
-          { title: 'Level Settings', url: '/level-setting', icon: 'book', icon_mode: 'ios' }
+          { title: 'Level Settings', url: '/level-setting', icon: 'book', icon_mode: 'ios' },
+          { title: 'Course Category', url: '/Course-Category', icon: 'book', icon_mode: 'ios' }
+          
        ]
       },
       {

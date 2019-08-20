@@ -32,7 +32,7 @@ module.exports.removeSection = removeSection;
 const updateSection = async (req, res) => {
     let { sectionId } = req.params
     let { title, description, totalExperience } = req.body
-    const course = await Section.update({
+    const sectionUpdate = await Section.update({
         title: title,
         description: description,
         totalExperience: totalExperience,
@@ -41,7 +41,13 @@ const updateSection = async (req, res) => {
             id: sectionId
         }
     })
-    if (course) return ReS(res, { data: course }, 200);
+
+    const section = await Section.findAll({
+        where:{
+            id: sectionId
+        }
+    })
+    if (section) return ReS(res, { data: section.pop() }, 200);
     else return ReE(res, { message: 'Unable to insert Course.' }, 500)
 }
 module.exports.updateSection = updateSection;

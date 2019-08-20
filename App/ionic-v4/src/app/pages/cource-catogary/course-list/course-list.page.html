@@ -1,0 +1,52 @@
+<ion-header no-border>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+
+            <ion-back-button defaultHref="/"></ion-back-button>
+        </ion-buttons>
+
+        <ion-title text-capitalize>List Course </ion-title>
+
+        <ion-buttons slot="end">
+            <!-- <ion-button (click)="showHideSearchBox()" [hidden]="!searchBoxToolbarHidden"><ion-icon name="search"></ion-icon></ion-button> -->
+            <ion-button strong="true" (click)="add()">
+                <ion-icon name="add"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+
+    <!-- <ion-toolbar> -->
+    <!-- <ion-searchbar debounce="1000" mode="ios" clearIcon="backspace" (ionChange)="startSearch($event)"></ion-searchbar> -->
+
+
+    <!-- </ion-toolbar> -->
+</ion-header>
+
+<ion-content>
+    <ion-list>
+        <!-- <ion-item lines="none">
+            <ion-label>
+                <p>No </p>
+            </ion-label>
+        </ion-item> -->
+        <ion-item *ngFor="let list of listdata" (click)="editList(list.id)">
+            <ion-avatar slot="start">
+                <img src="../../../../assets/img//courseCategory/list.svg">
+            </ion-avatar>
+            <ion-label>
+                <h3>
+                    {{list.title}}
+                </h3>
+                <p>
+                    <span> {{list.description}}</span>
+                </p>
+            </ion-label>
+        </ion-item>
+
+    </ion-list>
+
+    <!-- <ion-infinite-scroll [disabled]="isInfiniteScrollDisabled" margin-top (ionInfinite)="loadData($event)">
+        <ion-infinite-scroll-content style="min-height: 1px;" loadingSpinner="bubbles">
+        </ion-infinite-scroll-content>
+    </ion-infinite-scroll> -->
+</ion-content>
