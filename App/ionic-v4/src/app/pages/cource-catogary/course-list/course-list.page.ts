@@ -13,7 +13,6 @@ export class CourseListPage implements OnInit {
     private router : Router) { }
   add(){
     this.router.navigate(['/Course-Category/add'])
-    alert('sd')
   }
   ngOnInit() {
     this.restapi.getPromise('course-category/get-all').then(res=> {

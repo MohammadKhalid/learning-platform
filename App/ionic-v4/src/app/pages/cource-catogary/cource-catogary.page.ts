@@ -2,7 +2,7 @@
 import { Component, OnInit, ElementRef, ViewChild, ViewChildren, QueryList, Input } from '@angular/core';
 import { NavController, ToastController, ModalController, AlertController, IonContent, LoadingController } from '@ionic/angular';
 import { FormGroup, FormControl, FormBuilder, Validators, FormArray } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthenticationService } from 'src/app/services/user/authentication.service';
 import { LoaderService } from 'src/app/services/utility/loader.service';
@@ -33,6 +33,7 @@ export class CourceCatogaryPage implements OnInit {
 	categories: [];
 	parentCategory: any;
 	loadercontext: any;
+	btnText: string = 'Save'
 
 	constructor(
 		private notificationService: NotificationService,
@@ -43,26 +44,33 @@ export class CourceCatogaryPage implements OnInit {
 		private modalCtrl: ModalController,
 		private authService: AuthenticationService,
 		private alertCtrl: AlertController,
-		private loadingController: LoaderService
+		private loadingController: LoaderService,
+		private router: Router
 	) {
 	}
-
 	ngOnInit() {
+	let editId = this.activatedRoute.snapshot.paramMap.get('id');
+
+		if (editId) {
+			this.btnText = "Update"
+			this.restApi.getPromise('/course-category', editId).then(res => {
+
+				this.form.controls['title'].setValue(res.data[0].title);
+				this.form.controls['description'].setValue(res.data[0].description);
+				this.form.controls['clientId'].setValue(res.data[0].clientId);
+				this.form.controls['companyId'].setValue(res.data[0].companyId);
+	}).catch(err => {
+		this.notificationService.showMsg(err);
+			})
+		}
+
+
+
 		this.restApi.getPromise('/course-client-company/clients').then(res => {
 			this.clients = res.data;
 		})
 
-		let editId = this.activatedRoute.snapshot.paramMap.get('id');
 
-
-		if (editId) {
-			this.restApi.getPromise('/course-category', editId).then(res => {
-				this.form.controls['title'].setValue(res.data[0].title);
-				this.form.controls['description'].setValue(res.data[0].description)
-			}).catch(err => {
-
-			})
-		}
 
 		this.form = this.formBuilder.group({
 			title: new FormControl('', Validators.required),
@@ -76,6 +84,7 @@ export class CourceCatogaryPage implements OnInit {
 		this.companie = []
 		let clientId = this.form.controls.clientId.value;
 		this.restApi.getPromise('course-client-company/companies', clientId).then(res => {
+			debugger
 			this.companie = res.data.companies;
 		})
 	}
@@ -91,16 +100,13 @@ export class CourceCatogaryPage implements OnInit {
 					console.log(res);
 				}).catch(onreject => {
 					this.notificationService.toast.dismiss();
-
 					alert(onreject);
 					console.log(onreject);
 				})
 		});
-
 	}
 	updateRecord() {
 		this.notificationService.showMsg('Updated...', 0).then(() => {
-
 			this.restApi.putPromise('categories/' + this.form.controls.id.value, this.form.value)
 				.then(res => {
 					this.notificationService.toast.dismiss();
@@ -108,21 +114,39 @@ export class CourceCatogaryPage implements OnInit {
 					console.log(res);
 				}).catch(onreject => {
 					this.notificationService.toast.dismiss();
-
 					alert(onreject);
 					console.log(onreject);
 				})
 		});
-
 	}
-
 	save() {
-		this.restApi.postPromise('course-category', this.form.value).then(res => {
-			this.notificationService.showMsg('record save successfully');
+		let editId = this.activatedRoute.snapshot.paramMap.get('id');
 
-		}).catch(err => {
-			this.notificationService.showMsg(err);
-		})
+		if (editId) {
+			this.btnText = "Update"
+			this.restApi.putPromise(`/course-category/${editId}`, this.form.value).then(res => {
+				this.notificationService.showMsg('updated Successfully!')
+				
+				this.router.navigate(['/Course-Category'])
+			}).catch(err => {
+				this.notificationService.showMsg(err);
+
+			})
+		} else {
+			this.btnText = "Save"
+			this.restApi.postPromise('course-category', this.form.value).then(res => {
+				this.notificationService.showMsg('record save successfully');
+				this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+                this.router.onSameUrlNavigation = 'reload';
+				this.router.navigate(['/Course-Category'])
+				
+			}).catch(err => {
+				this.notificationService.showMsg(err);
+			})
+		}
+
 	}
+
+
 
 }

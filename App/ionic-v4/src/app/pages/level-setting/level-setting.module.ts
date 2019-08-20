@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { LevelSettingsPage } from './level-settings.page';
+import { LevelSettingPage } from './level-setting.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: LevelSettingsPage
+    component: LevelSettingPage
   }
 ];
 
@@ -18,10 +18,11 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
+    
+    ReactiveFormsModule,
     IonicModule,
-    ReactiveFormsModule ,
     RouterModule.forChild(routes)
   ],
-  declarations: [LevelSettingsPage]
+  declarations: [LevelSettingPage]
 })
-export class LevelSettingsPageModule {}
+export class LevelSettingPageModule {}

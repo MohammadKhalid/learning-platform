@@ -1,11 +1,11 @@
 <ion-header no-border>
     <ion-toolbar color="primary">
         <ion-buttons slot="start">
-            <ion-back-button defaultHref="Course-Category"></ion-back-button>
+            <ion-back-button defaultHref="level-setting"></ion-back-button>
         </ion-buttons>
 
         <ion-title text-capitalize>
-            Course Category
+            Level Setting
         </ion-title>
 
         <ion-buttons slot="end">
@@ -50,17 +50,21 @@
             </ion-item>
 
             <ion-item lines="inset">
-                <ion-label position="stacked">Name
+                <ion-label position="stacked">Initial Level
                     <ion-text color="danger">*</ion-text>
                 </ion-label>
-                <ion-input formControlName="title" name="title" placeholder="Enter category name"></ion-input>
+                <ion-input formControlName="initialLevel" name="title" placeholder="Enter initialLevel"></ion-input>
             </ion-item>
 
             <ion-item lines="inset">
-                <ion-label position="stacked">Description</ion-label>
-                <ion-textarea formControlName="description" name="description" rows="5" placeholder="Enter description">
-                </ion-textarea>
+                <ion-label position="stacked">Initial Level
+                    <ion-text color="danger">*</ion-text>
+                </ion-label>
+                <ion-input formControlName="initialExperience" name="title" placeholder="Enter initialExperience"></ion-input>
             </ion-item>
+
+
+
         </ion-list>
 
     </form>
