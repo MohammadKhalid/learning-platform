@@ -4,11 +4,11 @@ const Op = Sequelize.Op;
 // const uuidv4 = require('uuid/v4')
 
 const create = async function (req, res) {
-    let { title, description, userId, companyId } = req.body
+    let { title, description, clientId, companyId } = req.body
     const category = await CourseCategory.create({
         title: title,
         description: description,
-        clientId: userId,
+        clientId: clientId,
         companyId: companyId
     })
 
