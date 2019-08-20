@@ -25,6 +25,9 @@ export class VideoComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    debugger;
+    this.sectionId;
+    this.recordId;
     let id = this.section.snapshot.paramMap.get('id')
     this.addVideoForm = this.formBuilder.group({
       title: new FormControl(''),

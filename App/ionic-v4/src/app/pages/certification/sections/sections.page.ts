@@ -1,26 +1,33 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, EventEmitter, Output, ChangeDetectorRef } from '@angular/core';
 import { MenuController, NavController, IonInput } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
 import { Subscription, interval } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/user/authentication.service';
+import { ConceptsPage } from './concepts/concepts.page';
 
 @Component({
   selector: 'app-sections',
   templateUrl: './sections.page.html',
   styleUrls: ['./sections.page.scss'],
+  providers: [ConceptsPage]
 })
+
 export class SectionsPage implements OnInit {
+  @ViewChild(ConceptsPage) conceptView: ConceptsPage;
+  // @Output() myEventConcept = new EventEmitter();
 
   constructor(private menu: MenuController,
     private reouter: Router,
     private apiSrv: RestApiService,
     private actRoute: ActivatedRoute,
     private navCntrl: NavController,
-    private authService: AuthenticationService) { }
+    private authService: AuthenticationService,
+    private cdRef : ChangeDetectorRef) { }
   user: any;
   public searchTerm: string = "";
   private subscription: Subscription;
+  private saveButtonSubscription : Subscription;
   private subscriptionResource: Subscription;
   public items: any;
   listData: any = [];
@@ -36,7 +43,11 @@ export class SectionsPage implements OnInit {
   panelOpenState = false;
   panelResourceOpenState = false;
   showField: boolean = false;
-
+  isConcept: boolean = false;
+  
+  ngOnDestroy() {
+    this.saveButtonSubscription.unsubscribe();
+  }
   ngOnInit() {
     this.searchBy = "";
     this.user = this.authService.getSessionData().user;
@@ -45,7 +56,7 @@ export class SectionsPage implements OnInit {
       if (res) {
         res.concept ? this.listData = res.concept : '';
         res.resource ? this.listResourceData = res.resource : '';
-        this.lessonName= "Lesson name";
+        this.lessonName = "Lesson name";
       }
     });
     //coach menu popupate end
@@ -58,6 +69,15 @@ export class SectionsPage implements OnInit {
       }
     });
     //student menu popupate end
+
+    //concept button start
+    this.saveButtonSubscription = this.apiSrv.getSectionConceptSaveButton().subscribe(res => {
+      if (res) {
+        this.isConcept = true;
+        this.cdRef.detectChanges();
+      }
+    });
+    //concept button end
   }
 
   addSectionPage() {
@@ -103,15 +123,17 @@ export class SectionsPage implements OnInit {
   }
   gotoConceptType(data) {
     let sectionId = this.apiSrv.sectionId;
-    if (data.type == "Quiz") {
-      this.reouter.navigate([`certification/sections/concepts/${sectionId}/${data.title}/${data.type}`])
-    }
-    else if (data.type == "Resource") {
-      this.reouter.navigate([`certification/sections/resources/${sectionId}/${data.title}/${data.type}`])
-    }
-    else {
-      this.reouter.navigate([`certification/sections/concepts/${sectionId}/${data.id}/${data.type}`])
-    }
+    // if (data.type == "Quiz") {
+    this.reouter.navigate([`certification/sections/concepts/${sectionId}/${data.id}`])
+    // }
+    // else if (data.type == "Resource") {
+    //   this.reouter.navigate([`certification/sections/resources/${sectionId}/${data.title}`])
+    // }
+    // else {
+    //   this.reouter.navigate([`certification/sections/concepts/${sectionId}/${data.id}`])
+    // }
   }
-
+  addConcept() {
+    this.apiSrv.populateSectionConcept();
+  }
 }

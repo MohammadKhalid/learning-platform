@@ -1,21 +1,9 @@
-<!-- coach side rendering start -->
-<div *ngIf="user.type ==='coach'">
-    <div class="ion-padding">
-        <ion-card>
-            <ion-card-content>
-                <mat-select [(ngModel)]="selectedOption" placeholder="Select option">
-                    <mat-option *ngFor='let option of conceptOptions' [disabled]="recordId ? true : false" [value]='option.id'>{{option.value}}</mat-option>
-                </mat-select>
-            </ion-card-content>
-        </ion-card>
-    </div>
-</div>
-<!-- coach side rendering end -->
+
 
 
 <!-- coach side rendering start -->
 <ion-content *ngIf="user.type ==='coach'" ion-padding style="height: calc(100vh - 160px);">
-    <div>
+    <!-- <div>
         <div *ngIf="selectedOption == 0">
             <app-video [recordId]="recordId" [sectionId]="sectionId"></app-video>
         </div>
@@ -25,7 +13,7 @@
         <div *ngIf="selectedOption == 2">
             <app-quiz [sectionId]="sectionId" [quizTitle]="recordId"></app-quiz>
         </div>
-    </div>
+    </div> -->
 </ion-content>
 <!-- coach side rendering end -->
 

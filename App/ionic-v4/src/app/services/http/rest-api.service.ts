@@ -15,6 +15,8 @@ import { NotificationService } from '../notification/notification.service';
 export class RestApiService {
 	private sectionMenuData = new BehaviorSubject(null);
 	private sectionMenuDataResource = new BehaviorSubject(null);
+	private sectionConcept = new BehaviorSubject(null);
+	private sectionConceptSaveButton = new BehaviorSubject(null);
 
 
 	private sectionMenuDataStudent = new BehaviorSubject(null);
@@ -257,6 +259,40 @@ export class RestApiService {
 	get sectionId() {
 		return this._sectionId;
 	}
+	// concept click start
+	getSectionConcept(): Observable<any> {
+		return this.sectionConcept.asObservable();
+	}
+	populateSectionConcept() {
+		// this.getPromise(`section-page/get-section-pages`, id).then(resSec => {
+		this.setSectionConcept(true);
+
+		// }).catch(err => {
+		// 	this.noti.showMsg(err);
+		// })
+	}
+	setSectionConcept(val: boolean) {
+		this.sectionConcept.next(val);
+	}
+	//concept click end
+
+	// concept save button visible start
+	getSectionConceptSaveButton(): Observable<any> {
+		return this.sectionConceptSaveButton.asObservable();
+	}
+	populateSectionConceptSaveButton() {
+		// this.getPromise(`section-page/get-section-pages`, id).then(resSec => {
+		this.setSectionConceptSaveButton(true);
+
+		// }).catch(err => {
+		// 	this.noti.showMsg(err);
+		// })
+	}
+	setSectionConceptSaveButton(val: boolean) {
+		this.sectionConceptSaveButton.next(val);
+	}
+	//concept save button visible end
+
 
 	// concepts coach
 	getSectionMenuData(): Observable<any> {
