@@ -4,21 +4,27 @@ module.exports = (sequelize, DataTypes) => {
     var Model = sequelize.define('StudentExperienceSetting', {
         initialLevel: {
             type: DataTypes.INTEGER,
-            allowNull: false
+            allowNull: false,
+            defaultValue: 0
         },
         initialExperience: {
             type: DataTypes.INTEGER,
-            allowNull: false
+            allowNull: false,
+            defaultValue: 0
         },
-        adminId: {
+        clientId: {
             type: DataTypes.UUID,
             allowNull: false
-
+        },
+        companyId: {
+            type: DataTypes.INTEGER,
+            allowNull: false
         }
     });
 
     Model.associate = function (models) {
-        this.belongsTo(models.User, { as: 'admin', foreignKey: 'adminId' });
+        this.belongsTo(models.User, { as: 'client', foreignKey: 'clientId' });
+        this.belongsTo(models.Company, { as: 'company', foreignKey: 'companyId' });
     };
 
 

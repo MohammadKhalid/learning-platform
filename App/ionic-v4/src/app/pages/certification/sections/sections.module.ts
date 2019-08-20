@@ -16,6 +16,7 @@ import { CdkTreeModule } from '@angular/cdk/tree';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { PortalModule } from '@angular/cdk/portal';
 import { PipesModule } from 'src/app/pipes/pipes.module';
+import { ConceptsPage } from './concepts/concepts.page';
 
 const routes: Routes = [
   {
@@ -23,10 +24,10 @@ const routes: Routes = [
     component: SectionsPage,
 
     children: [
-      { path: 'concepts/:id', loadChildren: './concepts/concepts.module#ConceptsPageModule' },
-      { path: 'concepts/:id/:recordid/:type', loadChildren: './concepts/concepts.module#ConceptsPageModule' },
-      { path: 'resources/:id', loadChildren: './resources/resources.module#ResourcesPageModule' },
-      { path: 'resources/:id/:recordid/:type', loadChildren: './resources/resources.module#ResourcesPageModule' },
+      { path: 'concepts/:sectionid', loadChildren: './concepts/concepts.module#ConceptsPageModule' },
+      { path: 'concepts/:sectionid/:sectionpageid', loadChildren: './concepts/concepts.module#ConceptsPageModule' },
+      { path: 'resources/:sectionid', loadChildren: './resources/resources.module#ResourcesPageModule' },
+      { path: 'resources/:sectionid/:sectionpageid', loadChildren: './resources/resources.module#ResourcesPageModule' },
       // { path: 'resources/:id/:type', loadChildren: './resources/resources.module#ResourcesPageModule' },
 
       // { path: 'concepts/:type/:id', loadChildren: './concepts/concepts.module#ConceptsPageModule' },

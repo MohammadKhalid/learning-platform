@@ -8,6 +8,7 @@ import { IonicModule } from '@ionic/angular';
 import { ConceptsPage } from './concepts.page';
 import { MatSelectModule } from '@angular/material';
 import { ComponentsModule } from 'src/app/components/components.module';
+import { AddModalComponent } from './add-modal/add-modal.component';
 
 const routes: Routes = [
   {
@@ -25,6 +26,8 @@ const routes: Routes = [
     ComponentsModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [ConceptsPage]
+  declarations: [ConceptsPage, AddModalComponent],
+  entryComponents: [AddModalComponent],
+
 })
 export class ConceptsPageModule { }
