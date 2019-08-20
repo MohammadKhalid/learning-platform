@@ -29,7 +29,7 @@ const routes: Routes = [
   {
     path:'Course-Category',
     canActivate:[AuthGuardService],
-    loadChildren:'./pages/cource-catogary/cource-catogary.module#CourceCatogaryPageModule'
+    loadChildren:'./pages/cource-catogary/cource-catogary-routing.module#CourceCatogaryRoutingModule'
   },
   { 
     path: 'company', 

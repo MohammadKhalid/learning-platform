@@ -7,21 +7,12 @@ import { IonicModule } from '@ionic/angular';
 
 import { CourceCatogaryPage } from '../cource-catogary/cource-catogary.page';
 import { CourseListPage } from './course-list/course-list.page';
-
 const routes: Routes = [
-     {path:'',
-    component:CourseListPage},
   {
-
-    path: 'add',
+    path: '',
     component: CourceCatogaryPage
-  },
-  {
-    path:'edit/:id',
-    component:CourceCatogaryPage
   }
 ];
-
 @NgModule({
   imports: [
     CommonModule,
@@ -31,6 +22,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [CourceCatogaryPage,CourseListPage]
+  declarations: [CourceCatogaryPage]
 })
-export class CourceCatogaryPageModule {}
+export class CourceCatogaryPageModule { }
