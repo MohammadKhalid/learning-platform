@@ -24,9 +24,9 @@ const routes: Routes = [
 
     children: [
       { path: 'concepts/:id', loadChildren: './concepts/concepts.module#ConceptsPageModule' },
-      { path: 'concepts/:id/:recordid/:type', loadChildren: './concepts/concepts.module#ConceptsPageModule' },
+      { path: 'concepts/:id/:recordid', loadChildren: './concepts/concepts.module#ConceptsPageModule' },
       { path: 'resources/:id', loadChildren: './resources/resources.module#ResourcesPageModule' },
-      { path: 'resources/:id/:recordid/:type', loadChildren: './resources/resources.module#ResourcesPageModule' },
+      { path: 'resources/:id/:recordid', loadChildren: './resources/resources.module#ResourcesPageModule' },
       // { path: 'resources/:id/:type', loadChildren: './resources/resources.module#ResourcesPageModule' },
 
       // { path: 'concepts/:type/:id', loadChildren: './concepts/concepts.module#ConceptsPageModule' },

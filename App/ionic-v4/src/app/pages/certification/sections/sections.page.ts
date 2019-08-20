@@ -30,6 +30,7 @@ export class SectionsPage implements OnInit {
   isAddClicked: boolean = false
   pageTitle = ''
   deleteId = 0
+  lessonName: string;
 
   searchBy: string = "";
   panelOpenState = false;
@@ -44,6 +45,7 @@ export class SectionsPage implements OnInit {
       if (res) {
         res.concept ? this.listData = res.concept : '';
         res.resource ? this.listResourceData = res.resource : '';
+        this.lessonName= "Lesson name";
       }
     });
     //coach menu popupate end
