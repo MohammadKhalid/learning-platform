@@ -90,7 +90,7 @@ liveGroupTrainingRoutes.get('/:item_id', LiveGroupTrainingController.get);
 const courseCategory = express.Router();
 studentRouter.use('/course-category', courseCategory)
 
-courseCategory.get('/get-all/:userId', commonController.getAll)
+courseCategory.get('/get-all/:userId', commonController.getAllCourse)
 
 //quiz
 
