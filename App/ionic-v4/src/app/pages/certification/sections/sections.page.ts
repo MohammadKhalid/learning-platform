@@ -1,10 +1,14 @@
 import { Component, OnInit, ViewChild, ElementRef, EventEmitter, Output, ChangeDetectorRef } from '@angular/core';
-import { MenuController, NavController, IonInput } from '@ionic/angular';
+import { MenuController, NavController, IonInput, ModalController } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
 import { Subscription, interval } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/user/authentication.service';
 import { ConceptsPage } from './concepts/concepts.page';
+import { DropzoneComponent } from 'src/app/components/common/dropzone/dropzone.component';
+import { NotificationService } from 'src/app/services/notification/notification.service';
+import { AddModalComponent } from './concepts/add-modal/add-modal.component';
+import { ResourceAddModelComponent } from './resource-add-model/resource-add-model.component';
 
 @Component({
   selector: 'app-sections',
@@ -15,6 +19,8 @@ import { ConceptsPage } from './concepts/concepts.page';
 
 export class SectionsPage implements OnInit {
   @ViewChild(ConceptsPage) conceptView: ConceptsPage;
+  @ViewChild(DropzoneComponent) fileField: DropzoneComponent;
+
   // @Output() myEventConcept = new EventEmitter();
 
   constructor(private menu: MenuController,
@@ -23,19 +29,29 @@ export class SectionsPage implements OnInit {
     private actRoute: ActivatedRoute,
     private navCntrl: NavController,
     private authService: AuthenticationService,
-    private cdRef : ChangeDetectorRef) { }
+    private notificationService: NotificationService,
+    public modalcontroler: ModalController,
+    private cdRef: ChangeDetectorRef) { }
   user: any;
   public searchTerm: string = "";
   private subscription: Subscription;
-  private saveButtonSubscription : Subscription;
+  private saveButtonSubscription: Subscription;
+  private saveButtonResourceSubscription: Subscription;
+
   private subscriptionResource: Subscription;
   public items: any;
   listData: any = [];
   listResourceData: any = [];
   id: any
-  isDeletedClicked: boolean = false
+  isDeletedClicked: boolean = false;
+  isDeletedClickedResource: boolean = false;
   isAddClicked: boolean = false
+  files: any = [];
+
+  // isAddClickedResource: boolean = false
   pageTitle = ''
+  pageTitleResource = ''
+
   deleteId = 0
   lessonName: string;
 
@@ -43,10 +59,15 @@ export class SectionsPage implements OnInit {
   panelOpenState = false;
   panelResourceOpenState = false;
   showField: boolean = false;
+  // showFieldResource: boolean = false;
   isConcept: boolean = false;
-  
+  isResource: boolean = false;
+
+  isResources: boolean = false;
+
   ngOnDestroy() {
     this.saveButtonSubscription.unsubscribe();
+    this.saveButtonResourceSubscription.unsubscribe();
   }
   ngOnInit() {
     this.searchBy = "";
@@ -56,6 +77,7 @@ export class SectionsPage implements OnInit {
       if (res) {
         res.concept ? this.listData = res.concept : '';
         res.resource ? this.listResourceData = res.resource : '';
+        debugger;
         this.lessonName = "Lesson name";
       }
     });
@@ -78,6 +100,15 @@ export class SectionsPage implements OnInit {
       }
     });
     //concept button end
+
+    //resource button start
+    this.saveButtonResourceSubscription = this.apiSrv.getSectionResourceSaveButton().subscribe(res => {
+      if (res) {
+        this.isResource = true;
+        this.cdRef.detectChanges();
+      }
+    });
+    //resource button end
   }
 
   addSectionPage() {
@@ -95,6 +126,24 @@ export class SectionsPage implements OnInit {
     })
   }
 
+  // addSectionPageResource() {
+  //   let obj = {
+  //     title: this.pageTitle,
+  //     sectionId: this.apiSrv.sectionId
+  //   }
+  //   this.apiSrv.postPromise('section-page', obj).then(respone => {
+  //     this.listData.push(respone.data)
+  //     this.showFieldResource = false
+  //     this.pageTitleResource = ''
+  //     this.isAddClickedResource = false
+  //   }).catch(error => {
+
+  //   })
+  // }
+
+  // eventBtnSubmit(count) {
+  //   this.submitBtn = count > 0 ? false : true;
+  // }
   deleteSectionPage(data) {
     this.deleteId = data.id
     this.apiSrv.delete(`section-page/${data.id}`).subscribe(response => {
@@ -102,6 +151,38 @@ export class SectionsPage implements OnInit {
       this.isDeletedClicked = false
       this.deleteId = 0
     })
+  }
+
+  upload() {
+    this.files = this.fileField.getFiles();
+    let formData = new FormData();
+    this.files.forEach((file) => {
+      formData.append('file', file.rawFile);
+    });
+    let sectionId = this.apiSrv.sectionId;
+    formData.append('sectionId', sectionId);
+    this.apiSrv.postPromise('resource', formData)
+      .then(res => {
+
+        this.files = res.data;
+        this.fileField.removeAll();
+
+        this.apiSrv.populateSectionSubMenu(sectionId);
+
+        this.notificationService.showMsg("Saved Successfully");
+        this.reouter.navigate([`certification/sections/resources/${sectionId}`])
+      }).catch(err => {
+        this.notificationService.showMsg("Error inserting resources");
+      })
+    // // POST formData to Server
+  }
+  deleteSectionPageResource(data) {
+    // this.deleteId = data.id
+    // this.apiSrv.delete(`section-page/${data.id}`).subscribe(response => {
+    //   this.listResourceData = this.listResourceData.filter(x => x.id != data.id)
+    //   this.isDeletedClickedResource = false
+    //   this.deleteId = 0
+    // })
   }
 
   ngAfterViewInit() {
@@ -112,17 +193,18 @@ export class SectionsPage implements OnInit {
   }
   back() {
     this.apiSrv.populateSectionConceptBackNavigate();
-  //   let id = this.actRoute.snapshot.paramMap.get('id');
-  //   // this.menu.enable(true, 'mainMenu')
-  // this.reouter.navigate([`/certification/module/${id}`])
+    //   let id = this.actRoute.snapshot.paramMap.get('id');
+    //   // this.menu.enable(true, 'mainMenu')
+    // this.reouter.navigate([`/certification/module/${id}`])
   }
 
   goto(route) {
     this.reouter.navigate([`/certification/sections/${route}`])
   }
 
-  goToResource() {
-    this.reouter.navigate([`/certification/sections/resources/${this.apiSrv.sectionId}`])
+  gotoResourceType(data) {
+    let sectionId = this.apiSrv.sectionId;
+    this.reouter.navigate([`certification/sections/resources/${sectionId}/${data.id}`])
   }
   gotoConceptType(data) {
     let sectionId = this.apiSrv.sectionId;
@@ -139,4 +221,21 @@ export class SectionsPage implements OnInit {
   addConcept() {
     this.apiSrv.populateSectionConcept();
   }
+  async popUpResource() {
+    let sectionId = this.apiSrv.sectionId;
+
+    const modal: HTMLIonModalElement =
+      await this.modalcontroler.create({
+        component: ResourceAddModelComponent,
+        componentProps: {
+          sectionId: sectionId,
+          // updateList: this.updateList.bind(this)
+        }
+      });
+
+    modal.onDidDismiss().then(() => {
+    });
+    await modal.present();
+  }
+
 }

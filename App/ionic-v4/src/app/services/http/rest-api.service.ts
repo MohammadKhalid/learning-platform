@@ -18,7 +18,7 @@ export class RestApiService {
 	private sectionConcept = new BehaviorSubject(null);
 	private sectionConceptSaveButton = new BehaviorSubject(null);
 	private sectionConceptBackNavigate = new BehaviorSubject(null);
-	
+	private sectionResourceSaveButton = new BehaviorSubject(null);
 
 	private sectionMenuDataStudent = new BehaviorSubject(null);
 	private sectionMenuDataResourceStudent = new BehaviorSubject(null);
@@ -315,17 +315,6 @@ export class RestApiService {
 	}
 
 
-
-
-
-
-
-
-
-
-
-
-
 		// concept back navigate  click start
 		getSectionConceptBackNavigate(): Observable<any> {
 			return this.sectionConceptBackNavigate.asObservable();
@@ -337,4 +326,17 @@ export class RestApiService {
 			this.sectionConceptBackNavigate.next(val);
 		}
 		//concept  back navigate click end
+
+
+		// concept save button visible start
+	getSectionResourceSaveButton(): Observable<any> {
+		return this.sectionResourceSaveButton.asObservable();
+	}
+	populateSectionResourceSaveButton() {
+		this.setSectionConceptSaveButton(true);
+	}
+	setSectionResourceSaveButton(val: boolean) {
+		this.sectionResourceSaveButton.next(val);
+	}
+	//concept save button visible end
 }

@@ -1,0 +1,27 @@
+<ion-header translucent="true">
+    <ion-toolbar mode="ios">
+        <ion-buttons slot="start">
+            <ion-button (click)="close()">
+                <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>Add Resources</ion-title>
+    </ion-toolbar>
+
+</ion-header>
+<ion-content padding fullscreen>
+
+    <ion-list class="ion-padding">
+        <app-dropzone (eventBtnSubmit)="eventBtnSubmit($event)"></app-dropzone>
+    </ion-list>
+
+
+
+
+</ion-content>
+
+<ion-footer>
+    <ion-toolbar>
+        <ion-button (click)="upload()" [disabled]="submitBtn" size="md">Save</ion-button>
+    </ion-toolbar>
+</ion-footer>
