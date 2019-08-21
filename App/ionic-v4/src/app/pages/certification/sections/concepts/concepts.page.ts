@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RestApiService } from '../../../../services/http/rest-api.service';
 import { AuthenticationService } from '../../../../services/user/authentication.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MenuController, ModalController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { AddModalComponent } from './add-modal/add-modal.component';
@@ -23,6 +23,7 @@ export class ConceptsPage implements OnInit {
   sectionId: any;
   titleEmiter: any;
   private subscription: Subscription;
+  private subscriptionBackNavigate: Subscription;
 
 
   constructor(
@@ -31,6 +32,7 @@ export class ConceptsPage implements OnInit {
     private actRoute: ActivatedRoute,
     private menu: MenuController,
     public modalcontroler: ModalController,
+    private router: Router
 
   ) {
     this.authService.authenticationState.subscribe((state) => {
@@ -38,14 +40,17 @@ export class ConceptsPage implements OnInit {
     });
     this.user = this.sessionData.user
   }
-  ionViewWillEnter() {
-    this.menu.enable(false, 'mainMenu')
-  }
+  // ionViewWillEnter() {
+  //   this.menu.enable(true, 'mainMenu')
+  // }
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.subscriptionBackNavigate.unsubscribe();
   }
   ngOnInit() {
-    this.menu.enable(false);
+    this.menu.enable(true);
+    this.menu.enable(true, 'mainMenu')
+    // this.menu.enable(true, 'mainMenu')
     let sectionId = this.sectionId = this.actRoute.snapshot.paramMap.get('sectionid');
     this.sectionPageId = this.actRoute.snapshot.paramMap.get('sectionpageid');
     if (this.sectionPageId) {
@@ -71,6 +76,14 @@ export class ConceptsPage implements OnInit {
     this.subscription = this.restApi.getSectionConcept().subscribe(res => {
       if (res) {
         this.popUpConcept();
+      }
+    });
+
+    this.subscriptionBackNavigate = this.restApi.getSectionConceptBackNavigate().subscribe(res => {
+      debugger;
+      if (res) {
+        let id = this.actRoute.snapshot.paramMap.get('sectionid');
+        this.router.navigate([`/certification/module/${id}`]);
       }
     });
   }

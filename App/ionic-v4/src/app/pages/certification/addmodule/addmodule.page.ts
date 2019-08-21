@@ -4,7 +4,7 @@ import { FormGroup, FormArray, FormControl, FormBuilder, Validators } from '@ang
 import { RestApiService } from 'src/app/services/http/rest-api.service';
 import { NotificationService } from 'src/app/services/notification/notification.service';
 import { AuthenticationService } from 'src/app/services/user/authentication.service';
-import { ModalController, PopoverController } from '@ionic/angular';
+import { ModalController, PopoverController, MenuController } from '@ionic/angular';
 import { AddEditModelComponent } from './add-edit-model/add-edit-model.component';
 import { AddEditPopoverComponent } from 'src/app/components/common/add-edit-popover/add-edit-popover.component';
 
@@ -24,11 +24,15 @@ export class AddmodulePage implements OnInit {
     private authService: AuthenticationService,
     public modalcontroler: ModalController,
     private notifictation: NotificationService,
-    public popoverController: PopoverController) { }
+    public popoverController: PopoverController,
+    public menu : MenuController) { }
   data: any[] = [];
   serverUrl: string = "./assets/img/";
   forms: FormGroup
   ngOnInit() {
+    debugger
+    this.menu.enable(true);
+    this.menu.enable(true, 'mainMenu')
     this.user = this.authService.getSessionData().user;
     this.id = this.actroute.snapshot.paramMap.get('id');
     // this.forms = this.fb.group({

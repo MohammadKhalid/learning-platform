@@ -111,7 +111,10 @@ export class SectionsPage implements OnInit {
     }, 100)
   }
   back() {
-    this.menu.enable(true, 'mainMenu')
+    this.apiSrv.populateSectionConceptBackNavigate();
+  //   let id = this.actRoute.snapshot.paramMap.get('id');
+  //   // this.menu.enable(true, 'mainMenu')
+  // this.reouter.navigate([`/certification/module/${id}`])
   }
 
   goto(route) {

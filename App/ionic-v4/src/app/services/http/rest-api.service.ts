@@ -17,7 +17,8 @@ export class RestApiService {
 	private sectionMenuDataResource = new BehaviorSubject(null);
 	private sectionConcept = new BehaviorSubject(null);
 	private sectionConceptSaveButton = new BehaviorSubject(null);
-
+	private sectionConceptBackNavigate = new BehaviorSubject(null);
+	
 
 	private sectionMenuDataStudent = new BehaviorSubject(null);
 	private sectionMenuDataResourceStudent = new BehaviorSubject(null);
@@ -264,12 +265,7 @@ export class RestApiService {
 		return this.sectionConcept.asObservable();
 	}
 	populateSectionConcept() {
-		// this.getPromise(`section-page/get-section-pages`, id).then(resSec => {
 		this.setSectionConcept(true);
-
-		// }).catch(err => {
-		// 	this.noti.showMsg(err);
-		// })
 	}
 	setSectionConcept(val: boolean) {
 		this.sectionConcept.next(val);
@@ -281,12 +277,7 @@ export class RestApiService {
 		return this.sectionConceptSaveButton.asObservable();
 	}
 	populateSectionConceptSaveButton() {
-		// this.getPromise(`section-page/get-section-pages`, id).then(resSec => {
 		this.setSectionConceptSaveButton(true);
-
-		// }).catch(err => {
-		// 	this.noti.showMsg(err);
-		// })
 	}
 	setSectionConceptSaveButton(val: boolean) {
 		this.sectionConceptSaveButton.next(val);
@@ -308,7 +299,6 @@ export class RestApiService {
 	setSectionMenuData(val: any) {
 		this.sectionMenuData.next(val);
 	}
-
 	// concepts student
 	getSectionMenuDataStudent(): Observable<any> {
 		return this.sectionMenuDataStudent.asObservable();
@@ -323,4 +313,28 @@ export class RestApiService {
 	setSectionMenuDataStudent(val: any) {
 		this.sectionMenuDataStudent.next(val);
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+		// concept back navigate  click start
+		getSectionConceptBackNavigate(): Observable<any> {
+			return this.sectionConceptBackNavigate.asObservable();
+		}
+		populateSectionConceptBackNavigate() {
+			this.setSectionConceptBackNavigate(true);
+		}
+		setSectionConceptBackNavigate(val: boolean) {
+			this.sectionConceptBackNavigate.next(val);
+		}
+		//concept  back navigate click end
 }
