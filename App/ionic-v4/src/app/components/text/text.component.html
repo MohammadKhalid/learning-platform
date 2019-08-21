@@ -13,9 +13,18 @@
             <ion-item lines="none">
                 <ion-label position="floating">
                 </ion-label>
-                <angular-editor id="angularEditor" formControlName="description" [config]="editorConfig"></angular-editor>
+                <angular-editor id="angularEditor" formControlName="description" [config]="editorConfig">
+                </angular-editor>
                 <!-- <ion-textarea placeholder="placeholder" rows="6" cols="20" formControlName="description"></ion-textarea> -->
             </ion-item>
+
+            <ion-item lines="inset">
+                <ion-label position="floating">Experience
+                    <ion-text color="danger">*</ion-text>
+                </ion-label>
+                <ion-input type="input" formControlName='experience' placeholder="Enter Experience"></ion-input>
+            </ion-item>
+
 
             <ion-item lines="none" class="ion-float-right ion-padding-top">
                 <ion-button type="submit" size="md" [disabled]="!addTextForm.valid">{{btnTxt}}</ion-button>

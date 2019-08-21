@@ -1,0 +1,40 @@
+<ion-header translucent="true">
+  <ion-toolbar mode="ios">
+    <ion-buttons slot="start">
+      <ion-button (click)="close()">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Add Concepts</ion-title>
+  </ion-toolbar>
+
+</ion-header>
+<ion-content padding fullscreen>
+
+<!-- coach side rendering start --> 
+    <ion-card>
+      <ion-card-content>
+        <mat-select [(ngModel)]="selectedOption" placeholder="Select option">
+          <mat-option *ngFor='let option of conceptOptions' [value]='option.id'>{{option.value}}</mat-option>
+        </mat-select>
+      </ion-card-content>
+    </ion-card> 
+  
+  <!-- coach side rendering end -->
+
+  <ion-list class="ion-padding">
+
+    <div>
+      <div *ngIf="selectedOption == 0">
+        <app-video [recordId]="sectionPageId" [sectionId]="sectionId"></app-video>
+      </div>
+      <div *ngIf="selectedOption == 1">
+        <app-text [sectionPageId]="sectionPageId" [sectionId]="sectionId" [recordId]="recordId"></app-text>
+      </div>
+      <div *ngIf="selectedOption == 2">
+        <app-quiz [sectionId]="sectionId" [quizTitle]="sectionPageId"></app-quiz>
+      </div>
+    </div>
+  </ion-list>
+
+</ion-content>

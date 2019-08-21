@@ -1,0 +1,72 @@
+<ion-header no-border>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="level-setting"></ion-back-button>
+        </ion-buttons>
+
+        <ion-title text-capitalize>
+            Level Setting
+        </ion-title>
+
+        <ion-buttons slot="end">
+            <ion-button [hidden]="!form.valid" strong="true" (click)="save()">
+                {{btnText}}
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+    <form [formGroup]="form">
+
+        <ion-list class="ion-padding">
+
+            <ion-list-header>
+                <ion-label color="primary">Add category</ion-label>
+            </ion-list-header>
+
+            <ion-item lines="inset">
+                <ion-label position="floating">Clients
+                    <ion-text color="danger">*</ion-text>
+                </ion-label>
+                <ion-select placeholder="Select client" (ionChange)="getCompanies()" formControlName="clientId">
+                    <ion-select-option *ngFor="let client of clients" [value]="client.id">{{client.name}}
+                    </ion-select-option>
+
+                </ion-select>
+            </ion-item>
+
+
+            <ion-item lines="inset">
+                <ion-label position="floating">Companies
+                    <ion-text color="danger">*</ion-text>
+                </ion-label>
+                <ion-select placeholder="Select Comapny" formControlName="companyId">
+                    <ion-select-option *ngFor="let company of companie" [value]="company.id">{{company.name}}
+                    </ion-select-option>
+
+                </ion-select>
+            </ion-item>
+
+            <ion-item lines="inset">
+                <ion-label position="stacked">Initial Level
+                    <ion-text color="danger">*</ion-text>
+                </ion-label>
+                <ion-input formControlName="initialLevel" name="title" placeholder="Enter initialLevel"></ion-input>
+            </ion-item>
+
+            <ion-item lines="inset">
+                <ion-label position="stacked">Initial Level
+                    <ion-text color="danger">*</ion-text>
+                </ion-label>
+                <ion-input formControlName="initialExperience" name="title" placeholder="Enter initialExperience"></ion-input>
+            </ion-item>
+
+
+
+        </ion-list>
+
+    </form>
+
+</ion-content>

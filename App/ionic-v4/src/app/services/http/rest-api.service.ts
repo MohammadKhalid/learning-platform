@@ -15,7 +15,10 @@ import { NotificationService } from '../notification/notification.service';
 export class RestApiService {
 	private sectionMenuData = new BehaviorSubject(null);
 	private sectionMenuDataResource = new BehaviorSubject(null);
-
+	private sectionConcept = new BehaviorSubject(null);
+	private sectionConceptSaveButton = new BehaviorSubject(null);
+	private sectionConceptBackNavigate = new BehaviorSubject(null);
+	private sectionResourceSaveButton = new BehaviorSubject(null);
 
 	private sectionMenuDataStudent = new BehaviorSubject(null);
 	private sectionMenuDataResourceStudent = new BehaviorSubject(null);
@@ -257,6 +260,30 @@ export class RestApiService {
 	get sectionId() {
 		return this._sectionId;
 	}
+	// concept click start
+	getSectionConcept(): Observable<any> {
+		return this.sectionConcept.asObservable();
+	}
+	populateSectionConcept() {
+		this.setSectionConcept(true);
+	}
+	setSectionConcept(val: boolean) {
+		this.sectionConcept.next(val);
+	}
+	//concept click end
+
+	// concept save button visible start
+	getSectionConceptSaveButton(): Observable<any> {
+		return this.sectionConceptSaveButton.asObservable();
+	}
+	populateSectionConceptSaveButton() {
+		this.setSectionConceptSaveButton(true);
+	}
+	setSectionConceptSaveButton(val: boolean) {
+		this.sectionConceptSaveButton.next(val);
+	}
+	//concept save button visible end
+
 
 	// concepts coach
 	getSectionMenuData(): Observable<any> {
@@ -272,7 +299,6 @@ export class RestApiService {
 	setSectionMenuData(val: any) {
 		this.sectionMenuData.next(val);
 	}
-
 	// concepts student
 	getSectionMenuDataStudent(): Observable<any> {
 		return this.sectionMenuDataStudent.asObservable();
@@ -287,4 +313,30 @@ export class RestApiService {
 	setSectionMenuDataStudent(val: any) {
 		this.sectionMenuDataStudent.next(val);
 	}
+
+
+		// concept back navigate  click start
+		getSectionConceptBackNavigate(): Observable<any> {
+			return this.sectionConceptBackNavigate.asObservable();
+		}
+		populateSectionConceptBackNavigate() {
+			this.setSectionConceptBackNavigate(true);
+		}
+		setSectionConceptBackNavigate(val: boolean) {
+			this.sectionConceptBackNavigate.next(val);
+		}
+		//concept  back navigate click end
+
+
+		// concept save button visible start
+	getSectionResourceSaveButton(): Observable<any> {
+		return this.sectionResourceSaveButton.asObservable();
+	}
+	populateSectionResourceSaveButton() {
+		this.setSectionConceptSaveButton(true);
+	}
+	setSectionResourceSaveButton(val: boolean) {
+		this.sectionResourceSaveButton.next(val);
+	}
+	//concept save button visible end
 }

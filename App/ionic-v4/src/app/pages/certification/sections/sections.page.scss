@@ -1,4 +1,4 @@
-.toolbar-Background{
+.toolbar-Background {
     --background: #1c262f
 }
 
@@ -20,7 +20,7 @@
     color: #02b3e7;
 }
 
- ::ng-deep .mat-expansion-panel-body {
+::ng-deep .mat-expansion-panel-body {
     padding: 0 0 16px 24px !important;
 }
 
@@ -145,9 +145,11 @@
         color: #318ca9;
         padding-left: 40px;
     }
+
     .certificate-Sbar {
         width: 49%;
     }
+
     .send-feedBack {
         font-size: 10px;
     }
@@ -203,11 +205,14 @@
 
 .setWidth {
     width: 218px;
-} 
+}
 
-.concept-title-adjustment{
+.concept-title-adjustment {
     padding-top: 10px;
     padding-left: 10px;
     background: #2e3d49
 }
 
+.top-icon-default {
+    color: #318ca9;
+}

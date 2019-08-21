@@ -15,6 +15,8 @@ import { AngularEditorConfig } from '@kolkov/angular-editor';
 export class TextComponent implements OnInit {
   @Input() sectionId: any;
   @Input() recordId: any;
+  @Input() sectionPageId: any;
+
   addTextForm: FormGroup
   btnTxt: string = 'Save'
   title: any;
@@ -73,7 +75,7 @@ export class TextComponent implements OnInit {
     this.id = this.actroute.snapshot.paramMap.get('id');
 
     this.formInitialize();
-    if (this.recordId && this.sectionId) {
+    if (this.recordId && this.sectionPageId) {
       this.btnTxt = "update"
       let id = this.activeRoute.snapshot.paramMap.get('id')
       this.sectionId = id
@@ -96,8 +98,6 @@ export class TextComponent implements OnInit {
   }
 
   addText() {
-
-
     if (this.recordId) {
       this.serviceApi.putPromise(`text/${this.recordId}`, this.addTextForm.value).then(res => {
 
@@ -108,8 +108,8 @@ export class TextComponent implements OnInit {
         this.noti.showMsg(err)
       })
 
-    } else {
-
+    }
+    else {
       this.serviceApi.postPromise('text', this.addTextForm.value).then(res => {
         this.loadingController.dismiss()
         this.noti.showMsg('text Created');

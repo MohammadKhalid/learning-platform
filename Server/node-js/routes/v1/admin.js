@@ -122,11 +122,16 @@ courseCategoryRoutes.get('/:item_id', courseCategoryController.get);
 courseCategoryRoutes.put('/:item_id', courseCategoryController.update);
 courseCategoryRoutes.delete('/:item_id', courseCategoryController.remove);
 
+
+//level settings
+
 const levelSettingRoutes = express.Router();
 adminRouter.use('/levelSetting', levelSettingRoutes);
 
-levelSettingRoutes.get('/:adminId',levelSettingController.get)
+levelSettingRoutes.get('/get/:itemId',levelSettingController.get)
 levelSettingRoutes.post('/',levelSettingController.create)
+levelSettingRoutes.get('/get-all', levelSettingController.getAll);
+levelSettingRoutes.put('/update/:itemId', levelSettingController.update);
 
 // // profile
 // const profileRoutes = express.Router();
