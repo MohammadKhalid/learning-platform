@@ -1,4 +1,4 @@
-const { Section, Course } = require('../../models');
+const { Section, Course, SectionPage } = require('../../models');
 const { to, ReE, ReS } = require('../../services/util.service');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -19,7 +19,17 @@ module.exports.create = create;
 
 const removeSection = async (req, res) => {
     let { sectionId } = req.params
-    const section = await Section.destroy({
+    const sectionPage = await SectionPage.destroy({
+        include: [{
+            model: Section,
+            as: 'Section'
+        }],
+        where: {
+            sectionId: sectionId
+        }
+    })
+
+    let section = await Section.destroy({
         where: {
             id: sectionId
         }
@@ -37,13 +47,13 @@ const updateSection = async (req, res) => {
         description: description,
         totalExperience: totalExperience,
     }, {
-        where: {
-            id: sectionId
-        }
-    })
+            where: {
+                id: sectionId
+            }
+        })
 
     const section = await Section.findAll({
-        where:{
+        where: {
             id: sectionId
         }
     })

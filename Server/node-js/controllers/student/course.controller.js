@@ -1,15 +1,29 @@
-const { Course, CourseCategory, StudentCourse, Section, User } = require('../../models');
+const { Course, CourseCategory, UserCompany, StudentCourse, Section, User } = require('../../models');
 const { to, ReE, ReS } = require('../../services/util.service');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 
 const getCourses = async (req, res) => {
-    let { adminId, categories, searchBy, userId } = req.query;
-    let coachIds = await User.findAll({
-        where: { createdBy: adminId, type: 'coach' },
-        attributes: ['id']
+    let { categories, searchBy, userId } = req.query;
+    // let coachIds = await User.findAll({
+    //     where: { createdBy: adminId, type: 'coach' },
+    //     attributes: ['id']
+    // });
+    let studentCompany = await UserCompany.findAll({
+        where:{
+            userId: userId
+        }
     });
+    let studentCompanyId = studentCompany[0].companyId
+
+    let coachIds = await UserCompany.findAll({
+        attributes: ['userId'],
+        where: {
+            companyId: studentCompanyId
+        }
+    })
+
     let courseIds = await StudentCourse.findAll({
         attributes: ['CourseId'],
         where: {
@@ -20,7 +34,7 @@ const getCourses = async (req, res) => {
     let condition = {}
     let categoryCondition = {}
     condition.createdBy = {
-        [Op.in]: coachIds.map(x => x.id)
+        [Op.in]: coachIds.map(x => x.userId)
     }
 
     if (categories) {

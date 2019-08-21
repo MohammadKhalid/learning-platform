@@ -1,4 +1,4 @@
-const { Sequelize, CourseCategory,UserCompany, Section, Text, Lesson, Resource, Quiz, Course, SectionPage, StudentProgress } = require('../../models');
+const { Sequelize, CourseCategory, UserCompany, Section, Text, Lesson, Resource, Quiz, Course, SectionPage, StudentProgress } = require('../../models');
 const { to, ReE, ReS } = require('../../services/util.service');
 const Op = Sequelize.Op;
 // const uuidv4 = require('uuid/v4')
@@ -7,7 +7,7 @@ const getAllCourse = async function (req, res) {
     let { userId } = req.params;
     const company = await UserCompany.findAll({
         attributes: ['companyId'],
-        where:{
+        where: {
             userId: userId
         }
     })
@@ -98,8 +98,9 @@ module.exports.sectionDetailsForStudent = sectionDetailsForStudent;
 
 const getSections = async (req, res) => {
     let { courseId } = req.params
-    const section = await Section.findAll({
-        attributes: ['id', 'title', 'description', 'totalExperience','courseId'],
+    let flag = 'Section'
+    let section = await Section.findAll({
+        attributes: ['id', 'title', 'description', 'totalExperience', 'courseId'],
         include: [{
             model: Course,
             as: "course",
@@ -109,7 +110,15 @@ const getSections = async (req, res) => {
             courseId: courseId
         }
     })
-    if (section) return ReS(res, { data: section }, 200);
+    if (section.length == 0) {
+        flag = 'Course'
+        section = await Course.findAll({
+            where: {
+                id: courseId
+            }
+        })
+    }
+    if (section) return ReS(res, { data: section, flag: flag }, 200);
     else return ReE(res, { message: 'Unable to insert Course.' }, 500)
 }
 module.exports.getSections = getSections;
@@ -151,7 +160,7 @@ const getSectionItems = async (req, res) => {
     })
 
 
-    
+
 
     if (req.user.type == "student") {
         console.log(req.user.type);

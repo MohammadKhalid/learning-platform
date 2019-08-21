@@ -2,7 +2,7 @@
     <ion-toolbar color="primary">
 
 
-        <ion-title>Modules</ion-title>
+        <ion-title>{{ courseTitle }}</ion-title>
         <ion-buttons slot="start">
             <ion-back-button defaultHref="/certification"></ion-back-button>
         </ion-buttons>
@@ -14,9 +14,20 @@
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
+<!-- 
+<ion-card ion-no-padding>
+    <ion-card-header>
+        <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
+        <ion-card-title>Card Title</ion-card-title>
+    </ion-card-header>
 
-<ion-content padding>
-    <div *ngIf="data.length > 0">
+    <ion-card-content>
+        Keep close to Nature's heart... and break clear away, once in awhile,
+        and climb a mountain or spend a week in the woods. Wash your spirit clean.
+    </ion-card-content>
+</ion-card> -->
+<ion-content  class="hide-scroll">
+    <div *ngIf="data.length > 0" padding>
 
 
         <div class="card-main" *ngFor="let x of data">
@@ -54,7 +65,7 @@
                             </div>
 
                         </div>
-                        <div class="btnbtn">
+                        <div *ngIf="user.type == 'student'" class="btnbtn">
                             <ion-button size="small" class="ionBtn" fill="outline">Start Lesson</ion-button>
                         </div>
                     </ion-label>
@@ -65,6 +76,6 @@
         </div>
     </div>
 
- 
+
 
 </ion-content>
