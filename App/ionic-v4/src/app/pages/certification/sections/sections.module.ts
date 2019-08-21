@@ -52,7 +52,7 @@ const routes: Routes = [
     PipesModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [SectionsPage, OrderByDatePipe, ResourceAddModelComponent],
+  declarations: [SectionsPage, ResourceAddModelComponent],
   entryComponents: [ResourceAddModelComponent],
 
 })

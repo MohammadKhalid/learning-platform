@@ -147,6 +147,7 @@ export class SectionsPage implements OnInit {
   deleteSectionPage(data) {
     this.deleteId = data.id
     this.apiSrv.delete(`section-page/${data.id}`).subscribe(response => {
+      debugger
       this.listData = this.listData.filter(x => x.id != data.id)
       this.isDeletedClicked = false
       this.deleteId = 0

@@ -21,6 +21,7 @@ export class ConceptsPage implements OnInit {
   type: any;
   quizTitle: any;
   sectionId: any;
+  sectionConceptData: any = [];
   titleEmiter: any;
   private subscription: Subscription;
   private subscriptionBackNavigate: Subscription;
@@ -69,8 +70,14 @@ export class ConceptsPage implements OnInit {
     //   this.restApi.setSectionMenuData(res.data);
     // })
     // this.conceptOptions = this.restApi.getConceptsOptins();
-    if (this.sectionPageId && type) {
-      this.selectedOption = this.restApi.getConceptsOptionsByname(type);
+    if (this.sectionPageId && this.sectionPageId) {
+      debugger
+      this.restApi.getPromise('section-page/get-section-items', this.sectionPageId)
+        .then(response => {
+          this.sectionConceptData = response.data
+        }).catch(error => {
+
+        })
     }
 
     this.subscription = this.restApi.getSectionConcept().subscribe(res => {

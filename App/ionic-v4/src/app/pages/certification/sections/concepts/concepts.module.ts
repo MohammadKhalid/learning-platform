@@ -9,6 +9,7 @@ import { ConceptsPage } from './concepts.page';
 import { MatSelectModule } from '@angular/material';
 import { ComponentsModule } from 'src/app/components/components.module';
 import { AddModalComponent } from './add-modal/add-modal.component';
+import { PipesModule } from 'src/app/pipes/pipes.module';
 
 const routes: Routes = [
   {
@@ -21,6 +22,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
+    PipesModule,
     IonicModule,
     MatSelectModule,
     ComponentsModule,

@@ -1,31 +1,35 @@
-
-
-
 <!-- coach side rendering start -->
-<ion-content *ngIf="user.type ==='coach'" ion-padding style="height: calc(100vh - 160px);">
-    <!-- <div>
-        <div *ngIf="selectedOption == 0">
-            <app-video [recordId]="recordId" [sectionId]="sectionId"></app-video>
-        </div>
-        <div *ngIf="selectedOption == 1">
-            <app-text [recordId]="recordId" [sectionId]="sectionId"></app-text>
-        </div>
-        <div *ngIf="selectedOption == 2">
-            <app-quiz [sectionId]="sectionId" [quizTitle]="recordId"></app-quiz>
-        </div>
-    </div> -->
+<ion-content *ngIf="user.type ==='coach'" ion-padding>
+    <div *ngFor="let DataRow of sectionConceptData | orderByDate">
+        <ion-card *ngIf="DataRow.type === 'Text'">
+            <ion-card-header>
+                <ion-card-title>{{DataRow.title}}</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+                <app-student-text [data]="DataRow"></app-student-text>
+            </ion-card-content>
+        </ion-card>
+        <ion-card *ngIf="DataRow.type === 'Lesson'">
+            <ion-card-header>
+                <ion-card-title>{{DataRow.title}}</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+                <app-video-student [data]="DataRow"></app-video-student>
+            </ion-card-content>
+        </ion-card>
+    </div>
 </ion-content>
 <!-- coach side rendering end -->
 
 <!-- student side rendering start -->
 <ion-content ion-padding [ngClass]="{'content-black':type === 'Lesson'}" *ngIf="user.type ==='student'">
     <div>
-        <div *ngIf="type === 'Text'">
+        <!-- <div *ngIf="type === 'Text'">
             <app-student-text [sectionId]="sectionId" [recordId]="recordId"></app-student-text>
         </div>
         <div *ngIf="type === 'Lesson'">
             <app-video-student (titleEvent)="titleEvent($event)" [recordId]="recordId"></app-video-student>
-        </div>
+        </div> -->
 
         <div *ngIf="type === 'Quiz'">
             <app-quiz-student [recordId]="recordId" [sectionId]="sectionId"></app-quiz-student>
