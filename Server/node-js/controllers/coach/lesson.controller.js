@@ -5,13 +5,13 @@ const Op = Sequelize.Op;
 
 
 const create = async (req, res) => {
-    let { url, description, experience, sectionId, title } = req.body
+    let { url, description, experience, sectionPageId, title } = req.body
     const lesson = await Lesson.create({
         url: url,
         title: title,
         description: description,
         experience: experience,
-        sectionId: sectionId,
+        sectionPageId: sectionPageId,
     })
     if (lesson) return ReS(res, { data: lesson }, 200);
     else return ReE(res, { message: 'Unable to insert Course.' }, 500)

@@ -131,12 +131,12 @@ const getSideMenuItems = async (req, res) => {
             sectionId: sectionId
         }
     })
-    const resources = await Resource.findAll({
-        where: {
-            sectionPageId: sectionId
-        }
-    })
-    if (sectionpage) return ReS(res, { concept: sectionpage, resource: resources }, 200);
+    // const resources = await Resource.findAll({
+    //     where: {
+    //         sectionId: sectionId
+    //     }
+    // })
+    if (sectionpage) return ReS(res, { concept: sectionpage }, 200);
     else return ReE(res, { message: 'Unable to get Section Page.' }, 500)
 }
 module.exports.getSideMenuItems = getSideMenuItems;
@@ -159,18 +159,15 @@ const getSectionItems = async (req, res) => {
         }
     })
 
+    // if (req.user.type == "student") {
+    //     console.log(req.user.type);
+    //     const studentProgress = await StudentProgress.create({
+    //         studentId: studentId,
+    //         sectionPageId: sectionPageId
+    //     })
+    // }
 
-
-
-    if (req.user.type == "student") {
-        console.log(req.user.type);
-        const studentProgress = await StudentProgress.create({
-            studentId: studentId,
-            sectionPageId: sectionPageId
-        })
-    }
-
-    if (sectionpage) return ReS(res, { data: sectionpage }, 200);
+    if (sectionpage) return ReS(res, { data: [...sectionpage[0].Lesson,...sectionpage[0].Text,...sectionpage[0].Quiz] }, 200);
     else return ReE(res, { message: 'Unable to get Section Page.' }, 500)
 }
 module.exports.getSectionItems = getSectionItems;
