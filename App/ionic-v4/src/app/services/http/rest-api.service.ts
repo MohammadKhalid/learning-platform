@@ -264,11 +264,14 @@ export class RestApiService {
 	getSectionConcept(): Observable<any> {
 		return this.sectionConcept.asObservable();
 	}
-	populateSectionConcept() {
-		this.setSectionConcept(true);
+	populateSectionConcept(val: boolean) {
+		this.setSectionConcept(val);
 	}
 	setSectionConcept(val: boolean) {
 		this.sectionConcept.next(val);
+	}
+	setSectionConceptUnsub() {
+		this.sectionConcept.next(false);
 	}
 	//concept click end
 
@@ -315,20 +318,20 @@ export class RestApiService {
 	}
 
 
-		// concept back navigate  click start
-		getSectionConceptBackNavigate(): Observable<any> {
-			return this.sectionConceptBackNavigate.asObservable();
-		}
-		populateSectionConceptBackNavigate() {
-			this.setSectionConceptBackNavigate(true);
-		}
-		setSectionConceptBackNavigate(val: boolean) {
-			this.sectionConceptBackNavigate.next(val);
-		}
-		//concept  back navigate click end
+	// concept back navigate  click start
+	getSectionConceptBackNavigate(): Observable<any> {
+		return this.sectionConceptBackNavigate.asObservable();
+	}
+	populateSectionConceptBackNavigate() {
+		this.setSectionConceptBackNavigate(true);
+	}
+	setSectionConceptBackNavigate(val: boolean) {
+		this.sectionConceptBackNavigate.next(val);
+	}
+	//concept  back navigate click end
 
 
-		// concept save button visible start
+	// concept save button visible start
 	getSectionResourceSaveButton(): Observable<any> {
 		return this.sectionResourceSaveButton.asObservable();
 	}

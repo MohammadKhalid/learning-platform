@@ -72,7 +72,7 @@ export class TextComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.id = this.actroute.snapshot.paramMap.get('id');
+    this.id = this.actroute.snapshot.paramMap.get('sectionpageid');
 
     this.formInitialize();
     if (this.recordId && this.sectionPageId) {
@@ -92,7 +92,8 @@ export class TextComponent implements OnInit {
     this.addTextForm = this.formValue.group({
       title: new FormControl('', Validators.required),
       description: new FormControl('', Validators.required),
-      sectionId: this.id,
+      sectionPageId: this.sectionPageId,
+      experience : new FormControl('',Validators.required)
     })
 
   }
@@ -115,7 +116,7 @@ export class TextComponent implements OnInit {
         this.noti.showMsg('text Created');
         let id = this.actroute.snapshot.paramMap.get('id');
         this.serviceApi.populateSectionSubMenu(id);
-        this.router.navigate([`certification/sections/concepts/${this.sectionId}/${res.data.id}/Text`])
+        // this.router.navigate([`certification/sections/concepts/${this.sectionId}/${res.data.id}/Text`])
 
       }).catch(err => {
         this.noti.showMsg(err);

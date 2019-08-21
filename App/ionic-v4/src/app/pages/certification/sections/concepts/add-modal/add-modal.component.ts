@@ -23,7 +23,11 @@ export class AddModalComponent implements OnInit {
     this.conceptOptions = this.restApi.getConceptsOptins();
     
   }
-  
+  eventEmitterCloseModel(){
+    debugger
+    this.close()
+    this.restApi.setSectionConceptUnsub();
+  }
   close() {
     this.cntrl.dismiss();
   }

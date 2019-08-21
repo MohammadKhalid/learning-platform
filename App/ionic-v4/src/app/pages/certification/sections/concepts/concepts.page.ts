@@ -71,7 +71,7 @@ export class ConceptsPage implements OnInit {
     // })
     // this.conceptOptions = this.restApi.getConceptsOptins();
     if (this.sectionPageId && this.sectionPageId) {
-      debugger
+  
       this.restApi.getPromise('section-page/get-section-items', this.sectionPageId)
         .then(response => {
           this.sectionConceptData = response.data
@@ -81,13 +81,15 @@ export class ConceptsPage implements OnInit {
     }
 
     this.subscription = this.restApi.getSectionConcept().subscribe(res => {
+     
+      debugger
       if (res) {
         this.popUpConcept();
       }
     });
 
     this.subscriptionBackNavigate = this.restApi.getSectionConceptBackNavigate().subscribe(res => {
-      debugger;
+
       if (res) {
         let id = this.actRoute.snapshot.paramMap.get('sectionid');
         this.router.navigate([`/certification/module/${id}`]);

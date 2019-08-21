@@ -77,7 +77,7 @@ export class SectionsPage implements OnInit {
       if (res) {
         res.concept ? this.listData = res.concept : '';
         res.resource ? this.listResourceData = res.resource : '';
-        debugger;
+        
         this.lessonName = "Lesson name";
       }
     });
@@ -147,7 +147,7 @@ export class SectionsPage implements OnInit {
   deleteSectionPage(data) {
     this.deleteId = data.id
     this.apiSrv.delete(`section-page/${data.id}`).subscribe(response => {
-      debugger
+      
       this.listData = this.listData.filter(x => x.id != data.id)
       this.isDeletedClicked = false
       this.deleteId = 0
@@ -220,7 +220,7 @@ export class SectionsPage implements OnInit {
     // }
   }
   addConcept() {
-    this.apiSrv.populateSectionConcept();
+    this.apiSrv.populateSectionConcept(true);
   }
   async popUpResource() {
     let sectionId = this.apiSrv.sectionId;
