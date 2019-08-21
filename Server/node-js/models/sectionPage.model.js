@@ -18,7 +18,6 @@ module.exports = (sequelize, DataTypes) => {
         this.hasMany(models.Text, { as: 'Text', foreignKey: 'sectionPageId' });
         this.hasMany(models.Lesson, { as: 'Lesson', foreignKey: 'sectionPageId' });
         this.hasMany(models.Quiz, { as: 'Quiz', foreignKey: 'sectionPageId' });
-        this.hasMany(models.Resource, { as: 'Resource', foreignKey: 'sectionPageId' });
     };
 
 

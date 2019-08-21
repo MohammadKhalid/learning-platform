@@ -17,6 +17,7 @@ export class AddmodulePage implements OnInit {
 
   id: any = "";
   user: any;
+  courseTitle: 'Course Name'
   constructor(private router: Router,
     private fb: FormBuilder,
     private actroute: ActivatedRoute,
@@ -47,8 +48,12 @@ export class AddmodulePage implements OnInit {
 
 
     this.service.getPromise('section/get-sections', this.id).then(res => {
-      this.data = res.data;
-
+      if(res.flag == 'Section'){
+        this.data = res.data;
+        this.courseTitle = res.data[0].course.title
+      }else{
+        this.courseTitle = res.data[0].title
+      }
     }).catch(err => {
     })
 
