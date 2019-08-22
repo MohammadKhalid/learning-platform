@@ -1,22 +1,21 @@
 <!-- coach side rendering start -->
 <ion-content *ngIf="user.type ==='coach'" ion-padding>
     <div *ngFor="let DataRow of sectionConceptData | orderByDate">
-        <ion-card *ngIf="DataRow.type === 'Text'">
-            <ion-card-header>
-                <ion-card-title>{{DataRow.title}}</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-                <app-student-text [data]="DataRow"></app-student-text>
-            </ion-card-content>
-        </ion-card>
-        <ion-card *ngIf="DataRow.type === 'Lesson'">
-            <ion-card-header>
-                <ion-card-title>{{DataRow.title}}</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-                <app-video-student [data]="DataRow"></app-video-student>
-            </ion-card-content>
-        </ion-card>
+        <!-- text start -->
+        <div *ngIf="DataRow.type === 'Text'">
+            <app-student-text [data]="DataRow"></app-student-text>
+
+        </div>
+
+        <!-- text end -->
+
+
+        <!-- lesson start -->
+        <div *ngIf="DataRow.type === 'Lesson'">
+            <app-video-student [data]="DataRow"></app-video-student>
+        </div>
+        <!-- lesson start -->
+
     </div>
 </ion-content>
 <!-- coach side rendering end -->

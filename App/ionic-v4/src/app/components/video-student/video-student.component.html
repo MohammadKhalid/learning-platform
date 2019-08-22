@@ -1,4 +1,18 @@
-<div class="iframe-container">
-      <iframe allowfullscreen [src]="youtubeKey | safe" >
-  </iframe>
-</div>
+
+
+
+
+
+<ion-card >
+  <ion-card-header>
+    <ion-card-title>{{title}}</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+      <div class="app-video-student">
+          <div class="iframe-container">
+            <iframe allowfullscreen [src]="youtubeKey | safe">
+            </iframe>
+          </div>
+        </div>
+  </ion-card-content>
+</ion-card>
