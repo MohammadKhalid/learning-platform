@@ -176,7 +176,7 @@ coachRouter.use('/resource', resourceRoutes)
 
 resourceRoutes.post('/', resourcesUpload, resourceController.create)
 // resourceRoutes.get('/get-section-resources/:sectionId/:title', resourceController.getSectionResources)
-resourceRoutes.get('/get-resources/:sectionPageId', resourceController.getResources)
+resourceRoutes.get('/get-resources/:sectionId', resourceController.getResources)
 // resourceRoutes.put('/update-section-resources', resourcesUpload, resourceController.updateResource)
 resourceRoutes.delete('/:resourceId', resourceController.remove)
 
@@ -189,5 +189,8 @@ coachRouter.use('/quiz', quizRoutes)
 quizRoutes.post('/', quizController.create)
 quizRoutes.get('/:sectionId/:title', quizController.getQuize)
 quizRoutes.get('/get-title/:sectionId/:title', quizController.getTitle)
+quizRoutes.delete('/:quizId', quizController.remove)
+quizRoutes.put('/:quizId', quizController.update)
+
 
 module.exports = coachRouter;

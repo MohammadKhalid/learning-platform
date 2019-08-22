@@ -226,7 +226,6 @@ const getSectionItems = async (req, res) => {
 
 
     }
-
     if (sectionpage) return ReS(res, { data: [...sectionpage[0].Lesson, ...sectionpage[0].Text, ...sectionpage[0].Quiz] }, 200);
     else return ReE(res, { message: 'Unable to get Section Page.' }, 500)
 }

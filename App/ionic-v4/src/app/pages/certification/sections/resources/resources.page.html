@@ -1,11 +1,11 @@
 <ion-content ion-padding>
-  <div *ngIf="user.type ==='coach'">
-    <app-resources [resourceTitle]="recordId" [sectionId]="sectionId"></app-resources>
-  </div>
+    <div *ngIf="user.type ==='coach'">
+        <app-resources [resourceTitle]="recordId" [sectionId]="sectionId"></app-resources>
+    </div>
 
-  <div *ngIf="user.type ==='student'">
-    <app-student-resources [sectionId]="sectionId" [resourceTitle]="recordId"></app-student-resources>
-  </div>
-  <!-- <div *ngIf="type === 'Resource'">
+    <div *ngIf="user.type ==='student'">
+        <app-student-resources [sectionId]="sectionId" [resourceTitle]="recordId"></app-student-resources>
+    </div>
+    <!-- <div *ngIf="type === 'Resource'">
   </div> -->
 </ion-content>

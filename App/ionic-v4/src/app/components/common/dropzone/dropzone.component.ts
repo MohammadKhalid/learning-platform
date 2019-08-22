@@ -7,7 +7,10 @@ import { NotificationService } from 'src/app/services/notification/notification.
   styleUrls: ['./dropzone.component.scss'],
 })
 export class DropzoneComponent implements OnInit {
-  public uploader: FileUploader = new FileUploader({});
+  public uploader: FileUploader = new FileUploader({
+    maxFileSize:10000
+    
+  });
   @Output() eventBtnSubmit = new EventEmitter<number>();
 
   public hasBaseDropZoneOver: boolean = false;
@@ -36,6 +39,12 @@ export class DropzoneComponent implements OnInit {
   fileOverBase(ev): void {
     this.hasBaseDropZoneOver = ev;
   }
+  // readFile(fileEvent : any){
+  //   const file = fileEvent.target.files[0];
+  //   console.log('file', file.size);
+    
+
+  // }
 
   removeFile(file) {
     this.uploader.removeFromQueue(file);
