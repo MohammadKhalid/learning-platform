@@ -11,10 +11,11 @@ import { Router } from '@angular/router';
 export class QuizComponent implements OnInit {
   quizes: any = [];
   @Input() sectionPageId: any;
+  @Input() sectionId: any;
   // @Input() quizTitle: any;
   btnTxt: string = 'Save'
   title: any;
-  oldTitle: string;
+  // oldTitle: string;
   isBtnDisable: boolean = true;
 
   constructor(
@@ -74,15 +75,16 @@ export class QuizComponent implements OnInit {
   }
 
   saveQuestion() {
+    debugger;
     let obj = {
       sectionPageId: this.sectionPageId,
       title: this.title,
       quizes: this.quizes,
-      oldTitle: this.oldTitle
+      // oldTitle: this.oldTitle
     }
     this.restApi.postPromise('quiz', obj)
       .then(response => {
-        this.router.navigate([`certification/sections/concepts/${this.sectionPageId}/${this.title}/Quiz`])
+        this.router.navigate([`certification/sections/concepts/${this.sectionId}/${this.sectionPageId}`])
         this.notificationService.showMsg('Record Insert');
       }).catch(err => {
         this.notificationService.showMsg(err);
