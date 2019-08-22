@@ -92,7 +92,7 @@ export class QuizComponent implements OnInit {
   }
   // validate() {
   //   setTimeout(() => {
-  //     this.isBtnDisable = !this.isBtnDisable;
+//     this.isBtnDisable = !this.isBtnDisable;
   //   }, 5000);
     
   // }

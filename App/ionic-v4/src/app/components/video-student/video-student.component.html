@@ -1,7 +1,10 @@
 <div class="color-adjustment">
-  <!-- <ion-card > -->
   <ion-card-header no-padding>
-    <ion-card-title class="header-title-video">{{title}}</ion-card-title>
+   
+      <ion-card-title class="header-title-video">{{title}}</ion-card-title>
+    <ion-icon (click)='deleteLesson()' name="trash"></ion-icon>
+    <ion-spinner *ngIf="isDeletedClicked" name="lines-small" color="dark">
+    </ion-spinner>
   </ion-card-header>
   <ion-card-content>
     <div class="app-video-student">
@@ -11,5 +14,4 @@
       </div>
     </div>
   </ion-card-content>
-  <!-- </ion-card> -->
 </div>

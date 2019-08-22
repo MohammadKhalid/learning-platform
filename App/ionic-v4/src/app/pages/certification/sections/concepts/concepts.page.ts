@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MenuController, ModalController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { AddModalComponent } from './add-modal/add-modal.component';
+import { QuizEditModalComponent } from 'src/app/components/quiz-edit-modal/quiz-edit-modal.component';
 @Component({
   selector: 'app-concepts',
   templateUrl: './concepts.page.html',
@@ -25,7 +26,7 @@ export class ConceptsPage implements OnInit {
   titleEmiter: any;
   private subscription: Subscription;
   private subscriptionBackNavigate: Subscription;
-
+  // quizIndex: number = 1;
 
   constructor(
     private restApi: RestApiService,
@@ -48,6 +49,16 @@ export class ConceptsPage implements OnInit {
     this.subscription.unsubscribe();
     this.subscriptionBackNavigate.unsubscribe();
   }
+  // QuizIndexEitter() {
+  //   debugger;
+  //   this.quizIndex++;
+  // }
+
+  removeItem(data) {
+    this.sectionConceptData.splice(this.sectionConceptData.indexOf(data), 1)
+
+  }
+
   ngOnInit() {
     this.menu.enable(true);
     this.menu.enable(true, 'mainMenu')
@@ -71,7 +82,7 @@ export class ConceptsPage implements OnInit {
     // })
     // this.conceptOptions = this.restApi.getConceptsOptins();
     if (this.sectionPageId && this.sectionPageId) {
-  
+
       this.restApi.getPromise('section-page/get-section-items', this.sectionPageId)
         .then(response => {
           this.sectionConceptData = response.data
@@ -81,7 +92,7 @@ export class ConceptsPage implements OnInit {
     }
 
     this.subscription = this.restApi.getSectionConcept().subscribe(res => {
-           if (res) {
+      if (res) {
         this.popUpConcept();
       }
     });
@@ -113,5 +124,27 @@ export class ConceptsPage implements OnInit {
     modal.onDidDismiss().then(() => {
     });
     await modal.present();
+  }
+
+
+  async openQuizEditModal(data?: any) {
+    debugger
+    const modal: HTMLIonModalElement =
+      await this.modalcontroler.create({
+        component: QuizEditModalComponent,
+        componentProps: {
+          data: data,
+          updateList: this.updateList.bind(this),
+                  }
+      });
+
+    modal.onDidDismiss().then(() => {
+    });
+    await modal.present();
+  }
+  
+  updateList(res) {
+    var index = this.sectionConceptData.findIndex(item => item.id === res.data.id);
+    this.sectionConceptData.splice(index, 1, res.data);
   }
 }

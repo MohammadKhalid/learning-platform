@@ -38,7 +38,7 @@ const getResources = async function (req, res) {
         where: {
             sectionId: sectionId
         },
-        group: ['title']
+        // group: ['title']
     })
 
     if (resources) return ReS(res, { data: resources }, 200);
@@ -73,11 +73,9 @@ module.exports.getResources = getResources;
 // module.exports.updateResource = updateResource;
 
 const remove = async function (req, res) {
-    let { resourceId, filename } = req.params;
-    const filePath = path.join(__dirname, '../../uploads/resources/');
-    fs.existsSync(`${filePath}${filename}`) == true ? fs.unlinkSync(`${filePath}${filename}`) : null;
+    let { resourceId } = req.params;
 
-    const resource = Resource.destroy({
+    const resource = await Resource.destroy({
         where: {
             id: resourceId
         }

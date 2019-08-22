@@ -258,6 +258,7 @@ export class RestApiService {
 		this._sectionId = id;
 	}
 	get sectionId() {
+		debugger
 		return this._sectionId;
 	}
 	// concept click start

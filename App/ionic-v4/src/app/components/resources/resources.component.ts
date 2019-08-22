@@ -34,11 +34,12 @@ export class ResourcesComponent implements OnInit {
   ) { }
   ngOnInit() {
     this.title = "";
-    if (this.sectionId && this.resourceTitle) {
+    if (this.sectionId) {
       this.btnTxt = "Update";
       this.oldTitle = this.title = this.resourceTitle;
 
-      this.restApi.getPromise(`resource/get-section-resources/${this.sectionId}/${this.oldTitle}`).then(res => {
+      this.restApi.getPromise(`resource/get-resources/${this.sectionId}`).then(res => {
+        debugger;
         this.fileData = res.data;
       }).catch(err => {
         this.notificationService.showMsg('server down');
@@ -48,19 +49,20 @@ export class ResourcesComponent implements OnInit {
 
 
   }
-  // show(filename){ 
-  //   debugger
-  //   let fileExt = filename.split('.')
-  //   if(fileExt[1]== "docx"){
-
-  //     return 'cart';
-  //   }else if(fileExt[1] == "pdf"){
-  //     return 'checkmark-circle';
-  //   }else {
-  //   return 'football'
-  //   }
-  // }
+  show(filename){ 
+   
+    let fileExt = filename.split('.')
+    if(fileExt[1]== "jpeg"){
+       
+      return 'book';
+    }else if(fileExt[1] == "png"){
+      return 'checkmark-circle';
+    }else {
+    return 'mail'
+    }
+  }
   upload() {
+    debugger
     this.files = this.fileField.getFiles();
     console.log(this.files);
     let formData = new FormData();
@@ -74,8 +76,8 @@ export class ResourcesComponent implements OnInit {
     formData.append('sectionId', this.sectionId);
     formData.append('title', this.title);
     // this.fileField.removeAll();
-    if (this.oldTitle) {
-      formData.append('oldTitle', this.oldTitle);
+    if (this.sectionId) {
+      // formData.append('oldTitle', this.oldTitle);
       this.restApi.putPromise('resource/update-section-resources', formData)
         .then(res => {
           this.files = res.data;
@@ -143,7 +145,7 @@ export class ResourcesComponent implements OnInit {
     });
   }
   deleteFile(file) {
-    this.restApi.delete(`resource/${file.id}/${file.url}`).subscribe(res => {
+    this.restApi.delete(`resource/${file.id}`).subscribe(res => {
       if (res) {
         this.notificationService.showMsg('Delete Successfully');
 

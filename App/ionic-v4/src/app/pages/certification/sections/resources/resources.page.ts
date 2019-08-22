@@ -30,10 +30,12 @@ export class ResourcesPage implements OnInit {
 
   ngOnInit() {
     this.menu.enable(false);
-    let id = this.sectionId = this.actRoute.snapshot.paramMap.get('id');
+    let id = this.restApi.sectionId = this.sectionId = this.actRoute.snapshot.paramMap.get('sectionid');
+
+
     this.recordId = this.actRoute.snapshot.paramMap.get('recordid');
     let type = this.actRoute.snapshot.paramMap.get('type');
-
+    debugger;
     if (this.user.type === 'coach') {
       this.restApi.populateSectionSubMenu(id);
     }

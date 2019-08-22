@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
 import { AuthenticationService } from 'src/app/services/user/authentication.service';
 import { Router } from '@angular/router';
@@ -9,49 +9,80 @@ import { Router } from '@angular/router';
   styleUrls: ['./quiz-student.component.scss'],
 })
 export class QuizStudentComponent implements OnInit {
-  @Input() recordId: any;
-  @Input() sectionId: any;
+  @Output() QuizIndexEitter = new EventEmitter();
+  @Output() removeItem = new EventEmitter<object>();
+  @Output() openQuizEditModal = new EventEmitter<object>();
 
+  @Input() data: any;
+  @Input() quizIndex: any;
   quizzesArray: any = []
   optionsCopy: any = []
   user: any
   attempted: Boolean = false;
+  isDeletedClicked: boolean = false
   constructor(
     private restApi: RestApiService,
     private auth: AuthenticationService,
     private router: Router
   ) { }
+  // ionViewDidEnter() {
+  //   // this.QuizIndexEitter.next();
+  // }
   ngOnInit() {
-    this.user = this.auth.getSessionData().user
-    this.restApi.getPromise(`quiz/${this.sectionId}/${this.recordId}`)
-      .then(response => {
-        debugger
-        this.attempted = response.attempted
-        if (this.attempted) {
 
-          for (const item of response.data) {
-            this.quizzesArray.push({
-              id: item.id,
-              questionId: item.question.id,
-              correctOptions: JSON.parse(item.question.options),
-              question: item.question.question,
-              studentOptions: JSON.parse(item.answer),
-            })
-          }
-          debugger;
-        } else {
-          for (const item of response.data) {
-            this.quizzesArray.push({
-              id: item.id,
-              question: item.question,
-              options: JSON.parse(item.options),
-              experience: item.experience
-            })
-          }
-        }
-      }).catch(error => {
+    this.user = this.auth.getSessionData().user;
+    this.data
+    debugger;
+    this.attempted = this.user.type === "coach" ? true : false;
+    //  for (const item of this.data) {
+    this.quizzesArray.push({
+      questionId: this.data.id,
+      sectionPageId: this.data.sectionPageId,
+      correctOptions: JSON.parse(this.data.options),
+      question: this.data.question,
+      // studentOptions: JSON.parse(item.answer),
+    })
+    // }
+    // this.restApi.getPromise(`quiz/${this.sectionId}/${this.recordId}`)
+    //   .then(response => {
+    //     debugger
+    //     this.attempted = response.attempted
+    //     if (this.attempted) {
 
-      })
+    //       for (const item of response.data) {
+    //         this.quizzesArray.push({
+    //           id: item.id,
+    //           questionId: item.question.id,
+    //           correctOptions: JSON.parse(item.question.options),
+    //           question: item.question.question,
+    //           studentOptions: JSON.parse(item.answer),
+    //         })
+    //       }
+    //       debugger;
+    //     } else {
+    //       for (const item of response.data) {
+    //         this.quizzesArray.push({
+    //           id: item.id,
+    //           question: item.question,
+    //           options: JSON.parse(item.options),
+    //           experience: item.experience
+    //         })
+    //       }
+    //     }
+    //   }).catch(error => {
+
+    //   })
+  }
+
+  deleteQuiz() {
+    this.isDeletedClicked = true
+    this.restApi.delete(`quiz/${this.data.id}`).subscribe(res => {
+      this.isDeletedClicked = false
+      this.removeItem.next(this.data)
+    })
+  }
+  editQuiz() {
+    this.openQuizEditModal.next(this.data)
   }
   todo(value) {
     return value.map(x => {
@@ -60,21 +91,21 @@ export class QuizStudentComponent implements OnInit {
       }
     }).join(',')
   }
-  submitQuiz() {
-    let obj = {
-      studentId: this.user.id,
-      title: this.recordId,
-      sectionId: this.sectionId,
-      finalQuiz: this.quizzesArray
-    }
+  // submitQuiz() {
+  //   let obj = {
+  //     studentId: this.user.id,
+  //     title: this.recordId,
+  //     sectionId: this.sectionId,
+  //     finalQuiz: this.quizzesArray
+  //   }
 
-    this.restApi.postPromise('quiz/submit-quiz', obj)
-      .then(response => {
-        debugger;
-        this.router.navigate([`certification/sections/concepts/${this.sectionId}/${this.recordId}/Quiz`])
-      }).catch(error => {
-        debugger;
-      })
-  }
+  //   this.restApi.postPromise('quiz/submit-quiz', obj)
+  //     .then(response => {
+  //       debugger;
+  //       this.router.navigate([`certification/sections/concepts/${this.sectionId}/${this.recordId}/Quiz`])
+  //     }).catch(error => {
+  //       debugger;
+  //     })
+  // }
 
 }
