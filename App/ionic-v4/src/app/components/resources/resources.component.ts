@@ -50,10 +50,10 @@ export class ResourcesComponent implements OnInit {
 
   }
   show(filename){ 
-    debugger
+   
     let fileExt = filename.split('.')
     if(fileExt[1]== "jpeg"){
-
+       
       return 'book';
     }else if(fileExt[1] == "png"){
       return 'checkmark-circle';
@@ -62,6 +62,7 @@ export class ResourcesComponent implements OnInit {
     }
   }
   upload() {
+    debugger
     this.files = this.fileField.getFiles();
     console.log(this.files);
     let formData = new FormData();
@@ -75,8 +76,8 @@ export class ResourcesComponent implements OnInit {
     formData.append('sectionId', this.sectionId);
     formData.append('title', this.title);
     // this.fileField.removeAll();
-    if (this.oldTitle) {
-      formData.append('oldTitle', this.oldTitle);
+    if (this.sectionId) {
+      // formData.append('oldTitle', this.oldTitle);
       this.restApi.putPromise('resource/update-section-resources', formData)
         .then(res => {
           this.files = res.data;

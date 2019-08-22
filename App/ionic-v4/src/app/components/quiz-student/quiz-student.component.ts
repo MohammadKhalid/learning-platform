@@ -10,15 +10,15 @@ import { Router } from '@angular/router';
 })
 export class QuizStudentComponent implements OnInit {
   @Output() QuizIndexEitter = new EventEmitter();
+  @Output() removeItem = new EventEmitter<object>();
 
-  // @Input() recordId: any;
-  // @Input() sectionId: any;
   @Input() data: any;
   @Input() quizIndex: any;
   quizzesArray: any = []
   optionsCopy: any = []
   user: any
   attempted: Boolean = false;
+  isDeletedClicked: boolean = false
   constructor(
     private restApi: RestApiService,
     private auth: AuthenticationService,
@@ -71,6 +71,14 @@ export class QuizStudentComponent implements OnInit {
     //   }).catch(error => {
 
     //   })
+  }
+
+  deleteQuiz() {
+    this.isDeletedClicked = true
+    this.restApi.delete(`quiz/${this.data.id}`).subscribe(res=>{
+      this.isDeletedClicked = false
+      this.removeItem.next(this.data)
+    })
   }
   todo(value) {
     return value.map(x => {

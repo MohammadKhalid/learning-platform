@@ -1,6 +1,9 @@
 <ion-card>
     <ion-card-header>
         <ion-card-title class="header-title-video">{{title}}</ion-card-title>
+        <ion-icon (click)='deleteText()' name="trash"></ion-icon>
+        <ion-spinner *ngIf="isDeletedClicked" name="lines-small" color="dark">
+        </ion-spinner>
     </ion-card-header>
     <ion-card-content>
         <ion-grid class="app-student-text">

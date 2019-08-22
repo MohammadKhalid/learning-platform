@@ -53,6 +53,12 @@ export class ConceptsPage implements OnInit {
   //   debugger;
   //   this.quizIndex++;
   // }
+
+  removeItem(data) {
+    this.sectionConceptData.splice(this.sectionConceptData.indexOf(data), 1)
+
+  }
+
   ngOnInit() {
     this.menu.enable(true);
     this.menu.enable(true, 'mainMenu')

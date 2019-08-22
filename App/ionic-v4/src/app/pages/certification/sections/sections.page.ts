@@ -57,6 +57,7 @@ export class SectionsPage implements OnInit {
 
   searchBy: string = "";
   panelOpenState = false;
+  sectionId : any
   panelResourceOpenState = false;
   showField: boolean = false;
   // showFieldResource: boolean = false;
@@ -68,6 +69,8 @@ export class SectionsPage implements OnInit {
     this.saveButtonResourceSubscription.unsubscribe();
   }
   ngOnInit() {
+    debugger
+    this.sectionId = this.apiSrv.sectionId;
     this.searchBy = "";
     this.user = this.authService.getSessionData().user;
     //coach menu popupate start
@@ -152,29 +155,28 @@ export class SectionsPage implements OnInit {
     })
   }
 
-  upload() {
-    this.files = this.fileField.getFiles();
-    let formData = new FormData();
-    this.files.forEach((file) => {
-      formData.append('file', file.rawFile);
-    });
-    let sectionId = this.apiSrv.sectionId;
-    formData.append('sectionId', sectionId);
-    this.apiSrv.postPromise('resource', formData)
-      .then(res => {
+  // upload() {
+  //   this.files = this.fileField.getFiles();
+  //   let formData = new FormData();
+  //   this.files.forEach((file) => {
+  //     formData.append('file', file.rawFile);
+  //   });
+  //   formData.append('sectionId', sectionId);
+  //   this.apiSrv.postPromise('resource', formData)
+  //     .then(res => {
 
-        this.files = res.data;
-        this.fileField.removeAll();
+  //       this.files = res.data;
+  //       this.fileField.removeAll();
 
-        this.apiSrv.populateSectionSubMenu(sectionId);
+  //       this.apiSrv.populateSectionSubMenu(sectionId);
 
-        this.notificationService.showMsg("Saved Successfully");
-        this.reouter.navigate([`certification/sections/resources/${sectionId}`])
-      }).catch(err => {
-        this.notificationService.showMsg("Error inserting resources");
-      })
-    // // POST formData to Server
-  }
+  //       this.notificationService.showMsg("Saved Successfully");
+  //       this.reouter.navigate([`certification/sections/resources/${sectionId}`])
+  //     }).catch(err => {
+  //       this.notificationService.showMsg("Error inserting resources");
+  //     })
+  //   // // POST formData to Server
+  // }
   deleteSectionPageResource(data) {
     this.deleteId = data.id
     this.apiSrv.delete(`resource/${data.id}`).subscribe(response => {
@@ -221,6 +223,7 @@ export class SectionsPage implements OnInit {
     this.apiSrv.populateSectionConcept(true);
   }
   async popUpResource() {
+    debugger;
     let sectionId = this.apiSrv.sectionId;
 
     const modal: HTMLIonModalElement =

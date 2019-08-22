@@ -5,16 +5,16 @@ const Op = Sequelize.Op;
 
 
 const create = async (req, res) => {
-    let { quizes, sectionId, title, oldTitle } = req.body
+    let { quizes, sectionPageId, title, oldTitle } = req.body
 
-    if (oldTitle) {
-        let removedQuiz = await Quiz.destroy({
-            where: {
-                title: oldTitle,
-                sectionId: sectionId
-            }
-        })
-    }
+    // if (oldTitle) {
+    //     let removedQuiz = await Quiz.destroy({
+    //         where: {
+    //             title: oldTitle,
+    //             sectionId: sectionId
+    //         }
+    //     })
+    // }
 
     let bulkQuizes = quizes.map(quiz => {
         return {
@@ -22,7 +22,7 @@ const create = async (req, res) => {
             question: quiz.question,
             options: JSON.stringify(quiz.options),
             experience: quiz.experience,
-            sectionId: sectionId
+            sectionPageId: sectionPageId
         }
     })
 
@@ -55,3 +55,13 @@ const getTitle = async (req, res) => {
     else return ReE(res, { message: 'Unable to get by title.' }, 500)
 }
 module.exports.getTitle = getTitle;
+
+const remove = async (req, res) => {
+    let { quizId } = req.params;
+    const quizesResult = await Quiz.destroy({
+        where: { id: quizId }
+    })
+    if (quizesResult) return ReS(res, { data: quizesResult }, 200);
+    else return ReE(res, { message: 'Unable to get by title.' }, 500)
+}
+module.exports.remove = remove;

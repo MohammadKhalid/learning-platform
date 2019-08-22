@@ -40,6 +40,11 @@
   <ion-list class="ion-padding">
     <div *ngFor="let questionRow of quizzesArray">
       <ion-card class="card-sizing">
+        <ion-card-header>
+          <ion-icon (click)='deleteQuiz()' name="trash"></ion-icon>
+          <ion-spinner *ngIf="isDeletedClicked" name="lines-small" color="dark">
+          </ion-spinner>
+        </ion-card-header>
         <ion-card-content>
           <ion-item lines="none" class="ion-float-right ion-padding-top ques-trash-icon">
           </ion-item>

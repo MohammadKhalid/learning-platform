@@ -38,7 +38,7 @@ const getResources = async function (req, res) {
         where: {
             sectionId: sectionId
         },
-        group: ['title']
+        // group: ['title']
     })
 
     if (resources) return ReS(res, { data: resources }, 200);
@@ -75,7 +75,7 @@ module.exports.getResources = getResources;
 const remove = async function (req, res) {
     let { resourceId } = req.params;
 
-    const resource = Resource.destroy({
+    const resource = await Resource.destroy({
         where: {
             id: resourceId
         }
