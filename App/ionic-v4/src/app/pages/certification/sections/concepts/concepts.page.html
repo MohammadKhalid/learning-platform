@@ -3,7 +3,7 @@
     <div *ngFor="let DataRow of sectionConceptData | orderByDate;">
         <!-- text start -->
         <div *ngIf="DataRow.type === 'Text'">
-            <app-student-text [data]="DataRow"></app-student-text>
+            <app-student-text (removeItem)="removeItem($event)" [data]="DataRow"></app-student-text>
 
         </div>
 
@@ -12,13 +12,13 @@
 
         <!-- lesson start -->
         <div *ngIf="DataRow.type === 'Lesson'">
-            <app-video-student [data]="DataRow"></app-video-student>
+            <app-video-student (removeItem)="removeItem($event)" [data]="DataRow"></app-video-student>
         </div>
         <!-- lesson start -->
 
         <!-- quiz start -->
         <div *ngIf="DataRow.type === 'Quiz'">
-            <app-quiz-student [data]="DataRow" [quizIndex]="quizIndex"></app-quiz-student>
+            <app-quiz-student  [data]="DataRow" [quizIndex]="quizIndex"></app-quiz-student>
         </div>
         <!-- quiz start -->
     </div>
