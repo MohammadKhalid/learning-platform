@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormsModule, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,9 +13,12 @@ import { AngularEditorConfig } from '@kolkov/angular-editor';
   styleUrls: ['./text.component.scss'],
 })
 export class TextComponent implements OnInit {
+  @Output() eventEmitterCloseModel = new EventEmitter<object>();
+
   @Input() sectionId: any;
   @Input() recordId: any;
   @Input() sectionPageId: any;
+  @Input() data: any;
 
   addTextForm: FormGroup
   btnTxt: string = 'Save'
@@ -75,16 +78,11 @@ export class TextComponent implements OnInit {
     this.id = this.actroute.snapshot.paramMap.get('sectionpageid');
 
     this.formInitialize();
-    if (this.recordId && this.sectionPageId) {
+    if (this.data) {
       this.btnTxt = "update"
-      let id = this.activeRoute.snapshot.paramMap.get('id')
-      this.sectionId = id
-      this.serviceApi.getPromise('text/get-by-id', this.recordId).then(res => {
-        this.addTextForm.controls['title'].setValue(res.data[0].title),
-          this.addTextForm.controls['description'].setValue(res.data[0].description),
-          this.sectionId
-
-      })
+      this.addTextForm.get('title').setValue(this.data.title)
+      this.addTextForm.get('description').setValue(this.data.description)
+      this.addTextForm.get('experience').setValue(this.data.experience)
     }
   }
 
@@ -93,18 +91,16 @@ export class TextComponent implements OnInit {
       title: new FormControl('', Validators.required),
       description: new FormControl('', Validators.required),
       sectionPageId: this.sectionPageId,
-      experience : new FormControl('',Validators.required)
+      experience: new FormControl('', Validators.required)
     })
 
   }
 
   addText() {
-    if (this.recordId) {
-      this.serviceApi.putPromise(`text/${this.recordId}`, this.addTextForm.value).then(res => {
-
+    if (this.data) {
+      this.serviceApi.putPromise(`text/${this.data.id}`, this.addTextForm.value).then(res => {
         this.noti.showMsg("update Record");
-        let id = this.actroute.snapshot.paramMap.get('id');
-        this.serviceApi.populateSectionSubMenu(id);
+        this.eventEmitterCloseModel.next();
       }).catch(err => {
         this.noti.showMsg(err)
       })
@@ -114,10 +110,7 @@ export class TextComponent implements OnInit {
       this.serviceApi.postPromise('text', this.addTextForm.value).then(res => {
         this.loadingController.dismiss()
         this.noti.showMsg('text Created');
-        let id = this.actroute.snapshot.paramMap.get('id');
-        this.serviceApi.populateSectionSubMenu(id);
-        // this.router.navigate([`certification/sections/concepts/${this.sectionId}/${res.data.id}/Text`])
-
+        this.eventEmitterCloseModel.next();
       }).catch(err => {
         this.noti.showMsg(err);
         console.log(err);

@@ -50,10 +50,11 @@ module.exports.removeText = removeText;
 
 const updateText = async (req, res) => {
     let { textId } = req.params
-    let { description, title } = req.body
+    let { description, title, experience } = req.body
     const text = await Text.update({
         title: title,
         description: description,
+        experience: experience
     }, {
             where: {
                 id: textId
