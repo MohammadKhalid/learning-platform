@@ -42,7 +42,7 @@ export class QuizEditModalComponent implements OnInit {
     this.cntrl.dismiss();
   }
   save() {
-    this.editModule('close');
+    // this.editModule('close');
   }
   // editModule(type?: string) {
   //   // let obj = {
@@ -78,7 +78,7 @@ export class QuizEditModalComponent implements OnInit {
     //   })
   }
   saveAndNext() {
-    this.editModule();
+    // this.editModule();
   }
 
 }

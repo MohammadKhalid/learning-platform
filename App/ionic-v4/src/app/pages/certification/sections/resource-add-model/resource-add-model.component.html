@@ -11,6 +11,11 @@
 
 </ion-header>
 <ion-content padding fullscreen>
+    <div class="spinner">
+
+        <ion-spinner name="crescent"></ion-spinner>
+    </div>
+
 
     <ion-list class="ion-padding">
         <app-dropzone (eventBtnSubmit)="eventBtnSubmit($event)"></app-dropzone>
@@ -20,11 +25,10 @@
 
 
 </ion-content>
-
 <ion-footer>
     <ion-toolbar>
-        <ion-button slot="end" (click)="upload(); " [disabled]="submitBtn" size="md">Save</ion-button>
-        <ion-spinner *ngIf="uploads" name="lines-small" color="light"></ion-spinner>
+        <ion-button class="btn-popup-adjustment" slot="end" (click)="upload(); " [disabled]="submitBtn" size="md">Save</ion-button>
 
     </ion-toolbar>
+
 </ion-footer>
