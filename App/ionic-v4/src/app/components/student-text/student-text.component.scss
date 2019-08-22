@@ -1,9 +1,18 @@
 .app-student-text{
     .text-padding-std{
-        padding-left: 10px
+        padding-left: 20px
     }
     
     .text-padding-std .content-adjustment{
-        text-align: justify
+        text-align: justify;
+        color: #313131
     }
+}
+
+.header-title-text{
+    padding-left: 30px;
+}
+
+.box-shadow-adjustment{
+    box-shadow: none
 }

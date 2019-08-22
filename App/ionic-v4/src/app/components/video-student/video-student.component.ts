@@ -15,6 +15,7 @@ export class VideoStudentComponent implements OnInit {
   ) { }
   @Input() data: any;
   @Output() removeItem = new EventEmitter<object>();
+  @Output() editItem = new EventEmitter<object>();
   youtubeKey: any;
   title: string = "";
   youtubeUrl: string = 'https://www.youtube.com/embed/';
@@ -33,7 +34,9 @@ export class VideoStudentComponent implements OnInit {
     })
   }
 
-
+  editLesson(){
+    this.editItem.next(this.data)
+  }
 
   getById(data) {
 

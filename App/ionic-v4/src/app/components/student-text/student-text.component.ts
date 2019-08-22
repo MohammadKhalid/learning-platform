@@ -10,6 +10,8 @@ import { RestApiService } from 'src/app/services/http/rest-api.service';
 export class StudentTextComponent implements OnInit {
   @Input() data: any;
   @Output() removeItem = new EventEmitter<object>();
+  @Output() editItem = new EventEmitter<object>();
+
   title: string = "";
   isDeletedClicked: boolean = false
   constructor(private activateroute: ActivatedRoute,
@@ -26,5 +28,9 @@ export class StudentTextComponent implements OnInit {
       this.isDeletedClicked = false
       this.removeItem.next(this.data)
     })
+  }
+
+  editText(){
+    this.editItem.next(this.data)
   }
 }
