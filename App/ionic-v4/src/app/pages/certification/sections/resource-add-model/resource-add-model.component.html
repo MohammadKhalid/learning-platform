@@ -2,7 +2,7 @@
     <ion-toolbar mode="ios">
         <ion-buttons slot="start">
             <!-- <ion-button (click)="close()"> -->
-            <ion-button>
+            <ion-button (click)="close()">
                 <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
             </ion-button>
         </ion-buttons>
@@ -23,6 +23,8 @@
 
 <ion-footer>
     <ion-toolbar>
-        <ion-button slot="end" (click)="upload()" [disabled]="submitBtn" size="md">Save</ion-button>
+        <ion-button slot="end" (click)="upload(); " [disabled]="submitBtn" size="md">Save</ion-button>
+        <ion-spinner name="lines-small" color="light"></ion-spinner>
+
     </ion-toolbar>
 </ion-footer>
