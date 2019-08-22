@@ -28,7 +28,8 @@ export class ResourceAddModelComponent implements OnInit {
   ngOnInit() { }
 
   eventBtnSubmit(count) {
-    this.submitBtn = count > 0 ? false : true;
+    debugger;
+      this.submitBtn = count > 0 ? false : true;
   }
 
 
@@ -44,8 +45,8 @@ export class ResourceAddModelComponent implements OnInit {
         .then(res => {
           this.files = res.data;
           this.fileField.removeAll();
-          // this.apiSrv.populateSectionSubMenu(id);
           this.notificationService.showMsg("Saved Successfully");
+          this.apiSrv.populateSectionSubMenu(this.sectionId);
           this.router.navigate([`resources/${this.sectionId}`])
         }).catch(err => {
           this.notificationService.showMsg("Error inserting resources");

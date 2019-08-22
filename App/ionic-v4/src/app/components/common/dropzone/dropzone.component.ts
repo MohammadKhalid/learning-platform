@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FileUploader, FileLikeObject } from 'ng2-file-upload';
+import { NotificationService } from 'src/app/services/notification/notification.service';
 @Component({
   selector: 'app-dropzone',
   templateUrl: './dropzone.component.html',
@@ -11,12 +12,16 @@ export class DropzoneComponent implements OnInit {
 
   public hasBaseDropZoneOver: boolean = false;
 
-  constructor() { }
+  constructor(
+    private notificationService: NotificationService,
+  ) { }
 
   ngOnInit() {
+    this.eventBtnSubmit.next(0);
+
     this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
       console.log('FileUpload:uploaded:', item, status, response);
-      alert('File uploaded successfully');
+      this.notificationService.showMsg('File uploaded successfully');
     };
   }
   public onFileSelected(event: EventEmitter<File[]>) {

@@ -81,9 +81,7 @@ export class ConceptsPage implements OnInit {
     }
 
     this.subscription = this.restApi.getSectionConcept().subscribe(res => {
-     
-      debugger
-      if (res) {
+           if (res) {
         this.popUpConcept();
       }
     });
