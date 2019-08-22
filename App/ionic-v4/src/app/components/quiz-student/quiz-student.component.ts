@@ -76,7 +76,6 @@ export class QuizStudentComponent implements OnInit {
   deleteQuiz() {
     this.isDeletedClicked = true
     this.restApi.delete(`quiz/${this.data.id}`).subscribe(res=>{
-      debugger
       this.isDeletedClicked = false
       this.removeItem.next(this.data)
     })
