@@ -67,6 +67,8 @@ import { QuizStudentComponent } from './quiz-student/quiz-student.component';
 import { StudentResourcesComponent } from './student-resources/student-resources.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AngularEditorModule } from '@kolkov/angular-editor';
+import { Ng2FileSizeModule } from 'ng2-file-size';
+
 @NgModule({
 	imports: [
 		CommonModule,
@@ -77,6 +79,7 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 		FileDropModule,
 		SimplePdfViewerModule,
 		RouterModule,
+		Ng2FileSizeModule,
 		MatTabsModule,
 		MatFormFieldModule,
 		MatSelectModule,
