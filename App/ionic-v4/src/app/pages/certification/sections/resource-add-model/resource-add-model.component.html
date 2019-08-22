@@ -24,7 +24,7 @@
 <ion-footer>
     <ion-toolbar>
         <ion-button slot="end" (click)="upload(); " [disabled]="submitBtn" size="md">Save</ion-button>
-        <ion-spinner name="lines-small" color="light"></ion-spinner>
+        <ion-spinner *ngIf="uploads" name="lines-small" color="light"></ion-spinner>
 
     </ion-toolbar>
 </ion-footer>
