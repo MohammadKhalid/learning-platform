@@ -79,7 +79,6 @@ import { Ng2FileSizeModule } from 'ng2-file-size';
 		FileDropModule,
 		SimplePdfViewerModule,
 		RouterModule,
-		Ng2FileSizeModule,
 		MatTabsModule,
 		MatFormFieldModule,
 		MatSelectModule,
