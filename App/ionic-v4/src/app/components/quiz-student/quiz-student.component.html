@@ -38,17 +38,17 @@
 
 <ng-template #attemptedRow>
   <ion-list class="ion-padding">
-    <div *ngFor="let questionRow of quizzesArray;let questionIndex=index">
+    <div *ngFor="let questionRow of quizzesArray">
       <ion-card class="card-sizing">
         <ion-card-content>
           <ion-item lines="none" class="ion-float-right ion-padding-top ques-trash-icon">
           </ion-item>
           <ion-item lines="inset">
             <ion-label>
-              Q{{questionIndex+1}}) {{questionRow.question}}
+              Q) {{questionRow.question}}
             </ion-label>
           </ion-item>
-          <div *ngFor="let options of questionRow.studentOptions" class="ion-padding-start">
+          <div *ngFor="let options of questionRow.correctOptions" class="ion-padding-start">
             <ion-item class="option-answer">
               <ion-checkbox [(ngModel)]='options.correctOption' class="check-box-icon" disabled='true' slot="start">
               </ion-checkbox>
@@ -57,11 +57,11 @@
               </ion-label>
             </ion-item>
           </div>
-          <ion-item lines="inset">
+          <!-- <ion-item lines="inset" *ngIf="user.type !='coach'">
             <ion-label>
               Corretion Answer(s): {{todo(questionRow.correctOptions)}}
             </ion-label>
-          </ion-item>
+          </ion-item> -->
         </ion-card-content>
       </ion-card>
 

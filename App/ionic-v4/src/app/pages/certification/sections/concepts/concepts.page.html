@@ -1,6 +1,6 @@
 <!-- coach side rendering start -->
 <ion-content *ngIf="user.type ==='coach'" ion-padding>
-    <div *ngFor="let DataRow of sectionConceptData | orderByDate">
+    <div *ngFor="let DataRow of sectionConceptData | orderByDate;">
         <!-- text start -->
         <div *ngIf="DataRow.type === 'Text'">
             <app-student-text [data]="DataRow"></app-student-text>
@@ -16,6 +16,11 @@
         </div>
         <!-- lesson start -->
 
+        <!-- quiz start -->
+        <div *ngIf="DataRow.type === 'Quiz'">
+            <app-quiz-student [data]="DataRow" [quizIndex]="quizIndex"></app-quiz-student>
+        </div>
+        <!-- quiz start -->
     </div>
 </ion-content>
 <!-- coach side rendering end -->
@@ -30,9 +35,9 @@
             <app-video-student (titleEvent)="titleEvent($event)" [recordId]="recordId"></app-video-student>
         </div> -->
 
-        <div *ngIf="type === 'Quiz'">
+        <!-- <div *ngIf="type === 'Quiz'">
             <app-quiz-student [recordId]="recordId" [sectionId]="sectionId"></app-quiz-student>
-        </div>
+        </div> -->
         <!-- student content -->
     </div>
 </ion-content>
