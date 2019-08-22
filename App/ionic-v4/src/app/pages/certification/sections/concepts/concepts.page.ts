@@ -82,13 +82,7 @@ export class ConceptsPage implements OnInit {
     // })
     // this.conceptOptions = this.restApi.getConceptsOptins();
     if (this.sectionPageId && this.sectionPageId) {
-
-      this.restApi.getPromise('section-page/get-section-items', this.sectionPageId)
-        .then(response => {
-          this.sectionConceptData = response.data
-        }).catch(error => {
-
-        })
+      this.fetchSectionItems()
     }
 
     this.subscription = this.restApi.getSectionConcept().subscribe(res => {
@@ -105,6 +99,15 @@ export class ConceptsPage implements OnInit {
       }
     });
   }
+
+  fetchSectionItems() {
+    this.restApi.getPromise('section-page/get-section-items', this.sectionPageId)
+      .then(response => {
+        this.sectionConceptData = response.data
+      }).catch(error => {
+
+      })
+  }
   titleEvent(title) {
     this.titleEmiter = title;
   }
@@ -115,9 +118,9 @@ export class ConceptsPage implements OnInit {
         componentProps: {
           sectionPageId: this.sectionPageId,
           sectionId: this.sectionId,
-          recordId: ''
-          // data: data,
-          // updateList: this.updateList.bind(this)
+          data: data,
+          fetchSectionItems: this.fetchSectionItems.bind(this)
+          
         }
       });
 
@@ -126,23 +129,25 @@ export class ConceptsPage implements OnInit {
     await modal.present();
   }
 
+  editItem(data) {
+    this.popUpConcept(data)
+  }
 
   async openQuizEditModal(data?: any) {
-    debugger
     const modal: HTMLIonModalElement =
       await this.modalcontroler.create({
         component: QuizEditModalComponent,
         componentProps: {
           data: data,
           updateList: this.updateList.bind(this),
-                  }
+        }
       });
 
     modal.onDidDismiss().then(() => {
     });
     await modal.present();
   }
-  
+
   updateList(res) {
     var index = this.sectionConceptData.findIndex(item => item.id === res.data.id);
     this.sectionConceptData.splice(index, 1, res.data);

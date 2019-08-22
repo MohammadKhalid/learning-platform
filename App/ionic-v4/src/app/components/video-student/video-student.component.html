@@ -2,6 +2,7 @@
   <ion-card-header>
     <ion-card-title>{{title}}</ion-card-title>
     <ion-icon (click)='deleteLesson()' name="trash"></ion-icon>
+    <ion-icon (click)='editLesson()' name="create"></ion-icon>
     <ion-spinner *ngIf="isDeletedClicked" name="lines-small" color="dark">
     </ion-spinner>
   </ion-card-header>
