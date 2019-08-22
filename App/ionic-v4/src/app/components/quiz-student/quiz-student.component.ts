@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 export class QuizStudentComponent implements OnInit {
   @Output() QuizIndexEitter = new EventEmitter();
   @Output() removeItem = new EventEmitter<object>();
+  @Output() openQuizEditModal = new EventEmitter<object>();
 
   @Input() data: any;
   @Input() quizIndex: any;
@@ -75,10 +76,13 @@ export class QuizStudentComponent implements OnInit {
 
   deleteQuiz() {
     this.isDeletedClicked = true
-    this.restApi.delete(`quiz/${this.data.id}`).subscribe(res=>{
+    this.restApi.delete(`quiz/${this.data.id}`).subscribe(res => {
       this.isDeletedClicked = false
       this.removeItem.next(this.data)
     })
+  }
+  editQuiz() {
+    this.openQuizEditModal.next(this.data)
   }
   todo(value) {
     return value.map(x => {

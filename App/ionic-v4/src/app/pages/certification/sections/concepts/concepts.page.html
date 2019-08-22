@@ -18,7 +18,7 @@
 
         <!-- quiz start -->
         <div *ngIf="DataRow.type === 'Quiz'">
-            <app-quiz-student (removeItem)="removeItem($event)" [data]="DataRow" [quizIndex]="quizIndex"></app-quiz-student>
+            <app-quiz-student (removeItem)="removeItem($event)" (openQuizEditModal)="openQuizEditModal($event)" [data]="DataRow" [quizIndex]="quizIndex"></app-quiz-student>
         </div>
         <!-- quiz start -->
     </div>
