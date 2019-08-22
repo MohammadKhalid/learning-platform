@@ -1,18 +1,15 @@
-
-
-
-
-
-<ion-card >
-  <ion-card-header>
-    <ion-card-title>{{title}}</ion-card-title>
+<div class="color-adjustment">
+  <!-- <ion-card > -->
+  <ion-card-header no-padding>
+    <ion-card-title class="header-title-video">{{title}}</ion-card-title>
   </ion-card-header>
   <ion-card-content>
-      <div class="app-video-student">
-          <div class="iframe-container">
-            <iframe allowfullscreen [src]="youtubeKey | safe">
-            </iframe>
-          </div>
-        </div>
+    <div class="app-video-student">
+      <div class="iframe-container">
+        <iframe allowfullscreen [src]="youtubeKey | safe">
+        </iframe>
+      </div>
+    </div>
   </ion-card-content>
-</ion-card>
+  <!-- </ion-card> -->
+</div>
