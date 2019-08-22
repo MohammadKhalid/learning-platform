@@ -62,9 +62,7 @@ export class SectionsPage implements OnInit {
   // showFieldResource: boolean = false;
   isConcept: boolean = false;
   isResource: boolean = false;
-
   isResources: boolean = false;
-
   ngOnDestroy() {
     this.saveButtonSubscription.unsubscribe();
     this.saveButtonResourceSubscription.unsubscribe();
@@ -75,10 +73,10 @@ export class SectionsPage implements OnInit {
     //coach menu popupate start
     this.subscription = this.apiSrv.getSectionMenuData().subscribe(res => {
       if (res) {
+        debugger
         res.concept ? this.listData = res.concept : '';
         res.resource ? this.listResourceData = res.resource : '';
-        
-        this.lessonName = "Lesson name";
+        this.lessonName = res.title;
       }
     });
     //coach menu popupate end
@@ -147,7 +145,7 @@ export class SectionsPage implements OnInit {
   deleteSectionPage(data) {
     this.deleteId = data.id
     this.apiSrv.delete(`section-page/${data.id}`).subscribe(response => {
-      
+
       this.listData = this.listData.filter(x => x.id != data.id)
       this.isDeletedClicked = false
       this.deleteId = 0
