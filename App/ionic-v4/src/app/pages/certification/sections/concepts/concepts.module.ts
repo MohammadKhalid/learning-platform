@@ -10,6 +10,7 @@ import { MatSelectModule } from '@angular/material';
 import { ComponentsModule } from 'src/app/components/components.module';
 import { AddModalComponent } from './add-modal/add-modal.component';
 import { PipesModule } from 'src/app/pipes/pipes.module';
+import { QuizEditModalComponent } from 'src/app/components/quiz-edit-modal/quiz-edit-modal.component';
 
 const routes: Routes = [
   {
@@ -28,8 +29,8 @@ const routes: Routes = [
     ComponentsModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [ConceptsPage, AddModalComponent],
-  entryComponents: [AddModalComponent],
+  declarations: [ConceptsPage, AddModalComponent, QuizEditModalComponent],
+  entryComponents: [AddModalComponent, QuizEditModalComponent],
 
 })
 export class ConceptsPageModule { }
