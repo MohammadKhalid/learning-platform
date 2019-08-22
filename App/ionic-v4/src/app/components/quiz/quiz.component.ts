@@ -10,8 +10,8 @@ import { Router } from '@angular/router';
 })
 export class QuizComponent implements OnInit {
   quizes: any = [];
-  @Input() sectionId: any;
-  @Input() quizTitle: any;
+  @Input() sectionPageId: any;
+  // @Input() quizTitle: any;
   btnTxt: string = 'Save'
   title: any;
   oldTitle: string;
@@ -27,34 +27,33 @@ export class QuizComponent implements OnInit {
     this.quizes = [];
     this.isBtnDisable = true;
 
-    if (this.sectionId && this.quizTitle) {
-      this.btnTxt = "Update";
-      this.oldTitle = this.title = this.quizTitle;
+    // if (this.sectionId && this.quizTitle) {
+    //   this.btnTxt = "Update";
+    //   this.oldTitle = this.title = this.quizTitle;
 
-      this.restApi.getPromise(`quiz/${this.sectionId}/${this.quizTitle}`).then(res => {
-        for (const item of res.data) {
-          let alterObj = {
-            question: '',
-            options: [
-              { text: '', correctOption: false }
-            ],
-            experience: ''
-          };
-          alterObj.question = item.question;
-          alterObj.options = JSON.parse(item.options);
-          alterObj.experience = item.experience;
+    //   this.restApi.getPromise(`quiz/${this.sectionId}/${this.quizTitle}`).then(res => {
+    //     for (const item of res.data) {
+    //       let alterObj = {
+    //         question: '',
+    //         options: [
+    //           { text: '', correctOption: false }
+    //         ],
+    //         experience: ''
+    //       };
+    //       alterObj.question = item.question;
+    //       alterObj.options = JSON.parse(item.options);
+    //       alterObj.experience = item.experience;
 
-          this.quizes.push(alterObj);
-        }
+    //       this.quizes.push(alterObj);
+    //     }
 
-      }).catch(err => {
-        this.notificationService.showMsg(`Server down ${err}.`);
-      })
-    }
-    else {
+    //   }).catch(err => {
+    //     this.notificationService.showMsg(`Server down ${err}.`);
+    //   })
+    // }
+    // else {
       this.addQuestion();
-    }
-    // this.validate();
+    // }
   }
 
   addOption(obj) {
@@ -76,16 +75,15 @@ export class QuizComponent implements OnInit {
 
   saveQuestion() {
     let obj = {
-      sectionId: this.sectionId,
+      sectionPageId: this.sectionPageId,
       title: this.title,
       quizes: this.quizes,
       oldTitle: this.oldTitle
     }
     this.restApi.postPromise('quiz', obj)
       .then(response => {
-        this.router.navigate([`certification/sections/concepts/${this.sectionId}/${this.title}/Quiz`])
+        this.router.navigate([`certification/sections/concepts/${this.sectionPageId}/${this.title}/Quiz`])
         this.notificationService.showMsg('Record Insert');
-
       }).catch(err => {
         this.notificationService.showMsg(err);
       })
