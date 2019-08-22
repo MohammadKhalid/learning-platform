@@ -128,7 +128,6 @@ export class ConceptsPage implements OnInit {
 
 
   async openQuizEditModal(data?: any) {
-    debugger
     const modal: HTMLIonModalElement =
       await this.modalcontroler.create({
         component: QuizEditModalComponent,
