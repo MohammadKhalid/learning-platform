@@ -126,6 +126,10 @@ export class SectionsPage implements OnInit {
 
     })
   }
+  recourcesroute(){
+    alert('1')
+    this.reouter.navigate([`/certification/sections/resources/${this.apiSrv.sectionId}`])
+  }
 
   // addSectionPageResource() {
   //   let obj = {
