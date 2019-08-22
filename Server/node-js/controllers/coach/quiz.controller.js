@@ -55,3 +55,13 @@ const getTitle = async (req, res) => {
     else return ReE(res, { message: 'Unable to get by title.' }, 500)
 }
 module.exports.getTitle = getTitle;
+
+const remove = async (req, res) => {
+    let { quizId } = req.params;
+    const quizesResult = await Quiz.destroy({
+        where: { id: quizId }
+    })
+    if (quizesResult) return ReS(res, { data: quizesResult }, 200);
+    else return ReE(res, { message: 'Unable to get by title.' }, 500)
+}
+module.exports.remove = remove;

@@ -75,7 +75,7 @@ module.exports.getResources = getResources;
 const remove = async function (req, res) {
     let { resourceId } = req.params;
 
-    const resource = Resource.destroy({
+    const resource = await Resource.destroy({
         where: {
             id: resourceId
         }
