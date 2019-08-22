@@ -176,12 +176,12 @@ export class SectionsPage implements OnInit {
     // // POST formData to Server
   }
   deleteSectionPageResource(data) {
-    // this.deleteId = data.id
-    // this.apiSrv.delete(`section-page/${data.id}`).subscribe(response => {
-    //   this.listResourceData = this.listResourceData.filter(x => x.id != data.id)
-    //   this.isDeletedClickedResource = false
-    //   this.deleteId = 0
-    // })
+    this.deleteId = data.id
+    this.apiSrv.delete(`resource/${data.id}`).subscribe(response => {
+      this.listResourceData = this.listResourceData.filter(x => x.id != data.id)
+      this.isDeletedClickedResource = false
+      this.deleteId = 0
+    })
   }
 
   ngAfterViewInit() {

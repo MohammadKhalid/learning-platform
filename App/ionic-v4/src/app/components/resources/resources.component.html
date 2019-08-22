@@ -5,7 +5,8 @@
                 <ion-item lines="none" class="item">
                     <div class="mainDiv">
                         <div class="fileName">
-                            <h4>{{filename.url}}</h4>
+                            <ion-icon name="show(filename)"></ion-icon>
+                            <h4>{{filename.title}}</h4>
                         </div>
                         <div>
                             <ion-icon name="close" (click)="deletePrompt(filename)"></ion-icon>
@@ -18,7 +19,7 @@
     </ion-row>
 </div>
 
-<ion-list class="ion-padding">
+<!-- <ion-list class="ion-padding">
     <ion-item lines="inset">
         <ion-label position="floating">Title
             <ion-text color="danger">*</ion-text>
@@ -35,4 +36,4 @@
             size="md">{{btnTxt}}</ion-button>
     </ion-item>
 
-</form>
+</form> -->
