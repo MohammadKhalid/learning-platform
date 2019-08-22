@@ -1,0 +1,62 @@
+<ion-header translucent="true">
+    <ion-toolbar mode="ios">
+      <ion-buttons slot="start">
+        <ion-button (click)="close()">
+          <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-title>Edit Quiz</ion-title>
+    </ion-toolbar>
+  
+  </ion-header>
+  
+  <ion-content padding fullscreen>
+   
+    
+<ion-list class="ion-padding">
+    <div *ngFor="let quize of data;let quizIndex=index">
+  
+      <ion-card class="card-sizing">
+        <ion-card-content>
+  
+          <ion-item lines="none" class="ion-float-right ion-padding-top ques-trash-icon">
+            <ion-icon name="trash" color="danger" (click)="deleteQuestion(quizIndex)"></ion-icon>
+            </ion-item>
+          <ion-item lines="inset">
+                <ion-input type="input" [(ngModel)]="quize.question" placeholder="Please enter Question that you want to ask">
+            </ion-input>
+          </ion-item>
+  
+          <div *ngFor="let option of quize.options;let optionIndex=index;">
+            <ion-item class="option-answer">
+              <ion-input [(ngModel)]="option.text"></ion-input>
+              <ion-checkbox class="check-box-icon" slot="start" [(ngModel)]="option.correctOption"></ion-checkbox>
+            </ion-item>
+            <ion-item lines="none" class="ion-float-right option-answer-trash-icon">
+              <ion-icon name="trash" (click)="quize.options.splice(optionIndex,1)"></ion-icon>
+              <!-- <ion-button (click)="quize.options.splice(optionIndex,1)" size="md">remove option</ion-button> -->
+            </ion-item>
+          </div>
+          <ion-item lines="none" class="ion-float-left ion-padding-top button-adjustment">
+            <ion-button (click)="addOption(quize.options)" class="button-color" fill="clear">
+              <ion-icon name="add"></ion-icon>
+              Add Option
+            </ion-button>
+               </ion-item>
+          <ion-item lines="inset" class="exp-adjustment">
+       
+            <ion-input type="input" [(ngModel)]="quize.experience" placeholder="Please enter Experience"></ion-input>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+  
+    </div>
+   
+    <ion-item lines="none" class="ion-float-right ion-padding-top">
+      <ion-button (click)="saveQuestion()" size="md" >
+        <ion-icon class="save-icon-adjust" name="save"></ion-icon>
+        {{btnTxt}}
+      </ion-button>
+    </ion-item>
+  </ion-list>
+  </ion-content>
