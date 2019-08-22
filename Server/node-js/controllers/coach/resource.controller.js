@@ -73,9 +73,7 @@ module.exports.getResources = getResources;
 // module.exports.updateResource = updateResource;
 
 const remove = async function (req, res) {
-    let { resourceId, filename } = req.params;
-    const filePath = path.join(__dirname, '../../uploads/resources/');
-    fs.existsSync(`${filePath}${filename}`) == true ? fs.unlinkSync(`${filePath}${filename}`) : null;
+    let { resourceId } = req.params;
 
     const resource = Resource.destroy({
         where: {
