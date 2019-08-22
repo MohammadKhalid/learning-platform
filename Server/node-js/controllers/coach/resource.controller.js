@@ -38,7 +38,7 @@ const getResources = async function (req, res) {
         where: {
             sectionId: sectionId
         },
-        group: ['title']
+        // group: ['title']
     })
 
     if (resources) return ReS(res, { data: resources }, 200);

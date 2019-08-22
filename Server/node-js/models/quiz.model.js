@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     Model.associate = function (models) {
-        this.belongsTo(models.SectionPage, { as: 'section', foreignKey: 'sectionPageId' });
+        this.belongsTo(models.SectionPage, { as: 'sectionPage', foreignKey: 'sectionPageId' });
     };
 
 

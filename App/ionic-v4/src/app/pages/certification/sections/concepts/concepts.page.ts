@@ -25,7 +25,7 @@ export class ConceptsPage implements OnInit {
   titleEmiter: any;
   private subscription: Subscription;
   private subscriptionBackNavigate: Subscription;
-
+  // quizIndex: number = 1;
 
   constructor(
     private restApi: RestApiService,
@@ -48,6 +48,16 @@ export class ConceptsPage implements OnInit {
     this.subscription.unsubscribe();
     this.subscriptionBackNavigate.unsubscribe();
   }
+  // QuizIndexEitter() {
+  //   debugger;
+  //   this.quizIndex++;
+  // }
+
+  removeItem(data) {
+    this.sectionConceptData.splice(this.sectionConceptData.indexOf(data), 1)
+
+  }
+
   ngOnInit() {
     this.menu.enable(true);
     this.menu.enable(true, 'mainMenu')
@@ -71,7 +81,7 @@ export class ConceptsPage implements OnInit {
     // })
     // this.conceptOptions = this.restApi.getConceptsOptins();
     if (this.sectionPageId && this.sectionPageId) {
-  
+
       this.restApi.getPromise('section-page/get-section-items', this.sectionPageId)
         .then(response => {
           this.sectionConceptData = response.data
@@ -81,7 +91,7 @@ export class ConceptsPage implements OnInit {
     }
 
     this.subscription = this.restApi.getSectionConcept().subscribe(res => {
-           if (res) {
+      if (res) {
         this.popUpConcept();
       }
     });

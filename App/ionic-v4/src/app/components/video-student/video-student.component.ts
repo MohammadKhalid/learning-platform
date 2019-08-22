@@ -14,14 +14,26 @@ export class VideoStudentComponent implements OnInit {
     private notificationService: NotificationService,
   ) { }
   @Input() data: any;
+  @Output() removeItem = new EventEmitter<object>();
   youtubeKey: any;
   title: string = "";
   youtubeUrl: string = 'https://www.youtube.com/embed/';
+  isDeletedClicked: boolean = false
 
   ngOnInit() {
     this.getById(this.data);
-    this.title= this.data.title;
+    this.title = this.data.title;
   }
+
+  deleteLesson() {
+    this.isDeletedClicked = true
+    this.restApi.delete(`lesson/${this.data.id}`).subscribe(res=>{
+      this.isDeletedClicked = false
+      this.removeItem.next(this.data)
+    })
+  }
+
+
 
   getById(data) {
 
