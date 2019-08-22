@@ -11,6 +11,7 @@ import { NotificationService } from 'src/app/services/notification/notification.
 export class QuizEditModalComponent implements OnInit {
 
   data: any;
+  quizes: any = [];
   updateList: any;
   constructor(
     public cntrl: ModalController,
@@ -26,20 +27,25 @@ export class QuizEditModalComponent implements OnInit {
 
   }
   ngOnInit() {
-    // let alterObj = {
-    //   question: '',
-    //   options: [
-    //     { text: '', correctOption: false }
-    //   ],
-    //   experience: ''
-    // };
-    // alterObj.question = this.data.question;
-    // alterObj.options = JSON.parse(this.data.options);
-    // alterObj.experience = this.data.experience;
-    // this.data.push(alterObj);
+  
+    let alterObj = {
+      question: '',
+      options: [
+        { text: '', correctOption: false }
+      ],
+      experience: ''
+    };
+    alterObj.question = this.data.question;
+    alterObj.options = JSON.parse(this.data.options);
+    alterObj.experience = this.data.experience;
+    this.quizes.push(alterObj)
   }
   close() {
     this.cntrl.dismiss();
+  }
+  
+  addOption(obj) {
+    obj.push({ text: '', correctOption: false });
   }
   save() {
     // this.editModule('close');
