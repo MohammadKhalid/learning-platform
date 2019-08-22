@@ -9,12 +9,12 @@ import { RestApiService } from 'src/app/services/http/rest-api.service';
 })
 export class StudentTextComponent implements OnInit {
   @Input() data: any;
-
+title: string="";
   constructor(private activateroute: ActivatedRoute,
     private authser: RestApiService) { }
 
   ngOnInit() {
-   
+   this.title= this.data.title;
   }
 
 }

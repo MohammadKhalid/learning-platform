@@ -1,7 +1,9 @@
-.text-padding-std{
-    padding-left: 10px
-}
-
-.text-padding-std .content-adjustment{
-    text-align: justify
+.app-student-text{
+    .text-padding-std{
+        padding-left: 10px
+    }
+    
+    .text-padding-std .content-adjustment{
+        text-align: justify
+    }
 }

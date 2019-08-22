@@ -20,6 +20,7 @@ export class VideoStudentComponent implements OnInit {
 
   ngOnInit() {
     this.getById(this.data);
+    this.title= this.data.title;
   }
 
   getById(data) {
