@@ -14,7 +14,7 @@
     <!-- coach side rendering start -->
     <ion-card>
         <ion-card-content>
-            <mat-select [(ngModel)]="selectedOption" placeholder="Select option">
+            <mat-select [disabled]="data" [(ngModel)]="selectedOption" placeholder="Select option">
                 <mat-option *ngFor='let option of conceptOptions' [value]='option.id'>{{option.value}}</mat-option>
             </mat-select>
         </ion-card-content>
@@ -26,7 +26,7 @@
 
         <div>
             <div *ngIf="selectedOption == 0">
-                <app-video [sectionPageId]="sectionPageId" (eventEmitterCloseModel)="eventEmitterCloseModel()" [sectionId]="sectionId"></app-video>
+                <app-video [data]="data" [sectionPageId]="sectionPageId" (eventEmitterCloseModel)="eventEmitterCloseModel()" [sectionId]="sectionId"></app-video>
             </div>
             <div *ngIf="selectedOption == 1">
                 <app-text [sectionPageId]="sectionPageId" [sectionId]="sectionId" [recordId]="recordId"></app-text>

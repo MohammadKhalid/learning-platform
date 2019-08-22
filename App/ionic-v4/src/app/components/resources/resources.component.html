@@ -8,7 +8,7 @@
 
                             <h4>
                                 <ion-icon name="{{show(filename.title)}}"></ion-icon>
-                                {{filename.title}}</h4>
+                                <a target="_blank" [href]="serverUrl+filename.title" download>{{filename.title}}</a> </h4>
                         </div>
                         <div>
                             <ion-icon name="close" (click)="deletePrompt(filename)"></ion-icon>

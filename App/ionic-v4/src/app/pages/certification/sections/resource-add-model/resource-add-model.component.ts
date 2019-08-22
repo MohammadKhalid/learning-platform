@@ -54,7 +54,8 @@ export class ResourceAddModelComponent implements OnInit {
           this.uploads = false; 
           this.notificationService.showMsg("Saved Successfully");
           this.apiSrv.populateSectionSubMenu(this.sectionId);
-          this.router.navigate([`resources/${this.sectionId}`])
+          this.router.navigate([`/certification/sections/resources/${this.sectionId}`])
+
           this.ctrl.dismiss('cancel')
         }).catch(err => {
           this.notificationService.showMsg("Error inserting resources");
