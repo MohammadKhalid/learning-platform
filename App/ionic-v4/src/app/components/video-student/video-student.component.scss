@@ -22,8 +22,8 @@
   .header-title-video{
     font-size: 18px;
     text-align: center;
-    padding-top: 12px;
-    padding-bottom: 12px;
+    padding-top: 18px;
+    padding-bottom: 20px;
     background-color: #1b232b;
     color: white;
     border-top: 1px solid #1b232b;
@@ -31,4 +31,9 @@
 
 .color-adjustment {
   background:#1C262F;
+}
+
+.header-title-video .btn-title-edit-del{
+    float: right;
+    margin-top: -12px;
 }
