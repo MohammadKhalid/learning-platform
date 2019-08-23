@@ -197,9 +197,9 @@ export class SectionsPage implements OnInit {
   }
   back() {
     this.apiSrv.populateSectionConceptBackNavigate();
-      let id = this.actRoute.snapshot.paramMap.get('id');
+     
       // this.menu.enable(true, 'mainMenu')
-    this.reouter.navigate([`/certification/module/${id}`])
+    this.reouter.navigate([`/certification/module/${this.apiSrv.sectionId}`])
   }
 
   goto(route) {

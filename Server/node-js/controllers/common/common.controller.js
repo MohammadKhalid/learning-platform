@@ -167,7 +167,6 @@ const getSectionItems = async (req, res) => {
     })
 
     if (req.user.type == "student") {
-        console.log(req.user.type);
 
         const studentProgress = await StudentProgress.findAll({
 

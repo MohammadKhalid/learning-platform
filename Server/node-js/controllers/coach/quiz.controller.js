@@ -71,7 +71,7 @@ const update = async (req, res) => {
     let { title, question, options, experience } = req.body
     const quizesResult = await Quiz.update({
         question: question,
-        title: title,
+        // title: title,
         options: JSON.stringify(options),
         experience: experience
     }, {
@@ -79,7 +79,13 @@ const update = async (req, res) => {
                 id: quizId
             }
         })
-    if (quizesResult) return ReS(res, { data: quizesResult }, 200);
+
+    let quiz = await Quiz.findAll({
+        where: {
+            id: quizId
+        }
+    })
+    if (quiz) return ReS(res, { data: quiz.pop() }, 200);
     else return ReE(res, { message: 'Unable to get by title.' }, 500)
 }
 module.exports.update = update;
