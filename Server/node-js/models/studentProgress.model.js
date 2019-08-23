@@ -10,9 +10,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-        lastSectionId: {
+        isLastActive: {
             type: DataTypes.INTEGER,
             allowNull: false,
+            defaultvalue: 0
         },
     });
 

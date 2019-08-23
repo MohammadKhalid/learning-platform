@@ -1,4 +1,4 @@
-const { Sequelize, CourseCategory, Section, Text, Lesson, Course, StudentProgress } = require('../../models');
+const { Sequelize, CourseCategory, Section, Text, Lesson, Course, StudentProgress, SectionPage } = require('../../models');
 const { to, ReE, ReS } = require('../../services/util.service');
 const Op = Sequelize.Op;
 
@@ -24,18 +24,24 @@ const getLastSectionDetails = async (req, res) => {
     let section = [];
     let { studentId } = req.params
     const studentProgress = await StudentProgress.findAll({
-        attributes: ['lastSectionId'],
+        attributes: ['sectionPageId'],
 
         where: {
+            isLastActive: 1,
             studentId: studentId
-        }
+        },
+
     })
 
     if (studentProgress.length > 0) {
-        section = await Section.findAll({
+        sectionPage = await SectionPage.findAll({
 
+            include: [{
+                model: Section,
+                as: 'Section'
+            }],
             where: {
-                id: studentProgress[0].lastSectionId
+                id: studentProgress[0].sectionPageId
             }
         })
     }

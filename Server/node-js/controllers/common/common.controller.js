@@ -125,7 +125,7 @@ module.exports.getSections = getSections;
 
 
 const getSideMenuItems = async (req, res) => {
-    let { sectionId } = req.params
+    let { sectionId, userId } = req.params
     const sectionpage = await Section.findAll({
         attributes: ['title'],
         include: [{
@@ -142,12 +142,6 @@ const getSideMenuItems = async (req, res) => {
         }
     })
 
-    if (req.user.type == "student") {
-
-        const studentProgressModel = await StudentProgress.update({
-            lastSectionId: sectionId
-        })
-    }
     let concepts = sectionpage.pop();
     if (concepts.sectionPage) return ReS(res, { concept: concepts.sectionPage, title: concepts.title, resource: resources }, 200);
     else return ReE(res, { concept: concepts, title: concepts.title }, 500)
@@ -229,6 +223,39 @@ const getSectionItems = async (req, res) => {
                     studentId: studentId
                 }
             })
+
+
+        //studentProgressWork
+
+        const studentProgressGet = await StudentProgress.findAll({
+
+            where: {
+                id: userId
+            }
+        })
+
+        if (studentProgressGet.length == 0) {
+            const studentProgressModel = await StudentProgress.create({
+                studentId: userId,
+                sectionPageId: sectionPageId,
+                isLastActive: 1
+            })
+        }
+        else {
+            const studentProgressModel = await StudentProgress.update({
+                isLastActive: 1
+
+            },
+                {
+                    where: {
+                        studentId: userId,
+                        sectionPageId: sectionPageId
+                    }
+                })
+
+
+        }
+
 
 
     }
