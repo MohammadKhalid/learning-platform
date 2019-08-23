@@ -214,7 +214,7 @@ const getSectionItems = async (req, res) => {
             studentLevel = level.currentLevel + 1;
         }
 
-        const level = await Level.update({
+        const levelUpdate = await Level.update({
             nextExperience: nextExperience,
             currentExperience: currentExperience,
             currentLevel: studentLevel

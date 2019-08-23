@@ -114,7 +114,7 @@ course.get('/completed-courses', courseContoller.getCompletedCourse)
 // section
 const section = express.Router();
 studentRouter.use('/section', section)
-// section.get('/get-sections/:courseId', commonController.getSections)
+section.get('/get-sections/:courseId', commonController.getSections)
 
 section.get('/get-section-details-for-student/:sectionId', commonController.sectionDetailsForStudent)
 
