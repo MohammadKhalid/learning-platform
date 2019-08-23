@@ -167,7 +167,6 @@ const getSectionItems = async (req, res) => {
     })
 
     if (req.user.type == "student") {
-        console.log(req.user.type);
 
         const studentProgress = await StudentProgress.findAll({
 
@@ -214,7 +213,7 @@ const getSectionItems = async (req, res) => {
             studentLevel = level.currentLevel + 1;
         }
 
-        const level = await Level.update({
+        const levelUpdate = await Level.update({
             nextExperience: nextExperience,
             currentExperience: currentExperience,
             currentLevel: studentLevel
