@@ -67,6 +67,7 @@ import { QuizStudentComponent } from './quiz-student/quiz-student.component';
 import { StudentResourcesComponent } from './student-resources/student-resources.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AngularEditorModule } from '@kolkov/angular-editor';
+import { AddEditPopoverComponent } from './common/add-edit-popover/add-edit-popover.component';
 
 @NgModule({
 	imports: [
@@ -86,7 +87,7 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 		DragScrollModule,
 		FileUploadModule,
 		MatIconModule,
-		HttpClientModule, 
+		HttpClientModule,
 		AngularEditorModule,
 		LazyLoadImageModule.forRoot({
 			preset: intersectionObserverPreset // <-- tell LazyLoadImage that you want to use IntersectionObserver
@@ -153,11 +154,13 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 		QuizStudentComponent,
 		StudentResourcesComponent,
 		StudentTextComponent,
-		SafePipe
+		SafePipe,
+		AddEditPopoverComponent
 	],
 	entryComponents: [
 		MediaComponent,
-		ClientTagModalComponent
+		ClientTagModalComponent,
+		AddEditPopoverComponent
 	],
 	exports: [
 		ConferenceComponent,

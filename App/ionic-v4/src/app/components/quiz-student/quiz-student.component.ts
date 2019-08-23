@@ -2,6 +2,8 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
 import { AuthenticationService } from 'src/app/services/user/authentication.service';
 import { Router } from '@angular/router';
+import { AddEditPopoverComponent } from '../common/add-edit-popover/add-edit-popover.component';
+import { PopoverController } from '@ionic/angular';
 
 @Component({
   selector: 'app-quiz-student',
@@ -23,7 +25,9 @@ export class QuizStudentComponent implements OnInit {
   constructor(
     private restApi: RestApiService,
     private auth: AuthenticationService,
-    private router: Router
+    private router: Router,
+    public popoverController: PopoverController,
+
   ) { }
   // ionViewDidEnter() {
   //   // this.QuizIndexEitter.next();
@@ -91,21 +95,19 @@ export class QuizStudentComponent implements OnInit {
       }
     }).join(',')
   }
-  // submitQuiz() {
-  //   let obj = {
-  //     studentId: this.user.id,
-  //     title: this.recordId,
-  //     sectionId: this.sectionId,
-  //     finalQuiz: this.quizzesArray
-  //   }
-
-  //   this.restApi.postPromise('quiz/submit-quiz', obj)
-  //     .then(response => {
-  //       debugger;
-  //       this.router.navigate([`certification/sections/concepts/${this.sectionId}/${this.recordId}/Quiz`])
-  //     }).catch(error => {
-  //       debugger;
-  //     })
-  // }
-
+  async addEditPopOver(ev: any, item: any) {
+    const popover = await this.popoverController.create({
+      component: AddEditPopoverComponent,
+      componentProps: {
+        delete: this.deleteQuiz.bind(this),
+        edit: this.editQuiz.bind(this),
+        item: item
+      },
+      event: ev,
+      animated: true,
+      showBackdrop: true,
+    });
+    return await popover.present();
+  }
+  
 }

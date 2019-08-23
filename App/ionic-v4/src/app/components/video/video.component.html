@@ -1,9 +1,10 @@
-<ion-card ion-padding>
+<!-- <ion-card ion-padding> -->
     <form [formGroup]="addVideoForm" (ngSubmit)="addVideo()">
 
 
-
-        <ion-list class="ion-padding">
+        
+        <ion-list>
+                <ion-card>
             <ion-item lines="inset">
                 <ion-label position="floating">Title
                     <ion-text color="danger">*</ion-text>
@@ -29,7 +30,7 @@
                 </ion-label>
                 <ion-textarea placeholder="Description" formControlName='description' rows="5" cols="20"></ion-textarea>
             </ion-item>
-
+        </ion-card>
             <ion-item lines="none" class="ion-float-right ion-padding-top">
                 <ion-button type="submit" [disabled]="!addVideoForm.valid" size="md">{{btnText}}</ion-button>
             </ion-item>
@@ -38,4 +39,4 @@
         </ion-list>
 
     </form>
-</ion-card>
+<!-- </ion-card> -->

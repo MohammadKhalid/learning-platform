@@ -1,7 +1,7 @@
-<ion-header translucent="true">
-    <ion-toolbar mode="ios">
+<ion-header translucent="true" class="add-Concept-header">
+    <ion-toolbar mode="ios" color="success cus-header-bg">
         <ion-buttons slot="start">
-            <ion-button (click)="close()">
+        <ion-button (click)="close()">
                 <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
             </ion-button>
         </ion-buttons>
@@ -12,14 +12,14 @@
 <ion-content padding fullscreen>
 
     <!-- coach side rendering start -->
-    <ion-card>
-        <ion-card-content>
-            <mat-select [disabled]="data" [(ngModel)]="selectedOption" placeholder="Select option">
-                <mat-option *ngFor='let option of conceptOptions' [value]='option.id'>{{option.value}}</mat-option>
-            </mat-select>
-        </ion-card-content>
-    </ion-card>
-
+    <ion-item lines="inset">
+            <ion-label position="floating">Category<ion-text color="danger">*</ion-text>
+            </ion-label>
+            <ion-select [disabled]="data" [(ngModel)]="selectedOption" placeholder="Select Type">
+                <ion-select-option *ngFor='let option of conceptOptions' [value]="option.id">{{option.value}}
+                </ion-select-option>
+            </ion-select>
+        </ion-item>
     <!-- coach side rendering end -->
 
     <ion-list class="ion-padding">

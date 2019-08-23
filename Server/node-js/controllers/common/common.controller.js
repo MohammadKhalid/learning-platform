@@ -125,7 +125,7 @@ module.exports.getSections = getSections;
 
 
 const getSideMenuItems = async (req, res) => {
-    let { sectionId } = req.params
+    let { sectionId, userId } = req.params
     const sectionpage = await Section.findAll({
         attributes: ['title'],
         include: [{
@@ -141,6 +141,7 @@ const getSideMenuItems = async (req, res) => {
             sectionId: sectionId
         }
     })
+
     let concepts = sectionpage.pop();
     if (concepts.sectionPage) return ReS(res, { concept: concepts.sectionPage, title: concepts.title, resource: resources }, 200);
     else return ReE(res, { concept: concepts, title: concepts.title }, 500)
@@ -167,7 +168,6 @@ const getSectionItems = async (req, res) => {
     })
 
     if (req.user.type == "student") {
-        console.log(req.user.type);
 
         const studentProgress = await StudentProgress.findAll({
 
@@ -198,7 +198,7 @@ const getSectionItems = async (req, res) => {
                 sectionPageid: sectionPageid
             }
         })
- 
+
         const level = await Level.findAll({
             where: {
                 studentId: studentId
@@ -214,7 +214,7 @@ const getSectionItems = async (req, res) => {
             studentLevel = level.currentLevel + 1;
         }
 
-        const level = await Level.update({
+        const levelUpdate = await Level.update({
             nextExperience: nextExperience,
             currentExperience: currentExperience,
             currentLevel: studentLevel
@@ -223,6 +223,39 @@ const getSectionItems = async (req, res) => {
                     studentId: studentId
                 }
             })
+
+
+        //studentProgressWork
+
+        const studentProgressGet = await StudentProgress.findAll({
+
+            where: {
+                id: userId
+            }
+        })
+
+        if (studentProgressGet.length == 0) {
+            const studentProgressModel = await StudentProgress.create({
+                studentId: userId,
+                sectionPageId: sectionPageId,
+                isLastActive: 1
+            })
+        }
+        else {
+            const studentProgressModel = await StudentProgress.update({
+                isLastActive: 1
+
+            },
+                {
+                    where: {
+                        studentId: userId,
+                        sectionPageId: sectionPageId
+                    }
+                })
+
+
+        }
+
 
 
     }
