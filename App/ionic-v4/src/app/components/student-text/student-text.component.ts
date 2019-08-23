@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
+import { PopoverController } from '@ionic/angular';
+import { AddEditPopoverComponent } from '../common/add-edit-popover/add-edit-popover.component';
 
 @Component({
   selector: 'app-student-text',
@@ -15,7 +17,7 @@ export class StudentTextComponent implements OnInit {
   title: string = "";
   isDeletedClicked: boolean = false
   constructor(private activateroute: ActivatedRoute,
-
+    public popoverController: PopoverController,
     private restApi: RestApiService) { }
 
   ngOnInit() {
@@ -30,7 +32,22 @@ export class StudentTextComponent implements OnInit {
     })
   }
 
-  editText(){
+  editText() {
     this.editItem.next(this.data)
+  }
+
+  async addEditPopOver(ev: any, item: any) {
+    const popover = await this.popoverController.create({
+      component: AddEditPopoverComponent,
+      componentProps: {
+        delete: this.deleteText.bind(this),
+        edit: this.editText.bind(this),
+        item: item
+      },
+      event: ev,
+      animated: true,
+      showBackdrop: true,
+    });
+    return await popover.present();
   }
 }
