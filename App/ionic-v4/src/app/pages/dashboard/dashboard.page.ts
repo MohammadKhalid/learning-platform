@@ -24,8 +24,12 @@ export class DashboardPage implements OnInit {
 	) {
 		this.sessionData = this.authService.getSessionData();
 	}
-
 	ngOnInit() {
+		let user =this.authService.getSessionData().user.id;
+		
+		this.restApi.postPromise(`level`,{studentId: user}).then(res=>{
+
+		});
 		this.restApi.get('dashboard', {}).subscribe((res: any) => {
 			console.log('DASHBOARD', res);
 		});
