@@ -1,6 +1,34 @@
 const { Level, StudentExperienceSettings } = require('../../models');
 const { to, ReE, ReS } = require('../../services/util.service');
 
+const create = async (req, res) => {
+    let level;
+    let { studentId } = req.body
+
+    const levelGet = await Level.findAll({
+        
+        where: {
+            studentId: studentId
+        }
+    })
+
+    if(levelGet.length == 0){
+
+         level = await Level.create({
+            studentId: studentId,
+            nextExperience: 100,
+            currentExperience: 0,
+            currentLevel: 0
+        })
+    }
+
+    
+    if (level) return ReS(res, { data: level }, 200);
+    else return ReE(res, { message: 'Unable to insert Course.' }, 500)
+}
+module.exports.create = create;
+
+
 const update = async function (req, res) {
     let nextExperience;
     let { studentExperience, studentLevel } = req.body
