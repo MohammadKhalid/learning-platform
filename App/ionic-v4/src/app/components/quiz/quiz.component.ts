@@ -75,7 +75,7 @@ export class QuizComponent implements OnInit {
   }
 
   saveQuestion() {
-    debugger;
+   
     let obj = {
       sectionPageId: this.sectionPageId,
       title: this.title,

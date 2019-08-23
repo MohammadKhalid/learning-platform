@@ -51,8 +51,8 @@ const routes: Routes = [
 
     RouterModule.forChild(routes)
   ],
-  declarations: [AddmodulePage, AddEditModelComponent, AddEditPopoverComponent],
-  entryComponents: [AddEditModelComponent, AddEditPopoverComponent],
+  declarations: [AddmodulePage, AddEditModelComponent],
+  entryComponents: [AddEditModelComponent],
 })
 export class AddmodulePageModule {
 }

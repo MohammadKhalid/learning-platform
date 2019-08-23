@@ -36,7 +36,7 @@ export class QuizStudentComponent implements OnInit {
 
     this.user = this.auth.getSessionData().user;
     this.data
-    debugger;
+   
     this.attempted = this.user.type === "coach" ? true : false;
     //  for (const item of this.data) {
     this.quizzesArray.push({

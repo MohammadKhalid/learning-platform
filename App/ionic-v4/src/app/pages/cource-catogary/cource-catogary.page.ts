@@ -84,7 +84,7 @@ export class CourceCatogaryPage implements OnInit {
 		this.companie = []
 		let clientId = this.form.controls.clientId.value;
 		this.restApi.getPromise('course-client-company/companies', clientId).then(res => {
-			debugger
+			
 			this.companie = res.data.companies;
 		})
 	}
@@ -94,7 +94,7 @@ export class CourceCatogaryPage implements OnInit {
 			this.restApi.postPromise('course-category', this.form.value)
 
 				.then(res => {
-					debugger
+					
 					this.notificationService.toast.dismiss();
 					this.navCtrl.navigateRoot('/category');
 					console.log(res);

@@ -57,7 +57,7 @@ export class SectionsPage implements OnInit {
 
   searchBy: string = "";
   panelOpenState = false;
-  sectionId : any
+  sectionId: any
   panelResourceOpenState = false;
   showField: boolean = false;
   // showFieldResource: boolean = false;
@@ -69,14 +69,13 @@ export class SectionsPage implements OnInit {
     this.saveButtonResourceSubscription.unsubscribe();
   }
   ngOnInit() {
-    debugger
+
     this.sectionId = this.apiSrv.sectionId;
     this.searchBy = "";
     this.user = this.authService.getSessionData().user;
     //coach menu popupate start
     this.subscription = this.apiSrv.getSectionMenuData().subscribe(res => {
       if (res) {
-        debugger
         res.concept ? this.listData = res.concept : '';
         res.resource ? this.listResourceData = res.resource : '';
         this.lessonName = res.title;
@@ -89,6 +88,7 @@ export class SectionsPage implements OnInit {
       if (res) {
         res.concept ? this.listData = res.concept : '';
         res.resource ? this.listResourceData = res.resource : '';
+        this.lessonName = res.title;
       }
     });
     //student menu popupate end
@@ -126,7 +126,7 @@ export class SectionsPage implements OnInit {
 
     })
   }
-  recourcesroute(){
+  recourcesroute() {
     this.reouter.navigate([`/certification/sections/resources/${this.apiSrv.sectionId}`])
   }
 
@@ -197,8 +197,8 @@ export class SectionsPage implements OnInit {
   }
   back() {
     this.apiSrv.populateSectionConceptBackNavigate();
-     
-      // this.menu.enable(true, 'mainMenu')
+
+    // this.menu.enable(true, 'mainMenu')
     this.reouter.navigate([`/certification/module/${this.apiSrv.sectionId}`])
   }
 
@@ -226,7 +226,7 @@ export class SectionsPage implements OnInit {
     this.apiSrv.populateSectionConcept(true);
   }
   async popUpResource() {
-    debugger;
+
     let sectionId = this.apiSrv.sectionId;
 
     const modal: HTMLIonModalElement =

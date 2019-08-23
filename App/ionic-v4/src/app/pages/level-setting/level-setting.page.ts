@@ -50,9 +50,7 @@ export class LevelSettingPage implements OnInit {
     if (editId) {
       this.btnText = "Update"
       this.restApi.getPromise('/levelSetting/get', editId).then(res => {
-        debugger
-
-        this.form.controls['initialLevel'].setValue(res.data[0].initialLevel);
+       this.form.controls['initialLevel'].setValue(res.data[0].initialLevel);
         this.form.controls['initialExperience'].setValue(res.data[0].initialExperience);
         this.form.controls['clientId'].setValue(res.data[0].clientId);
         this.form.controls['companyId'].setValue(res.data[0].companyId);

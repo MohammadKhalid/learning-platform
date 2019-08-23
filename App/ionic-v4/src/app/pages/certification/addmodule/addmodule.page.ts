@@ -26,12 +26,14 @@ export class AddmodulePage implements OnInit {
     public modalcontroler: ModalController,
     private notifictation: NotificationService,
     public popoverController: PopoverController,
-    public menu : MenuController) { }
+    public menu: MenuController) { }
   data: any[] = [];
   serverUrl: string = "./assets/img/";
   forms: FormGroup
+  inProgressData: any = [];
   ngOnInit() {
-    debugger
+
+
     this.menu.enable(true);
     this.menu.enable(true, 'mainMenu')
     this.user = this.authService.getSessionData().user;
@@ -45,20 +47,36 @@ export class AddmodulePage implements OnInit {
     //   ])),
     //   courseId: this.id
     // })
+    this.inprogressSection();
+  }
 
+  getModules() {
 
     this.service.getPromise('section/get-sections', this.id).then(res => {
-      if(res.flag == 'Section'){
+      if (res.flag == 'Section') {
         this.data = res.data;
+        if (this.inProgressData.length == 0) {
+          this.inProgressData = res.data.length > 0 ? res.data[0] : [];
+        }
         this.courseTitle = res.data[0].course.title
-      }else{
+      } else {
         this.courseTitle = res.data[0].title
       }
     }).catch(err => {
     })
 
   }
-
+  startLesson(item) {
+    let obj = {
+      userId: this.user.id,
+      courseId: this.id
+    }
+    this.service.postPromise('course/enroll-course', obj).then(res => {
+      this.router.navigate([`certification/sections/concepts/${item.id}`])
+    }).catch(res => {
+      this.notifictation.showMsg('Error to Add ');
+    })
+  }
   addModule() {
     this.service.postPromise('section', this.forms.value).then(res => {
       this.data.push(res.data);
@@ -93,6 +111,16 @@ export class AddmodulePage implements OnInit {
     var index = this.data.findIndex(item => item.id === res.data.id);
     this.data.splice(index, 1, res.data);
   }
+  inprogressSection() {
+    this.service.getPromise(`section/get-last-section-id/${this.user.id}`).then(res => {
+      this.inProgressData = res.data;
+      this.getModules()
+
+    }).catch(err => {
+
+    })
+  }
+
   deleteModule(id) {
     this.service.delete(`courses/${id}`).subscribe(res => {
       if (res) {

@@ -258,7 +258,7 @@ export class RestApiService {
 		this._sectionId = id;
 	}
 	get sectionId() {
-		debugger
+	
 		return this._sectionId;
 	}
 	// concept click start
@@ -308,7 +308,7 @@ export class RestApiService {
 		return this.sectionMenuDataStudent.asObservable();
 	}
 	populateSectionSubMenuStudent(id) {
-		this.getPromise(`section/get-section-details-for-student`, id).then(resSec => {
+		this.getPromise(`section/get-side-menu-items`, id).then(resSec => {
 			this.setSectionMenuDataStudent(resSec);
 		}).catch(err => {
 			this.noti.showMsg(err);

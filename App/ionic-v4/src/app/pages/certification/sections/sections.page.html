@@ -110,9 +110,58 @@
 
                 </ion-list>
             </ng-template>
+
             <!-- student type -->
             <ng-template #student>
                 <ion-item lines="none" class="certificate-item bordersSearch">
+                    <ion-input class="send-box" type="text" placeholder="SEARCH" [(ngModel)]="searchBy"></ion-input>
+                    <ion-icon name="search" class="icon-color certificate-icon certificate-section-icon"></ion-icon>
+                </ion-item>
+                <ion-list lines="none">
+
+                    <div id="accordion">
+                        <div class="card">
+                            <div class="card-header" id="heading-2">
+                                <h5 class="mb-0">
+                                    <a class="collapsed check" (click)="recourcesroute()" role="button" data-toggle="collapse" href="#collapse-2" aria-expanded="false" aria-controls="collapse-2">
+                                                RECOURCES
+                                            </a>
+                                </h5>
+                            </div>
+                            <div id="collapse-2" class="collapse" data-parent="#accordion" aria-labelledby="heading-2">
+                                <ion-item *ngFor="let dataRow of listResourceData | orderByDate | filter : searchBy" class="conceptGaps certificate-item certificate-section concept-title-adjustment">
+                                    <ion-label (click)="gotoResourceType(dataRow);">
+                                        {{dataRow.title.length > 15 ? dataRow.title.substring(0,15)+'...': dataRow.title}}
+                                    </ion-label>
+                                </ion-item>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="accordion1">
+
+                        <div class="card">
+                            <div class="card-header bordersResources" id="heading-2">
+                                <h5 class="mb-0">
+                                    <a class="collapsed check" role="button" data-toggle="collapse" href="#collapse-1" aria-expanded="false" aria-controls="collapse-1">
+                                                CONCEPTS
+                                                                                           </a>
+
+                                </h5>
+                            </div>
+                            <div id="collapse-1" class="collapse" data-parent="#accordion1" aria-labelledby="heading-2">
+                                <ion-item *ngFor="let dataRow of listData | orderByDate | filter : searchBy" class="conceptGaps certificate-item certificate-section concept-title-adjustment">
+                                    <ion-label (click)="gotoConceptType(dataRow);">
+                                        {{dataRow.title.length > 15 ? dataRow.title.substring(0,15)+'...': dataRow.title}}
+                                    </ion-label>
+                                </ion-item>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </ion-list>
+                <!-- <ion-item lines="none" class="certificate-item bordersSearch">
                     <ion-input class="send-box" type="text" placeholder="SEARCH" [(ngModel)]="searchBy"></ion-input>
                     <ion-icon name="search" class="icon-color certificate-icon certificate-section-icon"></ion-icon>
                 </ion-item>
@@ -155,7 +204,7 @@
                         </div>
 
                     </div>
-                </ion-list>
+                </ion-list> -->
             </ng-template>
 
         </mat-drawer>

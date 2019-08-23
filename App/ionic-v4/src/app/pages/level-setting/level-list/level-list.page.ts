@@ -18,7 +18,7 @@ export class LevelListPage implements OnInit {
   ngOnInit() {
     
     this.restapi.getPromise('/levelSetting/get-all').then(res=> {
-     debugger
+  
       
   this.listdata = res.data
     }).catch(err=> {

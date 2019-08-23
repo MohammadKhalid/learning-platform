@@ -2,7 +2,7 @@
     Drop files here...
     <!-- <ion-icon slot="icon-only" name="cloud-upload"></ion-icon>  -->
 </div>
-<input hidden="true" type="file" (change)="readFile($event)" (onFileSelected)="onFileSelected($event)" #multiFileUpload ng2FileSelect [uploader]="uploader" multiple />
+<input hidden="true" type="file" (onFileSelected)="onFileSelected($event)" #multiFileUpload ng2FileSelect [uploader]="uploader" multiple />
 
 <!-- <h2>Files: {{ uploader?.queue?.length }}</h2> -->
 

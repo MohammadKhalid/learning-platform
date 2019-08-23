@@ -7,10 +7,7 @@ import { NotificationService } from 'src/app/services/notification/notification.
   styleUrls: ['./dropzone.component.scss'],
 })
 export class DropzoneComponent implements OnInit {
-  public uploader: FileUploader = new FileUploader({
-    maxFileSize:10000
-    
-  });
+  public uploader: FileUploader = new FileUploader({ });
   @Output() eventBtnSubmit = new EventEmitter<number>();
 
   public hasBaseDropZoneOver: boolean = false;

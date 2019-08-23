@@ -39,7 +39,7 @@ export class ResourcesComponent implements OnInit {
       this.oldTitle = this.title = this.resourceTitle;
 
       this.restApi.getPromise(`resource/get-resources/${this.sectionId}`).then(res => {
-        debugger;
+       
         this.fileData = res.data;
       }).catch(err => {
         this.notificationService.showMsg('server down');
@@ -62,7 +62,7 @@ export class ResourcesComponent implements OnInit {
     }
   }
   upload() {
-    debugger
+   
     this.files = this.fileField.getFiles();
     console.log(this.files);
     let formData = new FormData();
