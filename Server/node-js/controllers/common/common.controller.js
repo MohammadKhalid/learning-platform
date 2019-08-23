@@ -1,4 +1,4 @@
-const { Sequelize, CourseCategory, UserCompany, Section, Text, Lesson, Resource, Quiz, Course, SectionPage, StudentProgress } = require('../../models');
+const { Sequelize, CourseCategory, UserCompany, Section, Text, Lesson, Resource, Quiz, Course, SectionPage, StudentProgress, Level } = require('../../models');
 const { to, ReE, ReS } = require('../../services/util.service');
 const Op = Sequelize.Op;
 // const uuidv4 = require('uuid/v4')
@@ -149,8 +149,8 @@ const getSideMenuItems = async (req, res) => {
 module.exports.getSideMenuItems = getSideMenuItems;
 
 const getSectionItems = async (req, res) => {
-    let nextExperience, studentLevel;
-    let { sectionPageId, studentId } = req.params
+    let nextExperience, studentLevel, currentExperience;
+    let { sectionPageId, userId } = req.params
     const sectionpage = await SectionPage.findAll({
         include: [{
             model: Lesson,
@@ -168,50 +168,59 @@ const getSectionItems = async (req, res) => {
     })
 
     if (req.user.type == "student") {
-
         const studentProgress = await StudentProgress.findAll({
-
             where: {
-                studentId: studentId,
-                sectionPageId: sectionPageId
+                studentId: userId,
+                sectionPageId: sectionPageId,
             }
         })
-
-
-        if (studentProgress.length != 0) {
+        if (studentProgress.length == 0) {
             const studentProgressCreate = await StudentProgress.create({
-                studentId: studentId,
-                sectionPageId: sectionPageId
+                studentId: userId,
+                sectionPageId: sectionPageId,
+                isLastActive: 1
             })
+        } else {
+            const studentProgressModel = await StudentProgress.update({
+                isLastActive: 1
+            }, {
+                    where: {
+                        studentId: userId,
+                        sectionPageId: sectionPageId
+                    }
+                })
         }
 
-        const texts = await Text.findAll({
-            attributes: [[sequelize.fn('sum', sequelize.col('totalExperience')), 'totalExperience']],
+        let texts = await Text.findAll({
+            attributes: [[Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
             where: {
-                sectionPageid: sectionPageid
-            }
+                sectionPageId: sectionPageId
+            },
+            group: ['sectionPageId']
         })
-
-        const lesson = await Lesson.findAll({
-            attributes: [[sequelize.fn('sum', sequelize.col('totalExperience')), 'totalExperience']],
+        let lesson = await Lesson.findAll({
+            attributes: [[Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
             where: {
-                sectionPageid: sectionPageid
-            }
+                sectionPageId: sectionPageId
+            },
+            group: ['sectionPageId']
         })
 
         const level = await Level.findAll({
             where: {
-                studentId: studentId
+                studentId: userId
             }
         })
-
-        studentExperience = texts[0].totalExperience + lesson[0].totalExperience;
-        currentExperience = studentExperience + level.currentExperience
-
-        if (studentExperience == level.nextExperience ||
-            studentExperience > level.nextExperience) {
-            nextExperience = level.nextExperience * 1.5;
-            studentLevel = level.currentLevel + 1;
+        lesson = lesson.pop()
+        texts = texts.pop()
+        console.log(lesson)
+        console.log(lesson['totalExperience'])
+        studentExperience = texts.totalExperience + lesson.totalExperience;
+        currentExperience = studentExperience + level[0].currentExperience
+        if (studentExperience == level[0].nextExperience ||
+            studentExperience > level[0].nextExperience) {
+            nextExperience = level[0].nextExperience * 1.5;
+            studentLevel = level[0].currentLevel + 1;
         }
 
         const levelUpdate = await Level.update({
@@ -220,43 +229,39 @@ const getSectionItems = async (req, res) => {
             currentLevel: studentLevel
         }, {
                 where: {
-                    studentId: studentId
+                    studentId: userId
                 }
             })
 
 
         //studentProgressWork
 
-        const studentProgressGet = await StudentProgress.findAll({
+        // const studentProgressGet = await StudentProgress.findAll({
 
-            where: {
-                id: userId
-            }
-        })
+        //     where: {
+        //         id: userId
+        //     }
+        // })
 
-        if (studentProgressGet.length == 0) {
-            const studentProgressModel = await StudentProgress.create({
-                studentId: userId,
-                sectionPageId: sectionPageId,
-                isLastActive: 1
-            })
-        }
-        else {
-            const studentProgressModel = await StudentProgress.update({
-                isLastActive: 1
+        // if (studentProgressGet.length == 0) {
+        //     const studentProgressModel = await StudentProgress.create({
+        //         studentId: userId,
+        //         sectionPageId: sectionPageId,
+        //         isLastActive: 1
+        //     })
+        // }
+        // else {
+        //     const studentProgressModel = await StudentProgress.update({
+        //         isLastActive: 1
 
-            },
-                {
-                    where: {
-                        studentId: userId,
-                        sectionPageId: sectionPageId
-                    }
-                })
-
-
-        }
-
-
+        //     },
+        //         {
+        //             where: {
+        //                 studentId: userId,
+        //                 sectionPageId: sectionPageId
+        //             }
+        //         })
+        // }
 
     }
     if (sectionpage) return ReS(res, { data: [...sectionpage[0].Lesson, ...sectionpage[0].Text, ...sectionpage[0].Quiz] }, 200);
