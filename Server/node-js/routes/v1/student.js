@@ -122,7 +122,7 @@ section.get('/get-section-details-for-student/:sectionId', commonController.sect
 section.get('/get-section-items/:sectionPageId/:studentId', commonController.getSectionItems)
 
 section.get('/get-side-menu-items/:sectionId', commonController.getSideMenuItems)
-section.get('/get-last-section-id/', sectionController.getLastSectionDetails)
+section.get('/get-last-section-id/:studentId', sectionController.getLastSectionDetails)
 
 
 // lessons

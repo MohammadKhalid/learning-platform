@@ -43,4 +43,4 @@ const getLastSectionDetails = async (req, res) => {
     if (section) return ReS(res, { data: section }, 200);
     else return ReE(res, { message: 'Unable to insert Course.' }, 500)
 }
-module.exports.getCoachSections = getCoachSections;
+module.exports.getLastSectionDetails = getLastSectionDetails;
