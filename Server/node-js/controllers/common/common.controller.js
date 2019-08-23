@@ -148,6 +148,7 @@ const getSideMenuItems = async (req, res) => {
 module.exports.getSideMenuItems = getSideMenuItems;
 
 const getSectionItems = async (req, res) => {
+    let nextExperience, studentLevel;
     let { sectionPageId, studentId } = req.params
     const sectionpage = await SectionPage.findAll({
         include: [{
@@ -167,10 +168,63 @@ const getSectionItems = async (req, res) => {
 
     if (req.user.type == "student") {
         console.log(req.user.type);
-        const studentProgress = await StudentProgress.create({
-            studentId: studentId,
-            sectionPageId: sectionPageId
+
+        const studentProgress = await StudentProgress.findAll({
+
+            where: {
+                studentId: studentId,
+                sectionPageId: sectionPageId
+            }
         })
+
+
+        if (studentProgress.length != 0) {
+            const studentProgressCreate = await StudentProgress.create({
+                studentId: studentId,
+                sectionPageId: sectionPageId
+            })
+        }
+
+        const texts = await Text.findAll({
+            attributes: [[sequelize.fn('sum', sequelize.col('totalExperience')), 'totalExperience']],
+            where: {
+                sectionPageid: sectionPageid
+            }
+        })
+
+        const lesson = await Lesson.findAll({
+            attributes: [[sequelize.fn('sum', sequelize.col('totalExperience')), 'totalExperience']],
+            where: {
+                sectionPageid: sectionPageid
+            }
+        })
+ 
+        const level = await Level.findAll({
+            where: {
+                studentId: studentId
+            }
+        })
+
+        studentExperience = texts[0].totalExperience + lesson[0].totalExperience;
+        currentExperience = studentExperience + level.currentExperience
+
+        if (studentExperience == level.nextExperience ||
+            studentExperience > level.nextExperience) {
+            nextExperience = level.nextExperience * 1.5;
+            studentLevel = level.currentLevel + 1;
+        }
+
+        const level = await Level.update({
+            nextExperience: nextExperience,
+            currentExperience: currentExperience,
+            currentLevel: studentLevel
+        }, {
+                where: {
+                    studentId: studentId
+                }
+            })
+
+
     }
     if (sectionpage) return ReS(res, { data: [...sectionpage[0].Lesson, ...sectionpage[0].Text, ...sectionpage[0].Quiz] }, 200);
     else return ReE(res, { message: 'Unable to get Section Page.' }, 500)

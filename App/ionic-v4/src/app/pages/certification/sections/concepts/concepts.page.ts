@@ -120,7 +120,7 @@ export class ConceptsPage implements OnInit {
           sectionId: this.sectionId,
           data: data,
           fetchSectionItems: this.fetchSectionItems.bind(this)
-          
+
         }
       });
 
@@ -149,7 +149,8 @@ export class ConceptsPage implements OnInit {
   }
 
   updateList(res) {
-    var index = this.sectionConceptData.findIndex(item => item.id === res.data.id);
+    debugger
+    var index = this.sectionConceptData.findIndex(item => item.id === res.data.id && item.type == res.data.type);
     this.sectionConceptData.splice(index, 1, res.data);
   }
 }
