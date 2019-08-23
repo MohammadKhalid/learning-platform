@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavParams } from '@ionic/angular';
+import { ViewController } from '@ionic/core';
 
 @Component({
   selector: 'app-add-edit-popover',
@@ -11,7 +12,7 @@ export class AddEditPopoverComponent implements OnInit {
   edit: any;
   item: any;
   constructor(
-    private navParams: NavParams,
+    private navParams: NavParams
   ) {
     this.delete = this.navParams.get("delete");
     this.edit = this.navParams.get("edit");
@@ -19,7 +20,8 @@ export class AddEditPopoverComponent implements OnInit {
 
   }
 
-  ngOnInit() { }
+  ngOnInit() { 
+  }
   deleteRec() {
     this.delete(this.item.id);
   }
