@@ -17,6 +17,7 @@ const commonController = require('../../controllers/common/common.controller');
 const lessonController = require('../../controllers/student/lesson.controller');
 const textController = require('../../controllers/student/text.controller');
 const resourceController = require('../../controllers/student/resource.controller');
+const sectionController = require('../../controllers/common/section.controller');
 
 
 // dashboard
@@ -119,6 +120,9 @@ section.get('/get-sections/:courseId', commonController.getSections)
 section.get('/get-section-details-for-student/:sectionId', commonController.sectionDetailsForStudent)
 
 section.get('/get-section-items/:sectionPageId/:studentId', commonController.getSectionItems)
+
+section.get('/get-side-menu-items/:sectionId', commonController.getSideMenuItems)
+section.get('/get-last-section-id/:studentId', sectionController.getLastSectionDetails)
 
 
 // lessons

@@ -1,4 +1,4 @@
-const { Sequelize, CourseCategory, Section, Text, Lesson,Course } = require('../../models');
+const { Sequelize, CourseCategory, Section, Text, Lesson, Course, StudentProgress, SectionPage } = require('../../models');
 const { to, ReE, ReS } = require('../../services/util.service');
 const Op = Sequelize.Op;
 
@@ -19,4 +19,34 @@ const getCoachSections = async (req, res) => {
     if (section) return ReS(res, { data: section }, 200);
     else return ReE(res, { message: 'Unable to insert Course.' }, 500)
 }
-module.exports.getCoachSections = getCoachSections;
+
+const getLastSectionDetails = async (req, res) => {
+    let section = [];
+    let { studentId } = req.params
+    const studentProgress = await StudentProgress.findAll({
+        attributes: ['sectionPageId'],
+
+        where: {
+            isLastActive: 1,
+            studentId: studentId
+        },
+
+    })
+
+    if (studentProgress.length > 0) {
+        sectionPage = await SectionPage.findAll({
+
+            include: [{
+                model: Section,
+                as: 'Section'
+            }],
+            where: {
+                id: studentProgress[0].sectionPageId
+            }
+        })
+    }
+
+    if (section) return ReS(res, { data: section }, 200);
+    else return ReE(res, { message: 'Unable to insert Course.' }, 500)
+}
+module.exports.getLastSectionDetails = getLastSectionDetails;
