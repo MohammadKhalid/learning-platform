@@ -141,6 +141,13 @@ const getSideMenuItems = async (req, res) => {
             sectionId: sectionId
         }
     })
+
+    if (req.user.type == "student") {
+
+        const studentProgressModel = await StudentProgress.update({
+            lastSectionId: sectionId
+        })
+    }
     let concepts = sectionpage.pop();
     if (concepts.sectionPage) return ReS(res, { concept: concepts.sectionPage, title: concepts.title, resource: resources }, 200);
     else return ReE(res, { concept: concepts, title: concepts.title }, 500)
@@ -197,7 +204,7 @@ const getSectionItems = async (req, res) => {
                 sectionPageid: sectionPageid
             }
         })
- 
+
         const level = await Level.findAll({
             where: {
                 studentId: studentId

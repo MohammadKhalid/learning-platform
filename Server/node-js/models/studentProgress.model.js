@@ -10,6 +10,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
+        lastSectionId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
     });
 
     Model.associate = function (models) {
