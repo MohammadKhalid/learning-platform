@@ -84,7 +84,7 @@ export class QuizEditModalComponent implements OnInit {
     this.service.putPromise(`quiz/${obj.id}`, obj)
       .then(response => {
         this.notifictation.showMsg('Record Updated');
-        debugger;
+        
         let res = {
           data: obj
         }

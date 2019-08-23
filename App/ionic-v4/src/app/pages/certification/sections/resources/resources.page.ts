@@ -35,7 +35,7 @@ export class ResourcesPage implements OnInit {
 
     this.recordId = this.actRoute.snapshot.paramMap.get('recordid');
     let type = this.actRoute.snapshot.paramMap.get('type');
-    debugger;
+   
     if (this.user.type === 'coach') {
       this.restApi.populateSectionSubMenu(id);
     }

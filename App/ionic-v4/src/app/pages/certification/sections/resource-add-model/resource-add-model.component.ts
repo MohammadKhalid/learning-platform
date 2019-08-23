@@ -33,13 +33,13 @@ export class ResourceAddModelComponent implements OnInit {
   ngOnInit() { }
 
   eventBtnSubmit(count) {
-    debugger;
+  
       this.submitBtn = count > 0 ? false : true;
   }
 
 
   upload() {
-    debugger
+  
     this.files = this.fileField.getFiles();
     let formData = new FormData();
     this.files.forEach((file) => {

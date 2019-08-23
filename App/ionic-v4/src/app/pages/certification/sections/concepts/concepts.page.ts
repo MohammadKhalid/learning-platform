@@ -81,7 +81,7 @@ export class ConceptsPage implements OnInit {
     //   this.restApi.setSectionMenuData(res.data);
     // })
     // this.conceptOptions = this.restApi.getConceptsOptins();
-    if (this.sectionPageId && this.sectionPageId) {
+    if (this.sectionPageId) {
       this.fetchSectionItems()
     }
 
@@ -101,7 +101,7 @@ export class ConceptsPage implements OnInit {
   }
 
   fetchSectionItems() {
-    this.restApi.getPromise('section-page/get-section-items', this.sectionPageId)
+    this.restApi.getPromise(`section-page/get-section-items/${this.sectionPageId}/${this.user.id}`)
       .then(response => {
         this.sectionConceptData = response.data
       }).catch(error => {
@@ -149,7 +149,7 @@ export class ConceptsPage implements OnInit {
   }
 
   updateList(res) {
-    debugger
+
     var index = this.sectionConceptData.findIndex(item => item.id === res.data.id && item.type == res.data.type);
     this.sectionConceptData.splice(index, 1, res.data);
   }

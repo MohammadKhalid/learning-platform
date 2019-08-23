@@ -12,7 +12,6 @@ import { IMAGE_URL } from 'src/environments/environment';
 })
 export class StudentResourcesComponent implements OnInit {
   @Input() sectionId
-  @Input() resourceTitle
   filename: any
   fileData: any = [];
   serverUrl: string = `${IMAGE_URL}/resources/`;
@@ -20,8 +19,8 @@ export class StudentResourcesComponent implements OnInit {
   constructor(private activateroute: ActivatedRoute, private restapi: RestApiService, private notification: NotificationService) { }
 
   ngOnInit() {
-    if (this.sectionId && this.resourceTitle)
-      this.restapi.getPromise(`resource/get-resources-for-student/${this.sectionId}/${this.resourceTitle}`).then(res => {
+    if (this.sectionId)
+      this.restapi.getPromise(`resource/get-resources-for-student/${this.sectionId}`).then(res => {
         this.fileData = res.data;
       }).catch(err => {
         this.notification.showMsg('server err')
