@@ -36,4 +36,16 @@ input[type='file'] {
 }
 
 
+.lbl-adjustment{
+  font-size: 24px;
+  color: #2E3D49;
+  font-weight: bold;
+}
 
+.clr-change{
+  --ion-color-base: #2E3D49 !important;
+}
+
+.input-adjustment{
+  margin-top: 10px;
+}

@@ -1,8 +1,8 @@
-<ion-card ion-padding>
+<!-- <ion-card ion-padding> -->
     <form [formGroup]="addTextForm" (ngSubmit)="addText()">
 
-        <ion-list class="ion-padding">
-
+        <ion-list>
+            <ion-card>
             <ion-item lines="inset">
                 <ion-label position="floating">Title
                     <ion-text color="danger">*</ion-text>
@@ -24,6 +24,7 @@
                 </ion-label>
                 <ion-input type="input" formControlName='experience' placeholder="Enter Experience"></ion-input>
             </ion-item>
+        </ion-card>
 
 
             <ion-item lines="none" class="ion-float-right ion-padding-top">
@@ -34,4 +35,4 @@
         </ion-list>
 
     </form>
-</ion-card>
+<!-- </ion-card> -->
