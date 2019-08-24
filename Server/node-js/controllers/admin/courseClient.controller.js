@@ -1,4 +1,4 @@
-const { Sequelize, User, Company } = require('../../models');
+const { Sequelize, User, Company, CourseCategory, StudentExperienceSetting } = require('../../models');
 const { to, ReE, ReS } = require('../../services/util.service');
 const Op = Sequelize.Op;
 
@@ -17,10 +17,8 @@ module.exports.getClients = getClients;
 
 const getClientCompany = async function (req, res) {
     let { clientId, flag } = req.params
-    if(flag == 'courseCategory'){
-        
-    }
-    const company = await User.findAll({
+
+    let company = await User.findAll({
         include: [{
             model: Company,
             attributes: ['id', 'name'],
@@ -29,9 +27,20 @@ const getClientCompany = async function (req, res) {
         where: {
             id: clientId
         }
-
     })
-    if (company.length > 0) return ReS(res, { data: company.pop() }, 200);
-    else return ReE(res, { message: 'Unable to get companies.' }, 500)
+    if (flag == 'levelSettings') {
+        if (company[0].companies.length > 0) {
+            let companyIds = await StudentExperienceSetting.findAll({
+                where: {
+                    companyId: company[0].companies[0].id
+                }
+            })
+            company = company.filter((x, ind) => x.companies[0].id != companyIds[ind].clientId)
+        } else {
+            return ReS(res, { data: [] }, 200);
+        }
+    }
+    if (company.length > 0) return ReS(res, { data: company }, 200);
+    else return ReE(res, { message: 'Unable to get companies.', data: [] }, 500)
 }
 module.exports.getClientCompany = getClientCompany;
