@@ -68,6 +68,7 @@ import { StudentResourcesComponent } from './student-resources/student-resources
 import { HttpClientModule } from '@angular/common/http';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { AddEditPopoverComponent } from './common/add-edit-popover/add-edit-popover.component';
+import { QuizViewerCoachComponent } from './quiz-viewer-coach/quiz-viewer-coach.component';
 
 @NgModule({
 	imports: [
@@ -155,7 +156,8 @@ import { AddEditPopoverComponent } from './common/add-edit-popover/add-edit-popo
 		StudentResourcesComponent,
 		StudentTextComponent,
 		SafePipe,
-		AddEditPopoverComponent
+		AddEditPopoverComponent,
+		QuizViewerCoachComponent
 	],
 	entryComponents: [
 		MediaComponent,
@@ -205,6 +207,7 @@ import { AddEditPopoverComponent } from './common/add-edit-popover/add-edit-popo
 		StudentTextComponent,
 		QuizStudentComponent,
 		StudentResourcesComponent,
+		QuizViewerCoachComponent,
 		SafePipe,
 	],
 	providers: [

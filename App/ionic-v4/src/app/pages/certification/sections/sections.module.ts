@@ -19,6 +19,7 @@ import { PipesModule } from 'src/app/pipes/pipes.module';
 import { ConceptsPage } from './concepts/concepts.page';
 import { ResourceAddModelComponent } from './resource-add-model/resource-add-model.component';
 import { ComponentsModule } from 'src/app/components/components.module';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 const routes: Routes = [
   {
@@ -50,6 +51,7 @@ const routes: Routes = [
     MatExpansionModule,
     MatInputModule,
     PipesModule,
+    DirectivesModule,
     RouterModule.forChild(routes)
   ],
   declarations: [SectionsPage, ResourceAddModelComponent],

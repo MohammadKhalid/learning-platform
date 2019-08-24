@@ -36,8 +36,8 @@ export class QuizStudentComponent implements OnInit {
 
     this.user = this.auth.getSessionData().user;
     this.data
-   
-    this.attempted = this.user.type === "coach" ? true : false;
+
+    this.attempted = this.user.type === "coach" ? true : this.data.attempted;
     //  for (const item of this.data) {
     this.quizzesArray.push({
       questionId: this.data.id,
@@ -109,5 +109,14 @@ export class QuizStudentComponent implements OnInit {
     });
     return await popover.present();
   }
-  
+  submitQuiz(quizRow) {
+    this.restApi.postPromise('quiz', quizRow)
+      .then(response => {
+        this.attempted = true;
+        // this.router.navigate([`certification/sections/concepts/${this.sectionId}/${this.sectionPageId}`])
+        // this.notificationService.showMsg('Record Insert');
+      }).catch(err => {
+        // this.notificationService.showMsg(err);
+      })
+  }
 }

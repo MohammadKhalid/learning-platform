@@ -28,7 +28,7 @@
 
     </div>
     <ion-item lines="none" class="ion-float-right ion-padding-top">
-      <ion-button (click)="submitQuiz()" size="md">
+      <ion-button (click)="submitQuiz(quizRow)" size="md">
         <ion-icon class="save-icon-adjust" name="save"></ion-icon>
         Finish
       </ion-button>
@@ -44,7 +44,7 @@
 
           <ion-spinner *ngIf="isDeletedClicked" name="lines-small" color="dark">
           </ion-spinner>
-          <ion-toolbar mode="ios">
+          <ion-toolbar mode="ios" *ngIf="user.type === 'coach'">
             <ion-buttons slot="end">
               <ion-button class="flot-right" slot="end" fill="clear" color="primary"
                 (click)="addEditPopOver($event, {id:''})">
