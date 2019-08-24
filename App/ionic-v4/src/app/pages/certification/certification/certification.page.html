@@ -25,7 +25,7 @@
                         <h2 class="certficate-title">
                             <span>{{obj.title}}</span>
                         </h2>
-                        <certificate-card [courses]="obj.subCategories"></certificate-card>
+                        <certificate-card *ngIf="obj.subCategories.length > 0" [courses]="obj.subCategories"></certificate-card>
                     </div>
                 </div>
             </mat-tab>
@@ -42,10 +42,6 @@
                         </ion-col>
                     </ion-row>
                 </ion-grid>
-
-
-
-
             </mat-tab>
             <!-- content 3 start -->
             <mat-tab label="Completed Certifications">
@@ -74,7 +70,7 @@
                 <h2 class="certficate-title">
                     <span>{{obj.title}}</span>
                 </h2>
-                <certificate-card [courses]="obj.subCategories"></certificate-card>
+                <certificate-card  *ngIf="obj.subCategories.length > 0"  [courses]="obj.subCategories"></certificate-card>
             </div>
         </div>
     </div>
