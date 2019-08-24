@@ -54,6 +54,7 @@ export class ResourceAddModelComponent implements OnInit {
           this.uploads = false; 
           this.notificationService.showMsg("Saved Successfully");
           this.apiSrv.populateSectionSubMenu(this.sectionId);
+          debugger
           this.router.navigate([`/certification/sections/resources/${this.sectionId}`])
 
           this.ctrl.dismiss('cancel')

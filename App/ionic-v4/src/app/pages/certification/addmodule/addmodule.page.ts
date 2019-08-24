@@ -34,8 +34,7 @@ export class AddmodulePage implements OnInit {
   ngOnInit() {
 
 
-    this.menu.enable(true);
-    this.menu.enable(true, 'mainMenu')
+   
     this.user = this.authService.getSessionData().user;
     this.id = this.actroute.snapshot.paramMap.get('id');
     // this.forms = this.fb.group({
@@ -49,7 +48,12 @@ export class AddmodulePage implements OnInit {
     // })
     this.inprogressSection();
   }
-
+  ionViewWillEnter(){
+    debugger
+    this.menu.enable(true);
+    this.menu.enable(true, 'mainMenu')
+  }
+ 
   getModules() {
 
     this.service.getPromise('section/get-sections', this.id).then(res => {
@@ -65,6 +69,10 @@ export class AddmodulePage implements OnInit {
     }).catch(err => {
     })
 
+  }
+  goToRoute(id){
+   
+   this.router.navigate([`/certification/sections/concepts/${id}`]) 
   }
   startLesson(item) {
     let obj = {
