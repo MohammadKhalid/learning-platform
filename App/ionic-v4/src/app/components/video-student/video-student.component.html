@@ -8,7 +8,7 @@
       {{title}}
     
     
-      <ion-buttons class="btn-title-edit-del">
+      <ion-buttons class="btn-title-edit-del" *ngIf="user.type=== 'coach'">
           <ion-button  fill="clear" color="primary"
             (click)="addEditPopOver($event, {id:''})">
             <ion-icon name="more" slot="icon-only"></ion-icon>

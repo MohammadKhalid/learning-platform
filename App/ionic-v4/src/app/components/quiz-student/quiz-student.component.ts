@@ -39,10 +39,11 @@ export class QuizStudentComponent implements OnInit {
 
     this.attempted = this.user.type === "coach" ? true : this.data.attempted;
     //  for (const item of this.data) {
+    
     this.quizzesArray.push({
       questionId: this.data.id,
       sectionPageId: this.data.sectionPageId,
-      correctOptions: JSON.parse(this.data.options),
+      options: JSON.parse(this.data.options),
       question: this.data.question,
       // studentOptions: JSON.parse(item.answer),
     })
@@ -110,13 +111,17 @@ export class QuizStudentComponent implements OnInit {
     return await popover.present();
   }
   submitQuiz(quizRow) {
-    this.restApi.postPromise('quiz', quizRow)
-      .then(response => {
-        this.attempted = true;
-        // this.router.navigate([`certification/sections/concepts/${this.sectionId}/${this.sectionPageId}`])
-        // this.notificationService.showMsg('Record Insert');
-      }).catch(err => {
-        // this.notificationService.showMsg(err);
-      })
+    quizRow.userId= this.user.id;
+    debugger;
+    // this.attempted = true;
+
+    // this.restApi.postPromise('quiz', quizRow)
+    //   .then(response => {
+    //     this.attempted = true;
+    //     // this.router.navigate([`certification/sections/concepts/${this.sectionId}/${this.sectionPageId}`])
+    //     // this.notificationService.showMsg('Record Insert');
+    //   }).catch(err => {
+    //     // this.notificationService.showMsg(err);
+    //   })
   }
 }
