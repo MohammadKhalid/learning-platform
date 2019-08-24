@@ -168,12 +168,13 @@ const getSectionItems = async (req, res) => {
         })
         let quiz = await Quiz.findAll({
             include: [{
+                attributes: ['answer'],
                 model: StudentAnswer,
                 as: 'quizAnswers',
                 where: {
                     userId: userId
                 },
-                required:false
+                required: false
             }],
             where: {
                 sectionPageId: sectionPageId
@@ -184,8 +185,9 @@ const getSectionItems = async (req, res) => {
                 "id": x.id,
                 "question": x.question,
                 "title": x.title,
-                "options": x.options.replace(/true/g, false),
+                "options": x.quizAnswers.length == 0 ?  x.options.replace(/true/g, false): x.options,
                 "type": x.type,
+                "attempted": x.quizAnswers.length > 0 ? true : false,
                 "sectionPageId": x.sectionPageId,
                 "quizAnswers": x.quizAnswers,
                 "experience": x.experience,
@@ -224,7 +226,7 @@ const getSectionItems = async (req, res) => {
                 },
                 group: ['sectionPageId']
             })
-    
+
             const level = await Level.findAll({
                 where: {
                     studentId: userId
@@ -234,26 +236,26 @@ const getSectionItems = async (req, res) => {
             console.log(texts)
             // console.log(lesson[0].totalExperience)
             // console.log(texts[0].totalExperience)
-    
-            if(texts.length == 0 && lesson.length != 0){
+
+            if (texts.length == 0 && lesson.length != 0) {
                 studentExperience = lesson[0].totalExperience;
-            } 
-            else if(texts.length != 0 && lesson.length == 0){
+            }
+            else if (texts.length != 0 && lesson.length == 0) {
                 studentExperience = texts[0].totalExperience;
             }
-            else if(texts.length != 0 && lesson.length != 0){
+            else if (texts.length != 0 && lesson.length != 0) {
                 studentExperience = texts[0].totalExperience + lesson[0].totalExperience;
             }
-    
+
             console.log(studentExperience);
-            
+
             currentExperience = studentExperience + level[0].currentExperience
             if (studentExperience == level[0].nextExperience ||
                 studentExperience > level[0].nextExperience) {
                 nextExperience = level[0].nextExperience * 1.5;
                 studentLevel = level[0].currentLevel + 1;
             }
-    
+
             const levelUpdate = await Level.update({
                 nextExperience: nextExperience,
                 currentExperience: currentExperience,
@@ -263,8 +265,8 @@ const getSectionItems = async (req, res) => {
                         studentId: userId
                     }
                 })
-    
-    
+
+
         } else {
             const studentProgressModel = await StudentProgress.update({
                 isLastActive: 1
@@ -276,7 +278,7 @@ const getSectionItems = async (req, res) => {
                 })
         }
 
-        
+
         //studentProgressWork
 
         // const studentProgressGet = await StudentProgress.findAll({

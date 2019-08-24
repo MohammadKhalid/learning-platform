@@ -21,7 +21,8 @@ module.exports = (sequelize, DataTypes) => {
         },
         title:{
             type: DataTypes.STRING,
-            // allowNull: false
+            allowNull: false,
+            defaultValue: 'title'
         },
         quizId:{
             type: DataTypes.INTEGER,

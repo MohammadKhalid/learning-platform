@@ -80,7 +80,7 @@ const submitQuiz = async function (req, res) {
     let { userId, options, sectionPageId, questionId } = req.body
     let totalScore = 0
     let quiz = await Quiz.findAll({
-        attributes: ['options'],
+        attributes: ['options','experience'],
         where: {
             id: questionId,
         }
@@ -89,17 +89,32 @@ const submitQuiz = async function (req, res) {
     let isCorrect = 0
     if (quiz[0].options == JSON.stringify(options)) {
         isCorrect = 1
-        totalScore += x.experience
+        totalScore += quiz[0].experience
     }
-    let quizRes = await Quiz.create({
+    let studentAnswerResult = await StudentAnswer.create({
         isCorrect: isCorrect,
         answer: JSON.stringify(options),
         sectionPageId: sectionPageId,
         userId: userId,
         quizId: questionId,
     })
+
+    let quizRes = await Quiz.findAll({
+        include: [{
+            attributes: ['answer'],
+            model: StudentAnswer,
+            as: 'quizAnswers',
+            where: {
+                userId: userId
+            },
+            required: false
+        }],
+        where: {
+            id: questionId
+        }
+    })
     
-    if (studentAnswerResult) return ReS(res, { data: studentAnswerResult }, 200);
+    if (studentAnswerResult) return ReS(res, { data: quizRes }, 200);
     else return ReE(res, { message: 'Unable to insert Course.' }, 500)
 }
 module.exports.submitQuiz = submitQuiz;
