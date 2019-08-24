@@ -1,28 +1,37 @@
-  <ion-list class="ion-padding">
+  <ion-list no-padding>
     <div *ngFor="let questionRow of quizzesArray">
       <ion-card class="card-sizing">
-        <ion-card-header>
-
-          <ion-spinner *ngIf="isDeletedClicked" name="lines-small" color="dark">
-          </ion-spinner>
-          <ion-toolbar mode="ios">
-            <ion-buttons slot="end">
-              <ion-button class="flot-right" slot="end" fill="clear" color="primary"
-                (click)="addEditPopOver($event, {id:''})">
-                <ion-icon name="more" slot="icon-only"></ion-icon>
-              </ion-button>
-            </ion-buttons>
-          </ion-toolbar>
-        </ion-card-header>
-        <ion-card-content>
+          <ion-row>
+              <ion-col size-sm="11">
+                  <ion-item lines="none">
+                      <ion-label class="question-quiz-adjusment">
+                        Q) &nbsp;&nbsp;{{questionRow.question}}
+                      </ion-label>
+                    </ion-item>
+              </ion-col>
+              <ion-col size-sm="1">
+                  <ion-card-header>
+                      <ion-spinner *ngIf="isDeletedClicked" name="lines-small" color="dark">
+                      </ion-spinner>
+                      <ion-toolbar mode="ios">
+                        <ion-buttons slot="end">
+                          <ion-button class="flot-right" slot="end" fill="clear" color="primary"
+                            (click)="addEditPopOver($event, {id:''})">
+                            <ion-icon name="more" slot="icon-only"></ion-icon>
+                          </ion-button>
+                        </ion-buttons>
+                      </ion-toolbar>
+                    </ion-card-header>
+              </ion-col>
+            </ion-row>
+        
+        
+        
+        <ion-card-content class="answers-quiz-adjustment">
           <ion-item lines="none" class="ion-float-right ion-padding-top ques-trash-icon">
           </ion-item>
-          <ion-item lines="inset">
-            <ion-label>
-              Q) {{questionRow.question}}
-            </ion-label>
-          </ion-item>
-          <div *ngFor="let options of questionRow.correctOptions" class="ion-padding-start">
+
+          <div *ngFor="let options of questionRow.correctOptions">
             <ion-item class="option-answer">
               <ion-checkbox [(ngModel)]='options.correctOption' class="check-box-icon" disabled='true' slot="start">
               </ion-checkbox>

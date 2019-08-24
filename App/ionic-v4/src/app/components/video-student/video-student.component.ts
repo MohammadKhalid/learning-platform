@@ -3,6 +3,7 @@ import { RestApiService } from 'src/app/services/http/rest-api.service';
 import { NotificationService } from 'src/app/services/notification/notification.service';
 import { AddEditPopoverComponent } from '../common/add-edit-popover/add-edit-popover.component';
 import { PopoverController } from '@ionic/angular';
+import { AuthenticationService } from 'src/app/services/user/authentication.service';
 
 @Component({
   selector: 'app-video-student',
@@ -14,8 +15,14 @@ export class VideoStudentComponent implements OnInit {
   constructor(
     private restApi: RestApiService,
     private notificationService: NotificationService,
+    private authService: AuthenticationService,
     public popoverController: PopoverController,
-  ) { }
+  ) { 
+    this.authService.authenticationState.subscribe((state) => {
+      this.sessionData = state ? this.authService.getSessionData() : null;
+    });
+    this.user = this.sessionData.user
+  }
   @Input() data: any;
   @Output() removeItem = new EventEmitter<object>();
   @Output() editItem = new EventEmitter<object>();
@@ -23,6 +30,8 @@ export class VideoStudentComponent implements OnInit {
   title: string = "";
   youtubeUrl: string = 'https://www.youtube.com/embed/';
   isDeletedClicked: boolean = false
+  user: any;
+  sessionData: any;
 
   ngOnInit() {
     this.getById(this.data);
@@ -30,7 +39,6 @@ export class VideoStudentComponent implements OnInit {
   }
 
   deleteLesson() {
-    debugger;
     this.isDeletedClicked = true
     this.restApi.delete(`lesson/${this.data.id}`).subscribe(res => {
       this.isDeletedClicked = false
@@ -39,7 +47,6 @@ export class VideoStudentComponent implements OnInit {
   }
 
   editLesson() {
-    debugger;
     this.editItem.next(this.data)
   }
 

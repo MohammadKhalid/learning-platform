@@ -23,6 +23,11 @@
 .startLesson {
     float: right;
     margin-bottom: 10px;
+    padding-right: 50%;
+    margin-top: 20px;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    font-weight: 600;
 }
 
 span {
@@ -363,21 +368,53 @@ span {
     float: right;
 }
 
-.xp1 {
+.header-progress-xp{
+    font-weight: bold;
+    display: flex;
+}
+
+
+.header-progress-xp .xp1 {
     background-image: url('../../../../assets/img/xp.svg');
     background-repeat: no-repeat;
-    // background-image: url(./assets/img/xp.svg) no-repeat;
     background-size: contain;
     text-align: right;
-    width: 50%;
+    width: 90%;
     background-position: right;
 }
 
 .xp1 h3 {
     text-align: center;
     font-size: 10px;
-    padding-top: 3px;
-    /* padding-left: 113px; */
-    padding-right: 29px;
+    /* padding-top: 3px; */
+    /* padding-right: 27px; */
+    width: 70px;
     float: right;
+}
+
+.inprogess-fixed-subtitle{
+    padding-left: 20px;
+}
+
+.inprogess-fixed-title{   
+    padding-left: 20px;
+    padding-top: 12px;
+
+}
+
+.sticky-card-fixation{
+    width: 100%;
+    margin-left: 0px;
+    margin-top: 0px;
+    padding-top: 11px;
+    border-radius: 0px;
+}
+
+.title-down-adjustment{
+    padding-left: 20px
+}
+
+
+.adjust-percentage-left{
+    padding-left: 50%;
 }

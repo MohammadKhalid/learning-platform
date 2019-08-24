@@ -14,42 +14,56 @@
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
+<!-- Student Start -->
+<ion-card class="sticky-card-fixation" ion-no-padding *ngIf="user.type == 'student'">
+    <div>
+        <ion-card-header>
+            <ion-row>
+                <ion-col size="8">
+                    <ion-card-subtitle class="inprogess-fixed-subtitle">Your Latest Activity</ion-card-subtitle>
+                    <ion-card-title class="inprogess-fixed-title">
+                        {{inProgressData.title | titlecase}}
+                    </ion-card-title>
+                </ion-col>
+                <ion-col size="4">
+                    <ion-button size="default" class="startLesson" (click)="startLesson(inProgressData)">Start Lesson
+                    </ion-button>
 
-<ion-card ion-no-padding *ngIf="user.type == 'student'">
-    <ion-card-header>
-        <ion-row>
-            <ion-col size="8">
-                <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
-                <ion-card-title>{{inProgressData.title}}</ion-card-title>
-            </ion-col>
-            <ion-col size="4">
-                <ion-button size="small" class="startLesson" (click)="startLesson(inProgressData)">Start Lesson</ion-button>
+                </ion-col>
+            </ion-row>
 
-            </ion-col>
-        </ion-row>
+        </ion-card-header>
 
-    </ion-card-header>
-
-    <ion-card-content>
-        {{inProgressData.description}}
         <ion-item-divider>
         </ion-item-divider>
 
-        <div>
-            <p>han bhai kia hua kia karhe ho main sab theek kardnga </p>
-        </div>
-        <div class="xp1">
-            <h3>
-                34XP
-            </h3>
-        </div>
+        <ion-card-content>
+            <ion-row>
+                <ion-col size-sm="8">
+                    <div class="title-down-adjustment">
+                        <p>{{courseTitle}} </p>
+                    </div>
+                </ion-col>
+                <ion-col size-sm="1">
+                    <div class="adjust-percentage-left">
+                        <p>0%</p>
+                    </div>
+                </ion-col>
+                <ion-col size-sm="1">
+                    <div class="header-progress-xp">
+                        <div class="xp1">
+                            <h3>
+                                {{inProgressData.totalExperience}}XP
+                            </h3>
+                        </div>
+                    </div>
+                </ion-col>
+            </ion-row>
+        </ion-card-content>
 
-
-
-
-
-    </ion-card-content>
+    </div>
 </ion-card>
+<!-- Student End -->
 <ion-content class="hide-scroll">
     <div *ngIf="data.length > 0" padding>
 

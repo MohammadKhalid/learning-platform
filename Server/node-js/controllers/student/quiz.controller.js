@@ -7,17 +7,32 @@ const getQuiz = async function (req, res) {
     let { sectionPageId } = req.params
 
     let quiz = await Quiz.findAll({
-        include:[{
+        include: [{
             model: StudentAnswer,
             as: 'quizAnswers'
         }],
-        where:{
+        where: {
             sectionPageId: sectionPageId
         }
     })
 
-    if (quiz) return ReS(res, { data: quiz, attempted: false }, 200);
-        else return ReE(res, { message: 'Unable to insert Course.' }, 500)
+    let quizRes = quiz.map(x => {
+        return {
+            "id": x.id,
+            "question": x.question,
+            "title": x.title,
+            "options": x.options.replace(/true/g, false),
+            "type": x.type,
+            "quizAnswers": x.quizAnswers,
+            "experience": x.experience,
+            "sectionId": x.sectionId,
+            "createdAt": x.createdAt,
+            "updatedAt": x.updatedAt
+        }
+    })
+
+    if (quizRes) return ReS(res, { data: quizRes, attempted: false }, 200);
+    else return ReE(res, { message: 'Unable to insert Course.' }, 500)
     // let studentAnswerResult = await StudentAnswer.findAll({
     //     include: [{
     //         model: Quiz,
@@ -62,34 +77,44 @@ module.exports.getQuiz = getQuiz;
 
 const submitQuiz = async function (req, res) {
 
-    let { studentId, finalQuiz, title, sectionId } = req.body
+    let { userId, options, sectionPageId, questionId } = req.body
     let totalScore = 0
     let quiz = await Quiz.findAll({
-        attributes: ['options'],
+        attributes: ['options','experience'],
         where: {
-            sectionId: sectionId,
-            title: title
+            id: questionId,
         }
     })
 
-    let bulkQuizRes = finalQuiz.map((x, ind) => {
-        let isCorrect = 0
-        if (quiz[ind].options == JSON.stringify(x.options)) {
-            isCorrect = 1
-            totalScore += x.experience
-        }
-        return {
-            isCorrect: isCorrect,
-            answer: JSON.stringify(x.options),
-            sectionId: sectionId,
-            userId: studentId,
-            quizId: x.id,
-            title: title
-        }
+    let isCorrect = 0
+    if (quiz[0].options == JSON.stringify(options)) {
+        isCorrect = 1
+        totalScore += quiz[0].experience
+    }
+    let studentAnswerResult = await StudentAnswer.create({
+        isCorrect: isCorrect,
+        answer: JSON.stringify(options),
+        sectionPageId: sectionPageId,
+        userId: userId,
+        quizId: questionId,
     })
 
-    let studentAnswerResult = await StudentAnswer.bulkCreate(bulkQuizRes)
-    if (studentAnswerResult) return ReS(res, { data: studentAnswerResult }, 200);
+    let quizRes = await Quiz.findAll({
+        include: [{
+            attributes: ['answer'],
+            model: StudentAnswer,
+            as: 'quizAnswers',
+            where: {
+                userId: userId
+            },
+            required: false
+        }],
+        where: {
+            id: questionId
+        }
+    })
+    
+    if (studentAnswerResult) return ReS(res, { data: quizRes }, 200);
     else return ReE(res, { message: 'Unable to insert Course.' }, 500)
 }
 module.exports.submitQuiz = submitQuiz;
@@ -109,12 +134,12 @@ const updateExperience = async function (req, res) {
 
     currentExperience = quiz.experience + currentLevel.currentExperience;
 
-    if(quiz.experience == currentLevel.nextExperience ||
-        quiz.experience > currentLevel.nextExperience){
-            nextExperience = currentLevel.nextExperience * 1.5;
-            studentLevel = currentLevel.currentLevel + 1;
-         }
-    
+    if (quiz.experience == currentLevel.nextExperience ||
+        quiz.experience > currentLevel.nextExperience) {
+        nextExperience = currentLevel.nextExperience * 1.5;
+        studentLevel = currentLevel.currentLevel + 1;
+    }
+
     const level = await Level.update({
         nextExperience: nextExperience,
         currentExperience: quiz.experience,

@@ -121,6 +121,7 @@ export class AddmodulePage implements OnInit {
   }
   inprogressSection() {
     this.service.getPromise(`section/get-last-section-id/${this.user.id}`).then(res => {
+      debugger;
       this.inProgressData = res.data;
       this.getModules()
 
