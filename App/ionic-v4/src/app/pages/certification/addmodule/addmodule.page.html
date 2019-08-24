@@ -55,7 +55,7 @@
 
 
         <div class="card-main" *ngFor="let x of data">
-            <ion-card [routerLink]="['/certification/sections/concepts',x.id]">
+            <ion-card (click)="goToRoute(x.id)">
                 <ion-button *ngIf="user.type == 'coach'" class="flot-right" slot="end" fill="clear" color="primary" (click)="$event.preventDefault();$event.stopPropagation();addEditPopOver($event,x)">
                     <ion-icon name="more" slot="icon-only"></ion-icon>
                 </ion-button>

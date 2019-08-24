@@ -82,8 +82,9 @@ export class LevelSettingPage implements OnInit {
   getCompanies() {
     this.companie = []
     let clientId = this.form.controls.clientId.value;
-    this.restApi.getPromise('course-client-company/companies', clientId).then(res => {
-     this.companie = res.data.companies;
+    this.restApi.getPromise(`course-client-company/companies/${clientId}/levelSettings`).then(res => {
+    
+      this.companie = res.data.companies;
     })
   }
 

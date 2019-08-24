@@ -61,6 +61,10 @@ export class ResourcesComponent implements OnInit {
     return 'mail'
     }
   }
+  ionViewWillEnter(){
+    debugger
+    this.upload();
+  }
   upload() {
    
     this.files = this.fileField.getFiles();
