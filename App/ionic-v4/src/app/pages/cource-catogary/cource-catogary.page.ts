@@ -83,7 +83,7 @@ export class CourceCatogaryPage implements OnInit {
 	getCompanies() {
 		this.companie = []
 		let clientId = this.form.controls.clientId.value;
-		this.restApi.getPromise('course-client-company/companies', clientId).then(res => {
+		this.restApi.getPromise(`course-client-company/companies/${clientId}/courseCategory` ).then(res => {
 			
 			this.companie = res.data.companies;
 		})
