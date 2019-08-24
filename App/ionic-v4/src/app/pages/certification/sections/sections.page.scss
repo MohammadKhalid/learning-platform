@@ -145,11 +145,9 @@
         color: #318ca9;
         padding-left: 40px;
     }
-
     .certificate-Sbar {
         width: 49%;
     }
-
     .send-feedBack {
         font-size: 10px;
     }
@@ -177,6 +175,14 @@
 
 .check[aria-expanded="true"]:after {
     content: "\f077";
+}
+
+.newAwns {
+    display: block;
+    position: relative;
+    text-decoration: none;
+    color: #ffff;
+    font-size: 12px;
 }
 
 .card {

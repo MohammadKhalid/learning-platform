@@ -30,7 +30,7 @@ const routes: Routes = [
       { path: 'concepts/:sectionid', loadChildren: './concepts/concepts.module#ConceptsPageModule' },
       { path: 'concepts/:sectionid/:sectionpageid', loadChildren: './concepts/concepts.module#ConceptsPageModule' },
       { path: 'resources/:sectionid', loadChildren: './resources/resources.module#ResourcesPageModule' },
-  { path: 'quizes-awnser', loadChildren: './quizes-awnser/quizes-awnser.module#QuizesAwnserPageModule' },
+  { path: 'quizes-awnser/:sectionid', loadChildren: './quizes-awnser/quizes-awnser.module#QuizesAwnserPageModule' },
      
       // { path: 'resources/:sectionid/:sectionpageid', loadChildren: './resources/resources.module#ResourcesPageModule' },
       // { path: 'resources/:id/:type', loadChildren: './resources/resources.module#ResourcesPageModule' },

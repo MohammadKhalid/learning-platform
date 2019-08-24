@@ -129,7 +129,9 @@ export class SectionsPage implements OnInit {
   recourcesroute() {
     this.reouter.navigate([`/certification/sections/resources/${this.apiSrv.sectionId}`])
   }
-
+  awnserRoute() {
+    this.reouter.navigate([`/certification/sections/quizes-awnser/${this.apiSrv.sectionId}`])
+  }
   // addSectionPageResource() {
   //   let obj = {
   //     title: this.pageTitle,
