@@ -32,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
 
     Model.associate = function (models) {
         this.belongsTo(models.SectionPage, { as: 'sectionPage', foreignKey: 'sectionPageId' });
+        this.hasMany(models.StudentAnswer, { as: 'quizAnswers', foreignKey: 'quizId' });
     };
 
 

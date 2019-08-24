@@ -109,7 +109,7 @@ const courseClientRoutes = express.Router();
 adminRouter.use('/course-client-company', courseClientRoutes);
 
 courseClientRoutes.get('/clients' ,courseClientController.getClients)
-courseClientRoutes.get('/companies/:clientId' ,courseClientController.getClientCompany)
+courseClientRoutes.get('/companies/:clientId/:flag' ,courseClientController.getClientCompany)
 
 
 // course category
