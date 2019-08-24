@@ -15,13 +15,20 @@ export class CourseListPage implements OnInit {
     this.router.navigate(['/Course-Category/add'])
   }
   ngOnInit() {
+   
+  }
+
+
+  ionViewWillEnter(){
+    this.listUpdate()
+  }
+  listUpdate(){
     this.restapi.getPromise('course-category/get-all').then(res=> {
       
-  this.listdata = res.data
-    }).catch(err=> {
-
-    })
-
+      this.listdata = res.data
+        }).catch(err=> {
+    
+        })
   }
   editList(id){
       this.router.navigate([`/Course-Category/edit/${id}`])

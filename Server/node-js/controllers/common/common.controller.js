@@ -1,4 +1,4 @@
-const { Sequelize, CourseCategory, UserCompany, Section, Text, Lesson, Resource, Quiz, Course, SectionPage, StudentProgress, Level } = require('../../models');
+const { Sequelize, CourseCategory, UserCompany, Section, Text, Lesson, StudentAnswer, Resource, Quiz, Course, SectionPage, StudentProgress, Level } = require('../../models');
 const { to, ReE, ReS } = require('../../services/util.service');
 const Op = Sequelize.Op;
 // const uuidv4 = require('uuid/v4')
@@ -151,23 +151,48 @@ module.exports.getSideMenuItems = getSideMenuItems;
 const getSectionItems = async (req, res) => {
     let nextExperience, studentLevel, currentExperience;
     let { sectionPageId, userId } = req.params
-    const sectionpage = await SectionPage.findAll({
-        include: [{
-            model: Lesson,
-            as: 'Lesson'
-        }, {
-            model: Text,
-            as: 'Text'
-        }, {
-            model: Quiz,
-            as: 'Quiz'
-        }],
-        where: {
-            id: sectionPageId
-        }
-    })
+    let sectionpage = []
 
     if (req.user.type == "student") {
+        sectionpage = await SectionPage.findAll({
+            include: [{
+                model: Lesson,
+                as: 'Lesson'
+            }, {
+                model: Text,
+                as: 'Text'
+            }],
+            where: {
+                id: sectionPageId
+            }
+        })
+        let quiz = await Quiz.findAll({
+            include: [{
+                model: StudentAnswer,
+                as: 'quizAnswers',
+                where: {
+                    userId: userId
+                },
+                required:false
+            }],
+            where: {
+                sectionPageId: sectionPageId
+            }
+        })
+        let quizRes = quiz.map(x => {
+            return {
+                "id": x.id,
+                "question": x.question,
+                "title": x.title,
+                "options": x.options.replace(/true/g, false),
+                "type": x.type,
+                "quizAnswers": x.quizAnswers,
+                "experience": x.experience,
+                "sectionId": x.sectionId,
+                "createdAt": x.createdAt,
+                "updatedAt": x.updatedAt
+            }
+        })
         const studentProgress = await StudentProgress.findAll({
             where: {
                 studentId: userId,
@@ -193,6 +218,7 @@ const getSectionItems = async (req, res) => {
 
         let texts = await Text.findAll({
             attributes: [[Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
+            raw: true,
             where: {
                 sectionPageId: sectionPageId
             },
@@ -200,6 +226,7 @@ const getSectionItems = async (req, res) => {
         })
         let lesson = await Lesson.findAll({
             attributes: [[Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
+            raw: true,
             where: {
                 sectionPageId: sectionPageId
             },
@@ -211,11 +238,20 @@ const getSectionItems = async (req, res) => {
                 studentId: userId
             }
         })
-        lesson = lesson.pop()
-        texts = texts.pop()
-        console.log(lesson)
-        console.log(lesson['totalExperience'])
-        studentExperience = texts.totalExperience + lesson.totalExperience;
+    
+
+        if(texts.length == 0 && lesson.length != 0){
+            studentExperience = lesson[0].totalExperience;
+        } 
+        else if(texts.length != 0 && lesson.length == 0){
+            studentExperience = texts[0].totalExperience;
+        }
+        else if(texts.length != 0 && lesson.length != 0){
+            studentExperience = texts[0].totalExperience + lesson[0].totalExperience;
+        }
+
+        console.log(studentExperience);
+        
         currentExperience = studentExperience + level[0].currentExperience
         if (studentExperience == level[0].nextExperience ||
             studentExperience > level[0].nextExperience) {
@@ -262,9 +298,27 @@ const getSectionItems = async (req, res) => {
         //             }
         //         })
         // }
-
+        if (sectionpage) return ReS(res, { data: [...sectionpage[0].Lesson, ...sectionpage[0].Text, ...quizRes] }, 200);
+        else return ReE(res, { message: 'Unable to get Section Page.' }, 500)
+    } else {
+        sectionpage = await SectionPage.findAll({
+            include: [{
+                model: Lesson,
+                as: 'Lesson'
+            }, {
+                model: Text,
+                as: 'Text'
+            }, {
+                model: Quiz,
+                as: 'Quiz',
+            }],
+            where: {
+                id: sectionPageId
+            }
+        })
+        if (sectionpage) return ReS(res, { data: [...sectionpage[0].Lesson, ...sectionpage[0].Text, ...sectionpage[0].Quiz] }, 200);
+        else return ReE(res, { message: 'Unable to get Section Page.' }, 500)
     }
-    if (sectionpage) return ReS(res, { data: [...sectionpage[0].Lesson, ...sectionpage[0].Text, ...sectionpage[0].Quiz] }, 200);
-    else return ReE(res, { message: 'Unable to get Section Page.' }, 500)
+
 }
 module.exports.getSectionItems = getSectionItems;

@@ -17,14 +17,22 @@ export class LevelListPage implements OnInit {
   }
   ngOnInit() {
     
+   
+  }
+
+
+  ionViewWillEnter(){
+    this.updateList();
+  }
+  updateList(){
     this.restapi.getPromise('/levelSetting/get-all').then(res=> {
   
       
-  this.listdata = res.data
-    }).catch(err=> {
-
-    })
-
+      this.listdata = res.data
+        }).catch(err=> {
+    
+        })
+    
   }
   editList(id){
       this.router.navigate([`/level-setting/edit/${id}`])
