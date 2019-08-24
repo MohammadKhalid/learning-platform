@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
 import { NotificationService } from 'src/app/services/notification/notification.service';
 import { forEach } from '@angular/router/src/utils/collection';
@@ -9,6 +9,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./quiz.component.scss'],
 })
 export class QuizComponent implements OnInit {
+  @Output() eventEmitterCloseModel = new EventEmitter<object>();
+
   quizes: any = [];
   @Input() sectionPageId: any;
   @Input() sectionId: any;
@@ -86,6 +88,7 @@ export class QuizComponent implements OnInit {
       .then(response => {
         this.router.navigate([`certification/sections/concepts/${this.sectionId}/${this.sectionPageId}`])
         this.notificationService.showMsg('Record Insert');
+        this.eventEmitterCloseModel.next();
       }).catch(err => {
         this.notificationService.showMsg(err);
       })

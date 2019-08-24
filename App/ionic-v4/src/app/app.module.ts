@@ -30,7 +30,7 @@ import { MatFormFieldModule } from '@angular/material';
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
     
     // OrderByDatePipe
   ],

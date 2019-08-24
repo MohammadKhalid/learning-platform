@@ -206,10 +206,10 @@ export class SectionsPage implements OnInit {
     this.reouter.navigate([`/certification/sections/${route}`])
   }
 
-  gotoResourceType(data) {
-    let sectionId = this.apiSrv.sectionId;
-    this.reouter.navigate([`certification/sections/resources/${sectionId}/${data.id}`])
-  }
+  // gotoResourceType(data) {
+  //   let sectionId = this.apiSrv.sectionId;
+  //   this.reouter.navigate([`certification/sections/resources/${sectionId}/${data.id}`])
+  // }
   gotoConceptType(data) {
     let sectionId = this.apiSrv.sectionId;
     // if (data.type == "Quiz") {

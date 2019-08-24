@@ -35,7 +35,7 @@
             </div>
             <div *ngIf="selectedOption == 2">
                 <!-- [quizTitle]="sectionPageId" -->
-                <app-quiz [sectionPageId]="sectionPageId" [sectionId]="sectionId"></app-quiz>
+                <app-quiz [sectionPageId]="sectionPageId" (eventEmitterCloseModel)="eventEmitterCloseModel()" [sectionId]="sectionId"></app-quiz>
             </div>
         </div>
     </ion-list>
