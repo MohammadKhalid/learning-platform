@@ -186,6 +186,7 @@ const getSectionItems = async (req, res) => {
                 "title": x.title,
                 "options": x.options.replace(/true/g, false),
                 "type": x.type,
+                "sectionPageId": x.sectionPageId,
                 "quizAnswers": x.quizAnswers,
                 "experience": x.experience,
                 "sectionId": x.sectionId,
