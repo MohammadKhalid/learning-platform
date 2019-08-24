@@ -16,11 +16,14 @@ module.exports.getClients = getClients;
 
 
 const getClientCompany = async function (req, res) {
-    let { clientId } = req.params
+    let { clientId, flag } = req.params
+    if(flag == 'courseCategory'){
+        
+    }
     const company = await User.findAll({
         include: [{
             model: Company,
-            attributes: ['id','name'],
+            attributes: ['id', 'name'],
             as: 'companies',
         }],
         where: {

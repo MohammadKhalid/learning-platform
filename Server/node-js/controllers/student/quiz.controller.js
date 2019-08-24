@@ -4,46 +4,57 @@ const Op = Sequelize.Op;
 
 const getQuiz = async function (req, res) {
 
-    let { sectionId, title } = req.params
+    let { sectionPageId } = req.params
 
-    let studentAnswerResult = await StudentAnswer.findAll({
-        include: [{
-            model: Quiz,
-            as: 'question'
+    let quiz = await Quiz.findAll({
+        include:[{
+            model: StudentAnswer,
+            as: 'quizAnswers'
         }],
-        where: {
-            sectionId: sectionId,
-            title: title
+        where:{
+            sectionPageId: sectionPageId
         }
     })
 
-    if (studentAnswerResult.length == 0) {
-        let quiz = await Quiz.findAll({
-            where: {
-                sectionId: sectionId,
-                title: title
-            }
-        })
-        let quizRes = quiz.map(x => {
-            return {
-                "id": x.id,
-                "question": x.question,
-                "title": x.title,
-                "options": x.options.replace(/true/g, false),
-                "type": x.type,
-                "experience": x.experience,
-                "sectionId": x.sectionId,
-                "createdAt": x.createdAt,
-                "updatedAt": x.updatedAt
-            }
-        })
+    if (quiz) return ReS(res, { data: quiz, attempted: false }, 200);
+        else return ReE(res, { message: 'Unable to insert Course.' }, 500)
+    // let studentAnswerResult = await StudentAnswer.findAll({
+    //     include: [{
+    //         model: Quiz,
+    //         as: 'question'
+    //     }],
+    //     where: {
+    //         sectionPageId: sectionPageId,
+    //         // title: title
+    //     }
+    // })
 
-        if (quizRes) return ReS(res, { data: quizRes, attempted: false }, 200);
-        else return ReE(res, { message: 'Unable to insert Course.' }, 500)
-    } else {
-        if (studentAnswerResult) return ReS(res, { data: studentAnswerResult, attempted: true }, 200);
-        else return ReE(res, { message: 'Unable to insert Course.' }, 500)
-    }
+    // if (studentAnswerResult.length == 0) {
+    //     let quiz = await Quiz.findAll({
+    //         where: {
+    //             sectionPageId: sectionPageId,
+    //         }
+    //     })
+    //     let quizRes = quiz.map(x => {
+    //         return {
+    //             "id": x.id,
+    //             "question": x.question,
+    //             "title": x.title,
+    //             "options": x.options.replace(/true/g, false),
+    //             "type": x.type,
+    //             "experience": x.experience,
+    //             "sectionId": x.sectionId,
+    //             "createdAt": x.createdAt,
+    //             "updatedAt": x.updatedAt
+    //         }
+    //     })
+
+    //     if (quizRes) return ReS(res, { data: quizRes, attempted: false }, 200);
+    //     else return ReE(res, { message: 'Unable to insert Course.' }, 500)
+    // } else {
+    //     if (studentAnswerResult) return ReS(res, { data: studentAnswerResult, attempted: true }, 200);
+    //     else return ReE(res, { message: 'Unable to insert Course.' }, 500)
+    // }
 
 }
 module.exports.getQuiz = getQuiz;
