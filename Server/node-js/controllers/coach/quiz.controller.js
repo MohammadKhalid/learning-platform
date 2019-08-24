@@ -1,4 +1,4 @@
-const { Quiz, Section } = require('../../models');
+const { Quiz, Section, SectionPage, User, StudentAnswer, UserCompany } = require('../../models');
 const { to, ReE, ReS } = require('../../services/util.service');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -89,3 +89,48 @@ const update = async (req, res) => {
     else return ReE(res, { message: 'Unable to get by title.' }, 500)
 }
 module.exports.update = update;
+
+const getStudentAnswers = async (req, res) => {
+    let { userId, sectionPageId } = req.params;
+
+    let companyId = await UserCompany.findOne({
+        where: {
+            userId: userId
+        }
+    })
+    let students = await UserCompany.findAll({
+        where: {
+            companyId: companyId.companyId
+        }
+    })
+
+    let studentIds = students.map(x => x.userId)
+
+    let quiz = await Quiz.findAll({
+        include: [{
+            attributes: ['answer'],
+            model: StudentAnswer,
+            as: 'quizAnswers',
+            include: [{
+                attributes: [[Sequelize.fn("CONCAT", Sequelize.col('firstName'), ' ', Sequelize.col('lastName')), "name"]],
+                model: User,
+                as: 'user'
+            }],
+            where: {
+                userId: studentIds
+            },
+            required: false
+        }, {
+            attributes: ['title'],
+            model: SectionPage,
+            as: 'sectionPage'
+        }],
+        where: {
+            sectionPageId: sectionPageId
+        }
+    })
+
+    if (quiz) return ReS(res, { data: quiz }, 200);
+    else return ReE(res, { message: 'Unable to get by title.' }, 500)
+}
+module.exports.getStudentAnswers = getStudentAnswers;

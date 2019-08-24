@@ -21,7 +21,6 @@ const getCoachSections = async (req, res) => {
 }
 
 const getLastSectionDetails = async (req, res) => {
-    let section = [];
     let { studentId } = req.params
     const studentProgress = await StudentProgress.findAll({
         attributes: ['sectionPageId'],
@@ -44,9 +43,10 @@ const getLastSectionDetails = async (req, res) => {
                 id: studentProgress[0].sectionPageId
             }
         })
+        return ReS(res, { data: sectionPage }, 200);
+    }else{
+        return ReS(res, { data: [] }, 200);
     }
 
-    if (section) return ReS(res, { data: sectionPage }, 200);
-    else return ReE(res, { message: 'Unable to insert Course.' }, 500)
 }
 module.exports.getLastSectionDetails = getLastSectionDetails;

@@ -11,6 +11,7 @@ const getAllCourse = async function (req, res) {
             userId: userId
         }
     })
+    console.log(userId)
     let userCompanyId = company[0].companyId
     const categories = await CourseCategory.findAll({
         where: {
@@ -142,8 +143,27 @@ const getSideMenuItems = async (req, res) => {
         }
     })
 
+    const quizAnswer = await Section.findAll({
+        attributes: ['title'],
+        include: [{
+            model: SectionPage,
+            as: 'sectionPage',
+            include: [{
+                model: Quiz,
+                as: 'Quiz'
+            }]
+        }],
+        where: {
+            id: sectionId
+        }
+    })
+    let quizSectionPage = []
+    if (quizAnswer[0].sectionPage.length > 0) {
+        quizSectionPage = quizAnswer[0].sectionPage.filter(x => x.Quiz.length > 0)
+    }
+
     let concepts = sectionpage.pop();
-    if (concepts.sectionPage) return ReS(res, { concept: concepts.sectionPage, title: concepts.title, resource: resources }, 200);
+    if (concepts.sectionPage) return ReS(res, { concept: concepts.sectionPage, title: concepts.title, resource: resources, quizAnswer: quizSectionPage }, 200);
     else return ReE(res, { concept: concepts, title: concepts.title }, 500)
 }
 module.exports.getSideMenuItems = getSideMenuItems;
@@ -185,7 +205,7 @@ const getSectionItems = async (req, res) => {
                 "id": x.id,
                 "question": x.question,
                 "title": x.title,
-                "options": x.quizAnswers.length == 0 ?  x.options.replace(/true/g, false): x.options,
+                "options": x.quizAnswers.length == 0 ? x.options.replace(/true/g, false) : x.options,
                 "type": x.type,
                 "attempted": x.quizAnswers.length > 0 ? true : false,
                 "sectionPageId": x.sectionPageId,
