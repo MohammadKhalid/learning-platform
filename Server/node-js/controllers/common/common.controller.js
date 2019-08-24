@@ -218,6 +218,7 @@ const getSectionItems = async (req, res) => {
 
         let texts = await Text.findAll({
             attributes: [[Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
+            raw: true,
             where: {
                 sectionPageId: sectionPageId
             },
@@ -225,6 +226,7 @@ const getSectionItems = async (req, res) => {
         })
         let lesson = await Lesson.findAll({
             attributes: [[Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
+            raw: true,
             where: {
                 sectionPageId: sectionPageId
             },
@@ -236,9 +238,20 @@ const getSectionItems = async (req, res) => {
                 studentId: userId
             }
         })
-        lesson = lesson.pop()
-        texts = texts.pop()
-        studentExperience = texts.totalExperience + lesson.totalExperience;
+    
+
+        if(texts.length == 0 && lesson.length != 0){
+            studentExperience = lesson[0].totalExperience;
+        } 
+        else if(texts.length != 0 && lesson.length == 0){
+            studentExperience = texts[0].totalExperience;
+        }
+        else if(texts.length != 0 && lesson.length != 0){
+            studentExperience = texts[0].totalExperience + lesson[0].totalExperience;
+        }
+
+        console.log(studentExperience);
+        
         currentExperience = studentExperience + level[0].currentExperience
         if (studentExperience == level[0].nextExperience ||
             studentExperience > level[0].nextExperience) {
