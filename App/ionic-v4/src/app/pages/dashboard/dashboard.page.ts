@@ -7,9 +7,9 @@ import { RtcService } from '../../services/rtc/rtc.service';
 import * as d3 from 'd3'
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.page.html',
-  styleUrls: ['./dashboard.page.scss'],
+	selector: 'app-dashboard',
+	templateUrl: './dashboard.page.html',
+	styleUrls: ['./dashboard.page.scss'],
 })
 export class DashboardPage implements OnInit {
 
@@ -19,17 +19,18 @@ export class DashboardPage implements OnInit {
 
 	constructor(
 		private restApi: RestApiService,
-		  private authService: AuthenticationService,
-		  private rtcService: RtcService
+		private authService: AuthenticationService,
+		private rtcService: RtcService
 	) {
 		this.sessionData = this.authService.getSessionData();
 	}
 	ngOnInit() {
-		let user =this.authService.getSessionData().user.id;
-		
-		this.restApi.postPromise(`level`,{studentId: user}).then(res=>{
+		let user = this.authService.getSessionData().user;
+		if (user.type === 'student') {
+			this.restApi.postPromise(`level`, { studentId: user.id }).then(res => {
+			});
+		}
 
-		});
 		this.restApi.get('dashboard', {}).subscribe((res: any) => {
 			console.log('DASHBOARD', res);
 		});
@@ -58,10 +59,10 @@ export class DashboardPage implements OnInit {
 
 	drawGraphActivity() {
 		// set the dimensions and margins of the graph
-		const margin = {top: 20, right: 20, bottom: 30, left: 50},
-		width = 960 - margin.left - margin.right,
-		height = 300 - margin.top - margin.bottom,
-		color = { 'practice-time': 'secondary', 'show-time': 'primary' };
+		const margin = { top: 20, right: 20, bottom: 30, left: 50 },
+			width = 960 - margin.left - margin.right,
+			height = 300 - margin.top - margin.bottom,
+			color = { 'practice-time': 'secondary', 'show-time': 'primary' };
 
 		// parse the date / time
 		let parseTime = d3.timeParse("%d-%b-%y");
@@ -132,15 +133,15 @@ export class DashboardPage implements OnInit {
 			.attr("class", "line")
 			// .attr("color", (d) => { return color[d.type] })
 			.attr("d", valueline);
-		
+
 		// Add the scatterplot
 		svg.selectAll("dot")
 			.data(data)
-				.enter().append("circle")
-					.attr("r", 6)
-					.attr("cx", (d) => { return x(d.date); })
-					.attr("cy", (d) => { return y(d.close); })
-					.attr("class", (d) => { return 'color-' + color[d.type] });
+			.enter().append("circle")
+			.attr("r", 6)
+			.attr("cx", (d) => { return x(d.date); })
+			.attr("cy", (d) => { return y(d.close); })
+			.attr("class", (d) => { return 'color-' + color[d.type] });
 
 		// Add the X Axis
 		svg.append("g")

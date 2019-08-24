@@ -99,7 +99,7 @@ courseCategory.get('/get-all/:userId', commonController.getAllCourse)
 const quiz = express.Router();
 studentRouter.use('/quiz', quiz)
 
-quiz.get('/:sectionId/:title', quizController.getQuiz)
+quiz.get('/:sectionPageId', quizController.getQuiz)
 quiz.post('/submit-quiz', quizController.submitQuiz)
 quiz.put('/update-quiz-experience/:studentId/:textId', quizController.updateExperience)
 

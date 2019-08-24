@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: 0
         },
-        sectionId:{
+        sectionPageId:{
             type: DataTypes.INTEGER,
             allowNull: false
         },
@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     Model.associate = function (models) {
-        this.belongsTo(models.Section, { as: 'section', foreignKey: 'sectionId' });
+        this.belongsTo(models.SectionPage, { as: 'sectionPage', foreignKey: 'sectionPageId' });
         this.belongsTo(models.User, { as: 'user', foreignKey: 'userId' });
         this.belongsTo(models.Quiz, { as: 'question', foreignKey: 'quizId' });
     };
