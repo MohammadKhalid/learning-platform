@@ -12,7 +12,7 @@
             <ion-icon name="menu" class="toggle-button-menu" (click)="drawer.toggle()"></ion-icon>
 
         </ion-buttons>
-        <ion-buttons slot="end">
+        <ion-buttons slot="end"  *ngIf="user.type == 'coach'">
             <!-- concept button start -->
             <ion-button *ngIf="isConcept" strong="true" routerDirection="root" (click)="addConcept()">
                 <ion-icon name="add" class="top-icon-default"></ion-icon>
