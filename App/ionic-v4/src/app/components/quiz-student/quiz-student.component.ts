@@ -44,38 +44,9 @@ export class QuizStudentComponent implements OnInit {
       sectionPageId: this.data.sectionPageId,
       options: JSON.parse(this.data.options),
       question: this.data.question,
+      quizAnswers: this.data.quizAnswers.length > 0 ? JSON.parse(this.data.quizAnswers[0].answer) : [],
       // studentOptions: JSON.parse(item.answer),
     })
-    // }
-    // this.restApi.getPromise(`quiz/${this.sectionId}/${this.recordId}`)
-    //   .then(response => {
-    //     debugger
-    //     this.attempted = response.attempted
-    //     if (this.attempted) {
-
-    //       for (const item of response.data) {
-    //         this.quizzesArray.push({
-    //           id: item.id,
-    //           questionId: item.question.id,
-    //           correctOptions: JSON.parse(item.question.options),
-    //           question: item.question.question,
-    //           studentOptions: JSON.parse(item.answer),
-    //         })
-    //       }
-    //       debugger;
-    //     } else {
-    //       for (const item of response.data) {
-    //         this.quizzesArray.push({
-    //           id: item.id,
-    //           question: item.question,
-    //           options: JSON.parse(item.options),
-    //           experience: item.experience
-    //         })
-    //       }
-    //     }
-    //   }).catch(error => {
-
-    //   })
   }
 
   deleteQuiz() {
@@ -88,12 +59,8 @@ export class QuizStudentComponent implements OnInit {
   editQuiz() {
     this.openQuizEditModal.next(this.data)
   }
-  todo(value) {
-    return value.map(x => {
-      if (x.correctOption) {
-        return x.text;
-      }
-    }).join(',')
+  seprater(value) {
+    return value.filter(x => x.correctOption).map(y => y.text).join(', ')
   }
   async addEditPopOver(ev: any, item: any) {
     const popover = await this.popoverController.create({
@@ -117,10 +84,20 @@ export class QuizStudentComponent implements OnInit {
       .then(response => {
         debugger;
         this.attempted = true;
-       
+
         // this.quizzesArray.splice(this.quizzesArray.indexOf(quizRow), 1, quizRow);
-        // let index = this.quizzesArray.findIndex(item => item.id === quizRow.id);
-        // this.quizzesArray.splice(index, 1, response);
+        let index = this.quizzesArray.findIndex(item => item.questionId === quizRow.questionId);
+        let dumyArray = [];
+        dumyArray.push({
+          questionId: response.data[0].id,
+          sectionPageId: response.data[0].sectionPageId,
+          options: JSON.parse(response.data[0].options),
+          question: response.data[0].question,
+          quizAnswers: JSON.parse(response.data[0].quizAnswers[0].answer),
+          // studentOptions: JSON.parse(item.answer),
+        })
+
+        this.quizzesArray.splice(index, 1, dumyArray[0]);
 
         this.notificationService.showMsg(response);
       }).catch(err => {
