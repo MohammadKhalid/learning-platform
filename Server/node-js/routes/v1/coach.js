@@ -187,8 +187,9 @@ const quizRoutes = express.Router();
 coachRouter.use('/quiz', quizRoutes)
 
 quizRoutes.post('/', quizController.create)
+quizRoutes.get('/get-student-answers/:userId/:sectionPageId', quizController.getStudentAnswers)
 quizRoutes.get('/:sectionId/:title', quizController.getQuize)
-quizRoutes.get('/get-title/:sectionId/:title', quizController.getTitle)
+// quizRoutes.get('/get-title/:sectionId/:title', quizController.getTitle)
 quizRoutes.delete('/:quizId', quizController.remove)
 quizRoutes.put('/:quizId', quizController.update)
 
