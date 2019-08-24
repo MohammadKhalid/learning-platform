@@ -41,6 +41,7 @@ export class SectionsPage implements OnInit {
   private subscriptionResource: Subscription;
   public items: any;
   listData: any = [];
+  quizAnswerlist : any =[];
   listResourceData: any = [];
   id: any
   isDeletedClicked: boolean = false;
@@ -76,8 +77,11 @@ export class SectionsPage implements OnInit {
     //coach menu popupate start
     this.subscription = this.apiSrv.getSectionMenuData().subscribe(res => {
       if (res) {
+        debugger;
         res.concept ? this.listData = res.concept : '';
         res.resource ? this.listResourceData = res.resource : '';
+        res.quizAnswer ? this.quizAnswerlist = res.quizAnswer : '';
+
         this.lessonName = res.title;
       }
     });
@@ -216,6 +220,18 @@ export class SectionsPage implements OnInit {
     let sectionId = this.apiSrv.sectionId;
     // if (data.type == "Quiz") {
     this.reouter.navigate([`certification/sections/concepts/${sectionId}/${data.id}`])
+    // }
+    // else if (data.type == "Resource") {
+    //   this.reouter.navigate([`certification/sections/resources/${sectionId}/${data.title}`])
+    // }
+    // else {
+    //   this.reouter.navigate([`certification/sections/concepts/${sectionId}/${data.id}`])
+    // }
+  }
+  gotoAnswerView(data) {
+    let sectionId = this.apiSrv.sectionId;
+    // if (data.type == "Quiz") {
+    this.reouter.navigate([`certification/sections/quizes-answer/${sectionId}/${data.id}`])
     // }
     // else if (data.type == "Resource") {
     //   this.reouter.navigate([`certification/sections/resources/${sectionId}/${data.title}`])

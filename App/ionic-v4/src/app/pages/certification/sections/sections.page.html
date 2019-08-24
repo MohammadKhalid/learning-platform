@@ -110,7 +110,51 @@
                     </div>
 
 
-                    <div id="accordion1">
+                    <!-- answer list start -->
+                    <div id="accordion3">
+
+                        <div class="card">
+                            <div class="card-header bordersResources" id="heading-2">
+                                <h5 class="mb-0">
+                                    <a class="collapsed check" role="button" data-toggle="collapse" href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
+                                       ANSWER
+                                        <ion-icon [attr.disabled]="showField"
+                                            (click)="$event.preventDefault();$event.stopPropagation();showField=true;"
+                                            class="certificate-icon certificate-section-icon add-spacing" name="add">
+                                        </ion-icon>
+                                    </a>
+
+                                </h5>
+                            </div>
+                            <div id="collapse-3" class="collapse" data-parent="#accordion3" aria-labelledby="heading-2">
+                                <ion-item class="conceptGaps certificate-item certificate-section setWidth" *ngIf="showField">
+                                    <ion-input [(ngModel)]="pageTitle" autofocus (keyup.enter)="addSectionPage();isAddClicked = true" placeholder="Enter Title">
+                                    </ion-input>
+                                    <ion-icon *ngIf="isAddClicked == false" (click)='addSectionPage();isAddClicked = true' class="certificate-icon certificate-section-icon" name="checkbox-outline">
+                                    </ion-icon>
+                                    <ion-icon *ngIf="isAddClicked == false" class="certificate-icon certificate-section-icon" (click)="showField=false;" name="close">
+                                    </ion-icon>
+                                    <ion-spinner *ngIf="isAddClicked" name="lines-small" color="light"></ion-spinner>
+                                </ion-item>
+                                <ion-item pointer *ngFor="let dataRow of quizAnswerlist | orderByDate | filter : searchBy" class="conceptGaps certificate-item certificate-section concept-title-adjustment">
+                                    <ion-label (click)="gotoAnswerView(dataRow);">
+                                        {{dataRow.title.length > 15 ? dataRow.title.substring(0,15)+'...': dataRow.title}}
+                                    </ion-label>
+                                    <div *ngIf="dataRow.id != deleteId">
+                                        <ion-icon class="certificate-icon" name="create">
+                                        </ion-icon>
+                                        <ion-icon (click)="deleteSectionPage(dataRow);isDeletedClicked=true;deleteId=dataRow.id" class="certificate-icon" name="trash">
+                                        </ion-icon>
+                                    </div>
+                                    <ion-spinner *ngIf="isDeletedClicked && dataRow.id == deleteId" name="lines-small" color="light"></ion-spinner>
+                                </ion-item>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- answer list end -->
+
+
+                    <!-- <div id="accordion1">
 
                         <div class="card">
                             <div class="card-header">
@@ -126,7 +170,7 @@
                         </div>
 
 
-                    </div>
+                    </div> -->
 
                 </ion-list>
             </ng-template>
