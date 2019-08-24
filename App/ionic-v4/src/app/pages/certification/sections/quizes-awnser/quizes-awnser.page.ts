@@ -27,6 +27,8 @@ export class QuizesAwnserPage implements OnInit {
   }
 
   ngOnInit() {
+    let id = this.restApi.sectionId = this.actRoute.snapshot.paramMap.get('sectionid');
+    this.restApi.populateSectionSubMenu(id);
     this.loadAll();
   }
 
