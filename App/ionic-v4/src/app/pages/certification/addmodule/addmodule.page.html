@@ -16,50 +16,52 @@
 </ion-header>
 <!-- Student Start -->
 <ion-card class="sticky-card-fixation" ion-no-padding *ngIf="user.type == 'student'">
-    <ion-card-header>
-        <ion-row>
-            <ion-col size="8">
-                <ion-card-subtitle class="inprogess-fixed-subtitle">Your Latest Activity</ion-card-subtitle>
-                <ion-card-title class="inprogess-fixed-title">
-                    {{inProgressData.title | titlecase}}
-                </ion-card-title>
-            </ion-col>
-            <ion-col size="4">
-                <ion-button size="default" class="startLesson" (click)="startLesson(inProgressData)">Start Lesson
-                </ion-button>
-
-            </ion-col>
-        </ion-row>
-
-    </ion-card-header>
-
-    <ion-item-divider>
-    </ion-item-divider>
-
-
-    <ion-card-content>
-        <ion-row>
-            <ion-col size-sm="8">
-                <div class="title-down-adjustment">
-                    <p>{{courseTitle}} </p>
-                </div>
-            </ion-col>
-            <ion-col  size-sm="1">
-                <div class="adjust-percentage-left">
-                    <p>0%</p>
-                </div>
-            </ion-col>
-            <ion-col size-sm="1">
-                <div class="header-progress-xp">
-                    <div class="xp1">
-                        <h3>
-                            {{inProgressData.totalExperience}}XP
-                        </h3>
+    <div >
+        <ion-card-header>
+            <ion-row>
+                <ion-col size="8">
+                    <ion-card-subtitle class="inprogess-fixed-subtitle">Your Latest Activity</ion-card-subtitle>
+                    <ion-card-title class="inprogess-fixed-title">
+                        {{inProgressData.title | titlecase}}
+                    </ion-card-title>
+                </ion-col>
+                <ion-col size="4">
+                    <ion-button size="default" class="startLesson" (click)="startLesson(inProgressData)">Start Lesson
+                    </ion-button>
+    
+                </ion-col>
+            </ion-row>
+    
+        </ion-card-header>
+    
+        <ion-item-divider>
+        </ion-item-divider>
+        
+        <ion-card-content>
+            <ion-row>
+                <ion-col size-sm="8">
+                    <div class="title-down-adjustment">
+                        <p>{{courseTitle}} </p>
                     </div>
-                </div>
-            </ion-col>
-        </ion-row>
-    </ion-card-content>
+                </ion-col>
+                <ion-col  size-sm="1">
+                    <div class="adjust-percentage-left">
+                        <p>0%</p>
+                    </div>
+                </ion-col>
+                <ion-col size-sm="1">
+                    <div class="header-progress-xp">
+                        <div class="xp1">
+                            <h3>
+                                {{inProgressData.totalExperience}}XP
+                            </h3>
+                        </div>
+                    </div>
+                </ion-col>
+            </ion-row>
+        </ion-card-content>
+
+    </div>
 </ion-card>
 <!-- Student End -->
 <ion-content class="hide-scroll">
