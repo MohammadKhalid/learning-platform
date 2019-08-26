@@ -11,6 +11,7 @@ const CompanyController 	= require(controllerPath + 'company.controller');
 const CoachController 	    = require(controllerPath + 'coach.controller');
 const StudentController 	= require(controllerPath + 'student.controller');
 const levelSettingController        = require(controllerPath + 'studentExperienceSetting.controller')
+const courseCategoryController      = require(controllerPath + 'courseCategory.controller')
 const courseClientController        = require(controllerPath + 'courseClient.controller')
 
 
@@ -97,6 +98,18 @@ levelSettingRoutes.get('/get/:itemId',levelSettingController.get)
 levelSettingRoutes.post('/',levelSettingController.create)
 levelSettingRoutes.get('/get-all/:userId', levelSettingController.getAll);
 levelSettingRoutes.put('/update/:itemId', levelSettingController.update);
+
+
+
+// course category
+const courseCategoryRoutes = express.Router();
+clientRouter.use('/course-category', courseCategoryRoutes);
+
+courseCategoryRoutes.post('/', courseCategoryController.create);
+courseCategoryRoutes.get('/get-all/:userId', courseCategoryController.getAll);
+courseCategoryRoutes.get('/:item_id', courseCategoryController.get);
+courseCategoryRoutes.put('/:item_id', courseCategoryController.update);
+courseCategoryRoutes.delete('/:item_id', courseCategoryController.remove);
 
 // course Client
 const courseClientRoutes = express.Router();
