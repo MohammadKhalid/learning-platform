@@ -31,6 +31,7 @@ export class AddmodulePage implements OnInit {
   serverUrl: string = "./assets/img/";
   forms: FormGroup
   inProgressData: any = [];
+  interval : any;
   ngOnInit() {
 
 
@@ -47,12 +48,13 @@ export class AddmodulePage implements OnInit {
     //   courseId: this.id
     // })
     this.inprogressSection();
+    
   }
-  ionViewWillEnter(){
-    debugger
-    this.menu.enable(true);
-    this.menu.enable(true, 'mainMenu')
-  }
+
+    
+    // this.menu.enable(true);
+    // 
+
  
   getModules() {
 
@@ -121,14 +123,22 @@ export class AddmodulePage implements OnInit {
   }
   inprogressSection() {
     this.service.getPromise(`section/get-last-section-id/${this.user.id}`).then(res => {
-      debugger;
-      this.inProgressData = res.data;
-      this.getModules()
 
+       this.inProgressData = res.data;
+      this.getModules()
+   
+     
+        this.menu.enable(true, 'mainMenu')
+        this.menu.enable(true)
+  
+     
     }).catch(err => {
 
     })
+   
   }
+  
+ 
 
   deleteModule(id) {
     this.service.delete(`courses/${id}`).subscribe(res => {
@@ -156,4 +166,5 @@ export class AddmodulePage implements OnInit {
     });
     return await popover.present();
   }
+ 
 }

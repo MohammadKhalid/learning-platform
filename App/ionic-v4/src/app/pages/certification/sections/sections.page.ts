@@ -9,6 +9,7 @@ import { DropzoneComponent } from 'src/app/components/common/dropzone/dropzone.c
 import { NotificationService } from 'src/app/services/notification/notification.service';
 import { AddModalComponent } from './concepts/add-modal/add-modal.component';
 import { ResourceAddModelComponent } from './resource-add-model/resource-add-model.component';
+import { settings } from 'cluster';
 
 @Component({
   selector: 'app-sections',
@@ -71,24 +72,16 @@ export class SectionsPage implements OnInit {
     this.saveButtonResourceSubscription.unsubscribe();
   }
   ngOnInit() {
+   
+
 
     this.sectionId = this.apiSrv.sectionId;
     this.searchBy = "";
     this.user = this.authService.getSessionData().user;
   
     //coach menu popupate start
-    this.subscription = this.apiSrv.getSectionMenuData().subscribe(res => {
-      if (res) {
-        debugger;
-        res.concept ? this.listData = res.concept : '';
-        res.resource ? this.listResourceData = res.resource : '';
-        res.quizAnswer ? this.quizAnswerlist = res.quizAnswer : '';
-
-        this.lessonName = res.title;
-        this.menu.enable(false);
-            this.menu.enable(false, 'mainMenu')
-      }
-    });
+  
+    
     //coach menu popupate end
 
     //student menu popupate start
@@ -119,7 +112,37 @@ export class SectionsPage implements OnInit {
     });
     //resource button end
   }
+ 
+  
+  
+ ionViewWillEnter(){
+  this.subscription = this.apiSrv.getSectionMenuData().subscribe(res => {
+    // this.menu.enable(false);
+    this.menu.enable(false, 'mainMenu')
+    if (res) {
+      debugger;
+      res.concept ? this.listData = res.concept : '';
+      res.resource ? this.listResourceData = res.resource : '';
+      res.quizAnswer ? this.quizAnswerlist = res.quizAnswer : '';
 
+      this.lessonName = res.title;
+      setTimeout(() => {
+        this.menu.enable(false);
+        this.menu.enable(false, 'mainMenu')
+    
+         
+       }, 400);
+       
+    // this.menu.enable(false);
+    }
+  });
+  
+
+ }
+ ionViewDidLeave() {
+  // enable the root left menu when leaving the tutorial page
+  this.menu.enable(true);
+}
   addSectionPage() {
     let obj = {
       title: this.pageTitle,
@@ -134,6 +157,7 @@ export class SectionsPage implements OnInit {
 
     })
   }
+  
   recourcesroute() {
     this.reouter.navigate([`/certification/sections/resources/${this.apiSrv.courseid}/${this.apiSrv.sectionId}`])
   }
@@ -199,12 +223,9 @@ export class SectionsPage implements OnInit {
     })
   }
 
-  // ngAfterViewInit() {
-  //   setInterval(() => {
-  //     this.menu.enable(false);
-  //     this.menu.enable(false, 'mainMenu')
-  //   }, 100)
-  // }
+ 
+   
+  
   back() {
     // this.apiSrv.populateSectionConceptBackNavigate();
 let courseid = this.apiSrv.courseid
