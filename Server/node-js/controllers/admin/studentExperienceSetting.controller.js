@@ -45,7 +45,19 @@ const get = async function (req, res) {
     const studentExpSettings = await StudentExperienceSetting.findAll({
         where: {
             id: itemId
-        }
+        },
+        include: [
+            {
+                model: User,
+                as: 'client',
+                attributes: [[Sequelize.fn('CONCAT',Sequelize.col('firstName'),' ',Sequelize.col('lastName')),'name']]
+            },
+            {
+                model: Company,
+                as: 'company',
+                attributes: ['name']
+            }
+        ]
     })
 
     if (studentExpSettings) return ReS(res, { data: studentExpSettings }, 200);
@@ -69,7 +81,6 @@ const getAll = async function (req, res) {
 
         }],
     })
-    console.log(studentExpSettings)
     if (studentExpSettings) return ReS(res, { data: studentExpSettings }, 200);
     else return ReE(res, { message: 'Unable to get settings.' }, 500)
 }

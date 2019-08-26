@@ -30,12 +30,15 @@ const getClientCompany = async function (req, res) {
     })
     if (flag == 'levelSettings') {
         if (company[0].companies.length > 0) {
+            let companyIdMap = company[0].companies.map(x => x.id)
             let companyIds = await StudentExperienceSetting.findAll({
                 where: {
-                    companyId: company[0].companies[0].id
+                    companyId: companyIdMap
                 }
             })
-            company = company.filter((x, ind) => x.companies[0].id != companyIds[ind].clientId)
+            for (let index = 0; index < companyIds.length; index++) {
+                company = company[0].companies.filter((x) => x.id != companyIds[index].companyId)
+            }
         } else {
             return ReS(res, { data: [] }, 200);
         }
