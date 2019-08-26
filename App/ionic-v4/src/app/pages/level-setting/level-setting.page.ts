@@ -7,6 +7,7 @@ import { AuthenticationService } from 'src/app/services/user/authentication.serv
 import { LoaderService } from 'src/app/services/utility/loader.service';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
 import { NotificationService } from 'src/app/services/notification/notification.service';
+import { toBase64String } from '@angular/compiler/src/output/source_map';
 
 @Component({
   selector: 'app-level-setting',
@@ -31,6 +32,10 @@ export class LevelSettingPage implements OnInit {
   parentCategory: any;
   loadercontext: any;
   btnText: string = 'Save'
+  lblCompanyName: string = ''
+  lblCompanyId: string = ''
+  lblClientName: number 
+  lblClientId: number
   constructor(
     private notificationService: NotificationService,
     private restApi: RestApiService,
@@ -46,11 +51,14 @@ export class LevelSettingPage implements OnInit {
 
   ngOnInit() {
     let editId = this.activatedRoute.snapshot.paramMap.get('id');
-
     if (editId) {
       this.btnText = "Update"
       this.restApi.getPromise('/levelSetting/get', editId).then(res => {
-       this.form.controls['initialLevel'].setValue(res.data[0].initialLevel);
+        this.lblClientName = res.data[0].client.name
+        this.lblClientId = res.data[0].clientId
+        this.lblCompanyName = res.data[0].company.name
+        this.lblCompanyId = res.data[0].companyId
+        this.form.controls['initialLevel'].setValue(res.data[0].initialLevel);
         this.form.controls['initialExperience'].setValue(res.data[0].initialExperience);
         this.form.controls['clientId'].setValue(res.data[0].clientId);
         this.form.controls['companyId'].setValue(res.data[0].companyId);
@@ -83,16 +91,16 @@ export class LevelSettingPage implements OnInit {
     this.companie = []
     let clientId = this.form.controls.clientId.value;
     this.restApi.getPromise(`course-client-company/companies/${clientId}/levelSettings`).then(res => {
-    
-      this.companie = res.data.companies;
+
+      this.companie = res.data
     })
   }
 
   addRecord() {
     this.notificationService.showMsg('Saving...', 0).then(() => {
       this.restApi.postPromise('course-category', this.form.value)
-  .then(res => {
-      this.notificationService.toast.dismiss();
+        .then(res => {
+          this.notificationService.toast.dismiss();
           this.navCtrl.navigateRoot('/category');
           console.log(res);
         }).catch(onreject => {
@@ -103,6 +111,8 @@ export class LevelSettingPage implements OnInit {
     });
   }
   updateRecord() {
+    debugger
+    this.form.value
     this.notificationService.showMsg('Updated...', 0).then(() => {
       this.restApi.putPromise('categories/' + this.form.controls.id.value, this.form.value)
         .then(res => {
@@ -132,7 +142,7 @@ export class LevelSettingPage implements OnInit {
     } else {
       this.btnText = "Save"
       this.restApi.postPromise('/levelSetting', this.form.value).then(res => {
-     
+
         this.notificationService.showMsg('record save successfully');
         this.router.routeReuseStrategy.shouldReuseRoute = () => false;
         this.router.onSameUrlNavigation = 'reload';
