@@ -25,17 +25,18 @@
             <ion-list-header>
                 <ion-label color="primary">Add category</ion-label>
             </ion-list-header>
+            <div *ngIf='user.type == "admin"'>
+                <ion-item *ngIf="btnText == 'Save' " lines="inset">
+                    <ion-label position="floating">Clients
+                        <ion-text color="danger">*</ion-text>
+                    </ion-label>
+                    <ion-select placeholder="Select client" (ionChange)="getCompanies()" formControlName="clientId">
+                        <ion-select-option *ngFor="let client of clients" [value]="client.id">{{client.name}}
+                        </ion-select-option>
 
-            <ion-item *ngIf="btnText == 'Save' " lines="inset">
-                <ion-label position="floating">Clients
-                    <ion-text color="danger">*</ion-text>
-                </ion-label>
-                <ion-select placeholder="Select client" (ionChange)="getCompanies()" formControlName="clientId">
-                    <ion-select-option *ngFor="let client of clients" [value]="client.id">{{client.name}}
-                    </ion-select-option>
-
-                </ion-select>
-            </ion-item>
+                    </ion-select>
+                </ion-item>
+            </div>
             <ion-item *ngIf="btnText == 'Update' " lines="inset">
                 <!-- <ion-label position="floating">Client
                     <ion-text color="danger">*</ion-text>

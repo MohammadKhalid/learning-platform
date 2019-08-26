@@ -34,7 +34,7 @@ export class LevelSettingPage implements OnInit {
   btnText: string = 'Save'
   lblCompanyName: string = ''
   lblCompanyId: string = ''
-  lblClientName: number 
+  lblClientName: number
   lblClientId: number
   constructor(
     private notificationService: NotificationService,
@@ -50,6 +50,7 @@ export class LevelSettingPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.user = this.authService.getSessionData().user
     let editId = this.activatedRoute.snapshot.paramMap.get('id');
     if (editId) {
       this.btnText = "Update"
@@ -66,33 +67,48 @@ export class LevelSettingPage implements OnInit {
         this.notificationService.showMsg(err);
       })
     }
-
-
-
     this.restApi.getPromise('/course-client-company/clients').then(res => {
       this.clients = res.data;
     })
 
+    if (this.user.type == 'client') {
+      this.companie = []
+      this.restApi.getPromise(`course-client-company/companies/${this.user.id}/levelSettings`).then(res => {
+        this.companie = res.data[0].companies
+      })
+    }
 
+    if (this.user.type == 'admin') {
 
-    this.form = this.formBuilder.group({
-      initialLevel: new FormControl('', Validators.compose([
-        Validators.required, Validators.pattern('^[0-9]*$')
-      ])),
-      companyId: new FormControl('', Validators.required),
-      initialExperience: new FormControl('', Validators.compose([
-        Validators.required, Validators.pattern('^[0-9]*$')
-      ])),
-      clientId: new FormControl('', Validators.required),
-    });
+      this.form = this.formBuilder.group({
+        initialLevel: new FormControl('', Validators.compose([
+          Validators.required, Validators.pattern('^[0-9]*$')
+        ])),
+        companyId: new FormControl('', Validators.required),
+        initialExperience: new FormControl('', Validators.compose([
+          Validators.required, Validators.pattern('^[0-9]*$')
+        ])),
+        clientId: new FormControl('', Validators.required),
+      });
+    }else{
+      this.form = this.formBuilder.group({
+        initialLevel: new FormControl('', Validators.compose([
+          Validators.required, Validators.pattern('^[0-9]*$')
+        ])),
+        companyId: new FormControl('', Validators.required),
+        initialExperience: new FormControl('', Validators.compose([
+          Validators.required, Validators.pattern('^[0-9]*$')
+        ])),
+        clientId: this.user.id,
+      });
+    }
   }
 
   getCompanies() {
     this.companie = []
     let clientId = this.form.controls.clientId.value;
     this.restApi.getPromise(`course-client-company/companies/${clientId}/levelSettings`).then(res => {
-
-      this.companie = res.data
+      this.companie = res.data[0].companies
     })
   }
 
@@ -111,7 +127,6 @@ export class LevelSettingPage implements OnInit {
     });
   }
   updateRecord() {
-    debugger
     this.form.value
     this.notificationService.showMsg('Updated...', 0).then(() => {
       this.restApi.putPromise('categories/' + this.form.controls.id.value, this.form.value)
@@ -128,7 +143,6 @@ export class LevelSettingPage implements OnInit {
   }
   save() {
     let editId = this.activatedRoute.snapshot.paramMap.get('id');
-
     if (editId) {
       this.btnText = "Update"
       this.restApi.putPromise(`/levelSetting/update/${editId}`, this.form.value).then(res => {

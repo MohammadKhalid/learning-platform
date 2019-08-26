@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
 import { Router } from '@angular/router';
+import { AuthenticationService } from 'src/app/services/user/authentication.service';
 
 @Component({
   selector: 'app-level-list',
@@ -9,33 +10,42 @@ import { Router } from '@angular/router';
 })
 export class LevelListPage implements OnInit {
   listdata: any = [];
-  constructor(private restapi : RestApiService,
-    private router : Router ) { }
+  user: any
+  constructor(private restapi: RestApiService,
+    private auth : AuthenticationService,
+    private router: Router) { }
 
-  add(){
+  add() {
     this.router.navigate(['level-setting/add'])
   }
   ngOnInit() {
-    
-   
+    this.user = this.auth.getSessionData().user
+
   }
 
 
-  ionViewWillEnter(){
+  ionViewWillEnter() {
     this.updateList();
   }
-  updateList(){
-    this.restapi.getPromise('/levelSetting/get-all').then(res=> {
+  updateList() {
+    if(this.user.type == 'admin'){
+      this.restapi.getPromise('/levelSetting/get-all').then(res => {
+        this.listdata = res.data
+      }).catch(err => {
   
-      
-      this.listdata = res.data
-        }).catch(err=> {
-    
-        })
-    
+      })
+    }else{
+      this.restapi.getPromise(`/levelSetting/get-all/${this.user.id}`).then(res => {
+        debugger
+        this.listdata = res.data
+      }).catch(err => {
+  
+      })
+    }
+
   }
-  editList(id){
-      this.router.navigate([`/level-setting/edit/${id}`])
+  editList(id) {
+    this.router.navigate([`/level-setting/edit/${id}`])
   }
 
 

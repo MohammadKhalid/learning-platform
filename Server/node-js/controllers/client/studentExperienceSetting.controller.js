@@ -84,8 +84,11 @@ const get = async function (req, res) {
 module.exports.get = get;
 
 const getAll = async function (req, res) {
+    let { userId } = req.params
     const studentExpSettings = await StudentExperienceSetting.findAll({
-
+        where: {
+            clientId: userId
+        },
         include: [{
             model: User,
             as: "client",
