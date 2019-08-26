@@ -83,6 +83,8 @@ export class SectionsPage implements OnInit {
         res.quizAnswer ? this.quizAnswerlist = res.quizAnswer : '';
 
         this.lessonName = res.title;
+        this.menu.enable(false);
+            this.menu.enable(false, 'mainMenu')
       }
     });
     //coach menu popupate end
@@ -195,12 +197,12 @@ export class SectionsPage implements OnInit {
     })
   }
 
-  ngAfterViewInit() {
-    setInterval(() => {
-      this.menu.enable(false);
-      this.menu.enable(false, 'mainMenu')
-    }, 100)
-  }
+  // ngAfterViewInit() {
+  //   setInterval(() => {
+  //     this.menu.enable(false);
+  //     this.menu.enable(false, 'mainMenu')
+  //   }, 100)
+  // }
   back() {
     this.apiSrv.populateSectionConceptBackNavigate();
 

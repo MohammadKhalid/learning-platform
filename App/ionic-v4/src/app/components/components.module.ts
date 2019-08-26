@@ -69,6 +69,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { AddEditPopoverComponent } from './common/add-edit-popover/add-edit-popover.component';
 import { QuizViewerCoachComponent } from './quiz-viewer-coach/quiz-viewer-coach.component';
+import { CertificatePdfComponent } from './certificate-pdf/certificate-pdf.component';
 
 @NgModule({
 	imports: [
@@ -157,7 +158,8 @@ import { QuizViewerCoachComponent } from './quiz-viewer-coach/quiz-viewer-coach.
 		StudentTextComponent,
 		SafePipe,
 		AddEditPopoverComponent,
-		QuizViewerCoachComponent
+		QuizViewerCoachComponent,
+		CertificatePdfComponent
 	],
 	entryComponents: [
 		MediaComponent,
@@ -165,6 +167,8 @@ import { QuizViewerCoachComponent } from './quiz-viewer-coach/quiz-viewer-coach.
 		AddEditPopoverComponent
 	],
 	exports: [
+		CertificatePdfComponent,
+
 		ConferenceComponent,
 		RoundProgressModule,
 		ShowTimeComponent,
