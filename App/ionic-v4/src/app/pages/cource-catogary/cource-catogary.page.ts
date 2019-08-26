@@ -49,7 +49,8 @@ export class CourceCatogaryPage implements OnInit {
 	) {
 	}
 	ngOnInit() {
-	let editId = this.activatedRoute.snapshot.paramMap.get('id');
+		this.user = this.authService.getSessionData().user;
+		let editId = this.activatedRoute.snapshot.paramMap.get('id');
 
 		if (editId) {
 			this.btnText = "Update"
@@ -59,8 +60,8 @@ export class CourceCatogaryPage implements OnInit {
 				this.form.controls['description'].setValue(res.data[0].description);
 				this.form.controls['clientId'].setValue(res.data[0].clientId);
 				this.form.controls['companyId'].setValue(res.data[0].companyId);
-	}).catch(err => {
-		this.notificationService.showMsg(err);
+			}).catch(err => {
+				this.notificationService.showMsg(err);
 			})
 		}
 
@@ -71,20 +72,33 @@ export class CourceCatogaryPage implements OnInit {
 		})
 
 
+		if (this.user.type == 'admin') {
+			this.form = this.formBuilder.group({
+				title: new FormControl('', Validators.required),
+				companyId: new FormControl('', Validators.required),
+				description: new FormControl(''),
+				clientId: new FormControl('', Validators.required),
+			});
+		} else {
+			this.companie = []
+			this.restApi.getPromise(`course-client-company/companies/${this.user.id}/courseCategory`).then(res => {
+				this.companie = res.data[0].companies;
+			})
+			this.form = this.formBuilder.group({
+				title: new FormControl('', Validators.required),
+				companyId: new FormControl('', Validators.required),
+				description: new FormControl(''),
+				clientId: this.user.id
+			});
+		}
 
-		this.form = this.formBuilder.group({
-			title: new FormControl('', Validators.required),
-			companyId: new FormControl('', Validators.required),
-			description: new FormControl(''),
-			clientId: new FormControl('', Validators.required),
-		});
 	}
 
 	getCompanies() {
 		this.companie = []
 		let clientId = this.form.controls.clientId.value;
-		this.restApi.getPromise(`course-client-company/companies/${clientId}/courseCategory` ).then(res => {
-			
+		this.restApi.getPromise(`course-client-company/companies/${clientId}/courseCategory`).then(res => {
+
 			this.companie = res.data[0].companies;
 			debugger
 		})
@@ -95,7 +109,7 @@ export class CourceCatogaryPage implements OnInit {
 			this.restApi.postPromise('course-category', this.form.value)
 
 				.then(res => {
-					
+
 					this.notificationService.toast.dismiss();
 					this.navCtrl.navigateRoot('/category');
 					console.log(res);
@@ -127,7 +141,7 @@ export class CourceCatogaryPage implements OnInit {
 			this.btnText = "Update"
 			this.restApi.putPromise(`/course-category/${editId}`, this.form.value).then(res => {
 				this.notificationService.showMsg('updated Successfully!')
-				
+
 				this.router.navigate(['/Course-Category'])
 			}).catch(err => {
 				this.notificationService.showMsg(err);
@@ -138,9 +152,9 @@ export class CourceCatogaryPage implements OnInit {
 			this.restApi.postPromise('course-category', this.form.value).then(res => {
 				this.notificationService.showMsg('record save successfully');
 				this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-                this.router.onSameUrlNavigation = 'reload';
+				this.router.onSameUrlNavigation = 'reload';
 				this.router.navigate(['/Course-Category'])
-				
+
 			}).catch(err => {
 				this.notificationService.showMsg(err);
 			})

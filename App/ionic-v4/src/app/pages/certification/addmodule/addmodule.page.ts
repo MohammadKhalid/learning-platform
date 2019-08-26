@@ -128,8 +128,7 @@ export class AddmodulePage implements OnInit {
       this.getModules()
    
      
-        this.menu.enable(true, 'mainMenu')
-        this.menu.enable(true)
+       
   
      
     }).catch(err => {

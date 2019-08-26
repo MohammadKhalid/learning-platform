@@ -22,13 +22,13 @@ export class CertificatePdfComponent implements OnInit {
     
     let content = this.content.nativeElement;
     let image = new Image();
-    // image.src ='../../../assets/img/browser/firefoxlanescape.png'
+    image.src ='../../../assets/img/browser/firefoxlanescape.png'
     doc.fromHTML(content.innerHTML,50,15,{
       'width': 190,
       'elementHandlers': specialElementHandlers,
      
     });
-    // doc.addImage(image,'PNG',14,15)
+    doc.addImage(image,'PNG',14,15)
     doc.save('done.pdf')
   }
 
