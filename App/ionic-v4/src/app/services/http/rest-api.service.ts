@@ -25,6 +25,7 @@ export class RestApiService {
 	sessionData: any;
 	url: string = SERVER_URL;
 	_sectionId: any;
+	_courseid : any
 
 	constructor(
 		private authService: AuthenticationService,
@@ -255,11 +256,22 @@ export class RestApiService {
 		}
 	}
 	set sectionId(id: any) {
+		debugger;
 		this._sectionId = id;
 	}
 	get sectionId() {
 	
 		return this._sectionId;
+	}
+
+
+	set courseid(id: any) {
+		debugger;
+		this._courseid = id;
+	}
+	get courseid() {
+	
+		return this._courseid;
 	}
 	// concept click start
 	getSectionConcept(): Observable<any> {

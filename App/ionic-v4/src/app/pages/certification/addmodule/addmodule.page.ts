@@ -72,7 +72,7 @@ export class AddmodulePage implements OnInit {
   }
   goToRoute(id){
    
-   this.router.navigate([`/certification/sections/concepts/${id}`]) 
+   this.router.navigate([`/certification/sections/concepts/${this.id}/${id}`]) 
   }
   startLesson(item) {
     let obj = {

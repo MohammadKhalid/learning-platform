@@ -59,6 +59,7 @@ export class SectionsPage implements OnInit {
   searchBy: string = "";
   panelOpenState = false;
   sectionId: any
+  courseid : any
   panelResourceOpenState = false;
   showField: boolean = false;
   // showFieldResource: boolean = false;
@@ -74,6 +75,7 @@ export class SectionsPage implements OnInit {
     this.sectionId = this.apiSrv.sectionId;
     this.searchBy = "";
     this.user = this.authService.getSessionData().user;
+  
     //coach menu popupate start
     this.subscription = this.apiSrv.getSectionMenuData().subscribe(res => {
       if (res) {
@@ -133,12 +135,12 @@ export class SectionsPage implements OnInit {
     })
   }
   recourcesroute() {
-    this.reouter.navigate([`/certification/sections/resources/${this.apiSrv.sectionId}`])
+    this.reouter.navigate([`/certification/sections/resources/${this.apiSrv.courseid}/${this.apiSrv.sectionId}`])
   }
   awnserRoute() {
-    this.reouter.navigate([`/certification/sections/quizes-awnser/${this.apiSrv.sectionId}`])
+    this.reouter.navigate([`/certification/sections/quizes-awnser/${this.apiSrv.courseid}/${this.apiSrv.sectionId}`])
   }
-  // addSectionPageResource() {
+  // addSectionPageResource() {.
   //   let obj = {
   //     title: this.pageTitle,
   //     sectionId: this.apiSrv.sectionId
@@ -204,10 +206,10 @@ export class SectionsPage implements OnInit {
   //   }, 100)
   // }
   back() {
-    this.apiSrv.populateSectionConceptBackNavigate();
-
+    // this.apiSrv.populateSectionConceptBackNavigate();
+let courseid = this.apiSrv.courseid
     // this.menu.enable(true, 'mainMenu')
-    this.reouter.navigate([`/certification/module/${this.apiSrv.sectionId}`])
+    this.reouter.navigate([`/certification/module/${courseid}`])
   }
 
   goto(route) {
@@ -220,8 +222,9 @@ export class SectionsPage implements OnInit {
   // }
   gotoConceptType(data) {
     let sectionId = this.apiSrv.sectionId;
+    let courseId = this.apiSrv.courseid
     // if (data.type == "Quiz") {
-    this.reouter.navigate([`certification/sections/concepts/${sectionId}/${data.id}`])
+    this.reouter.navigate([`certification/sections/concepts/${courseId}/${sectionId}/${data.id}`])
     // }
     // else if (data.type == "Resource") {
     //   this.reouter.navigate([`certification/sections/resources/${sectionId}/${data.title}`])
@@ -233,7 +236,7 @@ export class SectionsPage implements OnInit {
   gotoAnswerView(data) {
     let sectionId = this.apiSrv.sectionId;
     // if (data.type == "Quiz") {
-    this.reouter.navigate([`certification/sections/quizes-answer/${sectionId}/${data.id}`])
+    this.reouter.navigate([`certification/sections/quizes-answer/${this.apiSrv.courseid}/${sectionId}/${data.id}`])
     // }
     // else if (data.type == "Resource") {
     //   this.reouter.navigate([`certification/sections/resources/${sectionId}/${data.title}`])

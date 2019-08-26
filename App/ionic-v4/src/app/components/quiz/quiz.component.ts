@@ -86,7 +86,7 @@ export class QuizComponent implements OnInit {
     }
     this.restApi.postPromise('quiz', obj)
       .then(response => {
-        this.router.navigate([`certification/sections/concepts/${this.sectionId}/${this.sectionPageId}`])
+        this.router.navigate([`certification/sections/concepts/${this.restApi.courseid}/${this.sectionId}/${this.sectionPageId}`])
         this.notificationService.showMsg('Record Insert');
         this.eventEmitterCloseModel.next();
       }).catch(err => {

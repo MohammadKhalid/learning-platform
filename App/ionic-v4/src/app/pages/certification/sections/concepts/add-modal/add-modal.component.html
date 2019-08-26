@@ -1,7 +1,7 @@
 <ion-header translucent="true" class="add-Concept-header">
     <ion-toolbar mode="ios" color="success cus-header-bg">
         <ion-buttons slot="start">
-        <ion-button (click)="close()">
+            <ion-button (click)="close()">
                 <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
             </ion-button>
         </ion-buttons>
@@ -13,21 +13,21 @@
 
     <!-- coach side rendering start -->
     <ion-item lines="inset">
-            <ion-label position="floating">Category<ion-text color="danger">*</ion-text>
-            </ion-label>
-            <ion-select [disabled]="data" [(ngModel)]="selectedOption" placeholder="Select Type">
-                <ion-select-option *ngFor='let option of conceptOptions' [value]="option.id">{{option.value}}
-                </ion-select-option>
-            </ion-select>
-        </ion-item>
+        <ion-label position="floating">Category
+            <ion-text color="danger">*</ion-text>
+        </ion-label>
+        <ion-select [disabled]="data" [(ngModel)]="selectedOption" placeholder="Select Type">
+            <ion-select-option *ngFor='let option of conceptOptions' [value]="option.id">{{option.value}}
+            </ion-select-option>
+        </ion-select>
+    </ion-item>
     <!-- coach side rendering end -->
 
     <ion-list class="ion-padding">
 
         <div>
             <div *ngIf="selectedOption == 0">
-                <app-video [data]="data" [sectionPageId]="sectionPageId"
-                    (eventEmitterCloseModel)="eventEmitterCloseModel()" [sectionId]="sectionId"></app-video>
+                <app-video [data]="data" [sectionPageId]="sectionPageId" (eventEmitterCloseModel)="eventEmitterCloseModel()" [sectionId]="sectionId"></app-video>
             </div>
             <div *ngIf="selectedOption == 1">
                 <app-text [data]="data" (eventEmitterCloseModel)="eventEmitterCloseModel()" [sectionPageId]="sectionPageId" [sectionId]="sectionId" [recordId]="recordId">
