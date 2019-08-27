@@ -64,20 +64,20 @@ export class ConceptsPage implements OnInit {
     this.menu.enable(true);
     this.menu.enable(true, 'mainMenu')
     // this.menu.enable(true, 'mainMenu')
-    let sectionId = this.sectionId = this.actRoute.snapshot.paramMap.get('sectionid');
+    this.sectionId = this.sectionId = this.actRoute.snapshot.paramMap.get('sectionid');
     this.sectionPageId = this.actRoute.snapshot.paramMap.get('sectionpageid');
     this.courseid = this.actRoute.snapshot.paramMap.get('courseid');
   
     if (this.sectionPageId) {
       this.restApi.populateSectionConceptSaveButton();
     }
-    this.restApi.sectionId = sectionId;
+    this.restApi.sectionId = this.sectionId;
     this.restApi.courseid = this.courseid;
     if (this.user.type === 'coach') {
-      this.restApi.populateSectionSubMenu(sectionId);
+      this.restApi.populateSectionSubMenu(this.sectionId);
     }
     else if (this.user.type === 'student') {
-      this.restApi.populateSectionSubMenuStudent(sectionId);
+      this.restApi.populateSectionSubMenuStudent(this.sectionId);
     }
 
     // this.restApi.getPromise(`section/get-section-details`, id).then(res => {
@@ -104,7 +104,7 @@ export class ConceptsPage implements OnInit {
   }
 
   fetchSectionItems() {
-    this.restApi.getPromise(`section-page/get-section-items/${this.sectionPageId}/${this.user.id}`)
+    this.restApi.getPromise(`section-page/get-section-items/${this.courseid}/${this.sectionId}/${this.sectionPageId}/${this.user.id}`)
       .then(response => {
         this.sectionConceptData = response.data
       }).catch(error => {
