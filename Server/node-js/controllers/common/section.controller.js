@@ -55,25 +55,35 @@ module.exports.getLastSectionDetails = getLastSectionDetails;
 
 const getStudentProgress = async (req, res) => {
     let studentExperience;
-    let { sectionId, studentId } = req.params
+    let { courseId, studentId } = req.params
 
-    let sectionPage = await SectionPage.findAll({
+    let section = await Section.findAll({
         where: {
-            sectionId: sectionId
+            courseId: courseId
         },
 
         include: [{
-            model: Text,
-            as: 'Text',
-            attributes: [[Sequelize.fn('SUM', Sequelize.col('Text.experience')), 'totalExperience']],
-            raw: true
+
+            model: SectionPage,
+            as: 'sectionPage',
 
 
-        }, {
-            model: Lesson,
-            as: 'Lesson',
-            attributes: [[Sequelize.fn('SUM', Sequelize.col('Lesson.experience')), 'totalExperience']],
-            raw: true
+            include: [{
+            
+                model: Text,
+                as: 'Text',
+                attributes: [[Sequelize.fn('SUM', Sequelize.col('Text.experience')), 'totalExperience']],
+                raw: true
+    
+            },
+            {
+            
+                model: Lesson,
+                as: 'Lesson',
+                attributes: [[Sequelize.fn('SUM', Sequelize.col('Lesson.experience')), 'totalExperience']],
+                raw: true
+    
+            }]
 
         }],
         group: ['id']
