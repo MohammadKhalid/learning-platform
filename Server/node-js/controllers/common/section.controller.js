@@ -2,7 +2,6 @@ const { Sequelize, CourseCategory, Section, Text, Lesson, Course, StudentProgres
 const { to, ReE, ReS } = require('../../services/util.service');
 const Op = Sequelize.Op;
 
-
 const getCoachSections = async (req, res) => {
     let { courseId } = req.params
     const section = await Section.findAll({
@@ -21,19 +20,21 @@ const getCoachSections = async (req, res) => {
 }
 
 const getLastSectionDetails = async (req, res) => {
-    let { studentId } = req.params
+    let { studentId, courseId } = req.params
     const studentProgress = await StudentProgress.findAll({
         attributes: ['sectionPageId'],
 
         where: {
             isLastActive: 1,
-            studentId: studentId
+            studentId: studentId,
+            courseId: courseId
         },
 
     })
 
     if (studentProgress.length > 0) {
-        sectionPage = await SectionPage.findAll({
+        
+         sectionPage = await SectionPage.findAll({
 
             include: [{
                 model: Section,
@@ -44,9 +45,10 @@ const getLastSectionDetails = async (req, res) => {
             }
         })
         return ReS(res, { data: sectionPage }, 200);
-    }else{
+    } else {
         return ReS(res, { data: [] }, 200);
     }
+   
 
 }
 module.exports.getLastSectionDetails = getLastSectionDetails;
@@ -84,7 +86,7 @@ const getStudentProgress = async (req, res) => {
     // let totalExperience = textsTotalArray + lessonsTotalArray
 
     console.log(sectionPage.Text.totalExperience);
-    
+
 
     let studentProgress = await StudentProgress.findAll({
         attributes: ['sectionPageId'],
@@ -93,7 +95,7 @@ const getStudentProgress = async (req, res) => {
         },
     })
 
-    let sectionPageIds = studentProgress.map((row) => row.sectionPageId );
+    let sectionPageIds = studentProgress.map((row) => row.sectionPageId);
 
     let texts = await Text.findAll({
         attributes: [[Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
@@ -119,8 +121,8 @@ const getStudentProgress = async (req, res) => {
     let textsArray = texts.map((row) => { return parseInt(row.totalExperience) });
     let lessonsArray = lesson.map((row) => { return parseInt(row.totalExperience) });
 
-    let allLessons = lessonsArray.reduce( (acc, val) =>   acc + val )
-    let allTexts = textsArray.reduce( (acc, val) =>  acc + val )
+    let allLessons = lessonsArray.reduce((acc, val) => acc + val)
+    let allTexts = textsArray.reduce((acc, val) => acc + val)
 
 
     if (texts.length == 0 && lesson.length != 0) {
@@ -134,7 +136,7 @@ const getStudentProgress = async (req, res) => {
     }
 
 
-    if (sectionPage) return ReS(res, { data: {studentExperience: studentExperience, totalExperience: totalExperience} }, 200);
+    if (sectionPage) return ReS(res, { data: { studentExperience: studentExperience, totalExperience: totalExperience } }, 200);
     else return ReE(res, { message: 'Unable to insert Course.' }, 500)
 }
 module.exports.getStudentProgress = getStudentProgress;

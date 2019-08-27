@@ -120,7 +120,7 @@ studentRouter.use('/section', section)
 section.get('/get-sections/:courseId', commonController.getSections)
 section.get('/get-section-details-for-student/:sectionId', commonController.sectionDetailsForStudent)
 section.get('/get-side-menu-items/:sectionId', commonController.getSideMenuItems)
-section.get('/get-last-section-id/:studentId', sectionController.getLastSectionDetails)
+section.get('/get-last-section-id/:studentId/:courseId', sectionController.getLastSectionDetails)
 
 
 const sectionPage = express.Router();
