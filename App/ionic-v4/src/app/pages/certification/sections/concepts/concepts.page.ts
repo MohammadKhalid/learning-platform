@@ -61,8 +61,8 @@ export class ConceptsPage implements OnInit {
   }
 
   ngOnInit() {
-    this.menu.enable(true);
-    this.menu.enable(true, 'mainMenu')
+    // this.menu.enable(true);
+    // this.menu.enable(true, 'mainMenu')
     // this.menu.enable(true, 'mainMenu')
     this.sectionId = this.sectionId = this.actRoute.snapshot.paramMap.get('sectionid');
     this.sectionPageId = this.actRoute.snapshot.paramMap.get('sectionpageid');
