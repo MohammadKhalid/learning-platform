@@ -98,7 +98,8 @@ module.exports.sectionDetailsForStudent = sectionDetailsForStudent;
 
 
 const getSections = async (req, res) => {
-    let { courseId } = req.params
+    let studentProgress, texts, lesson, sectionPageIds, sectionIds;
+    let { courseId, studentId } = req.params
     let flag = 'Section'
     let section = await Section.findAll({
         attributes: ['id', 'title', 'description', 'totalExperience', 'courseId'],
@@ -119,7 +120,74 @@ const getSections = async (req, res) => {
             }
         })
     }
-    if (section) return ReS(res, { data: section, flag: flag }, 200);
+
+    if (req.user.type == "student") {
+
+        studentProgress = await StudentProgress.findAll({
+            where: {
+                studentId: studentId
+            },
+
+            include: [{
+
+                model: SectionPage,
+                as: 'sectionPage',
+
+                // include: [{
+
+                //     model: Text,
+                //     as: 'Text',
+                //     // attributes: [[Sequelize.fn('sum', Sequelize.col("experience")), 'textExperience']],
+                //     // raw: true
+                //     attributes: ['experience']
+
+                // },
+                // {
+
+                //     model: Lesson,
+                //     as: 'Lesson',
+                //     // attributes: [[Sequelize.fn('sum', Sequelize.col("Lesson.experience")), 'lessonExperience']],
+                //     // raw: true
+                //     attributes: ['experience']
+
+                // }],
+
+                // group: ['Text.sectionPageId','Lesson.sectionPageId']
+
+            }],
+
+        })
+
+        sectionPageIds = studentProgress.map((row) => row.sectionPage.id);
+        sectionIds = studentProgress.map((row) => row.sectionPage.sectionId);
+
+        texts = await Text.findAll({
+            attributes: ['sectionPageId',[Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
+            raw: true,
+            where: {
+                sectionPageId: {
+                    [Op.in]: sectionPageIds
+                }
+            },
+            group: ['sectionPageId']
+        })
+         lesson = await Lesson.findAll({
+            attributes: ['sectionPageId',[Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
+            raw: true,
+            where: {
+                sectionPageId: {
+                    [Op.in]: sectionPageIds
+                }
+            },
+            group: ['sectionPageId']
+        })
+
+    }
+
+    // console.log(studentProgress);
+
+
+    if (section) return ReS(res, { data: section, flag: flag, studentProgress: studentProgress, text: texts, lesson: lesson }, 200);
     else return ReE(res, { message: 'Unable to insert Course.' }, 500)
 }
 module.exports.getSections = getSections;
