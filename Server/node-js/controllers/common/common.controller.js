@@ -98,7 +98,9 @@ module.exports.sectionDetailsForStudent = sectionDetailsForStudent;
 
 
 const getSections = async (req, res) => {
-    let studentProgress, texts, lesson, sectionPageIds, sectionIds;
+    let studentProgress, texts, lesson, sectionPageIds, sectionId, totalTextExperience, totalLessonExperience;
+    let dataArray = [];
+    let obj = {};
     let { courseId, studentId } = req.params
     let flag = 'Section'
     let section = await Section.findAll({
@@ -159,10 +161,9 @@ const getSections = async (req, res) => {
         })
 
         sectionPageIds = studentProgress.map((row) => row.sectionPage.id);
-        sectionIds = studentProgress.map((row) => row.sectionPage.sectionId);
 
         texts = await Text.findAll({
-            attributes: ['sectionPageId',[Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
+            attributes: ['sectionPageId', [Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
             raw: true,
             where: {
                 sectionPageId: {
@@ -171,8 +172,8 @@ const getSections = async (req, res) => {
             },
             group: ['sectionPageId']
         })
-         lesson = await Lesson.findAll({
-            attributes: ['sectionPageId',[Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
+        lesson = await Lesson.findAll({
+            attributes: ['sectionPageId', [Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
             raw: true,
             where: {
                 sectionPageId: {
@@ -181,13 +182,34 @@ const getSections = async (req, res) => {
             },
             group: ['sectionPageId']
         })
+
+        for (i = 0; i < studentProgress.length; i++) {
+            if (studentProgress[i].sectionPageId == texts[i].sectionPageId) {
+                sectionId = studentProgress[i].sectionId;
+                totalTextExperience = texts[i].totalExperience;
+            }
+
+            if (studentProgress[i].sectionPageId == lesson[i].sectionPageId) {
+                sectionId = studentProgress[i].sectionId;
+                totalLessonExperience = lesson[i].totalExperience;
+            }
+
+            dataArray.push(obj = {
+
+                sectionId,
+                totalTextExperience,
+                totalLessonExperience
+
+            })
+        }
+
 
     }
 
     // console.log(studentProgress);
 
 
-    if (section) return ReS(res, { data: section, flag: flag, studentProgress: studentProgress, text: texts, lesson: lesson }, 200);
+    if (section) return ReS(res, { data: section, flag: flag, studentProgress: studentProgress, array: dataArray}, 200);
     else return ReE(res, { message: 'Unable to insert Course.' }, 500)
 }
 module.exports.getSections = getSections;
