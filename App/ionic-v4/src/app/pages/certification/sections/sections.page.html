@@ -103,13 +103,28 @@
                                     </ion-icon>
                                     <ion-spinner *ngIf="isAddClicked" name="lines-small" color="light"></ion-spinner>
                                 </ion-item>
+                                <ion-item class="conceptGaps certificate-item certificate-section setWidth"
+                                    *ngIf="isEditShow">
+                                    <ion-input [(ngModel)]="editTitle"
+                                        (keyup.enter)="edit();isEditClicked = true" autofocus
+                                        placeholder="Enter Title">
+                                    </ion-input>
+                                    <ion-icon *ngIf="!isEditClicked" (click)="edit();isEditClicked=true"
+                                        class="certificate-icon certificate-section-icon" name="checkbox-outline">
+                                    </ion-icon>
+                                    <ion-spinner *ngIf="isEditClicked" name="lines-small" color="light"></ion-spinner>
+                                    <ion-icon class="certificate-icon certificate-section-icon"
+                                        (click)="isEditShow = false;editId=0;isEditClicked=false" name="close">
+                                    </ion-icon>
+                                </ion-item>
 
                                 <ion-item pointer *ngFor="let dataRow of listData | orderByDate | filter : searchBy"
                                     class="conceptGaps certificate-item certificate-section concept-title-adjustment">
                                     <ion-label (click)="gotoConceptType(dataRow);">
                                         {{dataRow.title.length > 15 ? dataRow.title.substring(0,15)+'...': dataRow.title}}
                                     </ion-label>
-                                    <ion-icon (click)='edit(dataRow)' class="certificate-icon" name="create">
+                                    <ion-icon (click)='isEditShow = true;editId=dataRow.id; editTitle=dataRow.title'
+                                        class="certificate-icon" name="create">
                                     </ion-icon>
                                     <div *ngIf="dataRow.id != deleteId">
                                         <ion-icon
