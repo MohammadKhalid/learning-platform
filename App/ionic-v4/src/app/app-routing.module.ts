@@ -119,7 +119,9 @@ const routes: Routes = [
   { path: 'course-category', loadChildren: './pages/cource-catogary/cource-catogary.module#CourceCatogaryPageModule' },
   { path: 'course-list', loadChildren: './pages/cource-catogary/course-list/course-list.module#CourseListPageModule' },
   { path: 'level-setting', loadChildren: './pages/level-setting/level-setting.module#LevelSettingPageModule' },
-  { path: 'level-list', loadChildren: './pages/level-setting/level-list/level-list.module#LevelListPageModule' }
+  { path: 'level-list', loadChildren: './pages/level-setting/level-list/level-list.module#LevelListPageModule' },
+ 
+
 ];
 
 @NgModule({

@@ -25,20 +25,30 @@
             <ion-list-header>
                 <ion-label color="primary">Add category</ion-label>
             </ion-list-header>
+            <div *ngIf='user.type == "admin"'>
+                <ion-item *ngIf="btnText == 'Save' " lines="inset">
+                    <ion-label position="floating">Clients
+                        <ion-text color="danger">*</ion-text>
+                    </ion-label>
+                    <ion-select placeholder="Select client" (ionChange)="getCompanies()" formControlName="clientId">
+                        <ion-select-option *ngFor="let client of clients" [value]="client.id">{{client.name}}
+                        </ion-select-option>
 
-            <ion-item lines="inset">
-                <ion-label position="floating">Clients
+                    </ion-select>
+                </ion-item>
+            </div>
+            <ion-item *ngIf="btnText == 'Update' " lines="inset">
+                <!-- <ion-label position="floating">Client
                     <ion-text color="danger">*</ion-text>
                 </ion-label>
-                <ion-select placeholder="Select client" (ionChange)="getCompanies()" formControlName="clientId">
-                    <ion-select-option *ngFor="let client of clients" [value]="client.id">{{client.name}}
-                    </ion-select-option>
+                <ion-label position="floating">{{lblClientName}}
+                </ion-label> -->
+                <label for=""> Client : {{lblClientName}}</label>
 
-                </ion-select>
             </ion-item>
 
 
-            <ion-item lines="inset">
+            <ion-item *ngIf="btnText == 'Save' " lines="inset">
                 <ion-label position="floating">Companies
                     <ion-text color="danger">*</ion-text>
                 </ion-label>
@@ -47,6 +57,16 @@
                     </ion-select-option>
 
                 </ion-select>
+            </ion-item>
+            <ion-item *ngIf="btnText == 'Update' " lines="inset">
+                <!-- <ion-label position="floating">Company
+                    <ion-text color="danger">*</ion-text>
+                    
+                    {{lblClientName}}
+                </ion-label> -->
+
+                <label for=""> Comapany : {{lblCompanyName}}</label>
+
             </ion-item>
 
             <ion-item lines="inset">

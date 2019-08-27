@@ -84,8 +84,8 @@ export class AppComponent {
           { title: 'Categories', url: '/category', icon: 'list', icon_mode: 'ios' },
           { title: 'Topics', url: '/topic', icon: 'book', icon_mode: 'ios' },
           { title: 'Companies', url: '/company', icon: 'business', icon_mode: 'ios' },
-          { title: 'Level Settings', url: '/level-setting', icon: 'book', icon_mode: 'ios' },
-          { title: 'Course Category', url: '/Course-Category', icon: 'book', icon_mode: 'ios' }
+          { title: 'Level Settings', url: '/level-setting', icon: 'cog', icon_mode: 'ios' },
+          { title: 'Course Category', url: '/Course-Category', icon: 'list-box', icon_mode: 'ios' }
           
        ]
       },
@@ -118,7 +118,9 @@ export class AppComponent {
           { title: 'Dashboard', url: '/dashboard', icon: 'apps', icon_mode: 'md' },
           { title: 'Categories', url: '/category', icon: 'list', icon_mode: 'ios' },
           { title: 'Topics', url: '/topic', icon: 'book', icon_mode: 'ios' },
-          { title: 'Companies', url: '/company', icon: 'business', icon_mode: 'md' }
+          { title: 'Companies', url: '/company', icon: 'business', icon_mode: 'md' },
+          { title: 'Level Settings', url: '/level-setting', icon: 'cog', icon_mode: 'ios' },
+          { title: 'Course Category', url: '/Course-Category', icon: 'list-box', icon_mode: 'ios' }
         ]
       },
       {
@@ -174,7 +176,9 @@ export class AppComponent {
     client: [
       'company',
       'student',
-      'category'
+      'category',
+      'level-setting',
+      'Course-Category'
     ]
   };
   private userRouterConfig: Array<object>;

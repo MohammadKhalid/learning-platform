@@ -9,6 +9,7 @@ import { DropzoneComponent } from 'src/app/components/common/dropzone/dropzone.c
 import { NotificationService } from 'src/app/services/notification/notification.service';
 import { AddModalComponent } from './concepts/add-modal/add-modal.component';
 import { ResourceAddModelComponent } from './resource-add-model/resource-add-model.component';
+import { settings } from 'cluster';
 
 @Component({
   selector: 'app-sections',
@@ -41,6 +42,7 @@ export class SectionsPage implements OnInit {
   private subscriptionResource: Subscription;
   public items: any;
   listData: any = [];
+  quizAnswerlist : any =[];
   listResourceData: any = [];
   id: any
   isDeletedClicked: boolean = false;
@@ -58,6 +60,7 @@ export class SectionsPage implements OnInit {
   searchBy: string = "";
   panelOpenState = false;
   sectionId: any
+  courseid : any
   panelResourceOpenState = false;
   showField: boolean = false;
   // showFieldResource: boolean = false;
@@ -69,18 +72,16 @@ export class SectionsPage implements OnInit {
     this.saveButtonResourceSubscription.unsubscribe();
   }
   ngOnInit() {
+   
+
 
     this.sectionId = this.apiSrv.sectionId;
     this.searchBy = "";
     this.user = this.authService.getSessionData().user;
+  
     //coach menu popupate start
-    this.subscription = this.apiSrv.getSectionMenuData().subscribe(res => {
-      if (res) {
-        res.concept ? this.listData = res.concept : '';
-        res.resource ? this.listResourceData = res.resource : '';
-        this.lessonName = res.title;
-      }
-    });
+  
+    
     //coach menu popupate end
 
     //student menu popupate start
@@ -111,7 +112,37 @@ export class SectionsPage implements OnInit {
     });
     //resource button end
   }
+ 
+  
+  
+ ionViewWillEnter(){
+  this.subscription = this.apiSrv.getSectionMenuData().subscribe(res => {
+    // this.menu.enable(false);
+    this.menu.enable(false, 'mainMenu')
+    if (res) {
+      debugger;
+      res.concept ? this.listData = res.concept : '';
+      res.resource ? this.listResourceData = res.resource : '';
+      res.quizAnswer ? this.quizAnswerlist = res.quizAnswer : '';
 
+      this.lessonName = res.title;
+      setTimeout(() => {
+        this.menu.enable(false);
+        this.menu.enable(false, 'mainMenu')
+    
+         
+       }, 400);
+       
+    // this.menu.enable(false);
+    }
+  });
+  
+
+ }
+ ionViewDidLeave() {
+  // enable the root left menu when leaving the tutorial page
+  this.menu.enable(true);
+}
   addSectionPage() {
     let obj = {
       title: this.pageTitle,
@@ -126,11 +157,14 @@ export class SectionsPage implements OnInit {
 
     })
   }
+  
   recourcesroute() {
-    this.reouter.navigate([`/certification/sections/resources/${this.apiSrv.sectionId}`])
+    this.reouter.navigate([`/certification/sections/resources/${this.apiSrv.courseid}/${this.apiSrv.sectionId}`])
   }
-
-  // addSectionPageResource() {
+  awnserRoute() {
+    this.reouter.navigate([`/certification/sections/quizes-awnser/${this.apiSrv.courseid}/${this.apiSrv.sectionId}`])
+  }
+  // addSectionPageResource() {.
   //   let obj = {
   //     title: this.pageTitle,
   //     sectionId: this.apiSrv.sectionId
@@ -189,17 +223,14 @@ export class SectionsPage implements OnInit {
     })
   }
 
-  ngAfterViewInit() {
-    setInterval(() => {
-      this.menu.enable(false);
-      this.menu.enable(false, 'mainMenu')
-    }, 100)
-  }
+ 
+   
+  
   back() {
-    this.apiSrv.populateSectionConceptBackNavigate();
-
+    // this.apiSrv.populateSectionConceptBackNavigate();
+let courseid = this.apiSrv.courseid
     // this.menu.enable(true, 'mainMenu')
-    this.reouter.navigate([`/certification/module/${this.apiSrv.sectionId}`])
+    this.reouter.navigate([`/certification/module/${courseid}`])
   }
 
   goto(route) {
@@ -212,8 +243,21 @@ export class SectionsPage implements OnInit {
   // }
   gotoConceptType(data) {
     let sectionId = this.apiSrv.sectionId;
+    let courseId = this.apiSrv.courseid
     // if (data.type == "Quiz") {
-    this.reouter.navigate([`certification/sections/concepts/${sectionId}/${data.id}`])
+    this.reouter.navigate([`certification/sections/concepts/${courseId}/${sectionId}/${data.id}`])
+    // }
+    // else if (data.type == "Resource") {
+    //   this.reouter.navigate([`certification/sections/resources/${sectionId}/${data.title}`])
+    // }
+    // else {
+    //   this.reouter.navigate([`certification/sections/concepts/${sectionId}/${data.id}`])
+    // }
+  }
+  gotoAnswerView(data) {
+    let sectionId = this.apiSrv.sectionId;
+    // if (data.type == "Quiz") {
+    this.reouter.navigate([`certification/sections/quizes-answer/${this.apiSrv.courseid}/${sectionId}/${data.id}`])
     // }
     // else if (data.type == "Resource") {
     //   this.reouter.navigate([`certification/sections/resources/${sectionId}/${data.title}`])

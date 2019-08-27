@@ -24,6 +24,7 @@ export class ConceptsPage implements OnInit {
   sectionId: any;
   sectionConceptData: any = [];
   titleEmiter: any;
+  courseid : any;
   private subscription: Subscription;
   private subscriptionBackNavigate: Subscription;
   // quizIndex: number = 1;
@@ -65,11 +66,13 @@ export class ConceptsPage implements OnInit {
     // this.menu.enable(true, 'mainMenu')
     let sectionId = this.sectionId = this.actRoute.snapshot.paramMap.get('sectionid');
     this.sectionPageId = this.actRoute.snapshot.paramMap.get('sectionpageid');
+    this.courseid = this.actRoute.snapshot.paramMap.get('courseid');
+  
     if (this.sectionPageId) {
       this.restApi.populateSectionConceptSaveButton();
     }
-    let type = this.type = this.actRoute.snapshot.paramMap.get('type');
     this.restApi.sectionId = sectionId;
+    this.restApi.courseid = this.courseid;
     if (this.user.type === 'coach') {
       this.restApi.populateSectionSubMenu(sectionId);
     }

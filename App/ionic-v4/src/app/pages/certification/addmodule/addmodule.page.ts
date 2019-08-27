@@ -31,11 +31,11 @@ export class AddmodulePage implements OnInit {
   serverUrl: string = "./assets/img/";
   forms: FormGroup
   inProgressData: any = [];
+  interval : any;
   ngOnInit() {
 
 
-    this.menu.enable(true);
-    this.menu.enable(true, 'mainMenu')
+   
     this.user = this.authService.getSessionData().user;
     this.id = this.actroute.snapshot.paramMap.get('id');
     // this.forms = this.fb.group({
@@ -48,8 +48,14 @@ export class AddmodulePage implements OnInit {
     //   courseId: this.id
     // })
     this.inprogressSection();
+    
   }
 
+    
+    // this.menu.enable(true);
+    // 
+
+ 
   getModules() {
 
     this.service.getPromise('section/get-sections', this.id).then(res => {
@@ -65,6 +71,10 @@ export class AddmodulePage implements OnInit {
     }).catch(err => {
     })
 
+  }
+  goToRoute(id){
+   
+   this.router.navigate([`/certification/sections/concepts/${this.id}/${id}`]) 
   }
   startLesson(item) {
     let obj = {
@@ -113,13 +123,21 @@ export class AddmodulePage implements OnInit {
   }
   inprogressSection() {
     this.service.getPromise(`section/get-last-section-id/${this.user.id}`).then(res => {
-      this.inProgressData = res.data;
-      this.getModules()
 
+       this.inProgressData = res.data;
+      this.getModules()
+   
+     
+       
+  
+     
     }).catch(err => {
 
     })
+   
   }
+  
+ 
 
   deleteModule(id) {
     this.service.delete(`courses/${id}`).subscribe(res => {
@@ -147,4 +165,5 @@ export class AddmodulePage implements OnInit {
     });
     return await popover.present();
   }
+ 
 }

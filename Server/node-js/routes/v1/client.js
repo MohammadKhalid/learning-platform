@@ -10,6 +10,10 @@ const MediaController 		= require(controllerPath + 'media.controller');
 const CompanyController 	= require(controllerPath + 'company.controller');
 const CoachController 	    = require(controllerPath + 'coach.controller');
 const StudentController 	= require(controllerPath + 'student.controller');
+const levelSettingController        = require(controllerPath + 'studentExperienceSetting.controller')
+const courseCategoryController      = require(controllerPath + 'courseCategory.controller')
+const courseClientController        = require(controllerPath + 'courseClient.controller')
+
 
 // dashboard
 clientRouter.get('/dashboard', HomeController.dashboard);
@@ -83,5 +87,35 @@ studentRoutes.get('/form-input-data', StudentController.formInputData);
 studentRoutes.get('/:item_id', StudentController.get);
 studentRoutes.put('/:item_id', StudentController.update);
 studentRoutes.delete('/:item_id', StudentController.remove);
+
+
+//level settings
+
+const levelSettingRoutes = express.Router();
+clientRouter.use('/levelSetting', levelSettingRoutes);
+
+levelSettingRoutes.get('/get/:itemId',levelSettingController.get)
+levelSettingRoutes.post('/',levelSettingController.create)
+levelSettingRoutes.get('/get-all/:userId', levelSettingController.getAll);
+levelSettingRoutes.put('/update/:itemId', levelSettingController.update);
+
+
+
+// course category
+const courseCategoryRoutes = express.Router();
+clientRouter.use('/course-category', courseCategoryRoutes);
+
+courseCategoryRoutes.post('/', courseCategoryController.create);
+courseCategoryRoutes.get('/get-all/:userId', courseCategoryController.getAll);
+courseCategoryRoutes.get('/:item_id', courseCategoryController.get);
+courseCategoryRoutes.put('/:item_id', courseCategoryController.update);
+courseCategoryRoutes.delete('/:item_id', courseCategoryController.remove);
+
+// course Client
+const courseClientRoutes = express.Router();
+clientRouter.use('/course-client-company', courseClientRoutes);
+
+courseClientRoutes.get('/clients' ,courseClientController.getClients)
+courseClientRoutes.get('/companies/:clientId/:flag' ,courseClientController.getClientCompany)
 
 module.exports = clientRouter;

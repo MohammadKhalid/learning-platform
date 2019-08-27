@@ -70,9 +70,12 @@
                 <h2 class="certficate-title">
                     <span>{{obj.title}}</span>
                 </h2>
-                <certificate-card  *ngIf="obj.subCategories.length > 0"  [courses]="obj.subCategories"></certificate-card>
+                <certificate-card *ngIf="obj.subCategories.length > 0" [courses]="obj.subCategories"></certificate-card>
             </div>
         </div>
     </div>
+
+
+    <!-- <app-certificate-pdf></app-certificate-pdf> -->
 
 </ion-content>
