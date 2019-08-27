@@ -142,7 +142,7 @@ const sectionRoute = express.Router();
 coachRouter.use('/section', sectionRoute)
 
 sectionRoute.post('/', sectionController.create)
-sectionRoute.get('/get-sections/:courseId', commonController.getSections)
+sectionRoute.get('/get-sections/:courseId/:studentId', commonController.getSections)
 sectionRoute.put('/:sectionId', sectionController.updateSection)
 sectionRoute.delete('/:sectionId', sectionController.removeSection)
 
