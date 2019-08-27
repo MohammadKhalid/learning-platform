@@ -123,88 +123,88 @@ const getSections = async (req, res) => {
         })
     }
 
-    if (req.user.type == "student") {
+    // if (req.user.type == "student") {
 
-        studentProgress = await StudentProgress.findAll({
-            where: {
-                studentId: studentId
-            },
+    //     studentProgress = await StudentProgress.findAll({
+    //         where: {
+    //             studentId: studentId
+    //         },
 
-            include: [{
+    //         include: [{
 
-                model: SectionPage,
-                as: 'sectionPage',
+    //             model: SectionPage,
+    //             as: 'sectionPage',
 
-                // include: [{
+    //             // include: [{
 
-                //     model: Text,
-                //     as: 'Text',
-                //     // attributes: [[Sequelize.fn('sum', Sequelize.col("experience")), 'textExperience']],
-                //     // raw: true
-                //     attributes: ['experience']
+    //             //     model: Text,
+    //             //     as: 'Text',
+    //             //     // attributes: [[Sequelize.fn('sum', Sequelize.col("experience")), 'textExperience']],
+    //             //     // raw: true
+    //             //     attributes: ['experience']
 
-                // },
-                // {
+    //             // },
+    //             // {
 
-                //     model: Lesson,
-                //     as: 'Lesson',
-                //     // attributes: [[Sequelize.fn('sum', Sequelize.col("Lesson.experience")), 'lessonExperience']],
-                //     // raw: true
-                //     attributes: ['experience']
+    //             //     model: Lesson,
+    //             //     as: 'Lesson',
+    //             //     // attributes: [[Sequelize.fn('sum', Sequelize.col("Lesson.experience")), 'lessonExperience']],
+    //             //     // raw: true
+    //             //     attributes: ['experience']
 
-                // }],
+    //             // }],
 
-                // group: ['Text.sectionPageId','Lesson.sectionPageId']
+    //             // group: ['Text.sectionPageId','Lesson.sectionPageId']
 
-            }],
+    //         }],
 
-        })
+    //     })
 
-        sectionPageIds = studentProgress.map((row) => row.sectionPage.id);
+    //     sectionPageIds = studentProgress.map((row) => row.sectionPage.id);
 
-        texts = await Text.findAll({
-            attributes: ['sectionPageId', [Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
-            raw: true,
-            where: {
-                sectionPageId: {
-                    [Op.in]: sectionPageIds
-                }
-            },
-            group: ['sectionPageId']
-        })
-        lesson = await Lesson.findAll({
-            attributes: ['sectionPageId', [Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
-            raw: true,
-            where: {
-                sectionPageId: {
-                    [Op.in]: sectionPageIds
-                }
-            },
-            group: ['sectionPageId']
-        })
+    //     texts = await Text.findAll({
+    //         attributes: ['sectionPageId', [Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
+    //         raw: true,
+    //         where: {
+    //             sectionPageId: {
+    //                 [Op.in]: sectionPageIds
+    //             }
+    //         },
+    //         group: ['sectionPageId']
+    //     })
+    //     lesson = await Lesson.findAll({
+    //         attributes: ['sectionPageId', [Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
+    //         raw: true,
+    //         where: {
+    //             sectionPageId: {
+    //                 [Op.in]: sectionPageIds
+    //             }
+    //         },
+    //         group: ['sectionPageId']
+    //     })
 
-        for (i = 0; i < studentProgress.length; i++) {
-            if (studentProgress[i].sectionPageId == texts[i].sectionPageId) {
-                sectionId = studentProgress[i].sectionId;
-                totalTextExperience = texts[i].totalExperience;
-            }
+    //     for (i = 0; i < studentProgress.length; i++) {
+    //         if (studentProgress[i].sectionPageId == texts[i].sectionPageId) {
+    //             sectionId = studentProgress[i].sectionId;
+    //             totalTextExperience = texts[i].totalExperience;
+    //         }
 
-            if (studentProgress[i].sectionPageId == lesson[i].sectionPageId) {
-                sectionId = studentProgress[i].sectionId;
-                totalLessonExperience = lesson[i].totalExperience;
-            }
+    //         if (studentProgress[i].sectionPageId == lesson[i].sectionPageId) {
+    //             sectionId = studentProgress[i].sectionId;
+    //             totalLessonExperience = lesson[i].totalExperience;
+    //         }
 
-            dataArray.push(obj = {
+    //         dataArray.push(obj = {
 
-                sectionId,
-                totalTextExperience,
-                totalLessonExperience
+    //             sectionId,
+    //             totalTextExperience,
+    //             totalLessonExperience
 
-            })
-        }
+    //         })
+    //     }
 
 
-    }
+    // }
 
     // console.log(studentProgress);
 

@@ -57,13 +57,15 @@ export class AddmodulePage implements OnInit {
   // 
 
 
-  getModules() {
+  getModules(data) {
 
-    this.service.getPromise('section/get-sections', this.id).then(res => {
+    this.service.getPromise(`section/get-sections/${this.id}/${this.user.id}`, ).then(res => {
+      debugger
       if (res.flag == 'Section') {
         this.data = res.data;
         if (this.inProgressData.length == 0) {
-          this.inProgressData = res.data.length > 0 ? res.data[0] : [];
+          // this.inProgressData = res.data.length > 0 ? res.data[0] : [];
+          this.inProgressData = data
         }
         this.courseTitle = res.data[0].course.title
       } else {
@@ -133,10 +135,9 @@ export class AddmodulePage implements OnInit {
       if (res.data.length == 0) {
         this.isStart = true
       }
-      this.inProgressData = res.data[0];
-      this.getModules()
+      // this.inProgressData = res.data[0];
+      this.getModules(res.data[0])
     }).catch(err => {
-
     })
 
   }
