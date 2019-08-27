@@ -50,3 +50,91 @@ const getLastSectionDetails = async (req, res) => {
     else return ReE(res, { message: 'Unable to insert Course.' }, 500)
 }
 module.exports.getLastSectionDetails = getLastSectionDetails;
+
+const getStudentProgress = async (req, res) => {
+    let studentExperience;
+    let { sectionId, studentId } = req.params
+
+    let sectionPage = await SectionPage.findAll({
+        where: {
+            sectionId: sectionId
+        },
+
+        include: [{
+            model: Text,
+            as: 'Text',
+            attributes: [[Sequelize.fn('SUM', Sequelize.col('Text.experience')), 'totalExperience']],
+            raw: true
+
+
+        }, {
+            model: Lesson,
+            as: 'Lesson',
+            attributes: [[Sequelize.fn('SUM', Sequelize.col('Lesson.experience')), 'totalExperience']],
+            raw: true
+
+        }],
+        group: ['id']
+    })
+
+
+    // let textsTotalArray = sectionPage.map((row) => { return row.Text.totalExperience});
+    // let lessonsTotalArray = sectionPage.map((row) => { return row.Lesson.totalExperience});
+
+    // let totalExperience = textsTotalArray + lessonsTotalArray
+
+    console.log(sectionPage.Text.totalExperience);
+    
+
+    let studentProgress = await StudentProgress.findAll({
+        attributes: ['sectionPageId'],
+        where: {
+            studentId: studentId
+        },
+    })
+
+    let sectionPageIds = studentProgress.map((row) => row.sectionPageId );
+
+    let texts = await Text.findAll({
+        attributes: [[Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
+        raw: true,
+        where: {
+            sectionPageId: {
+                [Op.in]: sectionPageIds
+            }
+        },
+        group: ['sectionPageId']
+    })
+    let lesson = await Lesson.findAll({
+        attributes: [[Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
+        raw: true,
+        where: {
+            sectionPageId: {
+                [Op.in]: sectionPageIds
+            }
+        },
+        group: ['sectionPageId']
+    })
+
+    let textsArray = texts.map((row) => { return parseInt(row.totalExperience) });
+    let lessonsArray = lesson.map((row) => { return parseInt(row.totalExperience) });
+
+    let allLessons = lessonsArray.reduce( (acc, val) =>   acc + val )
+    let allTexts = textsArray.reduce( (acc, val) =>  acc + val )
+
+
+    if (texts.length == 0 && lesson.length != 0) {
+        studentExperience = allLessons;
+    }
+    else if (texts.length != 0 && lesson.length == 0) {
+        studentExperience = allTexts;
+    }
+    else if (texts.length != 0 && lesson.length != 0) {
+        studentExperience = allTexts + allLessons;
+    }
+
+
+    if (sectionPage) return ReS(res, { data: {studentExperience: studentExperience, totalExperience: totalExperience} }, 200);
+    else return ReE(res, { message: 'Unable to insert Course.' }, 500)
+}
+module.exports.getStudentProgress = getStudentProgress;

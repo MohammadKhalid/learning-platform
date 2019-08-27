@@ -149,7 +149,7 @@ const getSideMenuItems = async (req, res) => {
 module.exports.getSideMenuItems = getSideMenuItems;
 
 const getSectionItems = async (req, res) => {
-    let nextExperience, studentLevel, currentExperience;
+    let nextExperience, studentLevel, currentExperience, studentExperience;
     let { sectionPageId, userId } = req.params
     let sectionpage = []
 

@@ -152,6 +152,12 @@ studentRouter.use('/resource', resourceRoutes)
 resourceRoutes.get('/get-resources-for-student/:sectionId', resourceController.getSectionResourcesForStudent)
 
 
+//student-progress
+const progressRouter = express.Router();
+studentRouter.use('/student-progress', progressRouter)
+
+progressRouter.get('/get-student-progress/:sectionId/:studentId', sectionController.getStudentProgress)
+
 //level
 const levelRouter = express.Router();
 studentRouter.use('/level', levelRouter)
