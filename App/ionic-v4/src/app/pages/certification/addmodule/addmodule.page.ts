@@ -18,6 +18,7 @@ export class AddmodulePage implements OnInit {
   id: any = "";
   user: any;
   courseTitle: 'Course Name'
+  isStart: boolean = false
   constructor(private router: Router,
     private fb: FormBuilder,
     private actroute: ActivatedRoute,
@@ -31,11 +32,11 @@ export class AddmodulePage implements OnInit {
   serverUrl: string = "./assets/img/";
   forms: FormGroup
   inProgressData: any = [];
-  interval : any;
+  interval: any;
   ngOnInit() {
 
 
-   
+
     this.user = this.authService.getSessionData().user;
     this.id = this.actroute.snapshot.paramMap.get('id');
     // this.forms = this.fb.group({
@@ -48,14 +49,14 @@ export class AddmodulePage implements OnInit {
     //   courseId: this.id
     // })
     this.inprogressSection();
-    
+
   }
 
-    
-    // this.menu.enable(true);
-    // 
 
- 
+  // this.menu.enable(true);
+  // 
+
+
   getModules() {
 
     this.service.getPromise('section/get-sections', this.id).then(res => {
@@ -72,20 +73,25 @@ export class AddmodulePage implements OnInit {
     })
 
   }
-  goToRoute(id){
-   
-   this.router.navigate([`/certification/sections/concepts/${this.id}/${id}`]) 
+  goToRoute(id) {
+
+    this.router.navigate([`/certification/sections/concepts/${this.id}/${id}`])
   }
   startLesson(item) {
     let obj = {
       userId: this.user.id,
       courseId: this.id
     }
-    this.service.postPromise('course/enroll-course', obj).then(res => {
-      this.router.navigate([`certification/sections/concepts/${item.id}`])
-    }).catch(res => {
-      this.notifictation.showMsg('Error to Add ');
-    })
+    debugger
+    if (this.isStart) {
+      this.service.postPromise('course/enroll-course', obj).then(res => {
+        this.router.navigate([`certification/sections/concepts/${obj.courseId}/${item.id}`])
+      }).catch(res => {
+        this.notifictation.showMsg('Error to Add ');
+      })
+    }else{
+      this.router.navigate([`certification/sections/concepts/${obj.courseId}/${item.id}`])
+    }
   }
   addModule() {
     this.service.postPromise('section', this.forms.value).then(res => {
@@ -122,22 +128,20 @@ export class AddmodulePage implements OnInit {
     this.data.splice(index, 1, res.data);
   }
   inprogressSection() {
-    this.service.getPromise(`section/get-last-section-id/${this.user.id}`).then(res => {
 
-       this.inProgressData = res.data;
+    this.service.getPromise(`section/get-last-section-id/${this.user.id}/${this.id}`).then(res => {
+      if (res.data.length == 0) {
+        this.isStart = true
+      }
+      this.inProgressData = res.data[0];
       this.getModules()
-   
-     
-       
-  
-     
     }).catch(err => {
 
     })
-   
+
   }
-  
- 
+
+
 
   deleteModule(id) {
     this.service.delete(`courses/${id}`).subscribe(res => {
@@ -165,5 +169,5 @@ export class AddmodulePage implements OnInit {
     });
     return await popover.present();
   }
- 
+
 }

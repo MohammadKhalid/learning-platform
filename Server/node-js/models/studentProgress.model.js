@@ -10,6 +10,14 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
+        sectionId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        courseId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
         isLastActive: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -19,7 +27,9 @@ module.exports = (sequelize, DataTypes) => {
 
     Model.associate = function (models) {
         this.belongsTo(models.User, { as: 'student', foreignKey: 'studentId' });
-        this.belongsTo(models.SectionPage, { as: 'section', foreignKey: 'sectionPageId' });
+        this.belongsTo(models.Course, { as: 'course', foreignKey: 'courseId' });
+        this.belongsTo(models.Section, { as: 'section', foreignKey: 'sectionId' });
+        this.belongsTo(models.SectionPage, { as: 'sectionPage', foreignKey: 'sectionPageId' });
     };
 
 

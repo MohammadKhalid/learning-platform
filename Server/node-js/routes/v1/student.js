@@ -117,15 +117,15 @@ course.get('/completed-courses', courseContoller.getCompletedCourse)
 const section = express.Router();
 studentRouter.use('/section', section)
 
-section.get('/get-sections/:courseId', commonController.getSections)
+section.get('/get-sections/:courseId/:studentId', commonController.getSections)
 section.get('/get-section-details-for-student/:sectionId', commonController.sectionDetailsForStudent)
 section.get('/get-side-menu-items/:sectionId', commonController.getSideMenuItems)
-section.get('/get-last-section-id/:studentId', sectionController.getLastSectionDetails)
+section.get('/get-last-section-id/:studentId/:courseId', sectionController.getLastSectionDetails)
 
 
 const sectionPage = express.Router();
 studentRouter.use('/section-page', sectionPage)
-sectionPage.get('/get-section-items/:sectionPageId/:userId', commonController.getSectionItems)
+sectionPage.get('/get-section-items/:courseId/:sectionId/:sectionPageId/:userId', commonController.getSectionItems)
 
 // lessons
 const lessonRoutes = express.Router();
@@ -151,6 +151,12 @@ studentRouter.use('/resource', resourceRoutes)
 
 resourceRoutes.get('/get-resources-for-student/:sectionId', resourceController.getSectionResourcesForStudent)
 
+
+//student-progress
+const progressRouter = express.Router();
+studentRouter.use('/student-progress', progressRouter)
+
+progressRouter.get('/get-student-progress/:courseId/:studentId', sectionController.getStudentProgress)
 
 //level
 const levelRouter = express.Router();

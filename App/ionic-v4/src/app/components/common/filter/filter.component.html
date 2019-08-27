@@ -30,13 +30,15 @@
 
           <ion-col size-md="4" size-sm="2" size-xs="3">
             <!-- [disabled]="((!searchBy) && (categories.length == 0))"      -->
-            <button mat-flat-button class="apply-button btn-adjustment" (click)="search();" flex>
-              <img class="gif-adjustment" src="./assets/img/running.gif">
-              <ion-icon class="forward-icon-adjustment" src="./assets/img/forword-icon.svg"></ion-icon>
-
-              <!-- <mat-icon class="mat-icon-keyboard_arrow_right" svgIcon="thumb-up"></mat-icon> -->
-              <!-- <ion-icon name="ion ion-ios-arrow-forward"></ion-icon> -->
-            </button>
+            <div *ngIf="user.type == 'coach'">
+              <ion-button [disabled]="((!searchBy) && (categories.length == 0))" class="apply-button mat-button" size="small" (click)="search();" color="primary">Apply</ion-button>
+            </div>
+            <div *ngIf="user.type == 'student'">
+              <button  mat-flat-button class="apply-button btn-adjustment" (click)="search();" flex>
+                <img class="gif-adjustment" src="./assets/img/running.gif">
+                <ion-icon class="forward-icon-adjustment" src="./assets/img/forword-icon.svg"></ion-icon>
+              </button>
+            </div>
           </ion-col>
         </ion-row>
 

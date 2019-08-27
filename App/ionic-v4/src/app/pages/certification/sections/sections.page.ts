@@ -42,12 +42,16 @@ export class SectionsPage implements OnInit {
   private subscriptionResource: Subscription;
   public items: any;
   listData: any = [];
-  quizAnswerlist : any =[];
+  quizAnswerlist: any = [];
   listResourceData: any = [];
   id: any
+  editTitle = ""
+  isEditClicked: boolean = false
+  isEditShow: boolean = false
   isDeletedClicked: boolean = false;
   isDeletedClickedResource: boolean = false;
   isAddClicked: boolean = false
+  editId: number;
   files: any = [];
 
   // isAddClickedResource: boolean = false
@@ -60,7 +64,7 @@ export class SectionsPage implements OnInit {
   searchBy: string = "";
   panelOpenState = false;
   sectionId: any
-  courseid : any
+  courseid: any
   panelResourceOpenState = false;
   showField: boolean = false;
   // showFieldResource: boolean = false;
@@ -72,16 +76,16 @@ export class SectionsPage implements OnInit {
     this.saveButtonResourceSubscription.unsubscribe();
   }
   ngOnInit() {
-   
+
 
 
     this.sectionId = this.apiSrv.sectionId;
     this.searchBy = "";
     this.user = this.authService.getSessionData().user;
-  
+
     //coach menu popupate start
-  
-    
+
+
     //coach menu popupate end
 
     //student menu popupate start
@@ -112,37 +116,53 @@ export class SectionsPage implements OnInit {
     });
     //resource button end
   }
- 
-  
-  
- ionViewWillEnter(){
-  this.subscription = this.apiSrv.getSectionMenuData().subscribe(res => {
-    // this.menu.enable(false);
-    this.menu.enable(false, 'mainMenu')
-    if (res) {
-      debugger;
-      res.concept ? this.listData = res.concept : '';
-      res.resource ? this.listResourceData = res.resource : '';
-      res.quizAnswer ? this.quizAnswerlist = res.quizAnswer : '';
 
-      this.lessonName = res.title;
-      setTimeout(() => {
-        this.menu.enable(false);
-        this.menu.enable(false, 'mainMenu')
-    
-         
-       }, 400);
-       
-    // this.menu.enable(false);
+  edit() {
+    let obj = {
+      id: this.editId,
+      title: this.editTitle
     }
-  });
-  
+    
+    this.apiSrv.putPromise(`section-page/edit-title/${obj.id}`, obj).then(resp => {
+      if(resp.data.length == 1){
 
- }
- ionViewDidLeave() {
-  // enable the root left menu when leaving the tutorial page
-  this.menu.enable(true);
-}
+        let item =this.listData.find(x => x.id == obj.id)
+        this.listData.splice(this.listData.indexOf(item),1,resp.data[0])
+        this.isEditShow = false
+        this.editTitle = ''
+        this.isEditClicked = false
+      }
+    })
+  }
+
+  ionViewWillEnter() {
+    this.subscription = this.apiSrv.getSectionMenuData().subscribe(res => {
+      // this.menu.enable(false);
+      this.menu.enable(false, 'mainMenu')
+      if (res) {
+        debugger;
+        res.concept ? this.listData = res.concept : '';
+        res.resource ? this.listResourceData = res.resource : '';
+        res.quizAnswer ? this.quizAnswerlist = res.quizAnswer : '';
+
+        this.lessonName = res.title;
+        setTimeout(() => {
+          this.menu.enable(false);
+          this.menu.enable(false, 'mainMenu')
+
+
+        }, 400);
+
+        // this.menu.enable(false);
+      }
+    });
+
+
+  }
+  ionViewDidLeave() {
+    // enable the root left menu when leaving the tutorial page
+    this.menu.enable(true);
+  }
   addSectionPage() {
     let obj = {
       title: this.pageTitle,
@@ -157,7 +177,7 @@ export class SectionsPage implements OnInit {
 
     })
   }
-  
+
   recourcesroute() {
     this.reouter.navigate([`/certification/sections/resources/${this.apiSrv.courseid}/${this.apiSrv.sectionId}`])
   }
@@ -223,12 +243,12 @@ export class SectionsPage implements OnInit {
     })
   }
 
- 
-   
-  
+
+
+
   back() {
     // this.apiSrv.populateSectionConceptBackNavigate();
-let courseid = this.apiSrv.courseid
+    let courseid = this.apiSrv.courseid
     // this.menu.enable(true, 'mainMenu')
     this.reouter.navigate([`/certification/module/${courseid}`])
   }
