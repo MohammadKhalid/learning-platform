@@ -113,7 +113,9 @@ export class SectionsPage implements OnInit {
     //resource button end
   }
  
-  
+  edit(data){
+    
+  }
   
  ionViewWillEnter(){
   this.subscription = this.apiSrv.getSectionMenuData().subscribe(res => {

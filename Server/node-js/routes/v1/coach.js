@@ -132,7 +132,7 @@ coachRouter.use('/section-page', sectionPageRoute)
 
 sectionPageRoute.post('/', sectionPageController.create)
 sectionPageRoute.get('/get-section-pages/:sectionId', commonController.getSideMenuItems)
-sectionPageRoute.get('/get-section-items/:sectionPageId/:userId', commonController.getSectionItems)
+sectionPageRoute.get('/get-section-items/:courseId/:sectionId/:sectionPageId/:userId', commonController.getSectionItems)
 sectionPageRoute.put('/:sectionPageId', sectionPageController.updateSectionPage)
 sectionPageRoute.delete('/:sectionPageId', sectionPageController.removeSectionPage)
 
