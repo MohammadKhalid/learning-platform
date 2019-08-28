@@ -6,17 +6,22 @@ const Op = Sequelize.Op;
 
 
 const getSectionPages = async (req, res) => {
-    let { sectionId } = req.params;
+    let { courseId } = req.params;
 
+    let section = await Section.findAll({
 
-    let sectionPage = await SectionPage.findAll({
+        include: [{
+            model: SectionPage,
+            as: "sectionPage",
+        }],
         where: {
-            sectionId: sectionId
+            courseId: courseId
         }
     })
+
     
 
-    if (sectionPage) return ReS(res, { data: sectionPage }, 200);
+    if (section) return ReS(res, { data: section }, 200);
     else return ReE(res, { message: 'Unable to insert Course.' }, 500)
 }
 

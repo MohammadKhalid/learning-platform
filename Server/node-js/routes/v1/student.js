@@ -128,7 +128,7 @@ section.get('/get-last-section-id/:studentId/:courseId', sectionController.getLa
 const sectionPage = express.Router();
 studentRouter.use('/section-page', sectionPage)
 sectionPage.get('/get-section-items/:courseId/:sectionId/:sectionPageId/:userId', commonController.getSectionItems)
-sectionPage.get('/get-section-pages/:sectionId', sectionPageController.getSectionPages)
+sectionPage.get('/get-section-pages/:courseId', sectionPageController.getSectionPages)
 
 // lessons
 const lessonRoutes = express.Router();
