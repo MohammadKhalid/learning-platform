@@ -11,7 +11,7 @@ const getCourses = async (req, res) => {
     //     attributes: ['id']
     // });
     let studentCompany = await UserCompany.findAll({
-        where:{
+        where: {
             userId: userId
         }
     });
@@ -162,3 +162,23 @@ const getCompletedCourse = async (req, res) => {
 }
 
 module.exports.getCompletedCourse = getCompletedCourse;
+
+
+const changeStudentCourseStatus = async (req, res) => {
+    let { courseId, userId } = req.body;
+
+
+    const studentCourse = await StudentCourse.update({
+        status: 1,
+    }, {
+            where: {
+                courseId: courseId,
+                userId: userId
+            }
+        })
+
+    if (studentCourse) return ReS(res, { data: studentCourse }, 200);
+    else return ReE(res, { message: 'Unable to insert Course.' }, 500)
+}
+
+module.exports.changeStudentCourseStatus = changeStudentCourseStatus;

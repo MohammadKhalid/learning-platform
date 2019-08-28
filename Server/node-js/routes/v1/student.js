@@ -112,6 +112,7 @@ course.get('/', courseContoller.getCourses)
 course.post('/enroll-course', courseContoller.enrollCourse)
 course.get('/uncomplete-course', courseContoller.getUncompletedCourse)
 course.get('/completed-courses', courseContoller.getCompletedCourse)
+course.put('/change-student-course-status', courseContoller.changeStudentCourseStatus)
 
 // section
 const section = express.Router();
