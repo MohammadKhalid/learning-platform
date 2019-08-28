@@ -26,8 +26,10 @@ export class ConceptsPage implements OnInit {
   titleEmiter: any;
   courseid: any;
   sectionPageCount = []
-  nextId: number
+  nextSectionPageId: number
+  nextSectionId: number
   showFinish: boolean = false
+  showNext: boolean = true
   private subscription: Subscription;
   private subscriptionBackNavigate: Subscription;
   // quizIndex: number = 1;
@@ -82,16 +84,26 @@ export class ConceptsPage implements OnInit {
     }
     else if (this.user.type === 'student') {
       this.restApi.getPromise(`section-page/get-section-pages/${this.courseid}`).then(res => {
-        debugger
         let sectionIndex = res.section.findIndex(x => x.id == this.sectionId)
+        let sectionSectionPage = res.sectionPage.filter(x => x.sectionId == this.sectionId )
+        debugger
+        let inn = sectionSectionPage.findIndex(x => x.id == this.sectionPageId)
         let sectionPageIndex = res.sectionPage.findIndex(x => x.id == this.sectionPageId)
         let sectionCount = res.section.length
         let sectionPageCount = res.sectionPage.length
 
-        if (((sectionIndex + 1) == sectionCount) && ((sectionPageIndex + 1) == sectionPageCount) ) {
+        if (((sectionIndex + 1) == sectionCount) && ((sectionPageIndex + 1) == sectionPageCount)) {
           this.showFinish = true
         } else {
-          // this.nextId = res.data[(index + 1)].id
+          if ((inn+1) != sectionSectionPage.length) {
+            this.nextSectionPageId = res.sectionPage[(sectionPageIndex + 1)].id
+            this.nextSectionId = this.sectionId
+            debugger
+          } else {
+            // this.showNext = false
+            this.nextSectionPageId = res.sectionPage[(sectionPageIndex + 1)].id
+            this.nextSectionId = res.sectionPage[(sectionPageIndex + 1)].sectionId
+          }
         }
       })
       this.restApi.populateSectionSubMenuStudent(this.sectionId);
@@ -120,7 +132,7 @@ export class ConceptsPage implements OnInit {
     });
   }
   goToNextPage() {
-    this.router.navigate([`certification/sections/concepts/${this.courseid}/${this.sectionId}/${this.nextId}`]);
+    this.router.navigate([`certification/sections/concepts/${this.courseid}/${this.nextSectionId}/${this.nextSectionPageId}`]);
   }
   fetchSectionItems() {
     this.restApi.getPromise(`section-page/get-section-items/${this.courseid}/${this.sectionId}/${this.sectionPageId}/${this.user.id}`)

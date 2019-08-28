@@ -56,7 +56,7 @@
         <!-- quiz start -->
     </div>
     <ion-item-divider></ion-item-divider>
-    <ion-button (click)="goToNextPage()" *ngIf="sectionPageId && showFinish== false">
+    <ion-button (click)="goToNextPage()" *ngIf="sectionPageId && showFinish== false && showNext == true">
         Next
     </ion-button>
     <ion-button (click)="finishCourse()" *ngIf="showFinish">
