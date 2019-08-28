@@ -99,7 +99,11 @@ module.exports.sectionDetailsForStudent = sectionDetailsForStudent;
 
 const getSections = async (req, res) => {
     let studentProgress, texts, lesson, sectionPageIds, sectionId, totalTextExperience, totalLessonExperience;
+    let summedTextExperience, summedLessonExperience;
     let dataArray = [];
+    let sectionArray = [];
+    let textArray = [];
+    let lessonArray = []
     let obj = {};
     let { courseId, studentId } = req.params
     let flag = 'Section'
@@ -123,93 +127,118 @@ const getSections = async (req, res) => {
         })
     }
 
-    // if (req.user.type == "student") {
+    if (req.user.type == "student") {
 
-    //     studentProgress = await StudentProgress.findAll({
-    //         where: {
-    //             studentId: studentId
-    //         },
+        studentProgress = await StudentProgress.findAll({
+            where: {
+                studentId: studentId
+            },
 
-    //         include: [{
+            include: [{
 
-    //             model: SectionPage,
-    //             as: 'sectionPage',
+                model: SectionPage,
+                as: 'sectionPage',
 
-    //             // include: [{
+                // include: [{
 
-    //             //     model: Text,
-    //             //     as: 'Text',
-    //             //     // attributes: [[Sequelize.fn('sum', Sequelize.col("experience")), 'textExperience']],
-    //             //     // raw: true
-    //             //     attributes: ['experience']
+                //     model: Text,
+                //     as: 'Text',
+                //     // attributes: [[Sequelize.fn('sum', Sequelize.col("experience")), 'textExperience']],
+                //     // raw: true
+                //     attributes: ['experience']
 
-    //             // },
-    //             // {
+                // },
+                // {
 
-    //             //     model: Lesson,
-    //             //     as: 'Lesson',
-    //             //     // attributes: [[Sequelize.fn('sum', Sequelize.col("Lesson.experience")), 'lessonExperience']],
-    //             //     // raw: true
-    //             //     attributes: ['experience']
+                //     model: Lesson,
+                //     as: 'Lesson',
+                //     // attributes: [[Sequelize.fn('sum', Sequelize.col("Lesson.experience")), 'lessonExperience']],
+                //     // raw: true
+                //     attributes: ['experience']
 
-    //             // }],
+                // }],
 
-    //             // group: ['Text.sectionPageId','Lesson.sectionPageId']
+                // group: ['Text.sectionPageId','Lesson.sectionPageId']
 
-    //         }],
+            }],
 
-    //     })
+        })
 
-    //     sectionPageIds = studentProgress.map((row) => row.sectionPage.id);
+        sectionPageIds = studentProgress.map((row) => row.sectionPage.id);
 
-    //     texts = await Text.findAll({
-    //         attributes: ['sectionPageId', [Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
-    //         raw: true,
-    //         where: {
-    //             sectionPageId: {
-    //                 [Op.in]: sectionPageIds
-    //             }
-    //         },
-    //         group: ['sectionPageId']
-    //     })
-    //     lesson = await Lesson.findAll({
-    //         attributes: ['sectionPageId', [Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
-    //         raw: true,
-    //         where: {
-    //             sectionPageId: {
-    //                 [Op.in]: sectionPageIds
-    //             }
-    //         },
-    //         group: ['sectionPageId']
-    //     })
+        texts = await Text.findAll({
+            attributes: ['sectionPageId', [Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
+            raw: true,
+            where: {
+                sectionPageId: {
+                    [Op.in]: sectionPageIds
+                }
+            },
+            group: ['sectionPageId']
+        })
+        lesson = await Lesson.findAll({
+            attributes: ['sectionPageId', [Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
+            raw: true,
+            where: {
+                sectionPageId: {
+                    [Op.in]: sectionPageIds
+                }
+            },
+            group: ['sectionPageId']
+        })
 
-    //     for (i = 0; i < studentProgress.length; i++) {
-    //         if (studentProgress[i].sectionPageId == texts[i].sectionPageId) {
-    //             sectionId = studentProgress[i].sectionId;
-    //             totalTextExperience = texts[i].totalExperience;
-    //         }
+        for (i = 0; i < studentProgress.length; i++) {
+            if (studentProgress[i].sectionPageId == texts[i].sectionPageId) {
+                sectionId = studentProgress[i].sectionId;
+                totalTextExperience = texts[i].totalExperience;
+                // sectionArray.push(studentProgress[i].sectionId);
+                // textArray.push(texts[i].totalExperience);
+            }
 
-    //         if (studentProgress[i].sectionPageId == lesson[i].sectionPageId) {
-    //             sectionId = studentProgress[i].sectionId;
-    //             totalLessonExperience = lesson[i].totalExperience;
-    //         }
+            if (studentProgress[i].sectionPageId == lesson[i].sectionPageId) {
+                sectionId = studentProgress[i].sectionId;
+                totalLessonExperience = lesson[i].totalExperience;
+                // sectionArray.push(studentProgress[i].sectionId);
+                // lessonArray.push(lesson[i].totalExperience);
+            }
 
-    //         dataArray.push(obj = {
+            // console.log(sectionArray);
 
-    //             sectionId,
-    //             totalTextExperience,
-    //             totalLessonExperience
+            if (dataArray == 0) {
 
-    //         })
-    //     }
+                dataArray.push(obj = {
+
+                    sectionId,
+                    totalTextExperience,
+                    totalLessonExperience
+
+                })
+            }
+
+            else if (dataArray[0].sectionId == sectionId) {
+                summedTextExperience = parseInt(dataArray[0].totalTextExperience) + parseInt(totalTextExperience);
+                summedLessonExperience = parseInt(dataArray[0].totalLessonExperience) + parseInt(totalLessonExperience);
+
+                dataArray = [];
+
+                dataArray.push(obj = {
+
+                    sectionId: sectionId,
+                    totalTextExperience: summedTextExperience,
+                    totalLessonExperience: summedLessonExperience
+
+                })
+            }
+
+        }
 
 
-    // }
+    }
 
-    // console.log(studentProgress);
+    console.log(studentProgress);
 
 
-    if (section) return ReS(res, { data: section, flag: flag, studentProgress: studentProgress, array: dataArray}, 200);
+    if (section) return ReS(res, { data: section, flag: flag, studentProgress: studentProgress, studentExperience: dataArray }, 200);
     else return ReE(res, { message: 'Unable to insert Course.' }, 500)
 }
 module.exports.getSections = getSections;
