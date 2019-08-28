@@ -22,8 +22,7 @@ const getSectionPages = async (req, res) => {
             sectionId: {
                 [Op.in]: sectionIds
             }
-        },
-        group: ['sectionId']
+        }
     })
 
     
