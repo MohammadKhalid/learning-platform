@@ -31,7 +31,7 @@ export class AddmodulePage implements OnInit {
   data: any[] = [];
   serverUrl: string = "./assets/img/";
   forms: FormGroup
-  inProgressData: any = [];
+  inProgressData: any = {};
   interval: any;
   ngOnInit() {
 
@@ -51,6 +51,11 @@ export class AddmodulePage implements OnInit {
     this.inprogressSection();
 
   }
+  ionViewWillEnter(){
+    debugger;
+    this.inprogressSection();
+
+  }
 
 
   // this.menu.enable(true);
@@ -60,13 +65,12 @@ export class AddmodulePage implements OnInit {
   getModules(data) {
 
     this.service.getPromise(`section/get-sections/${this.id}/${this.user.id}`, ).then(res => {
-      debugger
       if (res.flag == 'Section') {
         this.data = res.data;
-        if (this.inProgressData.length == 0) {
+        // if (!this.inProgressData) {
           // this.inProgressData = res.data.length > 0 ? res.data[0] : [];
           this.inProgressData = data
-        }
+        // }
         this.courseTitle = res.data[0].course.title
       } else {
         this.courseTitle = res.data[0].title
@@ -87,12 +91,12 @@ export class AddmodulePage implements OnInit {
     debugger
     if (this.isStart) {
       this.service.postPromise('course/enroll-course', obj).then(res => {
-        this.router.navigate([`certification/sections/concepts/${obj.courseId}/${item.id}`])
+        this.router.navigate([`certification/sections/concepts/${obj.courseId}/${item.Section.id}/${item.id}`])
       }).catch(res => {
         this.notifictation.showMsg('Error to Add ');
       })
     }else{
-      this.router.navigate([`certification/sections/concepts/${obj.courseId}/${item.id}`])
+      this.router.navigate([`certification/sections/concepts/${obj.courseId}/${item.Section.id}/${item.id}`])
     }
   }
   addModule() {
@@ -132,6 +136,7 @@ export class AddmodulePage implements OnInit {
   inprogressSection() {
 
     this.service.getPromise(`section/get-last-section-id/${this.user.id}/${this.id}`).then(res => {
+      debugger
       if (res.data.length == 0) {
         this.isStart = true
       }

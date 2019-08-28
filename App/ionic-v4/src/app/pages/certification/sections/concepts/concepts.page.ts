@@ -24,7 +24,14 @@ export class ConceptsPage implements OnInit {
   sectionId: any;
   sectionConceptData: any = [];
   titleEmiter: any;
-  courseid : any;
+  courseid: any;
+  sectionPageCount = [{
+    id: 1
+  }, {
+    id: 2
+  }]
+  nextId: number
+  showFinish: boolean = false
   private subscription: Subscription;
   private subscriptionBackNavigate: Subscription;
   // quizIndex: number = 1;
@@ -67,8 +74,9 @@ export class ConceptsPage implements OnInit {
     this.sectionId = this.sectionId = this.actRoute.snapshot.paramMap.get('sectionid');
     this.sectionPageId = this.actRoute.snapshot.paramMap.get('sectionpageid');
     this.courseid = this.actRoute.snapshot.paramMap.get('courseid');
-  
+
     if (this.sectionPageId) {
+
       this.restApi.populateSectionConceptSaveButton();
     }
     this.restApi.sectionId = this.sectionId;
@@ -77,6 +85,17 @@ export class ConceptsPage implements OnInit {
       this.restApi.populateSectionSubMenu(this.sectionId);
     }
     else if (this.user.type === 'student') {
+      debugger
+      let index = this.sectionPageCount.findIndex(x => x.id == this.sectionPageId)
+      let count = this.sectionPageCount.length
+      if ((index + 1) == count) {
+        this.showFinish = true
+      } else {
+        this.nextId = this.sectionPageCount[(index + 1)].id
+      }
+      // this.restApi.getPromise(`section-page/get-section-page-count/${this.sectionId}`).then(res=>{
+      //   debugger
+      // })
       this.restApi.populateSectionSubMenuStudent(this.sectionId);
     }
 
@@ -102,7 +121,9 @@ export class ConceptsPage implements OnInit {
       }
     });
   }
-
+  goToNextPage() {
+    this.router.navigate([`certification/sections/concepts/${this.courseid}/${this.sectionId}/${this.nextId}`]);
+  }
   fetchSectionItems() {
     this.restApi.getPromise(`section-page/get-section-items/${this.courseid}/${this.sectionId}/${this.sectionPageId}/${this.user.id}`)
       .then(response => {
