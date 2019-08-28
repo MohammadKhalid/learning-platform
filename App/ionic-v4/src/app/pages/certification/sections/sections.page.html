@@ -33,8 +33,9 @@
                 </ion-item>
                 <ion-list lines="none">
 
-                    <div id="accordion" class="resources-margin-adjust">
-                      <div class="card">
+                    <div id="accordion">
+
+                        <div class="card">
                             <div class="card-header" id="heading-2">
                                 <h5 class="mb-0">
                                     <a class="collapsed check" (click)="recourcesroute()" role="button" data-toggle="collapse" href="#collapse-2" aria-expanded="false" aria-controls="collapse-2">
@@ -65,8 +66,9 @@
                     </div>
 
                     <div id="accordion1">
+
                         <div class="card">
-                            <div class="card-header bordersConcepts" id="heading-2">
+                            <div class="card-header bordersResources" id="heading-2">
                                 <h5 class="mb-0">
                                     <a class="collapsed check" role="button" data-toggle="collapse" href="#collapse-1" aria-expanded="false" aria-controls="collapse-1">
                                         CONCEPTS
@@ -121,7 +123,7 @@
                     <div id="accordion3">
 
                         <div class="card">
-                            <div class="card-header bordersSearch" id="heading-2">
+                            <div class="card-header bordersResources" id="heading-2">
                                 <h5 class="mb-0">
                                     <a class="collapsed check" role="button" data-toggle="collapse" href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
                                         ANSWER
@@ -275,7 +277,7 @@
             </ng-template>
 
         </mat-drawer>
-        <mat-drawer-content class="mat-darawer1">
+        <mat-drawer-content style="margin-left:218px;">
             <router-outlet></router-outlet>
         </mat-drawer-content>
     </mat-drawer-container>

@@ -59,7 +59,7 @@
     <ion-button (click)="goToNextPage()" *ngIf="sectionPageId && showFinish== false">
         Next
     </ion-button>
-    <ion-button *ngIf="showFinish">
+    <ion-button (click)="finishCourse()" *ngIf="showFinish">
         Finish
     </ion-button>
 </ion-content>

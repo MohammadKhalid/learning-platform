@@ -24,6 +24,7 @@
                     <ion-card-title class="inprogess-fixed-title">
                         {{inProgressData?.Section?.title | titlecase}}
                     </ion-card-title>
+                    <ion-card-subtitle class="inprogess-fixed-subtitle"> {{inProgressData?.Section?.description | titlecase}}</ion-card-subtitle>
                 </ion-col>
                 <ion-col size="4">
                     <ion-button size="default" class="startLesson" (click)="startLesson(inProgressData)">{{isStart ? 'Start Course' : 'Resume Lesson'}}
@@ -46,7 +47,7 @@
                 </ion-col>
                 <ion-col size-sm="1">
                     <div class="adjust-percentage-left">
-                        <p>0%</p>
+                        <!-- <p>0%</p> -->
                     </div>
                 </ion-col>
                 <ion-col size-sm="1">
@@ -69,7 +70,8 @@
 
 
         <div class="card-main" *ngFor="let x of data">
-            <ion-card (click)="goToRoute(x.id)">
+            <!-- <ion-card (click)="goToRoute(x.id)"> -->
+            <ion-card >
                 <ion-button *ngIf="user.type == 'coach'" class="flot-right" slot="end" fill="clear" color="primary"
                     (click)="$event.preventDefault();$event.stopPropagation();addEditPopOver($event,x)">
                     <ion-icon name="more" slot="icon-only"></ion-icon>
@@ -95,8 +97,8 @@
                             </div>
 
                             <div class="circle" *ngIf="user.type == 'student'">
-                                <circle-progress [percent]="50" [maxPercent]="x.totalExperience" [radius]="30"
-                                    [showTitle]="false" [showSubtitle]="false" [outerStrokeWidth]="10"
+                                <circle-progress [percent]="n(x.id,x.totalExperience,int)" [maxPercent]="x.totalExperience" [radius]="30"
+                                    [showTitle]="true" [title]="n(x.id,x.totalExperience,text)" [outerStrokeWidth]="10"
                                     [innerStrokeWidth]="10" [outerStrokeColor]="'#0065b3'"
                                     [innerStrokeColor]="'#d6d7db'" [animation]="true" [animationDuration]="100">
                                 </circle-progress>

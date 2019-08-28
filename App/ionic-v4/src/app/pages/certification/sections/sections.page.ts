@@ -42,6 +42,7 @@ export class SectionsPage implements OnInit {
   private subscriptionResource: Subscription;
   public items: any;
   listData: any = [];
+  drawers : boolean;
   quizAnswerlist: any = [];
   listResourceData: any = [];
   id: any
@@ -78,7 +79,6 @@ export class SectionsPage implements OnInit {
   ngOnInit() {
 
 
-
     this.sectionId = this.apiSrv.sectionId;
     this.searchBy = "";
     this.user = this.authService.getSessionData().user;
@@ -94,6 +94,13 @@ export class SectionsPage implements OnInit {
         res.concept ? this.listData = res.concept : '';
         res.resource ? this.listResourceData = res.resource : '';
         this.lessonName = res.title;
+        setTimeout(() => {
+          debugger
+          this.menu.enable(false);
+          this.menu.enable(false, 'mainMenu')
+
+
+        }, 670);
       }
     });
     //student menu popupate end
@@ -122,12 +129,12 @@ export class SectionsPage implements OnInit {
       id: this.editId,
       title: this.editTitle
     }
-    
-    this.apiSrv.putPromise(`section-page/edit-title/${obj.id}`, obj).then(resp => {
-      if(resp.data.length == 1){
 
-        let item =this.listData.find(x => x.id == obj.id)
-        this.listData.splice(this.listData.indexOf(item),1,resp.data[0])
+    this.apiSrv.putPromise(`section-page/edit-title/${obj.id}`, obj).then(resp => {
+      if (resp.data.length == 1) {
+
+        let item = this.listData.find(x => x.id == obj.id)
+        this.listData.splice(this.listData.indexOf(item), 1, resp.data[0])
         this.isEditShow = false
         this.editTitle = ''
         this.isEditClicked = false
@@ -146,12 +153,7 @@ export class SectionsPage implements OnInit {
         res.quizAnswer ? this.quizAnswerlist = res.quizAnswer : '';
 
         this.lessonName = res.title;
-        setTimeout(() => {
-          this.menu.enable(false);
-          this.menu.enable(false, 'mainMenu')
 
-
-        }, 400);
 
         // this.menu.enable(false);
       }
