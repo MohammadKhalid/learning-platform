@@ -34,11 +34,14 @@ export class StudentTextComponent implements OnInit {
     this.restApi.delete(`text/${this.data.id}`).subscribe(res => {
       this.isDeletedClicked = false
       this.removeItem.next(this.data)
+      this.popoverController.dismiss();
+
     })
   }
 
   editText() {
     this.editItem.next(this.data)
+    this.popoverController.dismiss();
   }
 
   async addEditPopOver(ev: any, item: any) {

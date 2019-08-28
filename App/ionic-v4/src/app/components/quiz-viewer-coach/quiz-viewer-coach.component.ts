@@ -47,11 +47,13 @@ export class QuizViewerCoachComponent implements OnInit {
     this.restApi.delete(`quiz/${this.data.id}`).subscribe(res => {
       this.isDeletedClicked = false
       this.removeItem.next(this.data)
+      this.popoverController.dismiss();
     })
   }
   
   editQuiz() {
     this.openQuizEditModal.next(this.data)
+    this.popoverController.dismiss();
   }
   
   todo(value) {
