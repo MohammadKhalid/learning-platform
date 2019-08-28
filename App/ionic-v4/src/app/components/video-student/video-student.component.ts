@@ -43,11 +43,14 @@ export class VideoStudentComponent implements OnInit {
     this.restApi.delete(`lesson/${this.data.id}`).subscribe(res => {
       this.isDeletedClicked = false
       this.removeItem.next(this.data)
+      this.popoverController.dismiss();
+
     })
   }
 
   editLesson() {
     this.editItem.next(this.data)
+    this.popoverController.dismiss();
   }
 
   getById(data) {
