@@ -335,114 +335,6 @@ const getSectionItems = async (req, res) => {
                 "updatedAt": x.updatedAt
             }
         })
-        const studentProgress = await StudentProgress.findAll({
-            where: {
-                studentId: userId,
-                sectionPageId: sectionPageId,
-            }
-        })
-        if (studentProgress.length == 0) {
-            const studentProgressCreate = await StudentProgress.create({
-                studentId: userId,
-                sectionId: sectionId,
-                courseId: courseId,
-                sectionPageId: sectionPageId,
-                isLastActive: 1
-            })
-            const studentProgressUpdate = await StudentProgress.update({
-
-                isLastActive: 0
-            }, {
-                    where: {
-                        studentId: userId,
-                        sectionId: sectionId,
-                        courseId: courseId,
-                        sectionPageId: {
-                            [Op.not]: sectionPageId
-                        },
-                    }
-                })
-
-
-            // let texts = await Text.findAll({
-            //     attributes: [[Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
-            //     raw: true,
-            //     where: {
-            //         sectionPageId: sectionPageId
-            //     },
-            //     group: ['sectionPageId']
-            // })
-            // let lesson = await Lesson.findAll({
-            //     attributes: [[Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
-            //     raw: true,
-            //     where: {
-            //         sectionPageId: sectionPageId
-            //     },
-            //     group: ['sectionPageId']
-            // })
-
-            // const level = await Level.findAll({
-            //     where: {
-            //         studentId: userId
-            //     }
-            // })
-
-
-            // if (texts.length == 0 && lesson.length != 0) {
-            //     studentExperience = lesson[0].totalExperience;
-            // }
-            // else if (texts.length != 0 && lesson.length == 0) {
-            //     studentExperience = texts[0].totalExperience;
-            // }
-            // else if (texts.length != 0 && lesson.length != 0) {
-            //     studentExperience = texts[0].totalExperience + lesson[0].totalExperience;
-            // }
-
-
-            // currentExperience = studentExperience + level[0].currentExperience
-            // if (studentExperience == level[0].nextExperience ||
-            //     studentExperience > level[0].nextExperience) {
-            //     nextExperience = level[0].nextExperience * 1.5;
-            //     studentLevel = level[0].currentLevel + 1;
-            // }
-
-            // const levelUpdate = await Level.update({
-            //     nextExperience: nextExperience,
-            //     currentExperience: currentExperience,
-            //     currentLevel: studentLevel
-            // }, {
-            //         where: {
-            //             studentId: userId
-            //         }
-            //     })
-
-
-        } else {
-            const studentProgressModel = await StudentProgress.update({
-                isLastActive: 1
-            }, {
-                    where: {
-                        studentId: userId,
-                        sectionPageId: sectionPageId,
-                        courseId: courseId,
-                        sectionId: sectionId
-                    }
-                })
-            const studentProgressUpdate = await StudentProgress.update({
-
-                isLastActive: 0
-            }, {
-                    where: {
-                        studentId: userId,
-                        sectionId: sectionId,
-                        courseId: courseId,
-                        sectionPageId: {
-                            [Op.not]: sectionPageId
-                        },
-                    }
-                })
-        }
-
 
         //studentProgressWork
 
@@ -496,3 +388,133 @@ const getSectionItems = async (req, res) => {
 
 }
 module.exports.getSectionItems = getSectionItems;
+
+
+
+const updateStudentProgress = async (req, res) => {
+    let { sectionPageId, courseId, sectionId, userId } = req.body
+    let sectionpage = []
+
+    if (req.user.type == "student") {
+        
+        //studentProgressWork
+
+        const studentProgress = await StudentProgress.findAll({
+            where: {
+                studentId: userId,
+                sectionPageId: sectionPageId,
+            }
+        })
+
+        if (studentProgress.length == 0) {
+            const studentProgressCreate = await StudentProgress.create({
+                studentId: userId,
+                sectionId: sectionId,
+                courseId: courseId,
+                sectionPageId: sectionPageId,
+                isLastActive: 1
+            })
+            const studentProgressUpdate = await StudentProgress.update({
+        
+                isLastActive: 0
+            }, {
+                    where: {
+                        studentId: userId,
+                        sectionId: sectionId,
+                        courseId: courseId,
+                        sectionPageId: {
+                            [Op.not]: sectionPageId
+                        },
+                    }
+                })
+        
+        
+            // let texts = await Text.findAll({
+            //     attributes: [[Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
+            //     raw: true,
+            //     where: {
+            //         sectionPageId: sectionPageId
+            //     },
+            //     group: ['sectionPageId']
+            // })
+            // let lesson = await Lesson.findAll({
+            //     attributes: [[Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
+            //     raw: true,
+            //     where: {
+            //         sectionPageId: sectionPageId
+            //     },
+            //     group: ['sectionPageId']
+            // })
+        
+            // const level = await Level.findAll({
+            //     where: {
+            //         studentId: userId
+            //     }
+            // })
+        
+        
+            // if (texts.length == 0 && lesson.length != 0) {
+            //     studentExperience = lesson[0].totalExperience;
+            // }
+            // else if (texts.length != 0 && lesson.length == 0) {
+            //     studentExperience = texts[0].totalExperience;
+            // }
+            // else if (texts.length != 0 && lesson.length != 0) {
+            //     studentExperience = texts[0].totalExperience + lesson[0].totalExperience;
+            // }
+        
+        
+            // currentExperience = studentExperience + level[0].currentExperience
+            // if (studentExperience == level[0].nextExperience ||
+            //     studentExperience > level[0].nextExperience) {
+            //     nextExperience = level[0].nextExperience * 1.5;
+            //     studentLevel = level[0].currentLevel + 1;
+            // }
+        
+            // const levelUpdate = await Level.update({
+            //     nextExperience: nextExperience,
+            //     currentExperience: currentExperience,
+            //     currentLevel: studentLevel
+            // }, {
+            //         where: {
+            //             studentId: userId
+            //         }
+            //     })
+        
+        
+        } else {
+            const studentProgressModel = await StudentProgress.update({
+                isLastActive: 1
+            }, {
+                    where: {
+                        studentId: userId,
+                        sectionPageId: sectionPageId,
+                        courseId: courseId,
+                        sectionId: sectionId
+                    }
+                })
+            const studentProgressUpdate = await StudentProgress.update({
+        
+                isLastActive: 0
+            }, {
+                    where: {
+                        studentId: userId,
+                        sectionId: sectionId,
+                        courseId: courseId,
+                        sectionPageId: {
+                            [Op.not]: sectionPageId
+                        },
+                    }
+                })
+        }
+
+        
+        if (sectionpage) return ReS(res, { data: studentProgress }, 200);
+        else return ReE(res, { message: 'Unable to get Section Page.' }, 500)
+    }
+
+}
+module.exports.updateStudentProgress = updateStudentProgress;
+
+
+

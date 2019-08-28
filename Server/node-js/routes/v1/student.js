@@ -160,6 +160,7 @@ const progressRouter = express.Router();
 studentRouter.use('/student-progress', progressRouter)
 
 progressRouter.get('/get-student-progress/:courseId/:studentId', sectionController.getStudentProgress)
+progressRouter.post('/update-student-progress', commonController.updateStudentProgress)
 
 //level
 const levelRouter = express.Router();

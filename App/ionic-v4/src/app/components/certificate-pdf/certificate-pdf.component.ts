@@ -11,12 +11,15 @@ import { toBase64String } from '@angular/compiler/src/output/source_map';
 export class CertificatePdfComponent implements OnInit {
 @ViewChild('content') content:ElementRef 
   constructor() { }
-
+compressPdf: boolean = true
   ngOnInit() {}
 
   
   public downloadPdf(){
-    let doc = new jsPDF('l', 'mm',[594, 841]);
+    
+    let doc = new jsPDF('l', 'mm','a4', 1);
+    // doc.image_compression()
+    
     let specialElementHandlers = {
       '#editor' : function(element,renderer){
         return true;
@@ -35,10 +38,10 @@ export class CertificatePdfComponent implements OnInit {
       'elementHandlers': specialElementHandlers,
      
     });
-    doc.addImage(image, 'PNG',22,12,250,190)
-    doc.addImage(image2,'PNG', 100,40,80,36)
-    doc.save('done.pdf')
-    doc.output('done.pdf')
+    doc.addImage(image, 'PNG',22,12,250,190,'','FAST')
+    doc.addImage(image2,'PNG', 100,40,80,36,'','FAST')
+    doc.save('Certificate.pdf')
+   
 
 
 
@@ -47,9 +50,7 @@ export class CertificatePdfComponent implements OnInit {
   //   html2canvas(document.querySelector('#content'), 
 								
 	// 					 ).then(canvas => {
-	// 		let pdf = new jsPDF('p', 'mm', 'a4');
-	// 		pdf.addImage(canvas.toDataURL('image/png'), 'png',  211, 298);
-	// 		pdf.save('noman.pdf');
+	// 
 	// 	});
   // }
 
