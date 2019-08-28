@@ -19,6 +19,7 @@ const textController = require('../../controllers/student/text.controller');
 const resourceController = require('../../controllers/student/resource.controller');
 const sectionController = require('../../controllers/common/section.controller');
 const levelController = require('../../controllers/student/level.controller');
+const sectionPageController = require('../../controllers/student/sectionPage.controller');
 
 
 // dashboard
@@ -127,6 +128,7 @@ section.get('/get-last-section-id/:studentId/:courseId', sectionController.getLa
 const sectionPage = express.Router();
 studentRouter.use('/section-page', sectionPage)
 sectionPage.get('/get-section-items/:courseId/:sectionId/:sectionPageId/:userId', commonController.getSectionItems)
+sectionPage.get('/get-section-pages/:sectionId', sectionPageController.getSectionPages)
 
 // lessons
 const lessonRoutes = express.Router();

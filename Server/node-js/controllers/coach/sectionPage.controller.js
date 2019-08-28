@@ -47,3 +47,20 @@ const updateSectionPage = async (req, res) => {
     else return ReE(res, { data: [], message: 'Unable to insert Course.' }, 500)
 }
 module.exports.updateSectionPage = updateSectionPage;
+
+const getSectionPages = async (req, res) => {
+    let { sectionId } = req.query;
+
+
+    let sectionPage = await SectionPage.findAll({
+        where: {
+            sectionId: sectionId
+        }
+    })
+    
+
+    if (section) return ReS(res, { data: sectionPage }, 200);
+    else return ReE(res, { message: 'Unable to insert Course.' }, 500)
+}
+
+module.exports.getSectionPages = getSectionPages;
