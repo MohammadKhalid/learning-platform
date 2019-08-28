@@ -3,7 +3,8 @@
     <div *ngFor="let DataRow of sectionConceptData | orderByDate;">
         <!-- text start -->
         <div *ngIf="DataRow.type === 'Text'">
-            <app-student-text (editItem)="editItem($event)" (removeItem)="removeItem($event)" [data]="DataRow"></app-student-text>
+            <app-student-text (editItem)="editItem($event)" (removeItem)="removeItem($event)" [data]="DataRow">
+            </app-student-text>
 
         </div>
 
@@ -12,13 +13,15 @@
 
         <!-- lesson start -->
         <div *ngIf="DataRow.type === 'Lesson'">
-            <app-video-student (editItem)="editItem($event)" (removeItem)="removeItem($event)" [data]="DataRow"></app-video-student>
+            <app-video-student (editItem)="editItem($event)" (removeItem)="removeItem($event)" [data]="DataRow">
+            </app-video-student>
         </div>
         <!-- lesson start -->
 
         <!-- quiz start -->
         <div *ngIf="DataRow.type === 'Quiz'">
-            <app-quiz-viewer-coach (removeItem)="removeItem($event)" (openQuizEditModal)="openQuizEditModal($event)" [data]="DataRow" [quizIndex]="quizIndex"></app-quiz-viewer-coach>
+            <app-quiz-viewer-coach (removeItem)="removeItem($event)" (openQuizEditModal)="openQuizEditModal($event)"
+                [data]="DataRow" [quizIndex]="quizIndex"></app-quiz-viewer-coach>
         </div>
         <!-- quiz start -->
     </div>
@@ -30,7 +33,8 @@
     <div *ngFor="let DataRow of sectionConceptData | orderByDate;">
         <!-- text start -->
         <div *ngIf="DataRow.type === 'Text'">
-            <app-student-text (editItem)="editItem($event)" (removeItem)="removeItem($event)" [data]="DataRow"></app-student-text>
+            <app-student-text (editItem)="editItem($event)" (removeItem)="removeItem($event)" [data]="DataRow">
+            </app-student-text>
 
         </div>
 
@@ -39,15 +43,24 @@
 
         <!-- lesson start -->
         <div *ngIf="DataRow.type === 'Lesson'">
-            <app-video-student (editItem)="editItem($event)" (removeItem)="removeItem($event)" [data]="DataRow"></app-video-student>
+            <app-video-student (editItem)="editItem($event)" (removeItem)="removeItem($event)" [data]="DataRow">
+            </app-video-student>
         </div>
         <!-- lesson start -->
 
         <!-- quiz start -->
         <div *ngIf="DataRow.type === 'Quiz'">
-            <app-quiz-student (removeItem)="removeItem($event)" (openQuizEditModal)="openQuizEditModal($event)" [data]="DataRow" [quizIndex]="quizIndex"></app-quiz-student>
+            <app-quiz-student (removeItem)="removeItem($event)" (openQuizEditModal)="openQuizEditModal($event)"
+                [data]="DataRow" [quizIndex]="quizIndex"></app-quiz-student>
         </div>
         <!-- quiz start -->
     </div>
+    <ion-item-divider></ion-item-divider>
+    <ion-button (click)="goToNextPage()" *ngIf="sectionPageId && showFinish== false">
+        Next
+    </ion-button>
+    <ion-button *ngIf="showFinish">
+        Finish
+    </ion-button>
 </ion-content>
 <!-- student side rendering end -->
