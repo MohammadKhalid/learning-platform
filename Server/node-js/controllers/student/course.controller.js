@@ -182,3 +182,33 @@ const changeStudentCourseStatus = async (req, res) => {
 }
 
 module.exports.changeStudentCourseStatus = changeStudentCourseStatus;
+
+
+const getCertificateDetails = async (req, res) => {
+    let { courseId, userId } = req.params;
+
+
+    let user = await User.findAll({
+        attributes: [[Sequelize.fn("concat", Sequelize.col("firstname"),' ', Sequelize.col("lastname")),'name']],
+
+        include: [{
+            model: Course,
+            through: StudentCourse,
+            attributes: ['title'],
+
+            where: {
+                id: courseId
+            }
+            
+        }],
+        where: {
+            id: userId
+        }
+    })
+
+
+    if (user) return ReS(res, { data: user }, 200);
+    else return ReE(res, { message: 'Unable to insert Course.' }, 500)
+}
+
+module.exports.getCertificateDetails = getCertificateDetails;

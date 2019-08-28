@@ -114,6 +114,7 @@ course.post('/enroll-course', courseContoller.enrollCourse)
 course.get('/uncomplete-course', courseContoller.getUncompletedCourse)
 course.get('/completed-courses', courseContoller.getCompletedCourse)
 course.put('/change-student-course-status', courseContoller.changeStudentCourseStatus)
+course.get('/get-certificate-details/:courseId/:userId', courseContoller.getCertificateDetails)
 
 // section
 const section = express.Router();

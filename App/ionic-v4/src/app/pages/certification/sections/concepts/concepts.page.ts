@@ -25,13 +25,11 @@ export class ConceptsPage implements OnInit {
   sectionConceptData: any = [];
   titleEmiter: any;
   courseid: any;
-  sectionPageCount = [{
-    id: 1
-  }, {
-    id: 2
-  }]
-  nextId: number
+  sectionPageCount = []
+  nextSectionPageId: number
+  nextSectionId: number
   showFinish: boolean = false
+  showNext: boolean = true
   private subscription: Subscription;
   private subscriptionBackNavigate: Subscription;
   // quizIndex: number = 1;
@@ -85,17 +83,29 @@ export class ConceptsPage implements OnInit {
       this.restApi.populateSectionSubMenu(this.sectionId);
     }
     else if (this.user.type === 'student') {
-      debugger
-      let index = this.sectionPageCount.findIndex(x => x.id == this.sectionPageId)
-      let count = this.sectionPageCount.length
-      if ((index + 1) == count) {
-        this.showFinish = true
-      } else {
-        this.nextId = this.sectionPageCount[(index + 1)].id
-      }
-      // this.restApi.getPromise(`section-page/get-section-page-count/${this.sectionId}`).then(res=>{
-      //   debugger
-      // })
+      this.restApi.getPromise(`section-page/get-section-pages/${this.courseid}`).then(res => {
+        let sectionIndex = res.section.findIndex(x => x.id == this.sectionId)
+        let sectionSectionPage = res.sectionPage.filter(x => x.sectionId == this.sectionId )
+        debugger
+        let inn = sectionSectionPage.findIndex(x => x.id == this.sectionPageId)
+        let sectionPageIndex = res.sectionPage.findIndex(x => x.id == this.sectionPageId)
+        let sectionCount = res.section.length
+        let sectionPageCount = res.sectionPage.length
+
+        if (((sectionIndex + 1) == sectionCount) && ((sectionPageIndex + 1) == sectionPageCount)) {
+          this.showFinish = true
+        } else {
+          if ((inn+1) != sectionSectionPage.length) {
+            this.nextSectionPageId = res.sectionPage[(sectionPageIndex + 1)].id
+            this.nextSectionId = this.sectionId
+            debugger
+          } else {
+            // this.showNext = false
+            this.nextSectionPageId = res.sectionPage[(sectionPageIndex + 1)].id
+            this.nextSectionId = res.sectionPage[(sectionPageIndex + 1)].sectionId
+          }
+        }
+      })
       this.restApi.populateSectionSubMenuStudent(this.sectionId);
     }
 
@@ -122,7 +132,7 @@ export class ConceptsPage implements OnInit {
     });
   }
   goToNextPage() {
-    this.router.navigate([`certification/sections/concepts/${this.courseid}/${this.sectionId}/${this.nextId}`]);
+    this.router.navigate([`certification/sections/concepts/${this.courseid}/${this.nextSectionId}/${this.nextSectionPageId}`]);
   }
   fetchSectionItems() {
     this.restApi.getPromise(`section-page/get-section-items/${this.courseid}/${this.sectionId}/${this.sectionPageId}/${this.user.id}`)
@@ -134,6 +144,16 @@ export class ConceptsPage implements OnInit {
   }
   titleEvent(title) {
     this.titleEmiter = title;
+  }
+
+  finishCourse() {
+    let obj = {
+      courseId: this.courseid,
+      userId: this.user.id
+    }
+    this.restApi.putPromise('course/change-student-course-status', obj).then(res => {
+      this.router.navigate([`/certification/`])
+    })
   }
   async popUpConcept(data?: any) {
     const modal: HTMLIonModalElement =
