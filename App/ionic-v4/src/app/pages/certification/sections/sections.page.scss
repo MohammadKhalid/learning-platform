@@ -37,14 +37,18 @@
     padding-left: 6px;
 }
 
-.bordersResources {
+.bordersConcepts {
     border-bottom: 2px solid #1a222a;
     border-top: 2px solid #1a222a;
 }
 
-.bordersConcepts {
-    border-bottom: 2px solid #1a222a;
-    background: transparent;
+// .bordersConcepts {
+//     border-bottom: 2px solid #1a222a;
+//     background: transparent;
+// }
+
+.resources-margin-adjust{
+    margin-top: -9px;
 }
 
 .bordersSearch {
