@@ -292,7 +292,6 @@ const getSections = async (req, res) => {
 
     }
 
-    console.log(studentProgress);
 
 
     if (section) return ReS(res, { data: section, flag: flag, studentProgress: studentProgress, studentExperience: dataArray }, 200);
