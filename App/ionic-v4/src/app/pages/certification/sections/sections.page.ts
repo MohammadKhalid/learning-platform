@@ -42,6 +42,7 @@ export class SectionsPage implements OnInit {
   private subscriptionResource: Subscription;
   public items: any;
   listData: any = [];
+  drawers : boolean;
   quizAnswerlist: any = [];
   listResourceData: any = [];
   id: any
@@ -76,7 +77,6 @@ export class SectionsPage implements OnInit {
     this.saveButtonResourceSubscription.unsubscribe();
   }
   ngOnInit() {
-
 
 
     this.sectionId = this.apiSrv.sectionId;
