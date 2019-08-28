@@ -31,7 +31,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     NgCircleProgressModule.forRoot({
       "radius": 40,
-
+      "renderOnClick": false,
       "space": -10,
       "outerStrokeGradient": true,
       "outerStrokeWidth": 10,
@@ -39,14 +39,14 @@ const routes: Routes = [
       "outerStrokeGradientStopColor": "#0065b3",
       "innerStrokeColor": "#e7e8ea",
       "innerStrokeWidth": 10,
-      "title": "UI",
+      "title": "",
       "animateTitle": true,
       "animationDuration": 200,
-      "showTitle": false,
-      "showSubtitle": true,
-      "showUnits": false,
+      "showTitle": true,
+      "showSubtitle": false,
       "showBackground": false,
-      "startFromZero": false
+      "lazy": false,
+      "showUnits": true
     }),
 
     RouterModule.forChild(routes)

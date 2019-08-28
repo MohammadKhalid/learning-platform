@@ -29,6 +29,7 @@ export class AddmodulePage implements OnInit {
     public popoverController: PopoverController,
     public menu: MenuController) { }
   data: any[] = [];
+  studentExperience: any = []
   serverUrl: string = "./assets/img/";
   forms: FormGroup
   inProgressData: any = {};
@@ -51,7 +52,7 @@ export class AddmodulePage implements OnInit {
     this.inprogressSection();
 
   }
-  ionViewWillEnter(){
+  ionViewWillEnter() {
     debugger;
     this.inprogressSection();
 
@@ -64,12 +65,14 @@ export class AddmodulePage implements OnInit {
 
   getModules(data) {
 
-    this.service.getPromise(`section/get-sections/${this.id}/${this.user.id}`, ).then(res => {
+    this.service.getPromise(`section/get-sections/${this.id}/${this.user.id}`).then(res => {
       if (res.flag == 'Section') {
+        debugger
         this.data = res.data;
+        this.studentExperience = res.studentExperience
         // if (!this.inProgressData) {
-          // this.inProgressData = res.data.length > 0 ? res.data[0] : [];
-          this.inProgressData = data
+        // this.inProgressData = res.data.length > 0 ? res.data[0] : [];
+        this.inProgressData = data
         // }
         this.courseTitle = res.data[0].course.title
       } else {
@@ -83,6 +86,17 @@ export class AddmodulePage implements OnInit {
 
     this.router.navigate([`/certification/sections/concepts/${this.id}/${id}`])
   }
+  n(id, total, flag) {
+    if (this.studentExperience.length > 0) {
+      let textExp = this.studentExperience.filter(x => x.sectionId == id)
+        .reduce((acc, val) => acc.totalTextExperience + val.totalTextExperience)
+      let lessonExp = this.studentExperience.filter(x => x.sectionId == id)
+        .reduce((acc, val) => acc.totalLessonExperience + val.totalLessonExperience)
+      return ((textExp + lessonExp) / total) * 100
+    } else {
+      return 0
+    }
+  }
   startLesson(item) {
     let obj = {
       userId: this.user.id,
@@ -95,7 +109,7 @@ export class AddmodulePage implements OnInit {
       }).catch(res => {
         this.notifictation.showMsg('Error to Add ');
       })
-    }else{
+    } else {
       this.router.navigate([`certification/sections/concepts/${obj.courseId}/${item.Section.id}/${item.id}`])
     }
   }
