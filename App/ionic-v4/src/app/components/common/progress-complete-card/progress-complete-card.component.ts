@@ -1,7 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
 import { AuthenticationService } from 'src/app/services/user/authentication.service';
 import { IMAGE_URL } from 'src/environments/environment';
+import { CertificatePdfComponent } from '../../certificate-pdf/certificate-pdf.component';
+import * as jsPDF from 'jspdf';
+
 
 @Component({
   selector: 'app-progress-complete-card',
@@ -10,6 +13,7 @@ import { IMAGE_URL } from 'src/environments/environment';
 })
 export class ProgressCompleteCardComponent implements OnInit {
   @Input() tabType: any;
+  @ViewChild(CertificatePdfComponent) pdf: CertificatePdfComponent
   user: any;
   incompleteCourses: any = []
   defaultImage: string = "assets/img/certification/default-course.jpg";
@@ -17,10 +21,14 @@ export class ProgressCompleteCardComponent implements OnInit {
   imageToShowOnError: string = "assets/img/certification/no-img.jpg";
   constructor(
     private restApi: RestApiService,
-    private auth: AuthenticationService
+    private auth: AuthenticationService,
+    private comp: CertificatePdfComponent
   ) { }
+  @ViewChild('content') content: ElementRef
 
+  certificateData: any = 'Noman saleem'
   ngOnInit() {
+
 
     this.user = this.auth.getSessionData().user;
     if (this.tabType === 'inprogress') {
@@ -35,5 +43,58 @@ export class ProgressCompleteCardComponent implements OnInit {
       })
     }
   }
+  createPdfdata(user) {
+    alert(user);
+    debugger;
 
-}
+  }
+
+  downloadPdf() {
+   
+  
+      
+        let doc = new jsPDF('l', 'mm', 'a4', 1);
+        // doc.image_compression()
+
+        let specialElementHandlers = {
+          '#editor': function (element, renderer) {
+            return true;
+          }
+        }
+
+        let content = this.content.nativeElement;
+        let image = new Image();
+        let image2 = new Image();
+        image.src = '../../../assets/img/certification/frame.png'
+        image2.src = '../../../assets/img/certification/logo.png'
+
+        doc.fromHTML(content.innerHTML, 50, 15, {
+
+          'width': 190,
+          'elementHandlers': specialElementHandlers,
+
+        });
+        doc.addImage(image, 'PNG', 22, 12, 250, 190, '', 'FAST')
+        doc.addImage(image2, 'PNG', 100, 40, 80, 36, '', 'FAST')
+        doc.save('Certificate.pdf')
+
+      }
+    
+
+
+
+
+
+
+
+
+    //   html2canvas(document.querySelector('#content'), 
+
+    // 					 ).then(canvas => {
+    // 
+    // 	});
+    // }
+
+
+  }
+

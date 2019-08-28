@@ -24,7 +24,7 @@
 
 <ion-content no-padding>
     <mat-drawer-container class="example-container">
-        <mat-drawer #drawer mode="side" opened class="certificate-Sbar">
+        <mat-drawer #drawer mode="side" class="certificate-Sbar">
             <div *ngIf="user.type == 'coach'; then coach else student"></div>
             <ng-template #coach>
                 <ion-item lines="none" class="certificate-item bordersSearch">

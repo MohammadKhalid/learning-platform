@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import * as jsPDF from 'jspdf';
-import { toBase64String } from '@angular/compiler/src/output/source_map';
+
 
 
 @Component({
@@ -11,11 +11,13 @@ import { toBase64String } from '@angular/compiler/src/output/source_map';
 export class CertificatePdfComponent implements OnInit {
 @ViewChild('content') content:ElementRef 
   constructor() { }
-compressPdf: boolean = true
-  ngOnInit() {}
+  ngOnInit() {
+    
+  }
 
   
   public downloadPdf(){
+    alert('hey baby')
     
     let doc = new jsPDF('l', 'mm','a4', 1);
     // doc.image_compression()

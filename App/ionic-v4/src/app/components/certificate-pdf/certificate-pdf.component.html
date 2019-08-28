@@ -29,4 +29,4 @@
         <span style="color:#929394; font-size:12px;">Founder Thrive19</span>
     </div>
 </div>
-<button (click)="downloadPdf() ">Download Certificate</button>
+<ion-button (click)="$event.preventDefault();$event.stopPropagation(); downloadPdf() ">Download Certificate</ion-button>
