@@ -184,7 +184,7 @@ module.exports.getUncompletedCourse = getUncompletedCourse;
 
 
 const getCompletedCourse = async (req, res) => {
-    let studentProgress, texts, lesson, sectionPageId, sectionId, totalTextExperience, totalLessonExperience;
+    let studentProgress, courseId, sectionPageId, sectionId, totalTextExperience, totalLessonExperience;
     let dataArray = [];
     let { userId } = req.query;
 
@@ -250,6 +250,7 @@ const getCompletedCourse = async (req, res) => {
     for (let index = 0; index < studentProgress.length; index++) {
 
         sectionId = studentProgress[index].sectionPage.sectionId;
+        courseId = studentProgress[index].courseId
         totalTextExperience = studentProgress[index].sectionPage.Text.length > 0 ? studentProgress[index].sectionPage.Text.length == 1 ? studentProgress[index].sectionPage.Text[0].experience :
             studentProgress[index].sectionPage.Text.map((acc) => acc.experience).reduce((acc, val) => acc + val) : 0
         totalLessonExperience = studentProgress[index].sectionPage.Lesson.length > 0 ? studentProgress[index].sectionPage.Lesson.length == 1 ? studentProgress[index].sectionPage.Lesson[0].experience :
@@ -257,7 +258,7 @@ const getCompletedCourse = async (req, res) => {
         sectionPageId = studentProgress[index].sectionPage.id;
 
         dataArray.push({
-
+            courseId,
             sectionId,
             totalTextExperience,
             totalLessonExperience,
