@@ -463,7 +463,7 @@ const updateStudentProgress = async (req, res) => {
             }
         })
 
-        
+
 
         if (studentProgress.length == 0) {
             const studentProgressCreate = await StudentProgress.create({
@@ -579,72 +579,65 @@ const changeIsLastActive = async (req, res) => {
     let nextExperience, studentLevel, currentExperience, studentExperience;
     let { sectionPageId, courseId, sectionId, userId } = req.body
     let sectionpage = []
-
-    if (req.user.type == "student") {
-
-        //studentProgressWork
-
-        const studentProgress = await StudentProgress.findAll({
-            where: {
-                studentId: userId,
-                sectionPageId: sectionPageId,
-            }
-        })
-
-
-        console.log(studentProgress.length)
-
-        if (studentProgress.length == 0) {
-            const studentProgressCreate = await StudentProgress.create({
-                studentId: userId,
-                sectionId: sectionId,
-                courseId: courseId,
-                sectionPageId: sectionPageId,
-                isLastActive: 1
-            })
-            const studentProgressUpdate = await StudentProgress.update({
-                isLastActive: 0
-            }, {
-                    where: {
-                        studentId: userId,
-                        sectionId: sectionId,
-                        courseId: courseId,
-                        sectionPageId: {
-                            [Op.not]: sectionPageId
-                        },
-                    }
-                })
-
-        } else {
-            const studentProgressModel = await StudentProgress.update({
-                isLastActive: 1
-            }, {
-                    where: {
-                        studentId: userId,
-                        sectionPageId: sectionPageId,
-                        courseId: courseId,
-                        sectionId: sectionId
-                    }
-                })
-            const studentProgressUpdate = await StudentProgress.update({
-
-                isLastActive: 0
-            }, {
-                    where: {
-                        studentId: userId,
-                        sectionId: sectionId,
-                        courseId: courseId,
-                        sectionPageId: {
-                            [Op.not]: sectionPageId
-                        },
-                    }
-                })
+    const studentProgress = await StudentProgress.findAll({
+        where: {
+            studentId: userId,
+            sectionPageId: sectionPageId,
         }
+    })
 
 
-        if (studentProgress) return ReS(res, { data: studentProgress }, 200);
-        else return ReE(res, { message: 'Unable to get Section Page.' }, 500)
+
+    if (studentProgress.length == 0) {
+        const studentProgressCreate = await StudentProgress.create({
+            studentId: userId,
+            sectionId: sectionId,
+            courseId: courseId,
+            sectionPageId: sectionPageId,
+            isLastActive: 1
+        })
+        const studentProgressUpdate = await StudentProgress.update({
+            isLastActive: 0
+        }, {
+                where: {
+                    studentId: userId,
+                    sectionId: sectionId,
+                    courseId: courseId,
+                    sectionPageId: {
+                        [Op.not]: sectionPageId
+                    },
+                }
+            })
+
+    } else {
+        const studentProgressModel = await StudentProgress.update({
+            isLastActive: 1
+        }, {
+                where: {
+                    studentId: userId,
+                    sectionPageId: sectionPageId,
+                    courseId: courseId,
+                    sectionId: sectionId
+                }
+            })
+        const studentProgressUpdate = await StudentProgress.update({
+
+            isLastActive: 0
+        }, {
+                where: {
+                    studentId: userId,
+                    sectionId: sectionId,
+                    courseId: courseId,
+                    sectionPageId: {
+                        [Op.not]: sectionPageId
+                    },
+                }
+            })
     }
+
+
+    if (studentProgress) return ReS(res, { data: studentProgress }, 200);
+    else return ReE(res, { message: 'Unable to get Section Page.' }, 500)
 
 }
 module.exports.changeIsLastActive = changeIsLastActive;
