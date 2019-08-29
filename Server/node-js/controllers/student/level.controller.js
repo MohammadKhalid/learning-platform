@@ -1,6 +1,7 @@
-const { Level, StudentExperienceSettings } = require('../../models');
+const { Level, StudentExperienceSettings, User } = require('../../models');
 const { to, ReE, ReS } = require('../../services/util.service');
 
+const Sequelize = require('sequelize');
 const create = async (req, res) => {
     let level;
     let { studentId } = req.body
@@ -60,3 +61,26 @@ const update = async function (req, res) {
     else return ReE(res, { message: 'Unable to update settings.' }, 500)
 }
 module.exports.update = update;
+
+const getStudentLevel = async (req, res) => {
+    let { studentId } = req.params
+    const level = await Level.findAll({
+        attributes: ['nextExperience','currentExperience','currentLevel'],
+        include: [{
+            model: User,
+            as: 'student',
+            attributes: [[Sequelize.fn('CONCAT', Sequelize.col('firstName'), ' ', Sequelize.col('lastName')), 'name']],
+        }],
+        where: {
+            studentId: studentId
+        }
+    })
+    
+    if (level) {
+        return ReS(res, { data: level}, 200);
+    } else {
+        return ReS(res, { data: [] }, 200);
+    }
+
+}
+module.exports.getStudentLevel = getStudentLevel;

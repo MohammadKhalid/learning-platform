@@ -168,6 +168,6 @@ const levelRouter = express.Router();
 studentRouter.use('/level', levelRouter)
 
 levelRouter.post('/', levelController.create)
-
+levelRouter.get('/get-student-level/:studentId', levelController.getStudentLevel)
 
 module.exports = studentRouter;
