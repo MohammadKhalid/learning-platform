@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
 import { AuthenticationService } from 'src/app/services/user/authentication.service';
 import { IMAGE_URL } from 'src/environments/environment';
-import { CertificatePdfComponent } from '../../certificate-pdf/certificate-pdf.component';
+// import { CertificatePdfComponent } from '../../certificate-pdf/certificate-pdf.component';
 import * as jsPDF from 'jspdf';
 
 
@@ -13,7 +13,7 @@ import * as jsPDF from 'jspdf';
 })
 export class ProgressCompleteCardComponent implements OnInit {
   @Input() tabType: any;
-  @ViewChild(CertificatePdfComponent) pdf: CertificatePdfComponent
+  // @ViewChild(CertificatePdfComponent) pdf: CertificatePdfComponent
   user: any;
   incompleteCourses: any = []
   defaultImage: string = "assets/img/certification/default-course.jpg";
@@ -22,7 +22,7 @@ export class ProgressCompleteCardComponent implements OnInit {
   constructor(
     private restApi: RestApiService,
     private auth: AuthenticationService,
-    private comp: CertificatePdfComponent
+    // private comp: CertificatePdfComponent
   ) { }
   @ViewChild('content') content: ElementRef
 
@@ -43,11 +43,7 @@ export class ProgressCompleteCardComponent implements OnInit {
       })
     }
   }
-  createPdfdata(user) {
-    alert(user);
-    debugger;
-
-  }
+ 
 
   downloadPdf() {
    
