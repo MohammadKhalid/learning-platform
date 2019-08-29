@@ -108,6 +108,14 @@ const getUncompletedCourse = async (req, res) => {
     console.log(uncompleteCourseIds.map(x => x.id))
     let uncompleteCourse = await Course.findAll({
         attributes: [['id', 'courseId'], 'title', 'description', 'image'],
+
+        include: [{
+            attributes: [[Sequelize.fn('SUM', Sequelize.col('totalExperience')), 'totalExperience']],
+            model: Section,
+            as: 'Section'
+        }],
+        group: ["Section.courseId"],
+
         where: {
             id: uncompleteCourseIds.map(x => x.CourseId)
         }
@@ -143,6 +151,15 @@ const getCompletedCourse = async (req, res) => {
     console.log(completeCourseIds.map(x => x.id))
     let completeCourse = await Course.findAll({
         attributes: [['id', 'courseId'], 'title', 'description', 'image'],
+
+
+        include: [{
+            attributes: [[Sequelize.fn('SUM', Sequelize.col('totalExperience')), 'totalExperience']],
+            model: Section,
+            as: 'Section'
+        }],
+        group: ["Section.courseId"],
+
         where: {
             id: completeCourseIds.map(x => x.CourseId)
         }
@@ -189,7 +206,7 @@ const getCertificateDetails = async (req, res) => {
 
 
     let user = await User.findAll({
-        attributes: [[Sequelize.fn("concat", Sequelize.col("firstname"),' ', Sequelize.col("lastname")),'name']],
+        attributes: [[Sequelize.fn("concat", Sequelize.col("firstname"), ' ', Sequelize.col("lastname")), 'name']],
 
         include: [{
             model: Course,
@@ -199,7 +216,7 @@ const getCertificateDetails = async (req, res) => {
             where: {
                 id: courseId
             }
-            
+
         }],
         where: {
             id: userId

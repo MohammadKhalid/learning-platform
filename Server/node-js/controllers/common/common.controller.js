@@ -169,7 +169,7 @@ const getSections = async (req, res) => {
         for (let index = 0; index < studentProgress.length; index++) {
 
             sectionId = studentProgress[index].sectionPage.sectionId;
-            totalTextExperience = studentProgress[index].sectionPage.Text.length > 0 ? studentProgress[index].sectionPage.Text.length == 1  ? studentProgress[index].sectionPage.Text[0].experience :
+            totalTextExperience = studentProgress[index].sectionPage.Text.length > 0 ? studentProgress[index].sectionPage.Text.length == 1 ? studentProgress[index].sectionPage.Text[0].experience :
                 studentProgress[index].sectionPage.Text.reduce((acc, val) => parseInt(acc.experience) + parseInt(val.experience)) : 0
             totalLessonExperience = studentProgress[index].sectionPage.Lesson.length > 0 ? studentProgress[index].sectionPage.Lesson.length == 1 ? studentProgress[index].sectionPage.Lesson[0].experience :
                 studentProgress[index].sectionPage.Lesson.reduce((acc, val) => parseInt(acc.experience) + parseInt(val.experience)) : 0
@@ -344,7 +344,7 @@ const getSideMenuItems = async (req, res) => {
 module.exports.getSideMenuItems = getSideMenuItems;
 
 const getSectionItems = async (req, res) => {
-    let nextExperience, studentLevel, currentExperience, studentExperience;
+
     let { sectionPageId, courseId, sectionId, userId } = req.params
     let sectionpage = []
 
@@ -448,6 +448,7 @@ module.exports.getSectionItems = getSectionItems;
 
 
 const updateStudentProgress = async (req, res) => {
+    let nextExperience, studentLevel, currentExperience, studentExperience;
     let { sectionPageId, courseId, sectionId, userId } = req.body
     let sectionpage = []
 
@@ -462,6 +463,8 @@ const updateStudentProgress = async (req, res) => {
             }
         })
 
+
+
         if (studentProgress.length == 0) {
             const studentProgressCreate = await StudentProgress.create({
                 studentId: userId,
@@ -471,13 +474,10 @@ const updateStudentProgress = async (req, res) => {
                 isLastActive: 1
             })
             const studentProgressUpdate = await StudentProgress.update({
-
                 isLastActive: 0
             }, {
                     where: {
                         studentId: userId,
-                        sectionId: sectionId,
-                        courseId: courseId,
                         sectionPageId: {
                             [Op.not]: sectionPageId
                         },
@@ -485,57 +485,63 @@ const updateStudentProgress = async (req, res) => {
                 })
 
 
-            // let texts = await Text.findAll({
-            //     attributes: [[Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
-            //     raw: true,
-            //     where: {
-            //         sectionPageId: sectionPageId
-            //     },
-            //     group: ['sectionPageId']
-            // })
-            // let lesson = await Lesson.findAll({
-            //     attributes: [[Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
-            //     raw: true,
-            //     where: {
-            //         sectionPageId: sectionPageId
-            //     },
-            //     group: ['sectionPageId']
-            // })
+            let texts = await Text.findAll({
+                attributes: [[Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
+                raw: true,
+                where: {
+                    sectionPageId: sectionPageId
+                },
+                group: ['sectionPageId']
+            })
+            let lesson = await Lesson.findAll({
+                attributes: [[Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
+                raw: true,
+                where: {
+                    sectionPageId: sectionPageId
+                },
+                group: ['sectionPageId']
+            })
 
-            // const level = await Level.findAll({
-            //     where: {
-            //         studentId: userId
-            //     }
-            // })
-
-
-            // if (texts.length == 0 && lesson.length != 0) {
-            //     studentExperience = lesson[0].totalExperience;
-            // }
-            // else if (texts.length != 0 && lesson.length == 0) {
-            //     studentExperience = texts[0].totalExperience;
-            // }
-            // else if (texts.length != 0 && lesson.length != 0) {
-            //     studentExperience = texts[0].totalExperience + lesson[0].totalExperience;
-            // }
+            const level = await Level.findAll({
+                where: {
+                    studentId: userId
+                }
+            })
 
 
-            // currentExperience = studentExperience + level[0].currentExperience
-            // if (studentExperience == level[0].nextExperience ||
-            //     studentExperience > level[0].nextExperience) {
-            //     nextExperience = level[0].nextExperience * 1.5;
-            //     studentLevel = level[0].currentLevel + 1;
-            // }
+            if (texts.length == 0 && lesson.length != 0) {
+                studentExperience = parseInt(lesson[0].totalExperience);
+            }
+            else if (texts.length != 0 && lesson.length == 0) {
+                studentExperience = parseInt(texts[0].totalExperience);
+            }
+            else if (texts.length != 0 && lesson.length != 0) {
+                studentExperience = parseInt(texts[0].totalExperience) + parseInt(lesson[0].totalExperience);
+            }
+            else if (texts.length == 0 && lesson.length == 0) {
+                studentExperience = 0
+            }
 
-            // const levelUpdate = await Level.update({
-            //     nextExperience: nextExperience,
-            //     currentExperience: currentExperience,
-            //     currentLevel: studentLevel
-            // }, {
-            //         where: {
-            //             studentId: userId
-            //         }
-            //     })
+
+
+
+            currentExperience = studentExperience + level[0].currentExperience;
+            if (currentExperience == level[0].nextExperience ||
+                currentExperience > level[0].nextExperience) {
+                nextExperience = level[0].nextExperience * 1.5;
+                studentLevel = level[0].currentLevel + 1;
+            }
+
+
+            const levelUpdate = await Level.update({
+                nextExperience: nextExperience,
+                currentExperience: currentExperience,
+                currentLevel: studentLevel
+            }, {
+                    where: {
+                        studentId: userId
+                    }
+                })
 
 
         } else {
@@ -545,8 +551,6 @@ const updateStudentProgress = async (req, res) => {
                     where: {
                         studentId: userId,
                         sectionPageId: sectionPageId,
-                        courseId: courseId,
-                        sectionId: sectionId
                     }
                 })
             const studentProgressUpdate = await StudentProgress.update({
@@ -555,8 +559,6 @@ const updateStudentProgress = async (req, res) => {
             }, {
                     where: {
                         studentId: userId,
-                        sectionId: sectionId,
-                        courseId: courseId,
                         sectionPageId: {
                             [Op.not]: sectionPageId
                         },
@@ -573,4 +575,69 @@ const updateStudentProgress = async (req, res) => {
 module.exports.updateStudentProgress = updateStudentProgress;
 
 
+const changeIsLastActive = async (req, res) => {
+    let nextExperience, studentLevel, currentExperience, studentExperience;
+    let { sectionPageId, courseId, sectionId, userId } = req.body
+    let sectionpage = []
+    const studentProgress = await StudentProgress.findAll({
+        where: {
+            studentId: userId,
+            sectionPageId: sectionPageId,
+        }
+    })
 
+
+
+    if (studentProgress.length == 0) {
+        const studentProgressCreate = await StudentProgress.create({
+            studentId: userId,
+            sectionId: sectionId,
+            courseId: courseId,
+            sectionPageId: sectionPageId,
+            isLastActive: 1
+        })
+        const studentProgressUpdate = await StudentProgress.update({
+            isLastActive: 0
+        }, {
+                where: {
+                    studentId: userId,
+                    sectionId: sectionId,
+                    courseId: courseId,
+                    sectionPageId: {
+                        [Op.not]: sectionPageId
+                    },
+                }
+            })
+
+    } else {
+        const studentProgressModel = await StudentProgress.update({
+            isLastActive: 1
+        }, {
+                where: {
+                    studentId: userId,
+                    sectionPageId: sectionPageId,
+                    courseId: courseId,
+                    sectionId: sectionId
+                }
+            })
+        const studentProgressUpdate = await StudentProgress.update({
+
+            isLastActive: 0
+        }, {
+                where: {
+                    studentId: userId,
+                    sectionId: sectionId,
+                    courseId: courseId,
+                    sectionPageId: {
+                        [Op.not]: sectionPageId
+                    },
+                }
+            })
+    }
+
+
+    if (studentProgress) return ReS(res, { data: studentProgress }, 200);
+    else return ReE(res, { message: 'Unable to get Section Page.' }, 500)
+
+}
+module.exports.changeIsLastActive = changeIsLastActive;

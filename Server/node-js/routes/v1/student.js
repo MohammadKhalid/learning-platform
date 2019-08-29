@@ -162,12 +162,13 @@ studentRouter.use('/student-progress', progressRouter)
 
 progressRouter.get('/get-student-progress/:courseId/:studentId', sectionController.getStudentProgress)
 progressRouter.post('/update-student-progress', commonController.updateStudentProgress)
+progressRouter.post('/change-is-last-active', commonController.changeIsLastActive)
 
 //level
 const levelRouter = express.Router();
 studentRouter.use('/level', levelRouter)
 
 levelRouter.post('/', levelController.create)
-
+levelRouter.get('/get-student-level/:studentId', levelController.getStudentLevel)
 
 module.exports = studentRouter;

@@ -85,7 +85,7 @@ export class ConceptsPage implements OnInit {
     else if (this.user.type === 'student') {
       this.restApi.getPromise(`section-page/get-section-pages/${this.courseid}`).then(res => {
         let sectionIndex = res.section.findIndex(x => x.id == this.sectionId)
-        let sectionSectionPage = res.sectionPage.filter(x => x.sectionId == this.sectionId )
+        let sectionSectionPage = res.sectionPage.filter(x => x.sectionId == this.sectionId)
         debugger
         let inn = sectionSectionPage.findIndex(x => x.id == this.sectionPageId)
         let sectionPageIndex = res.sectionPage.findIndex(x => x.id == this.sectionPageId)
@@ -95,7 +95,7 @@ export class ConceptsPage implements OnInit {
         if (((sectionIndex + 1) == sectionCount) && ((sectionPageIndex + 1) == sectionPageCount)) {
           this.showFinish = true
         } else {
-          if ((inn+1) != sectionSectionPage.length) {
+          if ((inn + 1) != sectionSectionPage.length) {
             this.nextSectionPageId = res.sectionPage[(sectionPageIndex + 1)].id
             this.nextSectionId = this.sectionId
             debugger
@@ -132,6 +132,20 @@ export class ConceptsPage implements OnInit {
     });
   }
   goToNextPage() {
+    this.restApi.postPromise('student-progress/update-student-progress', {
+      courseId: this.courseid,
+      sectionId: this.sectionId,
+      sectionPageId: this.sectionPageId,
+      userId: this.user.id
+    }).then(res=>{
+
+      this.restApi.postPromise('student-progress/update-student-progress', {
+        courseId: this.courseid,
+        sectionId: this.nextSectionId,
+        sectionPageId: this.nextSectionPageId,
+        userId: this.user.id
+      })
+    })
     this.router.navigate([`certification/sections/concepts/${this.courseid}/${this.nextSectionId}/${this.nextSectionPageId}`]);
   }
   fetchSectionItems() {
