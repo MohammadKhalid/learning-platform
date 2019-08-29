@@ -87,11 +87,13 @@ export class AddmodulePage implements OnInit {
     this.router.navigate([`/certification/sections/concepts/${this.id}/${id}`])
   }
   n(id, total, flag) {
+    debugger;
     if (this.studentExperience.length > 0) {
-      let textExp = this.studentExperience.filter(x => x.sectionId == id)
-        .reduce((acc, val) => acc.totalTextExperience + val.totalTextExperience)
-      let lessonExp = this.studentExperience.filter(x => x.sectionId == id)
-        .reduce((acc, val) => acc.totalLessonExperience + val.totalLessonExperience)
+      let textExp = this.studentExperience.filter(x => x.sectionId == id).map(x=> x.totalTextExperience)
+        .reduce((acc, val) => acc + val,0)
+      let lessonExp = this.studentExperience.filter(x => x.sectionId == id).map(x=> x.totalLessonExperience)
+        .reduce((acc, val) => acc + val,0)
+        
       return ((textExp + lessonExp) / total) * 100
     } else {
       return 0
