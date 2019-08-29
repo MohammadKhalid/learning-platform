@@ -124,7 +124,7 @@ const courseRoute = express.Router();
 coachRouter.use('/course', courseRoute)
 
 courseRoute.post('/', CertificationUpload, courseController.create)
-courseRoute.get('/get-coaches-course', courseController.getCourse)
+courseRoute.post('/get-coaches-course', courseController.getCourse)
 
 // SectionPage
 const sectionPageRoute = express.Router();

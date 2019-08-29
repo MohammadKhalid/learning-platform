@@ -47,13 +47,12 @@ const create = async (req, res) => {
 module.exports.create = create;
 
 const getCourse = async (req, res) => {
-    let { categories, searchBy, userId } = req.query
+    let { categories, searchBy, userId } = req.body
     let condition = {}
     let categoryCondition = {}
     condition.createdBy = userId
-
-    if (categories) {
-        categories = categories.split(',')
+    if (categories.length > 0) {
+        // categories = categories.split(',')/
         categoryCondition.id = {
             [Op.in]: categories
         }
