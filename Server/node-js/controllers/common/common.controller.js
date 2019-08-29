@@ -463,8 +463,7 @@ const updateStudentProgress = async (req, res) => {
             }
         })
 
-
-        console.log(studentProgress.length)
+        
 
         if (studentProgress.length == 0) {
             const studentProgressCreate = await StudentProgress.create({
@@ -479,8 +478,6 @@ const updateStudentProgress = async (req, res) => {
             }, {
                     where: {
                         studentId: userId,
-                        sectionId: sectionId,
-                        courseId: courseId,
                         sectionPageId: {
                             [Op.not]: sectionPageId
                         },
@@ -554,8 +551,6 @@ const updateStudentProgress = async (req, res) => {
                     where: {
                         studentId: userId,
                         sectionPageId: sectionPageId,
-                        courseId: courseId,
-                        sectionId: sectionId
                     }
                 })
             const studentProgressUpdate = await StudentProgress.update({
@@ -564,8 +559,6 @@ const updateStudentProgress = async (req, res) => {
             }, {
                     where: {
                         studentId: userId,
-                        sectionId: sectionId,
-                        courseId: courseId,
                         sectionPageId: {
                             [Op.not]: sectionPageId
                         },
