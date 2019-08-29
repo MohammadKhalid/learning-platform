@@ -1,4 +1,4 @@
-const { Course, CourseCategory, UserCompany, StudentCourse, Section, User } = require('../../models');
+const { Course, CourseCategory, UserCompany, StudentCourse, Section, User, StudentProgress, SectionPage, Text, Lesson } = require('../../models');
 const { to, ReE, ReS } = require('../../services/util.service');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -95,6 +95,8 @@ const enrollCourse = async (req, res) => {
 module.exports.enrollCourse = enrollCourse;
 
 const getUncompletedCourse = async (req, res) => {
+    let studentProgress, courseId, sectionPageId, sectionId, totalTextExperience, totalLessonExperience;
+    let dataArray = [];
     let { userId } = req.query;
 
 
@@ -105,7 +107,6 @@ const getUncompletedCourse = async (req, res) => {
             status: 0
         }
     })
-    console.log(uncompleteCourseIds.map(x => x.id))
     let uncompleteCourse = await Course.findAll({
         attributes: [['id', 'courseId'], 'title', 'description', 'image'],
 
@@ -120,17 +121,62 @@ const getUncompletedCourse = async (req, res) => {
             id: uncompleteCourseIds.map(x => x.CourseId)
         }
     })
-    // let uncompleteCourse = await Course.findAll({
-    //     attributes: [['id','courseId'],'title','description','image'],
-    //     include: [{
-    //         model: User,
-    //         where:{
-    //             id: userId
-    //         }
-    //     }]
-    // })
 
-    if (uncompleteCourse) return ReS(res, { data: uncompleteCourse }, 200);
+    studentProgress = await StudentProgress.findAll({
+        where: {
+            studentId: userId,
+            courseId: uncompleteCourseIds.map(x => x.CourseId)
+        },
+
+        include: [{
+
+            model: SectionPage,
+            as: 'sectionPage',
+
+            include: [{
+
+                model: Text,
+                as: 'Text',
+                attributes: ['experience']
+
+            },
+            {
+
+                model: Lesson,
+                as: 'Lesson',
+                attributes: ['experience']
+
+            }],
+
+            group: ['Text.sectionPageId', 'Lesson.sectionPageId']
+
+        }],
+
+    })
+
+
+    for (let index = 0; index < studentProgress.length; index++) {
+
+        sectionId = studentProgress[index].sectionPage.sectionId;
+        courseId = studentProgress[index].courseId
+        totalTextExperience = studentProgress[index].sectionPage.Text.length > 0 ? studentProgress[index].sectionPage.Text.length == 1 ? studentProgress[index].sectionPage.Text[0].experience :
+            studentProgress[index].sectionPage.Text.map((acc) => acc.experience).reduce((acc, val) => acc + val) : 0
+        totalLessonExperience = studentProgress[index].sectionPage.Lesson.length > 0 ? studentProgress[index].sectionPage.Lesson.length == 1 ? studentProgress[index].sectionPage.Lesson[0].experience :
+            studentProgress[index].sectionPage.Lesson.map((acc) => acc.experience).reduce((acc, val) => acc + val) : 0
+        sectionPageId = studentProgress[index].sectionPage.id;
+
+        dataArray.push({
+            courseId,
+            sectionId,
+            totalTextExperience,
+            totalLessonExperience,
+            sectionPageId
+
+        })
+
+    }
+
+    if (uncompleteCourse) return ReS(res, { data: uncompleteCourse, studentProgress: dataArray }, 200);
     else return ReE(res, { message: 'Unable to insert Course.' }, 500)
 }
 
@@ -138,6 +184,8 @@ module.exports.getUncompletedCourse = getUncompletedCourse;
 
 
 const getCompletedCourse = async (req, res) => {
+    let studentProgress, texts, lesson, sectionPageId, sectionId, totalTextExperience, totalLessonExperience;
+    let dataArray = [];
     let { userId } = req.query;
 
 
@@ -148,7 +196,7 @@ const getCompletedCourse = async (req, res) => {
             status: 1
         }
     })
-    console.log(completeCourseIds.map(x => x.id))
+
     let completeCourse = await Course.findAll({
         attributes: [['id', 'courseId'], 'title', 'description', 'image'],
 
@@ -164,17 +212,62 @@ const getCompletedCourse = async (req, res) => {
             id: completeCourseIds.map(x => x.CourseId)
         }
     })
-    // let uncompleteCourse = await Course.findAll({
-    //     attributes: [['id','courseId'],'title','description','image'],
-    //     include: [{
-    //         model: User,
-    //         where:{
-    //             id: userId
-    //         }
-    //     }]
-    // })
 
-    if (completeCourse) return ReS(res, { data: completeCourse }, 200);
+
+    studentProgress = await StudentProgress.findAll({
+        where: {
+            studentId: userId,
+            courseId: completeCourseIds.map(x => x.CourseId)
+        },
+
+        include: [{
+
+            model: SectionPage,
+            as: 'sectionPage',
+
+            include: [{
+
+                model: Text,
+                as: 'Text',
+                attributes: ['experience']
+
+            },
+            {
+
+                model: Lesson,
+                as: 'Lesson',
+                attributes: ['experience']
+
+            }],
+
+            group: ['Text.sectionPageId', 'Lesson.sectionPageId']
+
+        }],
+
+    })
+
+
+    for (let index = 0; index < studentProgress.length; index++) {
+
+        sectionId = studentProgress[index].sectionPage.sectionId;
+        totalTextExperience = studentProgress[index].sectionPage.Text.length > 0 ? studentProgress[index].sectionPage.Text.length == 1 ? studentProgress[index].sectionPage.Text[0].experience :
+            studentProgress[index].sectionPage.Text.map((acc) => acc.experience).reduce((acc, val) => acc + val) : 0
+        totalLessonExperience = studentProgress[index].sectionPage.Lesson.length > 0 ? studentProgress[index].sectionPage.Lesson.length == 1 ? studentProgress[index].sectionPage.Lesson[0].experience :
+            studentProgress[index].sectionPage.Lesson.map((acc) => acc.experience).reduce((acc, val) => acc + val) : 0
+        sectionPageId = studentProgress[index].sectionPage.id;
+
+        dataArray.push({
+
+            sectionId,
+            totalTextExperience,
+            totalLessonExperience,
+            sectionPageId
+
+        })
+
+    }
+
+    if (completeCourse) return ReS(res, { data: completeCourse, studentProgress: dataArray }, 200);
     else return ReE(res, { message: 'Unable to insert Course.' }, 500)
 }
 
