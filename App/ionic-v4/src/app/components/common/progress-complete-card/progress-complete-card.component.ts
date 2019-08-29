@@ -2,8 +2,8 @@ import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { RestApiService } from 'src/app/services/http/rest-api.service';
 import { AuthenticationService } from 'src/app/services/user/authentication.service';
 import { IMAGE_URL } from 'src/environments/environment';
-import { CertificatePdfComponent } from '../../certificate-pdf/certificate-pdf.component';
 import * as jsPDF from 'jspdf';
+import * as moment from 'moment';
 
 
 @Component({
@@ -13,8 +13,9 @@ import * as jsPDF from 'jspdf';
 })
 export class ProgressCompleteCardComponent implements OnInit {
   @Input() tabType: any;
-  @ViewChild(CertificatePdfComponent) pdf: CertificatePdfComponent
   user: any;
+  name : any
+  coursename : any;
   incompleteCourses: any = []
   defaultImage: string = "assets/img/certification/default-course.jpg";
   serverUrl: string = `${IMAGE_URL}/certification/`;
@@ -22,12 +23,14 @@ export class ProgressCompleteCardComponent implements OnInit {
   constructor(
     private restApi: RestApiService,
     private auth: AuthenticationService,
-    private comp: CertificatePdfComponent
   ) { }
   @ViewChild('content') content: ElementRef
-
+  datacertificate : any = [];
+  date : any
+count = 0
   certificateData: any = 'Noman saleem'
   ngOnInit() {
+    
 
 
     this.user = this.auth.getSessionData().user;
@@ -43,48 +46,70 @@ export class ProgressCompleteCardComponent implements OnInit {
       })
     }
   }
-  createPdfdata(user) {
-    alert(user);
-    debugger;
+ 
 
-  }
-
-  downloadPdf() {
+  downloadPdf(courseid) {
    
   
-      
-        let doc = new jsPDF('l', 'mm', 'a4', 1);
-        // doc.image_compression()
-
-        let specialElementHandlers = {
-          '#editor': function (element, renderer) {
-            return true;
+      this.restApi.getPromise(`course/get-certificate-details/${courseid}/${this.user.id}`).then(res => {
+        this.datacertificate = res.data[0]
+       
+        debugger
+        if(res.data.length > 0){
+          
+    
+          this.name =res.data[0].name
+               this.coursename    = res.data[0].Courses[0].title
+               debugger
+              //  2019-08-28T07:31:43.000Z
+             this.date  =  moment(res.data[0].Courses[0].StudentCourse.updatedAt).format('MMMM,DD,YYYY')
+          console.log('name :',this.date);
+          
+          let doc = new jsPDF('l', 'mm', 'a4', 1);
+          // doc.image_compression()
+  
+          let specialElementHandlers = {
+            '#editor': function (element, renderer) {
+              return true;
+            }
           }
+  
+          let content = this.content.nativeElement;
+          let image = new Image();
+          let image2 = new Image();
+          image.src = '../../../assets/img/certification/frame.png'
+          image2.src = '../../../assets/img/certification/logo.png'
+  
+          doc.fromHTML(content.innerHTML, 50, 15, {
+  
+            'width': 190,
+            'elementHandlers': specialElementHandlers,
+  
+          });
+          doc.addImage(image, 'PNG', 22, 12, 250, 190, '', 'FAST')
+          doc.addImage(image2, 'PNG', 100, 40, 80, 36, '', 'FAST')
+         
+          if(this.count == 1){
+            debugger
+            doc.save('Certificate.pdf')
+          }
+          this.count +=1
+          this.downloadPdf(courseid)
+  
         }
-
-        let content = this.content.nativeElement;
-        let image = new Image();
-        let image2 = new Image();
-        image.src = '../../../assets/img/certification/frame.png'
-        image2.src = '../../../assets/img/certification/logo.png'
-
-        doc.fromHTML(content.innerHTML, 50, 15, {
-
-          'width': 190,
-          'elementHandlers': specialElementHandlers,
-
-        });
-        doc.addImage(image, 'PNG', 22, 12, 250, 190, '', 'FAST')
-        doc.addImage(image2, 'PNG', 100, 40, 80, 36, '', 'FAST')
-        doc.save('Certificate.pdf')
-
+      }).catch(err=> {
+        
+      })
+       
       }
     
 
 
 
 
-
+      progress(n){
+        return 0.1;
+      }
 
 
 

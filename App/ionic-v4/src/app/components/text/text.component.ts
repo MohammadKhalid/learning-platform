@@ -19,7 +19,7 @@ export class TextComponent implements OnInit {
   @Input() recordId: any;
   @Input() sectionPageId: any;
   @Input() data: any;
-
+  spinner : boolean = false ;
   addTextForm: FormGroup
   btnTxt: string = 'Save'
   title: any;
@@ -108,6 +108,7 @@ export class TextComponent implements OnInit {
     }
     else {
       this.serviceApi.postPromise('text', this.addTextForm.value).then(res => {
+        this.spinner = true;
         this.loadingController.dismiss()
         this.noti.showMsg('text Created');
         this.eventEmitterCloseModel.next();

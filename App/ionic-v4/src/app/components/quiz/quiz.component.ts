@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 })
 export class QuizComponent implements OnInit {
   @Output() eventEmitterCloseModel = new EventEmitter<object>();
+  spinner:boolean = false ;
 
   quizes: any = [];
   @Input() sectionPageId: any;
@@ -87,6 +88,7 @@ export class QuizComponent implements OnInit {
     this.restApi.postPromise('quiz', obj)
       .then(response => {
         this.router.navigate([`certification/sections/concepts/${this.restApi.courseid}/${this.sectionId}/${this.sectionPageId}`])
+        this.spinner = true;
         this.notificationService.showMsg('Record Insert');
         this.eventEmitterCloseModel.next();
       }).catch(err => {

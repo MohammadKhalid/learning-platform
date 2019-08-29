@@ -107,6 +107,7 @@ import { CertificatePdfComponent } from './certificate-pdf/certificate-pdf.compo
 			"showSubtitle": true,
 			"showUnits": false,
 			"showBackground": false,
+			"lazy" : false,
 			"startFromZero": false
 		}),
 	],
