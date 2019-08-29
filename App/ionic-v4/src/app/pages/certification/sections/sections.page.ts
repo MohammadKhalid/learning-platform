@@ -267,6 +267,14 @@ export class SectionsPage implements OnInit {
     let sectionId = this.apiSrv.sectionId;
     let courseId = this.apiSrv.courseid
     // if (data.type == "Quiz") {
+    if(this.user.type == 'student'){
+      this.apiSrv.postPromise('student-progress/change-is-last-active',{
+        sectionPageId:data.id, 
+        courseId: courseId, 
+        sectionId: sectionId, 
+        userId: this.user.id
+      })
+    }
     this.reouter.navigate([`certification/sections/concepts/${courseId}/${sectionId}/${data.id}`])
     // }
     // else if (data.type == "Resource") {

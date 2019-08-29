@@ -22,6 +22,7 @@
                 <div *ngIf="courses.length > 0">
                     <div *ngFor="let obj of courses">
 
+
                         <h2 class="certficate-title">
                             <span>{{obj.title}}</span>
                         </h2>
@@ -64,6 +65,15 @@
 
     <div *ngIf="user.type == 'coach'">
         <app-filter (searchByFilterEvent)="searchByFilterEvent($event)"></app-filter>
+        <ion-list>
+            <ion-item lines="none" *ngIf="courses.length == 0">
+                <ion-label>
+                    <p>No record Found! </p>
+                </ion-label>
+            </ion-item>
+        </ion-list>
+
+
         <div *ngIf="courses.length > 0">
             <div *ngFor="let obj of courses">
 
@@ -74,7 +84,5 @@
             </div>
         </div>
     </div>
-
-
 
 </ion-content>

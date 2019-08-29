@@ -21,13 +21,13 @@
                 </p>
             </div>
             <div class="progressbar-width">
-                <!-- <ion-progress-bar class="progress-bar-adjustment" color="primary" value="0.5"></ion-progress-bar> -->
+                <ion-progress-bar class="progress-bar-adjustment" color="primary" value="{{progress(n)}}"></ion-progress-bar>
             </div>
             <ion-icon name="play" class="ion-float-right play-btn-adjustment"></ion-icon>
         </ion-label>
 
     </ion-item>
-    <ion-button (click)="$event.preventDefault();$event.stopPropagation(); downloadPdf(row.courseId); " style="float: right">Download Certificate</ion-button>
+    <ion-button (click)="$event.preventDefault();$event.stopPropagation(); downloadPdf(row.courseId);courseid(row.courseId); " *ngIf="tabType == 'completed'" style="float: right">Certificate</ion-button>
     <!-- <ion-button (click)="$event.preventDefault();$event.stopPropagation();generateCertificate()" style="float: right;">Certificate Generate </ion-button> -->
 
 </ion-card>
@@ -54,18 +54,18 @@
           margin:30px 10px 10px 400px;
           font: menu;
           opacity: 0.7;">VERIFIED CERTIFICATE OF COMPLETION</h6>
-        <p style=" margin:25px 10px 10px 550px; font:menu">june,22,2018</p>
+        <p style=" margin:25px 10px 10px 550px; font:menu">{{date}}</p>
 
-        <h2 style=" margin:210px 0px -18px 470px; font-size: 20px ">{{certificateData}}</h2>
+        <h2 style=" margin:210px 0px -18px 490px; font-size: 20px ">{{name}}</h2>
 
         <p style="margin:0 0 5px 290px; color:#01b0e0 ">_____________________________________________</p>
-        <p style=" font-size: menu; margin:0 0 0 400px; color:#01b0e1 ">Has successfully completed the </p>
+        <p style=" font-size: menu; margin:0 0 0 420px; color:#01b0e1 ">Has successfully completed the </p>
 
 
-        <h2 style=" margin:80px 0px -18px 450px; ; font-size: 20px">Computer Science</h2>
+        <h2 style=" margin:80px 0px -18px 489px; ; font-size: 20px">{{coursename}}</h2>
 
         <p style="margin:0 0 0 170px; color:#01b0e0">____________________________________________________________________</p>
-        <p style="font-size: menu; margin:5px 0 10px 400px; color:#01b0e2 ">NANODEGREE PROGRAM </p>
+        <p style="font-size: menu; margin:5px 0 10px 430px; color:#01b0e2 ">NANODEGREE PROGRAM </p>
 
 
 
@@ -74,7 +74,7 @@
         <p style="margin: 50px 0 0 0; color: #01b0e1;">______________________</p>
 
 
-        <span style=" font-size: 12px; color:#929394;">Noman saleem</span><br>
+        <span style=" font-size: 12px; color:#929394;">XYZ</span><br>
         <span style="color:#929394; font-size:12px;">Founder Thrive19</span>
     </div>
 </div>

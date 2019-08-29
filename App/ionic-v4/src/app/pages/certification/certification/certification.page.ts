@@ -9,6 +9,10 @@ import { AuthenticationService } from 'src/app/services/user/authentication.serv
 })
 export class CertificationPage implements OnInit {
   courses: any = [];
+  name: any;
+  level : any;
+  currentExp : any;
+  nextExp : any;
   user: any
   constructor(
     private restService: RestApiService,
@@ -20,6 +24,11 @@ export class CertificationPage implements OnInit {
   }
 
   ngOnInit() {
+    
+  
+
+
+
     let obj = {
       categories: [],
       searchBy: '',
@@ -31,13 +40,15 @@ export class CertificationPage implements OnInit {
   }
   searchByFilterEvent(obj) {
     if (this.user.type == "coach") {
-      this.restService.get(`course/get-coaches-course`, obj).subscribe((resp: any) => {
+      this.restService.post(`course/get-coaches-course`, obj).subscribe((resp: any) => {
+      debugger;
         if (resp.data) this.courses = resp.data;
       });
     }
     else {
       obj.adminId = this.user.createdBy;
       this.restService.get(`course`, obj).subscribe((resp: any) => {
+        debugger;
         if (resp.data) this.courses = resp.data;
       });
     }

@@ -31,7 +31,7 @@
                     <ion-col size-md="4" size-sm="2" size-xs="3">
                         <!-- [disabled]="((!searchBy) && (categories.length == 0))"      -->
                         <div *ngIf="user.type == 'coach'">
-                            <button mat-button color="primary" [disabled]="((!searchBy) && (categories.length == 0))" class="apply-button mat-button" size="small" (click)="search();" color="primary">Apply</button>
+                            <button mat-button color="primary" [class.green]="((!searchBy) && (categories.length == 0))" [disabled]="((!searchBy) && (categories.length == 0))" class="apply-button mat-button" size="small" (click)="search();" color="primary">Apply</button>
                         </div>
                         <div *ngIf="user.type == 'student'">
                             <button mat-flat-button class="apply-button btn-adjustment" (click)="search();" flex>

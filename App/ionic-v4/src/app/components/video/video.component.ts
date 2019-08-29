@@ -16,7 +16,7 @@ export class VideoComponent implements OnInit {
   @Input() sectionPageId: any;
   @Input() sectionId: any;
   @Input() data: any;
-
+  spinner : boolean  = false ;
   id: any;
   response: any
   btnText: string = "Save";
@@ -68,6 +68,7 @@ export class VideoComponent implements OnInit {
         this.noti.showMsg(err)
       })
     } else {
+      this.spinner = true;
       this.apiservice.postPromise('lesson', this.addVideoForm.value).then(res => {
         this.response = res.data;
         // let id = this.section.snapshot.paramMap.get('');
