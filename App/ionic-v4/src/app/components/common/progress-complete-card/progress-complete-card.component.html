@@ -27,7 +27,10 @@
         </ion-label>
 
     </ion-item>
-    <ion-button (click)="$event.preventDefault();$event.stopPropagation(); downloadPdf(row.courseId);courseid(row.courseId); " *ngIf="tabType == 'completed'" style="float: right">Certificate</ion-button>
+    <ion-button [disabled]="spinner" (click)="$event.preventDefault();$event.stopPropagation(); downloadPdf(row.courseId);courseid(row.courseId); " *ngIf="tabType == 'completed'" style="float: right">Certificate
+        <ion-spinner *ngIf="spinner"></ion-spinner>
+
+    </ion-button>
     <!-- <ion-button (click)="$event.preventDefault();$event.stopPropagation();generateCertificate()" style="float: right;">Certificate Generate </ion-button> -->
 
 </ion-card>

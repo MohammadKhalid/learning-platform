@@ -53,7 +53,6 @@ export class AddmodulePage implements OnInit {
 
   }
   ionViewWillEnter() {
-    debugger;
     this.inprogressSection();
 
   }
@@ -70,10 +69,17 @@ export class AddmodulePage implements OnInit {
         debugger
         this.data = res.data;
         this.studentExperience = res.studentExperience
-        // if (!this.inProgressData) {
-        // this.inProgressData = res.data.length > 0 ? res.data[0] : [];
-        this.inProgressData = data
-        // }
+        if (data.length == 0 ) {
+        this.inProgressData = {
+          "Section": {
+            "title": res.data[0].title,
+            "description": res.data[0].description,
+          }
+        }
+        
+        }else {
+          this.inProgressData = res.data[0]
+        }
         this.courseTitle = res.data[0].course.title
       } else {
         this.courseTitle = res.data[0].title
@@ -136,10 +142,11 @@ export class AddmodulePage implements OnInit {
           updateList: this.updateList.bind(this)
         }
       });
-
+                                    
     modal.onDidDismiss().then(() => {
+      
     });
-    await modal.present();
+     modal.present();
   }
   addToList(res) {
     this.data.push(res.data);
@@ -153,11 +160,11 @@ export class AddmodulePage implements OnInit {
 
     this.service.getPromise(`section/get-last-section-id/${this.user.id}/${this.id}`).then(res => {
       debugger
-      if (res.data.length == 0) {
+      if (res.studentCourse.length == 0) {
         this.isStart = true
       }
       // this.inProgressData = res.data[0];
-      this.getModules(res.data[0])
+      this.getModules(res.data)
     }).catch(err => {
     })
 
@@ -166,16 +173,20 @@ export class AddmodulePage implements OnInit {
 
 
   deleteModule(id) {
-    this.service.delete(`courses/${id}`).subscribe(res => {
+    this.service.delete(`/section/${id}`).subscribe(res => {
       if (res) {
+        debugger;
         this.notifictation.showMsg("Successfully delete record");
+        this.popoverController.dismiss();
       }
     }, error => {
       this.notifictation.showMsg(error);
     })
   }
   editModule(data) {
-    this.openModal(data)
+    this.openModal(data);
+    this.popoverController.dismiss();
+   
   }
   async addEditPopOver(ev: any, item: any) {
     const popover = await this.popoverController.create({

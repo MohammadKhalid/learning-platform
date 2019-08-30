@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavParams } from '@ionic/angular';
+import { NavParams, ModalController } from '@ionic/angular';
 import { ViewController } from '@ionic/core';
 
 @Component({
@@ -12,20 +12,23 @@ export class AddEditPopoverComponent implements OnInit {
   edit: any;
   item: any;
   constructor(
-    private navParams: NavParams
+    private navParams: NavParams,
+    private modal : ModalController
   ) {
     this.delete = this.navParams.get("delete");
     this.edit = this.navParams.get("edit");
     this.item = this.navParams.get("item");
 
   }
-
+spinner :boolean = false ;
   ngOnInit() { 
   }
   deleteRec() {
     this.delete(this.item.id);
+ 
   }
   editRec(){
     this.edit(this.item);
+   
   }
 }

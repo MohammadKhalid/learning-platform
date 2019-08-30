@@ -20,8 +20,7 @@
 
         <!-- quiz start -->
         <div *ngIf="DataRow.type === 'Quiz'">
-            <app-quiz-viewer-coach (removeItem)="removeItem($event)" (openQuizEditModal)="openQuizEditModal($event)"
-                [data]="DataRow" [quizIndex]="quizIndex"></app-quiz-viewer-coach>
+            <app-quiz-viewer-coach (removeItem)="removeItem($event)" (openQuizEditModal)="openQuizEditModal($event)" [data]="DataRow" [quizIndex]="quizIndex"></app-quiz-viewer-coach>
         </div>
         <!-- quiz start -->
     </div>
@@ -50,16 +49,15 @@
 
         <!-- quiz start -->
         <div *ngIf="DataRow.type === 'Quiz'">
-            <app-quiz-student (removeItem)="removeItem($event)" (openQuizEditModal)="openQuizEditModal($event)"
-                [data]="DataRow" [quizIndex]="quizIndex"></app-quiz-student>
+            <app-quiz-student (removeItem)="removeItem($event)" (openQuizEditModal)="openQuizEditModal($event)" [data]="DataRow" [quizIndex]="quizIndex"></app-quiz-student>
         </div>
         <!-- quiz start -->
     </div>
     <ion-item-divider></ion-item-divider>
-    <ion-button (click)="goToNextPage()" *ngIf="sectionPageId && showFinish== false && showNext == true">
+    <ion-button (click)="goToNextPage()" *ngIf="sectionPageId && showFinish== false && showNext == true" class="nextBtn">
         Next
     </ion-button>
-    <ion-button (click)="finishCourse()" *ngIf="showFinish">
+    <ion-button (click)="finishCourse()" *ngIf="showFinish" class="finish">
         Finish
     </ion-button>
 </ion-content>

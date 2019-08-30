@@ -14,7 +14,8 @@ import * as moment from 'moment';
 export class ProgressCompleteCardComponent implements OnInit {
   @Input() tabType: any;
   user: any;
-  name: any
+  name: any;
+  spinner : any = false;
   coursename: any;
   incompleteCourses: any = []
   defaultImage: string = "assets/img/certification/default-course.jpg";
@@ -53,11 +54,11 @@ export class ProgressCompleteCardComponent implements OnInit {
 
 
   downloadPdf(courseid) {
+    this.spinner = true;
 
 
     this.restApi.getPromise(`course/get-certificate-details/${courseid}/${this.user.id}`).then(res => {
       this.datacertificate = res.data[0]
-
       debugger
       if (res.data.length > 0) {
 
@@ -95,10 +96,13 @@ export class ProgressCompleteCardComponent implements OnInit {
 
         if (this.count == 1) {
           debugger
+          this.downloadPdf(courseid)
+
           doc.save('Certificate.pdf')
         }
         this.count += 1
-        this.downloadPdf(courseid)
+        this.spinner = false ;
+
 
       }
     }).catch(err => {
