@@ -1,4 +1,4 @@
-const { Sequelize, CourseCategory, Section, Text, Lesson, Course, StudentProgress, SectionPage } = require('../../models');
+const { Sequelize, StudentCourse, Section, Text, Lesson, Course, StudentProgress, SectionPage } = require('../../models');
 const { to, ReE, ReS } = require('../../services/util.service');
 const Op = Sequelize.Op;
 
@@ -31,10 +31,18 @@ const getLastSectionDetails = async (req, res) => {
         },
 
     })
+    const studentCourse = await StudentCourse.findAll({
+
+        where: {
+            UserId: studentId,
+            CourseId: courseId
+        },
+
+    })
 
     if (studentProgress.length > 0) {
-        
-         sectionPage = await SectionPage.findAll({
+
+        sectionPage = await SectionPage.findAll({
 
             include: [{
                 model: Section,
@@ -44,11 +52,11 @@ const getLastSectionDetails = async (req, res) => {
                 id: studentProgress[0].sectionPageId
             }
         })
-        return ReS(res, { data: sectionPage }, 200);
+        return ReS(res, { data: sectionPage, studentCourse: studentCourse }, 200);
     } else {
-        return ReS(res, { data: [] }, 200);
+        return ReS(res, { data: [], studentCourse: studentCourse }, 200);
     }
-   
+
 
 }
 module.exports.getLastSectionDetails = getLastSectionDetails;
@@ -69,33 +77,26 @@ const getStudentProgress = async (req, res) => {
 
 
             include: [{
-            
+
                 model: Text,
                 as: 'Text',
                 attributes: [[Sequelize.fn('SUM', Sequelize.col('Text.experience')), 'totalExperience']],
                 raw: true
-    
+
             },
             {
-            
+
                 model: Lesson,
                 as: 'Lesson',
                 attributes: [[Sequelize.fn('SUM', Sequelize.col('Lesson.experience')), 'totalExperience']],
                 raw: true
-    
+
             }]
 
         }],
         group: ['id']
     })
 
-
-    // let textsTotalArray = sectionPage.map((row) => { return row.Text.totalExperience});
-    // let lessonsTotalArray = sectionPage.map((row) => { return row.Lesson.totalExperience});
-
-    // let totalExperience = textsTotalArray + lessonsTotalArray
-
-    console.log(sectionPage.Text.totalExperience);
 
 
     let studentProgress = await StudentProgress.findAll({
