@@ -339,7 +339,7 @@ module.exports.getSectionItems = getSectionItems;
 
 
 const updateStudentProgress = async (req, res) => {
-    let nextExperience, studentLevel, currentExperience, studentExperience;
+    let nextExperience, studentLevel, currentExperience, studentExperience, texts, lesson;
     let { sectionPageId, courseId, sectionId, userId } = req.body
     let sectionpage = []
 
@@ -376,7 +376,7 @@ const updateStudentProgress = async (req, res) => {
                 })
 
 
-            let texts = await Text.findAll({
+            texts = await Text.findAll({
                 attributes: [[Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
                 raw: true,
                 where: {
@@ -384,7 +384,7 @@ const updateStudentProgress = async (req, res) => {
                 },
                 group: ['sectionPageId']
             })
-            let lesson = await Lesson.findAll({
+            lesson = await Lesson.findAll({
                 attributes: [[Sequelize.fn('SUM', Sequelize.col('experience')), 'totalExperience']],
                 raw: true,
                 where: {
@@ -412,7 +412,6 @@ const updateStudentProgress = async (req, res) => {
             else if (texts.length == 0 && lesson.length == 0) {
                 studentExperience = 0
             }
-
 
 
 
@@ -458,7 +457,7 @@ const updateStudentProgress = async (req, res) => {
         }
 
 
-        if (sectionpage) return ReS(res, { data: studentProgress }, 200);
+        if (sectionpage) return ReS(res, { data: studentProgress, texts: texts, lesson: lesson }, 200);
         else return ReE(res, { message: 'Unable to get Section Page.' }, 500)
     }
 
