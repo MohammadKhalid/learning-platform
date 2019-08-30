@@ -91,8 +91,8 @@ export class SectionsPage implements OnInit {
     //student menu popupate start
     this.subscription = this.apiSrv.getSectionMenuDataStudent().subscribe(res => {
       if (res) {
-        res.concept ? this.listData = res.concept : '';
-        res.resource ? this.listResourceData = res.resource : '';
+        res.concept ? this.listData = res.concept : [];
+        res.resource ? this.listResourceData = res.resource : [];
         this.lessonName = res.title;
         setTimeout(() => {
           debugger
@@ -148,9 +148,9 @@ export class SectionsPage implements OnInit {
       this.menu.enable(false, 'mainMenu')
       if (res) {
         debugger;
-        res.concept ? this.listData = res.concept : '';
-        res.resource ? this.listResourceData = res.resource : '';
-        res.quizAnswer ? this.quizAnswerlist = res.quizAnswer : '';
+        res.concept ? this.listData = res.concept : [];
+        res.resource ? this.listResourceData = res.resource : [];
+        res.quizAnswer ? this.quizAnswerlist = res.quizAnswer : [];
 
         this.lessonName = res.title;
 
@@ -171,6 +171,7 @@ export class SectionsPage implements OnInit {
       sectionId: this.apiSrv.sectionId
     }
     this.apiSrv.postPromise('section-page', obj).then(respone => {
+      debugger
       this.listData.push(respone.data)
       this.showField = false
       this.pageTitle = ''

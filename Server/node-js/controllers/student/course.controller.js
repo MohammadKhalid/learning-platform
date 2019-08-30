@@ -95,7 +95,7 @@ const enrollCourse = async (req, res) => {
 module.exports.enrollCourse = enrollCourse;
 
 const getUncompletedCourse = async (req, res) => {
-    let studentProgress, texts, lesson, sectionPageId, sectionId, totalTextExperience, totalLessonExperience;
+    let studentProgress, courseId, sectionPageId, sectionId, totalTextExperience, totalLessonExperience;
     let dataArray = [];
     let { userId } = req.query;
 
@@ -107,7 +107,6 @@ const getUncompletedCourse = async (req, res) => {
             status: 0
         }
     })
-    console.log(uncompleteCourseIds.map(x => x.id))
     let uncompleteCourse = await Course.findAll({
         attributes: [['id', 'courseId'], 'title', 'description', 'image'],
 
@@ -122,7 +121,7 @@ const getUncompletedCourse = async (req, res) => {
             id: uncompleteCourseIds.map(x => x.CourseId)
         }
     })
-    
+
     studentProgress = await StudentProgress.findAll({
         where: {
             studentId: userId,
@@ -159,6 +158,7 @@ const getUncompletedCourse = async (req, res) => {
     for (let index = 0; index < studentProgress.length; index++) {
 
         sectionId = studentProgress[index].sectionPage.sectionId;
+        courseId = studentProgress[index].courseId
         totalTextExperience = studentProgress[index].sectionPage.Text.length > 0 ? studentProgress[index].sectionPage.Text.length == 1 ? studentProgress[index].sectionPage.Text[0].experience :
             studentProgress[index].sectionPage.Text.map((acc) => acc.experience).reduce((acc, val) => acc + val) : 0
         totalLessonExperience = studentProgress[index].sectionPage.Lesson.length > 0 ? studentProgress[index].sectionPage.Lesson.length == 1 ? studentProgress[index].sectionPage.Lesson[0].experience :
@@ -166,7 +166,7 @@ const getUncompletedCourse = async (req, res) => {
         sectionPageId = studentProgress[index].sectionPage.id;
 
         dataArray.push({
-
+            courseId,
             sectionId,
             totalTextExperience,
             totalLessonExperience,
@@ -184,7 +184,7 @@ module.exports.getUncompletedCourse = getUncompletedCourse;
 
 
 const getCompletedCourse = async (req, res) => {
-    let studentProgress, texts, lesson, sectionPageId, sectionId, totalTextExperience, totalLessonExperience;
+    let studentProgress, courseId, sectionPageId, sectionId, totalTextExperience, totalLessonExperience;
     let dataArray = [];
     let { userId } = req.query;
 
@@ -250,6 +250,7 @@ const getCompletedCourse = async (req, res) => {
     for (let index = 0; index < studentProgress.length; index++) {
 
         sectionId = studentProgress[index].sectionPage.sectionId;
+        courseId = studentProgress[index].courseId
         totalTextExperience = studentProgress[index].sectionPage.Text.length > 0 ? studentProgress[index].sectionPage.Text.length == 1 ? studentProgress[index].sectionPage.Text[0].experience :
             studentProgress[index].sectionPage.Text.map((acc) => acc.experience).reduce((acc, val) => acc + val) : 0
         totalLessonExperience = studentProgress[index].sectionPage.Lesson.length > 0 ? studentProgress[index].sectionPage.Lesson.length == 1 ? studentProgress[index].sectionPage.Lesson[0].experience :
@@ -257,7 +258,7 @@ const getCompletedCourse = async (req, res) => {
         sectionPageId = studentProgress[index].sectionPage.id;
 
         dataArray.push({
-
+            courseId,
             sectionId,
             totalTextExperience,
             totalLessonExperience,

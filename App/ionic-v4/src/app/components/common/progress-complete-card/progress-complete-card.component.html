@@ -21,7 +21,7 @@
                 </p>
             </div>
             <div class="progressbar-width">
-                <ion-progress-bar class="progress-bar-adjustment" color="primary" value="{{progress(n)}}"></ion-progress-bar>
+                <ion-progress-bar class="progress-bar-adjustment" color="primary" value="{{progress(row.courseId,row?.Section[0]?.totalExperience)}}"></ion-progress-bar>
             </div>
             <ion-icon name="play" class="ion-float-right play-btn-adjustment"></ion-icon>
         </ion-label>
