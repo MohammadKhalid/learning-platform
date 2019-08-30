@@ -1,4 +1,4 @@
-const { Level, StudentExperienceSettings, User } = require('../../models');
+const { Level, StudentExperienceSetting, User, UserCompany } = require('../../models');
 const { to, ReE, ReS } = require('../../services/util.service');
 
 const Sequelize = require('sequelize');
@@ -13,13 +13,31 @@ const create = async (req, res) => {
         }
     })
 
+    const userCompany = await UserCompany.findAll({
+
+        attributes: ['companyId'],
+        
+        where: {
+            userId: studentId
+        }
+    })
+
+    const studentExperienceSettings = await StudentExperienceSetting.findAll({
+        attributes: ['initialLevel','initialExperience'],
+
+        where: {
+            companyId: userCompany[0].companyId
+        }
+    })
+
+
     if(levelGet.length == 0){
 
          level = await Level.create({
             studentId: studentId,
-            nextExperience: 100,
+            nextExperience: studentExperienceSettings[0].initialExperience,
             currentExperience: 0,
-            currentLevel: 0
+            currentLevel: studentExperienceSettings[0].initialLevel
         })
     }
 

@@ -76,11 +76,11 @@ module.exports.getQuiz = getQuiz;
 
 
 const submitQuiz = async function (req, res) {
-
+    let nextExperience, studentLevel, currentExperience, studentExperience;
     let { userId, options, sectionPageId, questionId } = req.body
     let totalScore = 0
     let quiz = await Quiz.findAll({
-        attributes: ['options','experience'],
+        attributes: ['options', 'experience'],
         where: {
             id: questionId,
         }
@@ -113,7 +113,32 @@ const submitQuiz = async function (req, res) {
             id: questionId
         }
     })
-    
+
+    const level = await Level.findAll({
+        where: {
+            studentId: userId
+        }
+    })
+
+
+    currentExperience = totalScore + level[0].currentExperience;
+    if (currentExperience == level[0].nextExperience ||
+        currentExperience > level[0].nextExperience) {
+        nextExperience = level[0].nextExperience * 1.5;
+        studentLevel = level[0].currentLevel + 1;
+    }
+
+
+    const levelUpdate = await Level.update({
+        nextExperience: nextExperience,
+        currentExperience: currentExperience,
+        currentLevel: studentLevel
+    }, {
+            where: {
+                studentId: userId
+            }
+        })
+
     if (studentAnswerResult) return ReS(res, { data: quizRes }, 200);
     else return ReE(res, { message: 'Unable to insert Course.' }, 500)
 }
