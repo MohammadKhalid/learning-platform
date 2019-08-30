@@ -180,11 +180,11 @@ const getSections = async (req, res) => {
 
             sectionId = studentProgress[index].sectionPage.sectionId;
             totalTextExperience = studentProgress[index].sectionPage.Text.length > 0 ? studentProgress[index].sectionPage.Text.length == 1 ? studentProgress[index].sectionPage.Text[0].experience :
-                studentProgress[index].sectionPage.Text.reduce((acc, val) => parseInt(acc.experience) + parseInt(val.experience)) : 0
+                studentProgress[index].sectionPage.Text.reduce((acc, val) => parseInt(acc.experience) + parseInt(val.experience),0) : 0
             totalLessonExperience = studentProgress[index].sectionPage.Lesson.length > 0 ? studentProgress[index].sectionPage.Lesson.length == 1 ? studentProgress[index].sectionPage.Lesson[0].experience :
-                studentProgress[index].sectionPage.Lesson.reduce((acc, val) => parseInt(acc.experience) + parseInt(val.experience)) : 0
+                studentProgress[index].sectionPage.Lesson.reduce((acc, val) => parseInt(acc.experience) + parseInt(val.experience),0) : 0
             sectionPageId = studentProgress[index].sectionPage.id;
-            totalQuizExperience = studentAnswer.filter(x => x.sectionPageId == studentProgress[index].sectionPageId).map(x => x.question.experience).reduce((acc,val) => acc + val)
+            totalQuizExperience = studentAnswer.filter(x => x.sectionPageId == studentProgress[index].sectionPageId).map(x => x.question.experience).reduce((acc,val) => acc + val,0)
 
             console.log(totalQuizExperience)
             dataArray.push({

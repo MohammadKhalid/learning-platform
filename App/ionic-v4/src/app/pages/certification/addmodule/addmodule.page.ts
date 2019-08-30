@@ -29,6 +29,7 @@ export class AddmodulePage implements OnInit {
     public popoverController: PopoverController,
     public menu: MenuController) { }
   data: any[] = [];
+  isLastRecord: boolean = false
   studentExperience: any = []
   serverUrl: string = "./assets/img/";
   forms: FormGroup
@@ -49,11 +50,43 @@ export class AddmodulePage implements OnInit {
     //   ])),
     //   courseId: this.id
     // })
-    this.inprogressSection();
+    if (this.user.type == 'coach') {
+
+      this.service.getPromise(`section/get-sections/${this.id}/${this.user.id}`).then(res => {
+        if (res.flag == 'Section') {
+          this.data = res.data;
+          this.studentExperience = res.studentExperience
+          debugger
+          this.courseTitle = res.data[0].course.title
+        } else {
+          this.courseTitle = res.data[0].title
+        }
+      }).catch(err => {
+      })
+    } else {
+
+      this.inprogressSection();
+    }
 
   }
   ionViewWillEnter() {
-    this.inprogressSection();
+    if (this.user.type == 'coach') {
+
+      this.service.getPromise(`section/get-sections/${this.id}/${this.user.id}`).then(res => {
+        if (res.flag == 'Section') {
+          this.data = res.data;
+          this.studentExperience = res.studentExperience
+          debugger
+          this.courseTitle = res.data[0].course.title
+        } else {
+          this.courseTitle = res.data[0].title
+        }
+      }).catch(err => {
+      })
+    } else {
+
+      this.inprogressSection();
+    }
 
   }
 
@@ -64,21 +97,22 @@ export class AddmodulePage implements OnInit {
 
   getModules(data) {
 
+    debugger
     this.service.getPromise(`section/get-sections/${this.id}/${this.user.id}`).then(res => {
       if (res.flag == 'Section') {
-        debugger
         this.data = res.data;
         this.studentExperience = res.studentExperience
-        if (data.length == 0 ) {
-        this.inProgressData = {
-          "Section": {
-            "title": res.data[0].title,
-            "description": res.data[0].description,
+        if (data.length == 0) {
+          this.inProgressData = {
+            "Section": {
+              "id": res.data[0].id,
+              "title": res.data[0].title,
+              "description": res.data[0].description,
+            }
           }
-        }
-        
-        }else {
-          this.inProgressData = res.data[0]
+
+        } else {
+          this.inProgressData = data[0]
         }
         this.courseTitle = res.data[0].course.title
       } else {
@@ -93,14 +127,16 @@ export class AddmodulePage implements OnInit {
     this.router.navigate([`/certification/sections/concepts/${this.id}/${id}`])
   }
   n(id, total, flag) {
-    debugger;
+    debugger
     if (this.studentExperience.length > 0) {
-      let textExp = this.studentExperience.filter(x => x.sectionId == id).map(x=> x.totalTextExperience)
-        .reduce((acc, val) => acc + val,0)
-      let lessonExp = this.studentExperience.filter(x => x.sectionId == id).map(x=> x.totalLessonExperience)
-        .reduce((acc, val) => acc + val,0)
-        
-      return ((textExp + lessonExp) / total) * 100
+      let textExp = this.studentExperience.filter(x => x.sectionId == id).map(x => x.totalTextExperience)
+        .reduce((acc, val) => acc + val, 0)
+      let lessonExp = this.studentExperience.filter(x => x.sectionId == id).map(x => x.totalLessonExperience)
+        .reduce((acc, val) => acc + val, 0)
+      let quizExp = this.studentExperience.filter(x => x.sectionId == id).map(x => x.totalQuizExperience)
+        .reduce((acc, val) => acc + val, 0)
+
+      return ((textExp + lessonExp + quizExp) / total) * 100
     } else {
       return 0
     }
@@ -118,7 +154,11 @@ export class AddmodulePage implements OnInit {
         this.notifictation.showMsg('Error to Add ');
       })
     } else {
-      this.router.navigate([`certification/sections/concepts/${obj.courseId}/${item.Section.id}/${item.id}`])
+      if (this.isLastRecord) {
+        this.router.navigate([`certification/sections/concepts/${obj.courseId}/${item.Section.id}/${item.id}`])
+      } else {
+        this.router.navigate([`certification/sections/concepts/${obj.courseId}/${item.Section.id}`])
+      }
     }
   }
   addModule() {
@@ -142,11 +182,11 @@ export class AddmodulePage implements OnInit {
           updateList: this.updateList.bind(this)
         }
       });
-                                    
+
     modal.onDidDismiss().then(() => {
-      
+
     });
-     modal.present();
+    modal.present();
   }
   addToList(res) {
     this.data.push(res.data);
@@ -162,6 +202,9 @@ export class AddmodulePage implements OnInit {
       debugger
       if (res.studentCourse.length == 0) {
         this.isStart = true
+      }
+      if (res.data.length > 0) {
+        this.isLastRecord = true
       }
       // this.inProgressData = res.data[0];
       this.getModules(res.data)
@@ -186,7 +229,7 @@ export class AddmodulePage implements OnInit {
   editModule(data) {
     this.openModal(data);
     this.popoverController.dismiss();
-   
+
   }
   async addEditPopOver(ev: any, item: any) {
     const popover = await this.popoverController.create({
