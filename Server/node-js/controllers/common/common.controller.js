@@ -98,7 +98,7 @@ module.exports.sectionDetailsForStudent = sectionDetailsForStudent;
 
 
 const getSections = async (req, res) => {
-    let studentProgress, texts, lesson, sectionPageId, sectionId, totalTextExperience, totalLessonExperience;
+    let studentProgress, texts, lesson, sectionPageId, totalQuizExperience, sectionId, totalTextExperience, totalLessonExperience;
     let dataArray = [];
     let { courseId, studentId } = req.params
     let flag = 'Section'
@@ -161,6 +161,21 @@ const getSections = async (req, res) => {
         })
 
 
+        studentAnswer = await StudentAnswer.findAll({
+            attributes: ['quizId', 'sectionPageId'],
+            include: [{
+                model: Quiz,
+                as: 'question',
+                attributes: ['experience'],
+            }],
+
+            where: {
+                sectionPageId: studentProgress.map(x => x.sectionPageId),
+                isCorrect: 1
+            },
+
+        })
+
         for (let index = 0; index < studentProgress.length; index++) {
 
             sectionId = studentProgress[index].sectionPage.sectionId;
@@ -169,14 +184,16 @@ const getSections = async (req, res) => {
             totalLessonExperience = studentProgress[index].sectionPage.Lesson.length > 0 ? studentProgress[index].sectionPage.Lesson.length == 1 ? studentProgress[index].sectionPage.Lesson[0].experience :
                 studentProgress[index].sectionPage.Lesson.reduce((acc, val) => parseInt(acc.experience) + parseInt(val.experience)) : 0
             sectionPageId = studentProgress[index].sectionPage.id;
+            totalQuizExperience = studentAnswer.filter(x => x.sectionPageId == studentProgress[index].sectionPageId).map(x => x.question.experience).reduce((acc,val) => acc + val)
 
-
+            console.log(totalQuizExperience)
             dataArray.push({
 
                 sectionId,
                 totalTextExperience,
                 totalLessonExperience,
-                sectionPageId
+                sectionPageId,
+                totalQuizExperience
 
             })
 
