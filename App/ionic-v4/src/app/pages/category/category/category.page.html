@@ -1,19 +1,32 @@
-<ion-header no-border>
-  <ion-toolbar color="primary">
-  	<ion-buttons slot="start">
-    	<ion-menu-button color="light"></ion-menu-button>
-    </ion-buttons>
+<app-admin-category class="ion-page" *ngIf="sessionData?.user?.type === 'admin'"></app-admin-category>
+<app-client-category class="ion-page" *ngIf="sessionData?.user?.type === 'client'"></app-client-category>
+<app-student-category class="ion-page" *ngIf="sessionData?.user?.type === 'student'"></app-student-category>
 
-    <ion-title>Categories</ion-title>
+<!-- <ion-header no-border>
+	<ion-toolbar color="primary">
+		<ion-buttons slot="start">
+			<ion-menu-button color="light"></ion-menu-button>
+		</ion-buttons>
 
-    <ion-buttons slot="end">
-		<ion-button strong="true" routerDirection="root" routerLink="/category/add"><ion-icon slot="icon-only" name="add"></ion-icon></ion-button>
-	</ion-buttons>
-  </ion-toolbar>
+		<ion-title>Categories</ion-title>
+
+		<ion-buttons slot="end">
+			<ion-button (click)="showHideSearchBox()" [hidden]="!searchBoxToolbarHidden"><ion-icon name="search"></ion-icon></ion-button>
+			<ion-button strong="true" routerDirection="root" routerLink="/category/add"><ion-icon slot="icon-only" name="add"></ion-icon></ion-button>
+		</ion-buttons>
+ 	</ion-toolbar>
+
+  	<ion-toolbar [hidden]="searchBoxToolbarHidden">
+		<ion-searchbar debounce="1000" mode="ios" clearIcon="backspace" (ionChange)="startSearch($event)"></ion-searchbar>
+
+		<ion-buttons slot="end">
+			<ion-button (click)="closeSearch($event)"><ion-icon name="close-circle"></ion-icon></ion-button>
+		</ion-buttons>
+	</ion-toolbar>
 </ion-header>
 
 <ion-content>
-	<ion-list>
+	<ion-list lines="full">
 
 		<ion-item *ngIf="items?.length < 1">
 			<ion-label><p>No category yet</p></ion-label>
@@ -21,10 +34,19 @@
 
 		<ion-item detail="false" button="true" (click)="presentActions(item, i)" *ngFor="let item of items; let i = index">
 			<ion-label>
+				<p><span *ngFor="let parent of item.parents; let i = index"><small>{{ i > 0 ? ' / ' : '' }}</small>{{parent.title}}</span></p>
 				<span text-capitalize>{{item?.title}}</span>
-				<p>{{item?.description || 'No description'}}</p>
+				<h3>{{item?.description || 'No description'}}</h3>
 			</ion-label>
 		</ion-item>
 
 	</ion-list>
-</ion-content>
+
+	<ion-infinite-scroll [disabled]="isInfiniteScrollDisabled" margin-top (ionInfinite)="loadData($event)">
+		<ion-infinite-scroll-content
+			style="min-height: 1px;"
+			loadingSpinner="bubbles">
+		</ion-infinite-scroll-content>
+	</ion-infinite-scroll>
+
+</ion-content> -->

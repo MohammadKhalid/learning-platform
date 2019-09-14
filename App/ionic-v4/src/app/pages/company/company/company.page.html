@@ -1,0 +1,50 @@
+<ion-header no-border>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-menu-button color="light"></ion-menu-button>
+      </ion-buttons>
+  
+      <ion-title>Companies</ion-title>
+  
+      <ion-buttons slot="end">
+      <ion-button (click)="showHideSearchBox()" [hidden]="!searchBoxToolbarHidden"><ion-icon name="search"></ion-icon></ion-button>
+      <ion-button strong="true" routerDirection="forward" routerLink="./add" *ngIf="canAdd()"><ion-icon slot="icon-only" name="add"></ion-icon></ion-button>
+    </ion-buttons>
+    </ion-toolbar>
+  
+    <ion-toolbar [hidden]="searchBoxToolbarHidden">
+      <ion-searchbar debounce="1000" mode="ios" clearIcon="backspace" (ionChange)="startSearch($event)"></ion-searchbar>
+  
+      <ion-buttons slot="end">
+        <ion-button (click)="closeSearch($event)"><ion-icon name="close-circle"></ion-icon></ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content>
+    <ion-list lines="full">
+      <ion-item routerDirection="root" routerLink="./detail/{{item.id}}" *ngFor="let item of items">
+        <ion-label>
+          <ion-text text-capitalize>{{item?.name}}</ion-text>
+          <p *ngIf="item?.owner && sessionData.user.type === 'admin'">{{item?.owner[0]?.firstName}} {{item?.owner[0]?.lastName}}</p>
+          <p *ngIf="item?.address && sessionData.user.type !== 'admin'">{{item?.address}} {{item?.country}}</p>
+          <!-- <p>{{item?.description || 'No description'}}</p> -->
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  
+    <ion-list>
+      <ion-item lines="none" *ngIf="items?.length < 1">
+        <ion-label>
+          <p>No record!</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  
+    <ion-infinite-scroll [disabled]="isInfiniteScrollDisabled" margin-top (ionInfinite)="loadData($event)">
+      <ion-infinite-scroll-content
+        style="min-height: 1px;"
+        loadingSpinner="bubbles">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+  </ion-content>

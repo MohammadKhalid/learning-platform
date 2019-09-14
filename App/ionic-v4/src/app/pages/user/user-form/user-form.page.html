@@ -1,13 +1,13 @@
 <ion-header no-border>
     <ion-toolbar color="primary">
       <ion-buttons slot="start">
-        <ion-back-button [defaultHref]="!item ? this.routeData.appUrl : this.routeData.appUrl + '/detail/' + item.id"></ion-back-button>
+        <ion-back-button [defaultHref]="!item ? routeData.appUrl : routeData.appUrl + '/detail/' + item.id"></ion-back-button>
       </ion-buttons>
   
-      <ion-title text-capitalize>{{action}} {{this.routeData.singular}}</ion-title>
+      <ion-title text-capitalize>{{action}} {{routeData.singular}}</ion-title>
   
       <ion-buttons slot="end">
-        <ion-button type="button" *ngIf="form.valid && submitted === false" (click)="save()">Save</ion-button>
+        <ion-button type="button" *ngIf="form.valid && !submitted" (click)="save()">Save</ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
@@ -17,11 +17,14 @@
       <ion-input type="hidden" formControlName="id" ></ion-input>
 
       <ion-list>
+        <ion-list-header mode="ios">
+          <ion-label color="primary">Account</ion-label>
+        </ion-list-header>
+
         <ion-item lines="inset">
           <ion-label position="stacked">First Name <ion-text color="danger">*</ion-text></ion-label>
           <ion-input
             formControlName="firstName"
-            placeholder="Enter first name"
           ></ion-input>
         </ion-item>
 
@@ -29,60 +32,248 @@
           <ion-label position="stacked">Last Name <ion-text color="danger">*</ion-text></ion-label>
           <ion-input
             formControlName="lastName"
-            placeholder="Enter last name"
           ></ion-input>
         </ion-item>
-  
-        <ion-item lines="inset">
-          <ion-label position="stacked">Description</ion-label>
-          <ion-textarea
-             formControlName="description"
-            placeholder="Write description"
-            rows="5"
-          ></ion-textarea>
-        </ion-item>
-  
-      </ion-list>
-
-      <ion-list *ngIf="!item">
-        <ion-list-header mode="ios">
-          <ion-label color="primary">Login Credential</ion-label>
-        </ion-list-header>
 
         <ion-item lines="inset">
-          <ion-icon name="contact" slot="start"></ion-icon>
-          <ion-label position="stacked">Email <ion-text color="danger">*</ion-text></ion-label>
+          <ion-label position="stacked">Email</ion-label>
           <ion-input
             formControlName="email"
-            placeholder="Enter email"
             type="email"
           ></ion-input>
         </ion-item>
-
-        <ion-item lines="inset">
-          <ion-icon name="lock" slot="start"></ion-icon>
-          <ion-note slot="end">Min. 8 chars</ion-note>
-          <ion-label position="stacked">
-            Password <ion-text color="danger">*</ion-text>
-          </ion-label>
-          <ion-input
-            type="password"
-            formControlName="password"
-            placeholder="Enter password"
-          ></ion-input>
+  
+        <ion-item lines="full" hidden="true">
+          <ion-label position="stacked">Description</ion-label>
+          <ion-textarea
+             formControlName="description"
+          ></ion-textarea>
         </ion-item>
+      </ion-list>
 
-        <ion-item lines="inset">
-            <ion-icon name="lock" slot="start" color="light"></ion-icon>
-            <ion-label position="stacked">Repeat Password <ion-text color="danger">*</ion-text></ion-label>
-            <ion-input
-              type="password"
-              formControlName="passwordRepeat"
-              placeholder="Enter password again"
-            ></ion-input>
+      <ion-list>
+        <ion-item-group *ngIf="this.routeData.type !== 'client'">
+          <ion-list-header mode="ios">
+            <ion-label color="primary">Assign To</ion-label>
+          </ion-list-header>
+
+          <ion-item lines="inset" *ngIf="sessionData.user.type === 'admin'">
+            <ion-label position="stacked">Client <ion-text color="danger">*</ion-text></ion-label>
+            <ion-select (ionChange)="clientChanged($event)" formControlName="clientId" placeholder="Select One">
+              <ion-select-option value="{{c_index}}" *ngFor="let client of formFieldData?.clients_with_companies; let c_index = index">{{client.name}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-item-group>
+
+        <ion-item-group *ngIf="(this.routeData.type === 'student' || this.routeData.type === 'coach') && form?.controls?.clientId?.valid">
+          <ion-item lines="inset" [hidden]="!form?.controls?.clientId?.valid || formFieldData?.companies?.length < 1">
+            <ion-label position="stacked">Companies <ion-text color="danger">*</ion-text></ion-label>
+
+            <ion-select #companiesInput (ionChange)="companyChanged($event)" formControlName="companies" placeholder="Nothing Selected" multiple="true">
+              <ion-select-option value="{{company.id}}" *ngFor="let company of formFieldData?.companies">{{company.name}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item lines="inset" *ngIf="formFieldData?.companies?.length < 1">
+              <ion-label>
+                <h3>Companies <ion-text color="danger">*</ion-text></h3>
+                <p>There is no company</p>
+              </ion-label>
+              <ion-button fill="outline" routerLink="/company/add">Add Company</ion-button>
+          </ion-item>
+
+          <ion-item-group *ngIf="form?.controls?.companies?.valid && form?.controls?.companies?.value?.length > 1">
+            <ion-item lines="inset">
+              <ion-label position="stacked">
+                Departments <ion-text color="danger">*</ion-text>
+              </ion-label>
+              <ionic-selectable
+                placeholder="Nothing Selected"
+      
+                headerColor="primary"
+                [isMultiple]="true"
+                [searchFailText]="'No departments found'"
+                [canSearch]="true"
+                [hasConfirmButton]="true"
+      
+                [items]="formFieldData.departments"
+                
+                itemValueField="DepartmentTag"
+                itemTextField="name"
+
+                groupValueField="DepartmentTag.taggableId"
+                groupTextField="name"
+
+                formControlName="departments"
+      
+                (onChange)="selectableDepartmentChange($event)">
+                <ng-template ionicSelectableGroupTemplate let-group="group">
+                  {{getCompany(group.value)}}
+                </ng-template>
+
+                <ng-template ionicSelectableTitleTemplate>
+                  Select Departments
+                </ng-template>
+      
+                <ng-template ionicSelectableCloseButtonTemplate>
+                  <ion-icon name="close-circle"></ion-icon>
+                </ng-template>
+              </ionic-selectable>
+            </ion-item>
+          </ion-item-group>
+
+          <ion-item-group *ngIf="form?.controls?.companies?.valid && form?.controls?.companies?.value?.length < 2">
+            <ion-item lines="inset">
+              <ion-label position="stacked">Departments <ion-text color="danger">*</ion-text></ion-label>
+
+              <ion-select formControlName="departments" placeholder="Nothing Selected" multiple="true" *ngIf="formFieldData?.departments?.length > 0">
+                <ion-select-option value="{{department.DepartmentTag.taggableId + '-' + department.id}}" *ngFor="let department of formFieldData.departments">{{department.name}}</ion-select-option>
+              </ion-select>
+              <ion-select formControlName="departments" placeholder="No Department" readonly *ngIf="formFieldData?.departments?.length < 1"></ion-select>
+            </ion-item>
+          </ion-item-group>
+        </ion-item-group>
+      </ion-list>
+
+      <ion-list [hidden]="action === 'new'">
+          <ion-list-header mode="ios">
+            <ion-label color="primary">Telecom</ion-label>
+          </ion-list-header>
+
+          <div formArrayName="telecoms" *ngFor="let telecom of telecomForms.controls; let telecomIndex = index;">
+            <div [formGroupName]="telecomIndex">
+                <ion-input type="hidden" formControlName="name"></ion-input>
+
+                <ion-item lines="inset">
+                  <ion-label position="stacked">Telephone</ion-label>
+                  <ion-input
+                    formControlName="telephone"
+                  ></ion-input>
+                </ion-item>
+
+                <ion-item lines="inset">
+                  <ion-label position="stacked">Mobile</ion-label>
+                  <ion-input
+                    formControlName="mobile"
+                  ></ion-input>
+                </ion-item>
+
+                <ion-item [lines]="telecomIndex === telecomForms.controls.length ? 'inset' : 'full'">
+                  <ion-label position="stacked">Fax</ion-label>
+                  <ion-input
+                    formControlName="fax"
+                  ></ion-input>
+                </ion-item>
+              </div>
+          </div>
+      </ion-list>
+
+      <ion-list [hidden]="action === 'new'">
+        <ion-list-header mode="ios">
+          <ion-label color="primary">Address</ion-label>
+        </ion-list-header>
+
+        <div formArrayName="addresses" *ngFor="let address of addressForms.controls; let addressIndex = index;">
+          <div [formGroupName]="addressIndex">
+              <ion-input type="hidden" formControlName="name"></ion-input>
+
+              <ion-item lines="inset">
+                <ion-label position="stacked">Street</ion-label>
+                <ion-input
+                  formControlName="street"
+                ></ion-input>
+              </ion-item>
+
+              <ion-item lines="inset">
+                <ion-label position="stacked">City</ion-label>
+                <ion-input
+                  formControlName="cityName"
+                ></ion-input>
+              </ion-item>
+
+              <ion-item lines="inset">
+                  <ion-label position="stacked">State</ion-label>
+                  <ion-input
+                    formControlName="provinceName"
+                  ></ion-input>
+                </ion-item>
+
+              <ion-item lines="inset">
+                <ion-label position="stacked">Zip Code</ion-label>
+                <ion-input
+                  formControlName="zip"
+                ></ion-input>
+              </ion-item>
+
+              <ion-item [lines]="addressIndex === addressForms.controls.length ? 'inset' : 'full'">
+                <ion-label position="stacked">Country</ion-label>
+                <ion-input
+                  formControlName="country"
+                ></ion-input>
+              </ion-item>
+            </div>
+        </div>
+    </ion-list>
+
+    <section *ngIf="routeData.type === 'client'">
+      <ion-list formGroupName="subscription">
+          <ion-radio-group formControlName="subscriptionPackageId">
+            <ion-list-header mode="ios">
+              <ion-label color="primary">Subscription</ion-label>
+            </ion-list-header>
+        
+            <ion-item [lines]="subscriptionPackageIndex === formFieldData.subsription_packages.length - 1 ? 'none' : 'inset'" *ngFor="let subscriptionPackage of formFieldData?.subsription_packages; let subscriptionPackageIndex = index">
+              <ion-label>
+                <h2>{{subscriptionPackage.name}}</h2>
+                <h3>{{subscriptionPackage.price}} {{subscriptionPackage.priceCurrency}} / {{subscriptionPackage.priceBasis}}</h3>
+                <p>{{subscriptionPackage.description}}</p>
+              </ion-label>
+              <ion-radio slot="start" mode="ios" value="{{subscriptionPackage.id}}"></ion-radio>
+            </ion-item>
+          </ion-radio-group>
+
+          <ion-item>
+            <ion-icon name="calendar" mode="md" slot="start"></ion-icon>
+            <ion-label position="stacked">Date End <ion-badge>Expire in {{expireAt}}</ion-badge></ion-label>
+            <ion-datetime (ionChange)="updateSubscriptionEnd()" formControlName="expireAt" displayFormat="DDD. MMM DD, YYYY" max="{{maxYearPicker}}"></ion-datetime>
           </ion-item>
       </ion-list>
-  
-    </form>
+    </section>
+
+    <ion-list *ngIf="!item">
+      <ion-list-header mode="ios">
+        <ion-label color="primary">Login</ion-label>
+      </ion-list-header>
+
+      <ion-item lines="inset">
+        <ion-icon name="contact" slot="start"></ion-icon>
+        <ion-label position="stacked">Username <ion-text color="danger">*</ion-text></ion-label>
+        <ion-input
+          formControlName="username"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item lines="inset">
+        <ion-icon name="lock" slot="start"></ion-icon>
+        <ion-note slot="end">Min. 8 chars</ion-note>
+        <ion-label position="stacked">
+          Password <ion-text color="danger">*</ion-text>
+        </ion-label>
+        <ion-input
+          type="password"
+          formControlName="password"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item lines="none">
+          <ion-icon name="lock" slot="start" color="light"></ion-icon>
+          <ion-label position="stacked">Repeat Password <ion-text color="danger">*</ion-text></ion-label>
+          <ion-input
+            type="password"
+            formControlName="passwordRepeat"
+          ></ion-input>
+        </ion-item>
+    </ion-list>
+  </form>
   
   </ion-content>

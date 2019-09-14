@@ -4,9 +4,11 @@ import { ActivatedRoute } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { IonicSelectableComponent } from 'ionic-selectable';
 
+import { PublicRestApiService } from '../../../services/http/public-rest-api.service';
 import { RestApiService } from '../../../services/http/rest-api.service';
 import { AuthenticationService } from '../../../services/user/authentication.service';
 import { RtcService } from '../../../services/rtc/rtc.service';
+import { NotificationService } from '../../../services/notification/notification.service';
 
 import * as moment from 'moment';
 
@@ -17,25 +19,28 @@ import * as moment from 'moment';
 })
 export class ShowTimeDetailComponent implements OnInit {
 
-	@Input('url') url: any = { api: 'show-time', path: 'show-time' };
-	@Input('content') content: IonContent;
+@Input('url') url: any = { api: 'show-time', path: 'show-time' };
+@Input('content') content: IonContent;
   
-  item: any;
-  sessionData: any;
-  routeParam: any;
+	item: any;
+	sessionData: any;
+	routeParam: any;
 	coaches: any = [];
 
-  reviewForm: FormGroup;
-  submitToCoachForm: FormGroup;
+	reviewForm: FormGroup;
+	submitToCoachForm: FormGroup;
 
-  answers: any = {};
+	answers: any = {};
+	mediaBasePath: string;
 
-  @ViewChild('submitWorkElem') submitWorkElem: ElementRef;
-  @ViewChild('submitReviewElem') submitReviewElem: ElementRef;
+	@ViewChild('submitWorkElem') submitWorkElem: ElementRef;
+	@ViewChild('submitReviewElem') submitReviewElem: ElementRef;
 
 	constructor(
-    private restApi: RestApiService,
-    private activatedRoute: ActivatedRoute,
+		private notificationService: NotificationService,
+		private restApi: RestApiService,
+		private publicRestApi: PublicRestApiService,
+    	private activatedRoute: ActivatedRoute,
 		private navCtrl: NavController,
 		private alertCtrl: AlertController,
 		private authService: AuthenticationService,
@@ -43,77 +48,78 @@ export class ShowTimeDetailComponent implements OnInit {
 		private actionSheetCtrl: ActionSheetController
 	) {
 		this.sessionData = this.authService.getSessionData();
+		this.mediaBasePath = this.publicRestApi.url;
 
 		// get related data
-    this.restApi.get('form-input-data', {}).then((resp: any) => {
-        if(resp.data.coaches) this.coaches = resp.data.coaches;
-    });		
+		this.restApi.get('show-time/form-input-data', {}).subscribe((resp: any) => {
+			this.coaches = resp.coaches;
+		});
 	}
 
 	ngOnInit() {
-    this.activatedRoute.params.subscribe((paramData) => {
-      this.routeParam = paramData;
+		this.activatedRoute.params.subscribe((paramData) => {
+		this.routeParam = paramData;
 
-      // load
-      this.restApi.get(this.url.api + '/' + this.routeParam.id, {}).then((resp: any) => {
-        if(resp.success === true) {
-          this.item = resp.item;
-          
-          this.buildMediaPath();
-          this.buildAnswers();
+		// load
+		this.restApi.get(this.url.api + '/' + this.routeParam.id, {}).subscribe((resp: any) => {
+			if(resp.success === true) {
+			this.item = resp.item;
+			
+			this.buildMediaPath();
+			this.buildAnswers();
 
-          // review form
-          if(!this.item.rating && this.sessionData.user.id === this.item.submittedTo) {
-            this.reviewForm = new FormGroup({
-                    rating: new FormControl('neutral', [Validators.required]),
-                    comment: new FormControl('', [Validators.required])
-                });
-          } else if(!this.item.submittedTo && this.sessionData.user.id === this.item.userId) {
-            // submit to form
-            this.submitToCoachForm = new FormGroup({
-                    submittedTo: new FormControl('', [Validators.required]),
-                    sendTo: new FormControl('')
-                });
-          }
+			// review form
+			if(!this.item.rating && this.sessionData.user.id === this.item.submittedTo) {
+				this.reviewForm = new FormGroup({
+						rating: new FormControl('neutral', [Validators.required]),
+						comment: new FormControl('', [Validators.required])
+					});
+			} else if(!this.item.submittedTo && this.sessionData.user.id === this.item.userId) {
+				// submit to form
+				this.submitToCoachForm = new FormGroup({
+						submittedTo: new FormControl('', [Validators.required]),
+						sendTo: new FormControl('')
+					});
+			}
 
-          } else {
-            // navigate to page not found
-            this.navCtrl.navigateRoot(this.url.api);
-          }
-      });
-    });
-	}
-
-	presentPageAction() {
-		this.actionSheetCtrl.create({
-			header: this.item.title,
-			buttons: [
-				{	
-					text: 'Submit To',
-					icon: 'person-add',
-					handler: () => {
-						this.scrollToElem(this.submitWorkElem.nativeElement);
-					}
-				},
-				{
-					text: 'Delete',
-					role: 'destructive',
-					icon: 'trash',
-					handler: () => {
-						this.confirmDelete();
-					}
-				},
-				{
-					text: 'Cancel',
-					icon: 'close',
-					role: 'cancel',
-					handler: () => {}
-				}
-			]
-		}).then((action) => {
-			action.present();
+			} else {
+				// navigate to page not found
+				this.navCtrl.navigateRoot(this.url.api);
+			}
+		});
 		});
 	}
+
+	// presentPageAction() {
+	// 	this.actionSheetCtrl.create({
+	// 		header: this.item.title,
+	// 		buttons: [
+	// 			{	
+	// 				text: 'Submit To',
+	// 				icon: 'person-add',
+	// 				handler: () => {
+	// 					this.scrollToElem(this.submitWorkElem.nativeElement);
+	// 				}
+	// 			},
+	// 			{
+	// 				text: 'Delete',
+	// 				role: 'destructive',
+	// 				icon: 'trash',
+	// 				handler: () => {
+	// 					this.confirmDelete();
+	// 				}
+	// 			},
+	// 			{
+	// 				text: 'Cancel',
+	// 				icon: 'close',
+	// 				role: 'cancel',
+	// 				handler: () => {}
+	// 			}
+	// 		]
+	// 	}).then((action) => {
+	// 		action.present();
+	// 	});
+	// }
 
 	buildMediaPath() {
 		if(this.item.topic) {
@@ -126,7 +132,7 @@ export class ShowTimeDetailComponent implements OnInit {
 					let typeArray	= type.split('/')[0];
 
 					let mediaPaths = [
-						{ type: type, path: this.restApi.url + media.path }
+						{ type: type, path: this.mediaBasePath + media.path }
 					];
 
 					if(typeArray === 'video' || type === 'application/octet-stream') {
@@ -141,7 +147,7 @@ export class ShowTimeDetailComponent implements OnInit {
 								newMediaPathArray.pop();
 							
 							let newMediaPath 	= newMediaPathArray.join('.') + '.mp4';	
-							mediaPaths.push({type: 'video/mp4', path: this.restApi.url + newMediaPath});
+							mediaPaths.push({type: 'video/mp4', path: this.mediaBasePath + newMediaPath});
 						}
 					}
 
@@ -161,7 +167,7 @@ export class ShowTimeDetailComponent implements OnInit {
 				let typeArray	= type.split('/')[0];
 
 				let mediaPaths = [
-					{ type: type, path: this.restApi.url + media.path }
+					{ type: type, path: this.mediaBasePath + media.path }
 				];
 
 				if(typeArray === 'video' || type === 'application/octet-stream') {
@@ -176,7 +182,7 @@ export class ShowTimeDetailComponent implements OnInit {
 							newMediaPathArray.pop();
 						
 						let newMediaPath 	= newMediaPathArray.join('.') + '.mp4';	
-						mediaPaths.push({type: 'video/mp4', path: this.restApi.url + newMediaPath});
+						mediaPaths.push({type: 'video/mp4', path: this.mediaBasePath + newMediaPath});
 					}
 				}
 
@@ -202,12 +208,12 @@ export class ShowTimeDetailComponent implements OnInit {
 					text: 'Yes',
 					handler: () => {
 						if(this.reviewForm.valid) {
-							this.restApi.showMsg('Submitting...', 0).then((toast: any) => {
-								this.restApi.put(this.url.api + '/review/' + this.item.id, this.reviewForm.value).then((res: any) => {
-									this.restApi.toast.dismiss();
+							this.notificationService.showMsg('Submitting...', 0).then((toast: any) => {
+								this.restApi.put(this.url.api + '/review/' + this.item.id, this.reviewForm.value).subscribe((res: any) => {
+									this.notificationService.toast.dismiss();
 
 									if(res.success === true) {
-										this.restApi.showMsg('Review has been submitted!').then(() => {
+										this.notificationService.showMsg('Review has been submitted!').then(() => {
 											this.navCtrl.navigateRoot(this.url.api);
 										});
 
@@ -219,7 +225,7 @@ export class ShowTimeDetailComponent implements OnInit {
 											type: 'show'
 										});
 									} else {
-										this.restApi.showMsg(res.error);
+										this.notificationService.showMsg(res.error);
 									}
 								});
 							});
@@ -234,12 +240,12 @@ export class ShowTimeDetailComponent implements OnInit {
 
 	submitToCoach() {
 		if(this.submitToCoachForm.valid) {
-			this.restApi.showMsg('Submitting...', 0).then((toast: any) => {
-				this.restApi.put(this.url.api + '/submit/' + this.item.id, this.submitToCoachForm.value).then((res: any) => {
-					this.restApi.toast.dismiss();
+			this.notificationService.showMsg('Submitting...', 0).then((toast: any) => {
+				this.restApi.put(this.url.api + '/submit/' + this.item.id, this.submitToCoachForm.value).subscribe((res: any) => {
+					this.notificationService.toast.dismiss();
 
 					if(res.success === true) {
-						this.restApi.showMsg('Work ' + this.item.topic.title + ' has been submitted!').then(() => {
+						this.notificationService.showMsg('Work ' + this.item.topic.title + ' has been submitted!').then(() => {
 							this.navCtrl.navigateRoot(this.url.api);
 						});
 
@@ -251,7 +257,7 @@ export class ShowTimeDetailComponent implements OnInit {
 							type: 'Show'
 						});
 					} else {
-						this.restApi.showMsg(res.error);
+						this.notificationService.showMsg(res.error);
 					}
 				});
 			});
@@ -266,42 +272,42 @@ export class ShowTimeDetailComponent implements OnInit {
         this.submitToCoachForm.controls.submittedTo.setValue(event.value.id);
     }
 
-    confirmDelete() {
-		const title = this.item.topic ? this.item.topic.title : 'Unknown';
+    // confirmDelete() {
+	// 	const title = this.item.topic ? this.item.topic.title : 'Unknown';
 
-    	this.alertCtrl.create({
-    		header: 'Delete Confirmation',
-    		message: 'Are you sure you want to delete this work for "' + title + '"?',
-    		buttons: [
-		        {
-					text: 'Cancel',
-					role: 'cancel',
-					cssClass: 'secondary',
-					handler: (blah) => {}
-		        }, 
-		        {
-					text: 'Yes',
-					handler: () => {
-						this.restApi.showMsg('Deleting...', 0).then((toast: any) => {
-							this.restApi.delete(this.url.api + '/' + this.item.id).then((res: any) => {
-								this.restApi.toast.dismiss();
+    // 	this.alertCtrl.create({
+    // 		header: 'Delete Confirmation',
+    // 		message: 'Are you sure you want to delete this work for "' + title + '"?',
+    // 		buttons: [
+	// 	        {
+	// 				text: 'Cancel',
+	// 				role: 'cancel',
+	// 				cssClass: 'secondary',
+	// 				handler: (blah) => {}
+	// 	        }, 
+	// 	        {
+	// 				text: 'Yes',
+	// 				handler: () => {
+	// 					this.notificationService.showMsg('Deleting...', 0).then((toast: any) => {
+	// 						this.restApi.delete(this.url.api + '/' + this.item.id).subscribe((res: any) => {
+	// 							this.notificationService.toast.dismiss();
 
-								if(res.success === true) {
-									this.restApi.showMsg('Work ' + title + ' has been deleted!').then(() => {
-										this.navCtrl.navigateRoot(this.url.api);
-									});
-								} else {
-									this.restApi.showMsg(res.error);
-								}
-							});
-						});
-					}
-		        }
-			]
-    	}).then((alert) => {
-    		alert.present();	
-    	});
-    }
+	// 							if(res.success === true) {
+	// 								this.notificationService.showMsg('Work ' + title + ' has been deleted!').then(() => {
+	// 									this.navCtrl.navigateRoot(this.url.api);
+	// 								});
+	// 							} else {
+	// 								this.notificationService.showMsg(res.error);
+	// 							}
+	// 						});
+	// 					});
+	// 				}
+	// 	        }
+	// 		]
+    // 	}).then((alert) => {
+    // 		alert.present();	
+    // 	});
+    // }
 
 	beautifyDate(date: string, format: string = 'MMMM D, YYYY') {
       return moment(date).format(format);

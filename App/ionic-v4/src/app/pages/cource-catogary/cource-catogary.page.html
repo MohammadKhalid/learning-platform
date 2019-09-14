@@ -1,0 +1,68 @@
+<ion-header no-border>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="Course-Category"></ion-back-button>
+        </ion-buttons>
+
+        <ion-title text-capitalize>
+            Course Category
+        </ion-title>
+
+        <ion-buttons slot="end">
+            <ion-button [hidden]="!form.valid" strong="true" (click)="save()">
+                {{btnText}}
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+    <form [formGroup]="form">
+
+        <ion-list class="ion-padding">
+
+            <ion-list-header>
+                <ion-label color="primary">Add category</ion-label>
+            </ion-list-header>
+
+            <ion-item lines="inset" *ngIf="user.type == 'admin'">
+                <ion-label position="floating">Clients
+                    <ion-text color="danger">*</ion-text>
+                </ion-label>
+                <ion-select placeholder="Select client" (ionChange)="getCompanies()" formControlName="clientId">
+                    <ion-select-option *ngFor="let client of clients" [value]="client.id">{{client.name}}
+                    </ion-select-option>
+
+                </ion-select>
+            </ion-item>
+
+
+            <ion-item lines="inset">
+                <ion-label position="floating">Companies
+                    <ion-text color="danger">*</ion-text>
+                </ion-label>
+                <ion-select placeholder="Select Comapny" formControlName="companyId">
+                    <ion-select-option *ngFor="let company of companie" [value]="company.id">{{company.name}}
+                    </ion-select-option>
+
+                </ion-select>
+            </ion-item>
+
+            <ion-item lines="inset">
+                <ion-label position="stacked">Name
+                    <ion-text color="danger">*</ion-text>
+                </ion-label>
+                <ion-input formControlName="title" name="title" placeholder="Enter category name"></ion-input>
+            </ion-item>
+
+            <ion-item lines="inset">
+                <ion-label position="stacked">Description</ion-label>
+                <ion-textarea formControlName="description" name="description" rows="5" placeholder="Enter description">
+                </ion-textarea>
+            </ion-item>
+        </ion-list>
+
+    </form>
+
+</ion-content>

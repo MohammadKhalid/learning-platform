@@ -1,0 +1,39 @@
+.app-video-student{
+
+  .iframe-container {
+    overflow: hidden;
+    // Calculated from the aspect ration of the content (in case of 16:9 it is 9/16= 0.5625)
+    // padding-top: 51%;
+    position: relative;
+  }
+   
+  .iframe-container iframe {
+    //  border: 0;
+    //  height: 100%;
+     left: 0;
+    //  position: absolute;
+     top: 0;
+     width: 100%;
+     height: calc(85vh - 20px);
+  }
+}
+
+
+  .header-title-video{
+    font-size: 18px;
+    text-align: center;
+    padding-top: 18px;
+    padding-bottom: 20px;
+    background-color: #1b232b;
+    color: white;
+    border-top: 1px solid #1b232b;
+  }
+
+.color-adjustment {
+  background:#1C262F;
+}
+
+.header-title-video .btn-title-edit-del{
+    float: right;
+    margin-top: -12px;
+}

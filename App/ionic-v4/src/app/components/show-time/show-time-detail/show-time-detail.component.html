@@ -4,7 +4,7 @@
       <p *ngIf="item?.topic?.categories?.length > 0">
         <span *ngFor="let category of item?.topic?.categories; let i = index">{{i > 0 ? ', ' : ''}}{{category.title}}</span>
       </p>
-      <ion-text color="primary"><h1>{{item?.topic?.title || '-'}}</h1></ion-text>
+      <ion-text color="primary"><h2>{{item?.topic?.title || '-'}}</h2></ion-text>
       <p>{{item?.topic?.description || 'No description'}}</p>
     </ion-label>
   </ion-item>

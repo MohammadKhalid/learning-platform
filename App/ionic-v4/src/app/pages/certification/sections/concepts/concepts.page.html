@@ -1,0 +1,64 @@
+<!-- coach side rendering start -->
+<ion-content *ngIf="user.type ==='coach'" ion-padding>
+    <div *ngFor="let DataRow of sectionConceptData | orderByDate;">
+        <!-- text start -->
+        <div *ngIf="DataRow.type === 'Text'">
+            <app-student-text (editItem)="editItem($event)" (removeItem)="removeItem($event)" [data]="DataRow">
+            </app-student-text>
+
+        </div>
+
+        <!-- text end -->
+
+
+        <!-- lesson start -->
+        <div *ngIf="DataRow.type === 'Lesson'">
+            <app-video-student (editItem)="editItem($event)" (removeItem)="removeItem($event)" [data]="DataRow">
+            </app-video-student>
+        </div>
+        <!-- lesson start -->
+
+        <!-- quiz start -->
+        <div *ngIf="DataRow.type === 'Quiz'">
+            <app-quiz-viewer-coach (removeItem)="removeItem($event)" (openQuizEditModal)="openQuizEditModal($event)" [data]="DataRow" [quizIndex]="quizIndex"></app-quiz-viewer-coach>
+        </div>
+        <!-- quiz start -->
+    </div>
+</ion-content>
+<!-- coach side rendering end -->
+
+<!-- student side rendering start -->
+<ion-content ion-padding [ngClass]="{'content-black':type === 'Lesson'}" *ngIf="user.type ==='student'">
+    <div *ngFor="let DataRow of sectionConceptData | orderByDate;">
+        <!-- text start -->
+        <div *ngIf="DataRow.type === 'Text'">
+            <app-student-text (editItem)="editItem($event)" (removeItem)="removeItem($event)" [data]="DataRow">
+            </app-student-text>
+
+        </div>
+
+        <!-- text end -->
+
+
+        <!-- lesson start -->
+        <div *ngIf="DataRow.type === 'Lesson'">
+            <app-video-student (editItem)="editItem($event)" (removeItem)="removeItem($event)" [data]="DataRow">
+            </app-video-student>
+        </div>
+        <!-- lesson start -->
+
+        <!-- quiz start -->
+        <div *ngIf="DataRow.type === 'Quiz'">
+            <app-quiz-student (removeItem)="removeItem($event)" (openQuizEditModal)="openQuizEditModal($event)" [data]="DataRow" [quizIndex]="quizIndex"></app-quiz-student>
+        </div>
+        <!-- quiz start -->
+    </div>
+    <ion-item-divider></ion-item-divider>
+    <ion-button (click)="goToNextPage()" *ngIf="sectionPageId && showFinish== false && showNext == true" class="nextBtn">
+        Next
+    </ion-button>
+    <ion-button (click)="finishCourse()" *ngIf="showFinish" class="finish">
+        Finish
+    </ion-button>
+</ion-content>
+<!-- student side rendering end -->

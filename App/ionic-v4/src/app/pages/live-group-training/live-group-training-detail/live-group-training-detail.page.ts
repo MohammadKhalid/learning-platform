@@ -5,6 +5,7 @@ import { NavigationExtras } from '@angular/router';
 
 import { RestApiService } from '../../../services/http/rest-api.service';
 import { AuthenticationService } from '../../../services/user/authentication.service';
+import { NotificationService } from '../../../services/notification/notification.service';
 
 import * as moment from 'moment';
 
@@ -22,6 +23,7 @@ export class LiveGroupTrainingDetailPage implements OnInit {
 	allowedAction: string;
 
 	constructor(
+		private notificationService: NotificationService,
 		private restApi: RestApiService,
 		private navCtrl: NavController,
 		private actionSheetCtrl: ActionSheetController,
@@ -38,7 +40,7 @@ export class LiveGroupTrainingDetailPage implements OnInit {
 			this.routeParam = param;
 
 			// load
-			this.restApi.get(this.urlEndPoint + 's/' + this.routeParam.id, {}).then((resp: any) => {
+			this.restApi.get(this.urlEndPoint + 's/' + this.routeParam.id, {}).subscribe((resp: any) => {
 	        	this.item = resp.item;
 
 	        	if(this.item.speakerId == this.sessionData.user.id) {
@@ -113,16 +115,16 @@ export class LiveGroupTrainingDetailPage implements OnInit {
 					{
 				text: 'Yes',
 				handler: () => {
-					this.restApi.showMsg('Deleting...', 0).then((toast: any) => {
-						this.restApi.delete(this.urlEndPoint + 's/' + this.item.id).then((res: any) => {
-							this.restApi.toast.dismiss();
+					this.notificationService.showMsg('Deleting...', 0).then((toast: any) => {
+						this.restApi.delete(this.urlEndPoint + 's/' + this.item.id).subscribe((res: any) => {
+							this.notificationService.toast.dismiss();
 
 							if(res.success === true) {
-								this.restApi.showMsg('Live Group Training ' + this.item.title + ' has been deleted!').then(() => {
+								this.notificationService.showMsg('Live Group Training ' + this.item.title + ' has been deleted!').then(() => {
 									this.navCtrl.navigateRoot('/' + this.urlEndPoint);
 								});
 							} else {
-								this.restApi.showMsg(res.error);
+								this.notificationService.showMsg(res.error);
 							}
 						});
 					});

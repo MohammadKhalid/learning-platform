@@ -30,6 +30,7 @@
 */*/plugins/android.json
 */*/plugins/ios.json
 */*/www/
+*/*/html/
 */*/$RECYCLE.BIN/
 
 */*/.DS_Store
@@ -37,4 +38,3 @@
 */*/UserInterfaceState.xcuserstate
 
 */docs
-App/ionic-v4/html/

@@ -1,0 +1,22 @@
+<div>
+    <ion-row>
+        <ion-col size-md="4" *ngFor="let filename of fileData">
+            <ion-card>
+                <a class="text-deco-none" [href]="serverUrl+filename.title" download="{{filename.title}}" target="_blank">
+                    <ion-item lines="none" class="item">
+                        <div class="mainDiv">
+                            <div class="fileName">
+                                <h4>{{filename.title}}</h4>
+                            </div>
+                            <!-- <div>
+                                <ion-icon name="close" (click)="deletePrompt(filename)"></ion-icon>
+                            </div> -->
+                        </div>
+                    </ion-item>
+                </a>
+
+            </ion-card>
+
+        </ion-col>
+    </ion-row>
+</div>

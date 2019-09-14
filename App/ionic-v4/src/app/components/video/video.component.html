@@ -1,0 +1,45 @@
+<!-- <ion-card ion-padding> -->
+
+<form [formGroup]="addVideoForm" (ngSubmit)="addVideo()">
+
+
+
+    <ion-list>
+        <ion-card>
+            <ion-item lines="inset">
+                <ion-label position="floating">Title
+                    <ion-text color="danger">*</ion-text>
+                </ion-label>
+                <ion-input type="input" formControlName='title' placeholder="Enter Title"></ion-input>
+            </ion-item>
+            <ion-item lines="inset">
+                <ion-label position="floating">URL
+                    <ion-text color="danger">*</ion-text>
+                </ion-label>
+                <ion-input type="input" formControlName='url' placeholder="Enter Url"></ion-input>
+            </ion-item>
+
+            <ion-item lines="inset">
+                <ion-label position="floating">Experience
+                    <ion-text color="danger">*</ion-text>
+                </ion-label>
+                <ion-input type="input" formControlName='experience' placeholder="Enter Experience"></ion-input>
+            </ion-item>
+
+            <ion-item lines="inset">
+                <ion-label position="floating">Description
+                </ion-label>
+                <ion-textarea placeholder="Description" formControlName='description' rows="5" cols="20"></ion-textarea>
+            </ion-item>
+        </ion-card>
+        <ion-item lines="none" class="ion-float-right ion-padding-top">
+            <ion-button [disabled]="spinner" type="submit" [disabled]="!addVideoForm.valid" size="md">{{btnText}}
+                <ion-spinner *ngIf="spinner"></ion-spinner>
+            </ion-button>
+        </ion-item>
+
+
+    </ion-list>
+
+</form>
+<!-- </ion-card> -->

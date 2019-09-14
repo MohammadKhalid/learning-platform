@@ -1,15 +1,25 @@
 <ion-header no-border>
   <ion-toolbar color="primary">
   	<ion-buttons slot="start">
-    	<ion-menu-button color="light"></ion-menu-button>
+		<ion-menu-button *ngIf="routeData?.rootUrl === routeData?.type" color="light"></ion-menu-button>
+		<ion-back-button *ngIf="routeData?.rootUrl !== routeData?.type" defaultHref="{{routeData.rootUrl}}"></ion-back-button>
     </ion-buttons>
 
     <ion-title text-capitalize>{{routeData.plural}}</ion-title>
 
     <ion-buttons slot="end" *ngIf="canAdd()">
-		<ion-button strong="true" href="/{{routeData.appUrl}}/add"><ion-icon slot="icon-only" name="add"></ion-icon></ion-button>
+		<ion-button (click)="showHideSearchBox()" [hidden]="!searchBoxToolbarHidden"><ion-icon name="search"></ion-icon></ion-button>
+		<ion-button strong="true" routerDirection="root" routerLink="/{{routeData.appUrl}}/add"><ion-icon slot="icon-only" name="add"></ion-icon></ion-button>
 	</ion-buttons>
   </ion-toolbar>
+
+  <ion-toolbar [hidden]="searchBoxToolbarHidden">
+	<ion-searchbar debounce="1000" mode="ios" clearIcon="backspace" (ionChange)="startSearch($event)"></ion-searchbar>
+
+	<ion-buttons slot="end">
+		<ion-button (click)="closeSearch($event)"><ion-icon name="close-circle"></ion-icon></ion-button>
+	</ion-buttons>
+	</ion-toolbar>
 </ion-header>
 
 <ion-content>
@@ -19,16 +29,30 @@
 			<ion-label><p>No {{routeData.singular}} found</p></ion-label>
 		</ion-item>
 
-		<ion-item detail="false" button="true" *ngFor="let item of items;" routerDirection="root" routerLink="/{{routeData.appUrl}}/detail/{{item?.id}}">
+		<ion-item *ngFor="let item of items;" routerDirection="root" routerLink="{{detailLink}}{{item.id}}">
 			<ion-avatar slot="start" *ngIf="routeData?.type === 'student' || routeData?.type === 'coach'">
 				<img src="assets/img/user/{{routeData.type}}-avatar.png">
 			</ion-avatar>
-
-			<ion-icon slot="start" name="business" *ngIf="routeData?.type === 'company'"></ion-icon>
+			<ion-icon slot="start" name="business" *ngIf="routeData?.type === 'client'"></ion-icon>
 			<ion-label>
 				{{item?.firstName}} {{item?.lastName}}
+
+				<p *ngIf="routeData.type === 'client'">{{item?.subscription?.subscriptionPackage?.name || 'Unknown Subscription'}} Package</p>
+				<p *ngIf="routeData.type !== 'client'">
+					<span *ngFor="let company of item?.assignedCompanies; let i = index">
+						<small>{{i > 0 ? ' /' : '' }}</small> {{company?.company?.name}}
+					</span>
+					<span *ngIf="item?.assignedCompanies?.length < 1">Unassigned</span>
+				</p>
 			</ion-label>
 		</ion-item>
 
 	</ion-list>
+
+	<ion-infinite-scroll [disabled]="isInfiniteScrollDisabled" margin-top (ionInfinite)="loadData($event)">
+	<ion-infinite-scroll-content
+		style="min-height: 1px;"
+		loadingSpinner="bubbles">
+	</ion-infinite-scroll-content>
+	</ion-infinite-scroll>
 </ion-content>

@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 
-import { SOCKET_URL } from '../../../environments/environment';
+import { RTC_SIGNALLING_SERVER_URL, ICE_SERVERS } from '../../../environments/environment';
 
 import RTCMultiConnection from 'rtcmulticonnection';
 import adapter from 'webrtc-adapter';
 import io from 'socket.io-client';
-// import { forEach } from '@angular/router/src/utils/collection';
 import 'rxjs/add/operator/map';
 
 (<any>window).io = io;
@@ -16,52 +15,26 @@ import 'rxjs/add/operator/map';
 })
 export class RtcService {
 
-	connectionSocket: io;
-	socketUrl: string = SOCKET_URL;
+	connection: RTCMultiConnection;
+	socketUrl: string = RTC_SIGNALLING_SERVER_URL;
 	channel: string = 'thrive19';
+	extra: any;
 	log: boolean = true;
-	iceServers: any = {
-		stuns: [
-			// { urls: 'stun:numb.viagenie.ca' },
-			{ urls: 'stun:stun.l.google.com:19302' },
-			{ url:'stun:stun1.l.google.com:19302' },
-			{ url:'stun:stun2.l.google.com:19302' },
-			{ url:'stun:stun3.l.google.com:19302' },
-			{ url:'stun:stun4.l.google.com:19302' }
-		],
-		// turn: {
-		// 	urls: 'turn:numb.viagenie.ca',
-		// 	credential: 'fadqyv-nijwu8-Tubnyc',
-		// 	username: 'manvillt.developer@gmail.com'
-		// },
-		turns: [
-			{
-				urls: 'turn:thrive19.com:3478',
-				credential: 'fadqyvnijwu8Tubnyc',
-				username: 'thrive19'
-			},
-			{
-				urls: 'turn:thrive19.com:5349',
-				credential: 'fadqyvnijwu8Tubnyc',
-				username: 'thrive19'
-			}
-		]
-	};
-// fadqyvnijwu8Tubnyc
+
 	constructor(
 		private toastCtrl: ToastController
 	) {}
 
-	initConnection() {
-		this.createConnection().then((connection) => {
-			connection.connectSocket((socket) => {
-				this.connectionSocket = socket;
-			});
-		});
-	}
-
-	async createConnection() {
+	async initConnection(options?: any) {
 		let connection = new RTCMultiConnection();
+
+		// extra
+		if(options && options.hasOwnProperty('extra')) {
+			connection.extra = options.extra;
+			this.extra = options.extra;
+		} else if(this.extra) {
+			connection.extra = this.extra;
+		}
 
 		// log event
 		connection.enableLogs = this.log;
@@ -69,29 +42,32 @@ export class RtcService {
 		// set channel
 		connection.channel = this.channel;
 
-		// ice
-		connection.candidates = { turn: true };
-		connection.iceTransportPolicy = 'relay';
+		// socket options
+		connection.socketOptions = {
+			'forceNew': true, // For SocketIO version >= 1.0
+			'transport': 'polling' // fixing transport:unknown issues
+		};
 
 		// connect socket
 		connection.socketURL = this.socketUrl;
 
-		// STUN+TURN servers
-		connection.iceServers = [];
+		// ICE servers
+		if(ICE_SERVERS) {
+			connection.candidates = ICE_SERVERS.candidates;
+			connection.iceTransportPolicy = ICE_SERVERS.transportPolicy;
 
-		for (let index = 0; index < this.iceServers.stuns.length; index++) {
-			connection.iceServers.push(this.iceServers.stuns[index]);
+			connection.iceServers = [];
+			connection.iceServers.push(ICE_SERVERS.stun);
+			connection.iceServers.push(ICE_SERVERS.turn);
 		}
 
-		for (let index = 0; index < this.iceServers.turns.length; index++) {
-			connection.iceServers.push(this.iceServers.turns[index]);
-		}
+		this.connection = connection;
 
-		return connection;
+		console.log('CONN INITIATED', this.connection);
 	}
 
-	getConnectionSocket() {
-		return this.connectionSocket;
+	async getConnection() {
+		return this.connection;
 	}
 
 	// async create(params: any = {}) {

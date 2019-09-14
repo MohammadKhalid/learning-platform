@@ -31,9 +31,8 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Model.associate = function(models){
-      // this.hasMany(models.LiveGroupTrainingParticipant, {as: 'participants', foreignKey: 'liveGroupTrainingId'});
-      this.belongsToMany(models.User, {as: 'participants', through: 'LiveGroupTrainingParticipant', foreignKey: 'liveGroupTrainingId', otherKey: 'userId'});
-      this.belongsTo(models.User, {as: 'speaker', foreignKey: 'speakerId', otherKey: 'userId'});
+    this.belongsToMany(models.User, { through: { model: models.UserTag, unique: false, scope: { taggable: 'liveGroupTraining' } }, foreignKey: 'taggableId', constraints: false, as: 'users'});
+    this.belongsTo(models.User, {as: 'speaker', foreignKey: 'speakerId', otherKey: 'userId'});
   };
 
   Model.prototype.toWeb = function (pw) {

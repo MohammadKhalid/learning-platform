@@ -1,23 +1,114 @@
-<ion-content>
-    <ion-grid class="fixed-content" text-center *ngIf="loading === true">
+<!-- <ion-header no-border>
+    <ion-toolbar color="primary">
+        <div style="width: 175px;">
+            <ion-img src="assets/img/logo-light.png" margin-horizontal></ion-img>
+        </div>
+    </ion-toolbar>
+</ion-header> -->
+
+<ion-content padding class="bg">
+    <ion-grid class="fixed-content" text-center [hidden]="!loading">
         <ion-row class="fixed-content" class="fixed-content" justify-content-center align-items-center>
           <ion-col>
-            <ion-spinner color="light"></ion-spinner>
+            <ion-spinner color="primary"></ion-spinner>
           </ion-col>
         </ion-row>
     </ion-grid>
 
-    <ion-grid class="fixed-content" no-padding *ngIf="loading === false">
+    <ion-grid style="height: 100%" [hidden]="loading">
+        <ion-row style="height: 100%" align-items-center>
+            <ion-col size="12" size-sm="5" size-md="4" size-lg="3" style="margin: auto">
+                <form [formGroup]="loginForm">
+                    <ion-card padding color="clean">
+                        <div padding-vertical>
+                            <ion-img src="assets/img/logo.png" margin-horizontal></ion-img>
+                        </div>
+                        <ion-card-header>
+                            <ion-card-title><strong>Login to your account</strong></ion-card-title>
+                            <ion-card-subtitle *ngIf="showLoginMessage"><ion-text color="danger">Wrong username or password</ion-text></ion-card-subtitle>
+                        </ion-card-header>
+                        
+                        <ion-item>
+                            <ion-icon slot="start" name="contact"></ion-icon>
+                            <ion-input autofocus="true" type="text" autofocus="false" (keyup.enter)="login()" formControlName="username" placeholder="Email"></ion-input>
+                        </ion-item>
+
+                        <ion-item>
+                            <ion-icon slot="start" name="lock"></ion-icon>
+                            <ion-input type="password" autofocus="false" (keyup.enter)="login()" formControlName="password" placeholder="Password"></ion-input>
+                        </ion-item>
+                        
+                        <div text-center margin padding-top>
+                            <ion-button (click)="login()" color="dark" shape="round" expand="block" [disabled]="!loginForm?.valid">LOG IN</ion-button>
+                        </div>
+
+                        <ion-item lines="none" routerLink="">
+                            <ion-label><p>Forgot password</p></ion-label>
+                            <ion-icon name="help-circle-outline" slot="end" size="small"></ion-icon>
+                        </ion-item>
+
+                        <!-- <ion-item color="medium" lines="none">
+                            <ion-label text-wrap><p>If you want to try before committing to an active monthly plan, then you can sign up for a free 14-day trial. NO COST, NO OBLIGATION!</p></ion-label>
+                        </ion-item>
+
+                        <ion-item color="medium">
+                            <ion-label color="warning">
+                                <strong>Free Trial</strong>
+                            </ion-label>
+                            <ion-button routerLink="/public/signup">Signup</ion-button>    
+                        </ion-item> -->
+                    </ion-card>
+                </form>
+            </ion-col>
+            <ion-col size="12" size-sm="7" size-md="8" size-lg="9" style="margin: auto">
+                <div>
+                    <div padding-horizontal>
+                        <ion-text>
+                            <h2 class="header-xl">Your new learning<br>experience is here</h2>
+                        </ion-text>
+                    </div>
+                    <ion-list lines="none" class="bg-clear">
+                        <ion-item class="bg-clear">
+                            <ion-icon slot="start" name="checkmark-circle-outline" mode="ios" size="large"></ion-icon>
+                            <ion-label text-wrap>
+                                <ion-text color="primary"><h2><strong>Live Group Training</strong></h2></ion-text>
+                                <p><strong>Want motivated staff?</strong></p>
+                                <h3>With this technology and the power of the internet, we can now deliver individual or group motivational sessions remotely.</h3>
+                            </ion-label>
+                        </ion-item>
+                        <ion-item class="bg-clear">
+                            <ion-icon slot="start" name="checkmark-circle-outline" mode="ios" size="large"></ion-icon>
+                            <ion-label text-wrap>
+                                <ion-text color="primary"><h2><strong>Practice Time / Show Time</strong></h2></ion-text>
+                                <h3>The fastest and very best way to get your staff up to speed and competent in what they present to your customers.</h3>
+                                <h3>Have your staff practice the right word-tracks via live video. In real time they get to record it as many times as they want and see their own body language, hear their tonality and feel if what they are saying is effective or not.</h3>
+                                <h3>Then they can submit their practiced work for critiquing, all within the system.</h3>
+                            </ion-label>
+                        </ion-item>
+                        <ion-item class="bg-clear">
+                            <ion-icon slot="start" name="checkmark-circle-outline" mode="ios" size="large"></ion-icon>
+                            <ion-label text-wrap>
+                                <ion-text color="primary"><h2><strong>And more...</strong></h2></ion-text>
+                                <h3>Within Thrive19.com, your staff can watch short, cutting edge training videos, use a teleprompter to practice if they choose, ask our experts any question that they need help with, request personal coaching,  get certified on performance & results + a whole lot more.</h3>
+                            </ion-label>
+                        </ion-item>
+                    </ion-list>
+                </div>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+    <!-- <ion-grid class="fixed-content" no-padding [hidden]="loading">
         <ion-row class="fixed-content">
             <ion-col size="12" size-md="6" push-md="6" no-padding align-self-stretch style="background-color: var(--ion-color-light)">
                 <ion-row class="fixed-content">
                     <ion-col size="12" size-sm="10" push-sm="1" size-md="8" push-md="2" size-xl="6" push-xl="3" no-padding align-self-center>
-                        <form [formGroup]="loginForm" (ngSubmit)="login()">
+                        <form [formGroup]="loginForm">
                             <ion-card style="background-color: #fff;">
                                 <ion-card-content><ion-img src="assets/img/logo.png"></ion-img></ion-card-content>
                                 <ion-card-header>
                                     <ion-card-title text-center>Login and start learning</ion-card-title>
-                                    <ion-card-subtitle color="danger" *ngIf="showLoginMessage === true">{{loginErrorString}}</ion-card-subtitle>
+                                    <ion-card-subtitle color="danger" text-center *ngIf="showLoginMessage">Wrong username or password</ion-card-subtitle>
                                 </ion-card-header>
 
                                 
@@ -32,7 +123,7 @@
                                 </ion-item>
 
                                 <div text-center margin padding-vertical>
-                                    <ion-button type="submit" color="dark" shape="round" size="default" expand="block">LOG IN</ion-button>
+                                    <ion-button (click)="login()" color="dark" shape="round" size="default" expand="block" [disabled]="!loginForm?.valid">LOG IN</ion-button>
                                 </div>
                             </ion-card>
                         </form>
@@ -81,6 +172,6 @@
                 </ion-slides>
             </ion-col>
         </ion-row>
-    </ion-grid>
+    </ion-grid> -->
 
 </ion-content>

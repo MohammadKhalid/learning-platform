@@ -1,0 +1,41 @@
+<div>
+    <ion-row>
+        <ion-col size-md="4" *ngFor="let filename of fileData">
+            <ion-card>
+                <ion-item lines="none" class="item">
+                    <div class="mainDiv">
+                        <div class="fileName">
+
+                            <h4>
+                                <ion-icon name="{{show(filename.title)}}"></ion-icon>
+                                <a target="_blank" [href]="serverUrl+filename.title" download>{{filename.title}}</a> </h4>
+                        </div>
+                        <div>
+                            <ion-icon name="close" (click)="deletePrompt(filename)"></ion-icon>
+                        </div>
+                    </div>
+                </ion-item>
+            </ion-card>
+
+        </ion-col>
+    </ion-row>
+</div>
+
+<!-- <ion-list class="ion-padding">
+    <ion-item lines="inset">
+        <ion-label position="floating">Title
+            <ion-text color="danger">*</ion-text>
+        </ion-label>
+        <ion-input type="input" [(ngModel)]="title" placeholder="Enter Title"></ion-input>
+    </ion-item>
+</ion-list>
+<form style="margin-bottom: 200px">
+
+    <app-dropzone (eventBtnSubmit)="eventBtnSubmit($event)"></app-dropzone>
+    <ion-item lines="none" class="ion-float-right">
+        <ion-button (click)="upload()"
+            [disabled]="btnTxt == 'Save' ? (submitBtn || title == '') : (fileData.length < 0 ||  title == '')"
+            size="md">{{btnTxt}}</ion-button>
+    </ion-item>
+
+</form> -->

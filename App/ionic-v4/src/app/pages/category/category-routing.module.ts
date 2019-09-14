@@ -5,7 +5,8 @@ const routes: Routes = [
   { path: '', loadChildren: './category/category.module#CategoryPageModule' },
 
   { path: 'add', loadChildren: './category-form/category-form.module#CategoryFormPageModule' },
-  { path: 'edit/:id', loadChildren: './category-form/category-form.module#CategoryFormPageModule' }
+  { path: 'edit/:id', loadChildren: './category-form/category-form.module#CategoryFormPageModule' },
+
 ];
 
 @NgModule({

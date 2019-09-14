@@ -1,0 +1,33 @@
+::ng-deep .mat-form-field-underline {
+    display: none;
+}
+
+.mat-selector {
+    width: 90%;
+    padding-top: 13px;
+    margin-left: 8px;
+}
+
+::ng-deep .mat-select-arrow {
+    border-left: 15px solid transparent !important;
+    border-right: none !important;
+    border-top: 15px solid transparent !important;
+    border-image-source: url('../../../../../assets/img/certification/yPDuQQ.svg') !important;
+    border-image-repeat: stretch !important;
+}
+
+.content-black {
+    --background: #2e3d49;
+}
+
+.finish {
+    float: RIGHT;
+    padding-right: 22PX;
+    padding-top: 8PX;
+}
+
+.nextBtn {
+    float: RIGHT;
+    padding-right: 22PX;
+    padding-top: 8PX;
+}

@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
     var Model = sequelize.define('Category', {
         title       : DataTypes.STRING,
         description : DataTypes.TEXT,
+        isPublic    : {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
         isActive    : {
             type: DataTypes.BOOLEAN,
             defaultValue: true
@@ -21,15 +25,66 @@ module.exports = (sequelize, DataTypes) => {
 
     Model.associate = function(models) {
         // self reference as sub category
-        this.belongsTo(models.Category, { as: 'parentCategory', foreignKey: 'categoryId' });
-        this.hasMany(models.Category, {as: 'subCategories', foreignKey: 'categoryId'});
+        this.belongsToMany(models.Category, { as: 'parents', through: 'CategoryParents', foreignKey: 'categoryId' });
 
-        // topic
-        this.belongsToMany(models.Topic, { through: 'CategoryTopic', as: 'topics', foreignKey: 'categoryId' });
+        // // company
+        // this.belongsToMany(models.Company, { 
+        //     through: { 
+        //       model: models.CompanyTag,
+        //       unique: false,
+        //       scope: {
+        //         taggable: 'category'
+        //       }
+        //     },
+        //     foreignKey: 'taggableId',
+        //     constraints: false,
+        //     as: 'companies'
+        // });
+
+        // // topic
+        // // this.belongsToMany(models.Topic, { through: 'CategoryTopics', as: 'topics', foreignKey: 'categoryId', otherKey: 'topicId' });
+        this.belongsToMany(models.Topic, { 
+            through: { 
+              model: models.TopicTag,
+              unique: false,
+              scope: {
+                taggable: 'category'
+              }
+            },
+            foreignKey: 'taggableId',
+            constraints: false,
+            as: 'topics'
+        });
 
         // user
-        this.belongsTo(models.User, {as: 'createdByUser', foreignKey: 'createdBy'});
-        this.belongsTo(models.User, {as: 'updatedByUser', foreignKey: 'updatedBy'});
+        this.belongsToMany(models.User, { 
+            through: { 
+              model: models.UserTag,
+              unique: false,
+              scope: {
+                taggable: 'category'
+              }
+            },
+            foreignKey: 'taggableId',
+            constraints: false,
+            as: 'users'
+        });
+
+        this.belongsToMany(models.Company, { 
+            through: { 
+              model: models.CompanyTag,
+              unique: false,
+              scope: {
+                taggable: 'category'
+              }
+            },
+            foreignKey: 'taggableId',
+            constraints: false,
+            as: 'companies'
+        });
+
+        // this.belongsTo(models.User, {as: 'creator', foreignKey: 'createdBy'});
+        // this.belongsTo(models.User, {as: 'updater', foreignKey: 'updatedBy'});
     };
 
     Model.prototype.getJWT = function () {

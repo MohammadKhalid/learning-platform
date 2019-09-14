@@ -296,7 +296,7 @@
 
 									<div *ngFor="let media of question?.question?.medias;">
 		                                <div class="video-box" style="overflow: hidden;" *ngIf="media?.type === 'video/webm' || media?.type === 'video/mp4' || media?.type === 'application/octet-stream'">
-		                                    <video class="video" controls preload="auto">
+		                                    <video class="video" controls autoplay playsinline muted preload="auto">
 		                                        <source src="{{mediaPath?.path}}" type='{{mediaPath?.type}}' *ngFor="let mediaPath of media?.paths">
 		                                    </video>
 		                                </div>
@@ -340,7 +340,8 @@
 									</ion-col>
 								</ion-row>
 
-								<video #videoRecorder class="video"></video>
+								<video autoplay playsinline muted #videoRecorder class="video"></video>
+								
 							</div>
 						</ion-card>
 					</ion-col>

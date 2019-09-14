@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { Component, OnInit, ViewChild, ElementRef, ViewChildren, QueryList } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ModalController, ToastController, IonContent, IonList } from '@ionic/angular';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 
@@ -8,11 +8,11 @@ import { AuthenticationService } from '../../../services/user/authentication.ser
 
 import * as moment from 'moment';
 import { ContactAddModelComponent } from './contact-add-model/contact-add-model.component';
+import { OverlayEventDetail } from '@ionic/core';
 import { LoaderService } from 'src/app/services/utility/loader.service';
 import { RtcService } from 'src/app/services/rtc/rtc.service';
 import io from 'socket.io-client';
 import { SOCKET_URL } from 'src/environments/environment';
-import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-ask-expert',
@@ -44,15 +44,17 @@ export class AskExpertPage implements OnInit {
 	value: number = 12;
 	sessionData: any;
 	items: any = [];
-	chatTerm: string = "";
+	public searchTerm: string = "";
+	public chatTerm: string = "";
 	imagepath: string = './assets/img/askexpert/';
 	chatMouseOver: boolean = true;
 	addMouseOver: boolean;
 	findMouseOver: boolean;
+	chatMob: boolean;
 	queryParams: any;
 	isMsgSearchable: boolean = false;
 	isMsgSearchableMobile: boolean = false;
-	isContactLst: boolean = false;
+	isContactLst: false;
 	contactTerm: string = "";
 	contactSkeleton: any;
 	isSkeliton: boolean = true;
@@ -63,15 +65,14 @@ export class AskExpertPage implements OnInit {
 	chat_input: string;
 	contact_name: string;
 	isContactsearch: boolean = false;
-	isStartScreen: boolean = false;
+	isStartScreen: boolean;
 	chatlist: any = [];
 	headerIsOnline: boolean = false;
-	sockets = io(SOCKET_URL);
+	public sockets = io(SOCKET_URL);
 	IsinfinitScroll: boolean = true;
 	allDates: any = [];
 	firstLoad: boolean = true;
 	chatSpinner: boolean = false;
-	userSubscription: Subscription;
 
 	constructor(
 		private restApi: RestApiService,
@@ -89,28 +90,33 @@ export class AskExpertPage implements OnInit {
 		this.sessionData = this.authService.getSessionData();
 	}
 
-	setLoginStatus(data, status: boolean) {
-		if (this.userId != data.user_id) {
-			this.chatlist.forEach((el, i) => {
-				if (el.contact_id == data.user_id) {
-					this.chatlist[i].isLogin = status;
-					this.headerIsOnline = status;
-				}
-			});
-		}
-	}
-
 	ngOnInit() {
-		// this.isStartScreen = false;
+		this.isStartScreen = false;
 		this.sockets.on('contact-online', (data) => {
-			this.setLoginStatus(data, true);
+			if (this.userId != data.user_id) {
+				this.chatlist.forEach((el, i) => {
+					if (el.contact_id == data.user_id) {
+						this.chatlist[i].isLogin = 1;
+						this.headerIsOnline = true;
+					}
+				});
+
+			}
 		})
 		this.sockets.on('contact-offline', (data) => {
-			this.setLoginStatus(data, false);
+			if (this.userId != data.user_id) {
+				this.chatlist.forEach((el, i) => {
+					if (el.contact_id == data.user_id) {
+						this.chatlist[i].isLogin = 0;
+						this.headerIsOnline = false;
+					}
+				});
+
+			}
 		})
 		this.sockets.on('send-reply', (data) => {
-			this.chatlist.forEach((el, i) => {
-				if (el.contact_id == data.message.senderId && this.userId == data.message.recieverId) {
+					this.chatlist.forEach((el, i) => {
+				if (el.contact_id == data.message.senderId) {
 					this.chatlist[i].lastMessage = data.message.message;
 					this.chatlist[i].lastMessageDate = data.message.date;
 				}
@@ -130,77 +136,67 @@ export class AskExpertPage implements OnInit {
 				this.bottomScroll();
 			}
 		})
-		this.userSubscription = this.activatedRoute.params.subscribe(
-			(params: Params) => {
-				this.chatMessage = []; //default set empty because angular is smart it's not clearing data is id same
-				this.allDates = []; //default set empty because angular is smart it's not clearing data is id same
-				this.chatlist = []; //default set empty because angular is smart it's not clearing data is id same
-				this.isSkeliton = true; //default set empty because angular is smart it's not clearing data is id same
-				if (params.contactid) {
-					this.contactId = params.contactid;
-					this.isStartScreen = true;
-
-				}
+		this.activatedRoute.paramMap.subscribe(params => {
+			this.contactId = params.get('contactid');
+			if (this.contactId) {
 				this.getAllDate();
-				this.getContactList();
-			})
+			}
+		})
+		this.getContactList();
 	}
-
-	ngOnDestroy(): void {
-		this.userSubscription.unsubscribe();
-	}
-
 	getAllDate() {
 		let user_id = this.userId;
 		let contact_id = this.contactId;
-		this.restApi.get(`chatDates/${user_id}/${contact_id}`).then((res) => {
+		this.restApi.get(`chatDates/${user_id}/${contact_id}`).subscribe((res: any) => {
 			this.allDates = res.data;
+
 			this.loadchat();
 		});
 	}
-
 	loadchat() {
+
 		this.chatSpinner = true;
 		let selectedDate = this.allDates.length > 0 ? this.allDates[0].date : 'null';//this.allDates[this.allDates.length - 1];
+		this.chatMob = true;
 		let user_id = this.userId;
 		let contact_id = this.contactId;
-	
+		this.isStartScreen = true;
 		if (this.allDates.length > 0) {
-			this.restApi.get(`chat/${user_id}/${contact_id}/${selectedDate}`).then((res) => {
-
+			this.restApi.get(`chat/${user_id}/${contact_id}/${selectedDate}`).subscribe((res: any) => {
+				console.log('CHAT RES', res);
 				setTimeout(() => {
 					this.chatSpinner = false;
 				});
 				this.contact_name = res.firstName;
-				// this.isStartScreen = true;
+				this.isStartScreen = true;
 				this.headerIsOnline = res.isLogin;
 
-				// if (this.allDates.length > 0) {
-				const index = this.allDates.indexOf(this.allDates[0]); ///alway get 0 index 
-				this.allDates.splice(index, 1); //always remove 0 index object
-				this.IsinfinitScroll = false;
-				res.messages.forEach(el => {
-					this.chatMessage.unshift(el);
-				});
-				let obj = {
-					timeAgo: true,
-					date: res.messages[0].date,
-				};
-				this.chatMessage.unshift(obj);
-				this.firstLoad ? this.bottomScroll() : '';
-				this.firstLoad = false;
-				if (this.chatMessage.length < 7) {
+				if (this.allDates.length > 0) {
+					const index = this.allDates.indexOf(this.allDates[0]); ///alway get 0 index 
+					this.allDates.splice(index, 1); //always remove 0 index object
+					this.IsinfinitScroll = false;
 
-					this.loadchat()
+					res.messages.forEach(el => {
+						this.chatMessage.unshift(el);
+					});
+					let obj = {
+						timeAgo: true,
+						date: res.messages[0].date,
+					};
+					this.chatMessage.unshift(obj);
+
+					this.firstLoad ? this.bottomScroll() : '';
+					this.firstLoad = false;
+
+					if (this.chatMessage.length < 7) {
+
+						this.loadchat()
+					}
 				}
-				// }
-				// else {
-				// 	this.IsinfinitScroll = true;
-				// }
+				else {
+					this.IsinfinitScroll = true;
+				}
 			});
-		}
-		else {
-			this.IsinfinitScroll = true;
 		}
 
 	}
@@ -255,7 +251,7 @@ export class AskExpertPage implements OnInit {
 		return this.contactSkeleton;
 	}
 	getContactList() {
-		this.restApi.get(`contact/${this.restApi.sessionData.user.id}`).then((res: any) => {
+		this.restApi.get(`contact/${this.restApi.sessionData.user.id}`).subscribe((res: any) => {
 			this.isSkeliton = false;
 			if (res.success === true) {
 				this.chatlist = res.message;
@@ -263,13 +259,18 @@ export class AskExpertPage implements OnInit {
 				if (index != -1) {
 					this.chatlist[index].activeChat = 1;
 				}
+
+				// set chat other side person name
+				res.message.forEach((chattingPerson: any) => {
+					if(this.contactId === chattingPerson.contact_id) this.contact_name = chattingPerson.firstName + ' ' + chattingPerson.lastName;
+				});
 			}
-		}).catch((error: any) => {
+		}, (error: any) => {
 			this.isSkeliton = false;
 		});
 	}
 	getList() {
-		this.restApi.get(this.urlEndPoint, this.queryParams).then((res: any) => {
+		this.restApi.get(this.urlEndPoint, this.queryParams).subscribe((res: any) => {
 			if (res.success === true) {
 				this.items = res.items;
 			}
@@ -321,7 +322,7 @@ export class AskExpertPage implements OnInit {
 			this.chat_input = "";
 			this.bottomScroll();
 			this.restApi.put('chat/', obj)
-				.then((res: any) => { });
+				.subscribe((res: any) => { });
 		}
 	}
 }

@@ -7,8 +7,8 @@ import io from 'socket.io-client';
 
 
 import { AuthenticationService } from './services/user/authentication.service';
+import { RtcService } from './services/rtc/rtc.service';
 
-import { Observable } from 'rxjs/Observable';
 import { filter } from 'rxjs/operators';
 import { SOCKET_URL } from 'src/environments/environment';
 import { RestApiService } from './services/http/rest-api.service';
@@ -26,7 +26,8 @@ export class AppComponent {
   navRouterStartEvent: any;
   loginUrl: string = '/login';
   defaultUrl: string = '/dashboard';
-  public sockets = io(SOCKET_URL);
+  disabledItems = [ '/certification', '/report' ];
+  public sockets: io;
 
 
   private linksAssessment = {
@@ -56,7 +57,7 @@ export class AppComponent {
       title: 'My Account'
     },
     menu: [
-      { title: 'Reports', url: '/report', icon: 'stats', icon_mode: 'ios' },
+      { title: 'Reports', url: '#', icon: 'stats', icon_mode: 'ios' },
       { title: 'Profile', url: '/profile', icon: 'contact', icon_mode: 'ios' }
     ]
   };
@@ -81,17 +82,21 @@ export class AppComponent {
         menu: [
           { title: 'Dashboard', url: '/dashboard', icon: 'apps', icon_mode: 'md' },
           { title: 'Categories', url: '/category', icon: 'list', icon_mode: 'ios' },
-          { title: 'Topics', url: '/topic', icon: 'book', icon_mode: 'ios' }
-        ]
+          { title: 'Topics', url: '/topic', icon: 'book', icon_mode: 'ios' },
+          { title: 'Companies', url: '/company', icon: 'business', icon_mode: 'ios' },
+          { title: 'Level Settings', url: '/level-setting', icon: 'cog', icon_mode: 'ios' },
+          { title: 'Course Category', url: '/Course-Category', icon: 'list-box', icon_mode: 'ios' }
+          
+       ]
       },
       {
         header: {
           title: 'Users'
         },
         menu: [
+          { title: 'Clients', url: '/client', icon: 'business', icon_mode: 'md' },
           { title: 'Students', url: '/student', icon: 'school', icon_mode: 'ios' },
-          { title: 'Coaches', url: '/coach', icon: 'contacts', icon_mode: 'ios' },
-          { title: 'Companies', url: '/company', icon: 'business', icon_mode: 'md' }
+          { title: 'Coaches', url: '/coach', icon: 'contacts', icon_mode: 'ios' }
         ]
       },
       {
@@ -106,11 +111,16 @@ export class AppComponent {
       this.linksAssessment,
       this.linksAccount
     ],
-    company: [
+    client: [
       {
         header: false,
         menu: [
-          { title: 'Dashboard', url: '/dashboard', icon: 'apps', icon_mode: 'md' }
+          { title: 'Dashboard', url: '/dashboard', icon: 'apps', icon_mode: 'md' },
+          { title: 'Categories', url: '/category', icon: 'list', icon_mode: 'ios' },
+          { title: 'Topics', url: '/topic', icon: 'book', icon_mode: 'ios' },
+          { title: 'Companies', url: '/company', icon: 'business', icon_mode: 'md' },
+          { title: 'Level Settings', url: '/level-setting', icon: 'cog', icon_mode: 'ios' },
+          { title: 'Course Category', url: '/Course-Category', icon: 'list-box', icon_mode: 'ios' }
         ]
       },
       {
@@ -140,15 +150,39 @@ export class AppComponent {
     ]
   };
 
-  private userCommonRoutes = ['', 'dashboard', 'topic', 'practice-time', 'show-time', 'certification', 'live-group-training', 'ask-expert', 'request-personal-coaching', 'profile'];
+  private userCommonRoutes = [
+    '', 
+    'public',
+    'error',
+    'login', 
+    'dashboard', 
+    'topic', 
+    'practice-time', 
+    'show-time', 
+    'certification', 
+    'live-group-training', 
+    'ask-expert', 
+    'request-personal-coaching', 
+    'profile',
+    'coach',
+    'report',
+    'test'
+  ];
   private userRoutes = {
-    student: [
-      'coach',
-      'practice-time/add'
+    student: [ 'category' ],
+    coach: [
+      'student'
     ],
-    coach: [],
-    company: []
+    client: [
+      'company',
+      'student',
+      'category',
+      'level-setting',
+      'Course-Category'
+    ]
   };
+  private userRouterConfig: Array<object>;
+  private routerConfig: Array<object>;
 
   constructor(
     private platform: Platform,
@@ -157,41 +191,55 @@ export class AppComponent {
     private authenticationService: AuthenticationService,
     private router: Router,
     private menuCtrl: MenuController,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private rtcService: RtcService
   ) {
+    // default router config
+    this.routerConfig = this.getRouterConfig();
+
     // set navigation start url
     this.navRouterStartEvent = this.router.events.pipe(filter(e => e instanceof NavigationStart)).subscribe((event: any) => {
       this.navStart = event.url;
     });
 
     this.authenticationService.authenticationState.subscribe((state) => {
-      // menu state
-      setTimeout(() => {
-        this.menuCtrl.enable(state);
-      });
-
       if(this.authenticationService.authDidCheck) {
-        if (state) {
-          // set user data
-          this.userData = this.authenticationService.sessionData;
+        const navStartRoot = this.navStart.split('/')[1];
 
-          // set user menu
-          this.appPages = this.links[this.userData.user.type];
-
-          // set route
-          // this.userRoutes[this.userData.user.type] = this.userRoutes[this.userData.user.type].concat(this.userCommonRoutes);
-          // let userRouterConfig = [];
-          
-          // this.router.config.forEach((val: any) => { 
-          //   if(this.userRoutes[this.userData.user.type].includes(val.path)) userRouterConfig.push(val);
-          // });
-          // this.router.resetConfig(userRouterConfig);
-
-          // redirect if in login page
-          if(this.navStart === this.loginUrl || this.navStart === '/') this.navCtrl.navigateRoot(this.defaultUrl);
+        if(this.navStart === '/setup' || navStartRoot === 'public') {
+          // menu state
+          this.menuCtrl.enable(false);
         } else {
-          // redirect to
-          this.navCtrl.navigateRoot(this.loginUrl);
+          // socket io
+          this.sockets = io(SOCKET_URL);
+
+          // menu state
+          setTimeout(() => {
+            this.menuCtrl.enable(state);
+          }, 1500);
+
+          // auth success
+          if(state) {
+            // set user data
+            this.userData = this.authenticationService.sessionData;
+
+            // init user routes
+            this.setUserRoutes();
+
+            // rtc connection
+            this.rtcService.initConnection({ extra: this.userData.user });
+
+            // set user menu
+            this.appPages = this.links[this.userData.user.type];
+
+            // redirect if in login page
+            if(this.navStart === this.loginUrl || this.navStart === '/') this.navCtrl.navigateRoot(this.defaultUrl);
+          } else {
+            // redirect to
+            this.navCtrl.navigateRoot(this.loginUrl).then(() => {
+              // this.authenticationService.authDidCheck = false;
+            });
+          }
         }
       }
     }).remove(this.navRouterStartEvent); // unsubscribe route event
@@ -200,18 +248,23 @@ export class AppComponent {
   }
   @HostListener('window:unload', ['$event'])
   unloadHandler(event: any): void {
-        this.sockets.emit('set-offline', { user_id: this.authenticationService.getSessionData().user.id })
+        if(this.sockets) this.sockets.emit('set-offline', { user_id: this.authenticationService.getSessionData().user.id })
+  }
+  ngOnInit(){
+   
   }
   ngAfterViewInit() {
-    this.sockets.on('connect', () => {
-      setTimeout(() => {
-        if (this.authenticationService.getSessionData()) {
-          this.sockets.emit('set-online', { user_id: this.authenticationService.getSessionData().user.id });
-        }
-      }, 500);
-    });
-    this.sockets.on('disconnect', function () {
-    });
+    if(this.sockets) {
+      this.sockets.on('connect', () => {
+        setTimeout(() => {
+          if (this.authenticationService.getSessionData()) {
+            this.sockets.emit('set-online', { user_id: this.authenticationService.getSessionData().user.id });
+          }
+        }, 500);
+      });
+      this.sockets.on('disconnect', function () {
+      });
+    }
     // window.addEventListener('beforeunload', (e) => {
     //  alert();
     // });
@@ -224,19 +277,50 @@ export class AppComponent {
   }
   
   logout() {
-    this.sockets.emit('set-offline', { user_id: this.authenticationService.getSessionData().user.id })
+    if(this.sockets) this.sockets.emit('set-offline', { user_id: this.authenticationService.getSessionData().user.id })
     this.authenticationService.logout();
   }
 
   isActive(url: string) {
+    // disable color
+    if(url === '#') return 'medium';
+
     if(this.router.url === url || this.router.url === '/dashboard' && url === '/') return 'secondary';
 
     return 'dark';
   }
 
   isActiveLabel(url: string) {
-    if(this.router.url === url || this.router.url === '/dashboard' && url === '/') return 'medium';
+    // disable color
+    if(url === '#') return 'medium';
+
+    if(this.router.url === url || this.router.url === '/dashboard' && url === '/') return 'secondary';
 
     return '';
   }
+
+  setUserRoutes() {
+    // set route
+    this.userRouterConfig = [];
+
+    if(this.userData.user.type === 'admin') {
+      this.userRouterConfig = this.routerConfig;
+    } else {
+      this.userRoutes[this.userData.user.type] = this.userRoutes[this.userData.user.type].concat(this.userCommonRoutes);
+      this.routerConfig.forEach((val: any) => { 
+        if(this.userRoutes[this.userData.user.type].includes(val.path)) this.userRouterConfig.push(val);
+      });
+
+      // redirect
+      if(!this.userRoutes[this.userData.user.type].includes(this.navStart.split('/')[1])) this.navCtrl.navigateRoot(this.defaultUrl);
+    }
+
+    // reset router config
+    this.router.resetConfig(this.userRouterConfig);
+  }
+
+  getRouterConfig() {
+    return this.router.config;
+  }
+  
 }

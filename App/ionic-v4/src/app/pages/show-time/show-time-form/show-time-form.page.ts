@@ -5,14 +5,17 @@ import { HttpEventType } from '@angular/common/http';
 import { AlertController, NavController, ToastController, IonContent } from '@ionic/angular';
 
 import { RestApiService } from '../../../services/http/rest-api.service';
+import { PublicRestApiService } from '../../../services/http/public-rest-api.service';
 import { ViewService } from '../../../services/view/view.service';
 import { IonicSelectableComponent } from 'ionic-selectable';
 
 import { RtcService } from '../../../services/rtc/rtc.service';
 import { TimerService } from '../../../services/timer/timer.service';
+import { NotificationService } from '../../../services/notification/notification.service';
 
 import * as RecordRTC from 'recordrtc';
 import adapter from 'webrtc-adapter';
+import { reject } from 'q';
 
 @Component({
   selector: 'app-show-time-form',
@@ -84,7 +87,9 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
     isCustomTopic: boolean = false;
 
     constructor(
+        private notificationService: NotificationService,
         private restService: RestApiService,
+        private publicRestService: PublicRestApiService,
         private alertCtrl: AlertController,
         private toastCtrl: ToastController,
         private navCtrl: NavController,
@@ -94,14 +99,17 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
         private activatedRoute: ActivatedRoute
     ) {
         // set media base url
-        this.mediaBaseUrl = this.restService.url;
+        this.mediaBaseUrl = this.publicRestService.url;
 
-        // get topics
-        this.restService.get('topics', {}).then((res: any) => {
+        // get input data
+        this.restService.get('show-time/form-input-data', {}).subscribe((res: any) => {
+            this.coaches = res.coaches;
+
+            // set topics
             let items = [];
 
-            for (var i = res.items.length - 1; i >= 0; i--) {
-                const topic = res.items[i];
+            for (var i = res.topics.length - 1; i >= 0; i--) {
+                const topic = res.topics[i];
                 const categories = topic.categories;
 
                 // no category
@@ -126,11 +134,6 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
             }
 
             this.topics = items;
-        });
-
-        // get coaches
-        this.restService.get('form-input-data', {}).then((resp: any) => {
-            if(resp.data.coaches) this.coaches = resp.data.coaches;
         });
     }
 
@@ -312,7 +315,7 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
 
             // set duration
             if(this.question.question.answerLimit) this.setRecorderDuration();
-        }).catch((err) => {
+        }, (err) => {
             console.log(err.name + ": " + err.message);
         });
     }
@@ -477,33 +480,41 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
     }
 
     initSave() {
-        this.videoStatus = 'initializing';
-        this.textStatus = this.videoStatus;
+        return new Promise((resolve, reject) => {
+            this.videoStatus = 'initializing';
+            this.textStatus = this.videoStatus;
 
-        let formData = this.isCustomTopic ? this.form : {
-            topicId: this.form.topicId,
-            submittedTo: this.form.submittedTo,
-            sendTo: this.form.sendTo
-        };
+            let formData = this.isCustomTopic ? this.form : {
+                topicId: this.form.topicId,
+                submittedTo: this.form.submittedTo,
+                sendTo: this.form.sendTo
+            };
 
-        return this.restService.post(this.url.api, formData).then((res: any) => {
-            if(res.success === true) {
-                if(this.isCustomTopic) this.question = res.topic.questions[0];
+            this.restService.post(this.url.api, formData).subscribe((res: any) => {
+                if(res.success === true) {
+                    this.showTime = res.item;
 
-                this.showTime = res.item;
-            } else {
-                this.restService.showMsg(res.error);
-            }
+                    if(this.isCustomTopic) this.question = this.showTime.topic.questions[0];
+                } else {
+                    this.notificationService.showMsg(res.error);
+                }
+
+                resolve();
+            });
         });
     }
 
     save() {
         // save show time first if not yet added
-        if(!this.showTime) this.initSave().then(() => { if(this.showTime) this.saving() });
+        if(!this.showTime) this.initSave().then(() => {
+            console.log('INIT SAVING NEW', this.showTime);
+            this.saving();
+        });
         else this.saving();
     }
 
     saving() {
+        console.log('UPLOADING');
         this.videoStatus = 'uploading';
         this.textStatus = 'uploading';
 
@@ -568,7 +579,14 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
                         this.viewService.state.next(true);
 
                         // update status
-                        this.restService.put(this.url.api + '/' + this.showTime.id, { status: 'completed' }).then(() => {
+                        this.restService.put(this.url.api + '/' + this.showTime.id, { status: 'completed' }).subscribe(() => {
+                            // send email
+                            if(this.form.submittedTo || this.form.sendTo) {
+                                console.log('SEND EMAIL', this.url.api);
+                                this.restService.put(this.url.api + '/submit/' + this.showTime.id, { submittedTo: this.form.submittedTo, sendTo: this.form.sendTo }).subscribe(() => {
+                                    console.log('EMAIL SENT');
+                                });
+                            }
 
                             // go to detail
                             this.navCtrl.navigateRoot('/' + this.url.api + '/detail/' + this.showTime.id).then(() => {
@@ -581,9 +599,6 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
                                         type: this.data.route.type
                                     });
                                 }
-
-                                // submit
-                                if(this.form.sendTo) this.restService.put(this.url.api + '/submit/' + this.showTime.id, { submittedTo: this.form.submittedTo, sendTo: this.form.sendTo });
                             });
                         });
                     } else {
@@ -614,7 +629,7 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
         const alert = await this.alertCtrl.create({
             header: 'Before you start',
             subHeader: 'Read the instructions carefully',
-            message: '<p>When you click on Start Recording various objections will appear on your screen. There are <strong>' + this.form.questions.length +  '</strong> in total and during the recording you are expected to overcome each of them either using some of the example word-tracks we have provided you within "Practice Time", or other effective word-tracks that you may have learn’t from your manager or elsewhere.</p><p><br>Remember you only get <strong>one chance at recording</strong> this so please make sure you feel confident.</p>',
+            message: '<p>When you click on start recording you may see multiple instructions, objections or other commands that you need to address or overcome. You are expected to address each one, whether there’s only one or multiple points. Please do this using some of the example word-tracks we have provided for you within “Practice Time”, or other effective word-tracks that you may have learnt from your manager or elsewhere.</p><p><br>Remember you only get one chance at recording in Show Time so please make sure you feel confident and give it your best shot. Good luck!</p>',
             backdropDismiss: false,
             buttons: [
                 {
@@ -697,7 +712,7 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
                 let typeArray    = type.split('/')[0];
 
                 let mediaPaths = [
-                    { type: type, path: this.restService.url + media.path }
+                    { type: type, path: this.mediaBaseUrl + media.path }
                 ];
 
                 if(typeArray === 'video' || type === 'application/octet-stream') {
@@ -712,7 +727,7 @@ export class ShowTimeFormPage implements OnInit, OnDestroy {
                             newMediaPathArray.pop();
                         
                         let newMediaPath     = newMediaPathArray.join('.') + '.mp4';    
-                        mediaPaths.push({type: 'video/mp4', path: this.restService.url + newMediaPath});
+                        mediaPaths.push({type: 'video/mp4', path: this.mediaBaseUrl + newMediaPath});
                     }
                 }
 

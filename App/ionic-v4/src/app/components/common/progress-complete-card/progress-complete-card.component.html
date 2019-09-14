@@ -1,0 +1,83 @@
+<ion-card *ngFor="let row of incompleteCourses" routerDirection="forward" [routerLink]="'/certification/module/'+row.courseId">
+    <ion-item lines="none" routerDirection="root" no-padding>
+        <ion-thumbnail size-md="12" class="img-adjustment" slot="start">
+            <!-- <img src="../../../../assets/img/image-subject.jpg"> -->
+            <img [defaultImage]="defaultImage" [lazyLoad]="serverUrl+row.image" [errorImage]="imageToShowOnError">
+        </ion-thumbnail>
+        <ion-label class="content-inprogress">
+
+            <div class="header-progress">
+                <h3 class="font-sizing title">{{row.title}}</h3>
+                <div class="xp">
+                    <h3>
+                        {{row?.Section[0]?.totalExperience}}Xp
+                    </h3>
+                </div>
+            </div>
+
+            <div class="clamp-adjustment" style="-webkit-box-orient: vertical;box-orient: vertical;-moz-box-orient: vertical;">
+                <p class="ion-text-wrap for-clamp-adjustment">
+                    {{row.description}}
+                </p>
+            </div>
+            <div class="progressbar-width">
+                <ion-progress-bar class="progress-bar-adjustment" color="primary" value="{{progress(row.courseId,row?.Section[0]?.totalExperience)}}"></ion-progress-bar>
+            </div>
+            <ion-icon name="play" class="ion-float-right play-btn-adjustment"></ion-icon>
+        </ion-label>
+
+    </ion-item>
+    <ion-button [disabled]="spinner" (click)="$event.preventDefault();$event.stopPropagation(); downloadPdf(row.courseId);courseid(row.courseId); " *ngIf="tabType == 'completed'" style="float: right">Certificate
+        <ion-spinner *ngIf="spinner"></ion-spinner>
+
+    </ion-button>
+    <!-- <ion-button (click)="$event.preventDefault();$event.stopPropagation();generateCertificate()" style="float: right;">Certificate Generate </ion-button> -->
+
+</ion-card>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="content" #content>
+    <div class="v1" style="display: none;">
+
+        <h6 style="color: #01b0e0;
+          margin:30px 10px 10px 400px;
+          font: menu;
+          opacity: 0.7;">VERIFIED CERTIFICATE OF COMPLETION</h6>
+        <p style=" margin:25px 10px 10px 550px; font:menu">{{date}}</p>
+
+        <h2 style=" margin:210px 0px -18px 490px; font-size: 20px ">{{name}}</h2>
+
+        <p style="margin:0 0 5px 290px; color:#01b0e0 ">_____________________________________________</p>
+        <p style=" font-size: menu; margin:0 0 0 420px; color:#01b0e1 ">Has successfully completed the </p>
+
+
+        <h2 style=" margin:80px 0px -18px 489px; ; font-size: 20px">{{coursename}}</h2>
+
+        <p style="margin:0 0 0 170px; color:#01b0e0">____________________________________________________________________</p>
+        <p style="font-size: menu; margin:5px 0 10px 430px; color:#01b0e2 ">NANODEGREE PROGRAM </p>
+
+
+
+
+
+        <p style="margin: 50px 0 0 0; color: #01b0e1;">______________________</p>
+
+
+        <span style=" font-size: 12px; color:#929394;">XYZ</span><br>
+        <span style="color:#929394; font-size:12px;">Founder Thrive19</span>
+    </div>
+</div>

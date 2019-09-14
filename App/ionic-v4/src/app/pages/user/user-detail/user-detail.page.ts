@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { NavController, ActionSheetController, AlertController } from '@ionic/angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { NavController, ActionSheetController, AlertController } from '@ionic/angular';
 
-import { RestApiService } from '../../../services/http/rest-api.service';
 import { AuthenticationService } from '../../../services/user/authentication.service';
+import { RestApiService } from '../../../services/http/rest-api.service';
+import { NotificationService } from '../../../services/notification/notification.service';
+
+// import { ProfileComponent } from '../../../components/profile/profile.component';
 
 @Component({
   selector: 'app-user-detail',
@@ -11,73 +14,58 @@ import { AuthenticationService } from '../../../services/user/authentication.ser
   styleUrls: ['./user-detail.page.scss'],
 })
 export class UserDetailPage implements OnInit {
+
+	// @ViewChild(ProfileComponent) profile;
+	
 	sessionData: any;
-	item: any;
-	paramData: any;
 	routeData: any;
-	mediaBaseUrl: string;
+	paramData: any;
+	backBtnLink: string;
+	item: any;
 
 	constructor(
-		private restApi: RestApiService,
-		private authService: AuthenticationService,
 		private activatedRoute: ActivatedRoute,
+		private authService: AuthenticationService,
 		private navCtrl: NavController,
 		private actionSheetCtrl: ActionSheetController,
-		private alertCtrl: AlertController
+		private alertCtrl: AlertController,
+		private notificationService: NotificationService,
+		private restApi: RestApiService
 	) {
-		console.log('USER DETAIL CONSTRUCT');
-
-		// set media base url
-      	this.mediaBaseUrl = this.restApi.url;
-
 		this.sessionData = this.authService.getSessionData();
 	}
 
 	ngOnInit() {
-		console.log('USER DETAIL INIT');
-
 		this.activatedRoute.data.subscribe((data) => {
 			this.routeData = data;
 
 			this.activatedRoute.params.subscribe((data) => {
 				this.paramData = data;
-	
-				// set id
-				const id = this.routeData.type === 'profile' ? '/' : '/' + this.paramData.id;
-
-				if(id) {
-					this.restApi.get(this.routeData.apiEndPoint + id, {}).then((res: any) => {
-						if(res.success === true) {
-							this.item = res.item;
-						} else {
-							// navigate back to list
-							this.restApi.showMsg(this.routeData.singular + ' not found!').then(() => {
-								this.navCtrl.navigateRoot('/' + this.routeData.appUrl);
-							});
-						}
-					});
+				
+				if(this.routeData.rootUrl !== this.routeData.type) {
+					this.backBtnLink = '/' + this.routeData.rootUrl + '/detail/' + this.paramData.userId + '/' + this.routeData.type;
 				} else {
-					// navigate back to list
-					this.restApi.showMsg(this.routeData.singular + ' not found!').then(() => {
-	
-					});
+					this.backBtnLink = '/' + this.routeData.appUrl;
 				}
 			});
 		});
 	}
 
 	presentPageAction() {
-		const id = this.routeData.type === 'profile' ? '' : '/' + this.item.id;
+		// console.log('COMPONENT', this.profile);
+		// console.log('ITEM', this.item);
+
+		const id = this.paramData.id;
 
 		let actions: any = [
-			{
-				text: 'Edit',
-				icon: 'create',
-				handler: () => {
-					console.log('ROUTE DATA ID', '/' + this.routeData.appUrl + '/edit' + id);
-					this.navCtrl.navigateRoot('/' + this.routeData.appUrl + '/edit' + id);
-				}
-			}
+			// {
+			// 	text: 'Edit',
+			// 	icon: 'create',
+			// 	handler: () => {
+			// 		console.log('ROUTE DATA ID', '/' + this.routeData.appUrl + '/edit/' + id);
+			// 		this.navCtrl.navigateRoot('/' + this.routeData.appUrl + '/edit/' + id);
+			// 	}
+			// }
 		];
 
 		if(this.routeData.type !== 'profile') {
@@ -88,7 +76,6 @@ export class UserDetailPage implements OnInit {
 				handler: () => {
 					this.alertCtrl.create({
 						header: 'Delete Confirmation',
-						subHeader: this.item.title,
 						message: 'Are you sure you want to delete this ' + this.routeData.singular + '?',
 						buttons: [
 							{
@@ -98,16 +85,17 @@ export class UserDetailPage implements OnInit {
 							{
 								text: 'Yes',
 								handler: () => {
-									this.restApi.showMsg('Deleting...', 0).then((toast: any) => {
-										this.restApi.delete(this.routeData.apiEndPoint + '/' + this.item.id).then((res: any) => {
-											this.restApi.toast.dismiss();
+									this.notificationService.showMsg('Deleting...', 0).then((toast: any) => {
+										this.restApi.delete(this.routeData.apiEndPoint + '/' + id).subscribe((res: any) => {
+											this.notificationService.toast.dismiss();
 			
 											if(res.success === true) {
-												this.restApi.showMsg(this.routeData.singular + ' ' + this.item.firstName + ' ' + this.item.lastName + ' has been deleted!').then(() => {
+												// this.notificationService.showMsg(this.routeData.singular + ' ' + this.item.firstName + ' ' + this.item.lastName + ' has been deleted!').then(() => {
+													this.notificationService.showMsg(this.routeData.singular + ' has been deleted!').then(() => {
 													this.navCtrl.navigateRoot(this.routeData.appUrl);
 												});
 											} else {
-												this.restApi.showMsg(res.error);
+												this.notificationService.showMsg(res.error);
 											}
 										});
 									});
@@ -131,12 +119,12 @@ export class UserDetailPage implements OnInit {
 			}
 		});
 
+		const actionHeader: string = this.routeData.singular.charAt(0).toUpperCase() + this.routeData.singular.slice(1);
 		this.actionSheetCtrl.create({
-			header: this.item.title,
+			header: actionHeader,
 			buttons: actions
 		}).then((action) => {
 			action.present();
 		});
 	}
-
 }

@@ -1,0 +1,58 @@
+@import "../../../../node_modules/font-awesome/css/font-awesome.min.css";
+input[type='file'] {
+    display: none;
+}
+
+.elment {
+    margin-left: auto;
+    margin-right: 0px;
+}
+
+i.fa-upload {
+    margin: 10px;
+    cursor: pointer;
+    font-size: 30px;
+    color: #0065b3;
+}
+
+.Namespan {
+    color: #7f7f7f;
+}
+
+i:hover {
+    opacity: 0.6;
+}
+
+.example-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.example-container>* {
+    width: 100%;
+}
+
+ ::ng-deep .mat-form-field-underline {
+    display: none;
+}
+
+.lbl-adjustment {
+    font-size: 24px;
+    color: #2E3D49;
+    font-weight: bold;
+}
+
+.clr-change {
+    --ion-color-base: #2E3D49 !important;
+}
+
+.input-adjustment {
+    margin-top: 10px;
+}
+
+ion-spinner {
+    width: 28px;
+    height: 28px;
+    stroke: #444;
+    fill: #222;
+}

@@ -12,8 +12,8 @@ CONFIG.db_name      = process.env.DB_NAME       || 'name';
 CONFIG.db_user      = process.env.DB_USER       || 'root';
 CONFIG.db_password  = process.env.DB_PASSWORD   || 'root';
 
-CONFIG.jwt_encryption  = process.env.JWT_ENCRYPTION || 'jwt_please_change';
-CONFIG.jwt_expiration  = process.env.JWT_EXPIRATION || '10000';
+CONFIG.jwt_encryption  = process.env.JWT_ENCRYPTION || 'eypZAZy0CY^g9%KreypZAZy0CY^g9%Kr';
+CONFIG.jwt_expiration  = process.env.JWT_EXPIRATION || '3d';
 
 CONFIG.MANDRILL_API_KEY = process.env.MANDRILL_API_KEY || 'mandrill_api_key';
 

@@ -46,7 +46,7 @@ export class ShowTimeComponent implements OnInit {
 	}
 
 	loadData(event?: any) {
-		this.restApi.get(this.url.api, this.queryParams).then((resp: any) => {
+		this.restApi.get(this.url.api, this.queryParams).subscribe((resp: any) => {
 			if(resp.items.length > 0) {
 				this.items = this.items.concat(resp.items);
 				this.queryParams.pageNumber++;

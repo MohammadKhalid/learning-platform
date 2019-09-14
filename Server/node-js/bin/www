@@ -92,24 +92,3 @@ function onListening() {
   console.log('Server listenning on port:', addr.port);
 
 }
-
-
-// rtc
-// ioServer(server).on('connection', function(socket) {
-//   app.set('socketObject', socket);
-//   console.log('socketid', socket.id)
-//   //socket_id.push(socket.id);
-//   console.log('user connected!');
-//   socket.on('send-message', (data) => {
-//      console.log('message ', data)
-//     socket.emit('send-reply',data)
-//   })
-//   // socket.emit('test', { message: 'testing' });
-//   RTCMultiConnectionServer.addSocket(socket, {
-//     config: {
-//       "socketMessageEvent": "thrive19-message",
-//       "socketCustomEvent": "thrive19-custom-message",
-//       "port": port
-//     }
-//   });
-// });

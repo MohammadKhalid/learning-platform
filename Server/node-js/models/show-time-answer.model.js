@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
   var Model = sequelize.define('ShowTimeAnswer', {});
 
   Model.associate = function(models){
-    this.belongsTo(models.TopicQuestion, {as: 'question', foreignKey: 'topicQuestionId', otherKey: 'showTimeAnswerId'});
+    this.belongsTo(models.TopicQuestion, {as: 'question', foreignKey: 'topicQuestionId', otherKey: 'showTimeAnswerId', constraints: false});
   };
 
   Model.prototype.toWeb = function (pw) {

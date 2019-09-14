@@ -1,6 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { ModalController, NavController, NavParams, LoadingController } from '@ionic/angular';
-import { RestApiService } from 'src/app/services/http/rest-api.service';
+import { RestApiService } from 'src/app/services/http/rest-api.service'; 
+import { NotificationService } from '../../../../services/notification/notification.service';
+
+import { load } from '@angular/core/src/render3';
+
+
 @Component({
   selector: 'app-contact-add-model',
   templateUrl: './contact-add-model.component.html',
@@ -14,13 +19,30 @@ export class ContactAddModelComponent implements OnInit {
   currenttab: any;
   contactSkeleton: any;
   isSkeliton: boolean = true;
-  searchTerm: string = "";
+  searchTerm: string;
 
   imagepath: string = './assets/img/askexpert/';
-  constructor(public cntrl: ModalController, public navct: NavController, private restApi: RestApiService, public loadingCtrl: LoadingController, private navParams: NavParams) {
+  constructor(
+    private notificationService: NotificationService,
+    public cntrl: ModalController, 
+    public navct: NavController, 
+    private restApi: RestApiService, 
+    public loadingCtrl: LoadingController, 
+    private navParams: NavParams
+  ) {
     this.changeStatus = this.navParams.get("change");
     this.currenttab = this.navParams.get("tab");
   }
+  // async loaderInt() {
+  //   this.loadercontext = await this.loadingCtrl.create({ message: "Loading..." });
+  //    }
+  // async showLoading() {
+  //   this.loadercontext = await this.loadingCtrl.create({ message: "Loading..." });
+  //   this.loadercontext.present();
+  // }
+  // async hideLoading() {
+  //         await this.loadercontext.dismiss();
+  // }
   searchListCopy: any = []
   ionViewDidEnter() {
     this.getUsers();
@@ -41,14 +63,14 @@ export class ContactAddModelComponent implements OnInit {
     let user_id = this.restApi.sessionData.user.id;
     let type = this.restApi.sessionData.user.type;
 
-    this.restApi.get(`getcontactbyid/${user_id}/${type}`, {}).then((resp: any) => {
+    this.restApi.get(`getcontactbyid/${user_id}/${type}`, {}).subscribe((resp: any) => {
       this.isSkeliton = false;
       if (resp.success === true) {
         this.userList = resp.message;
         this.searchListCopy = JSON.parse(JSON.stringify(this.userList));
         console.log(resp);
       }
-    }).catch((err: any) => {
+    }, (err: any) => {
       this.isSkeliton = false;
     });
   }
@@ -63,15 +85,15 @@ export class ContactAddModelComponent implements OnInit {
     const index = this.userList.indexOf(item);
     this.userList.splice(index, 1);
 
-    this.restApi.post('contact', payload).then((resp: any) => {
+    this.restApi.post('contact', payload).subscribe((resp: any) => {
       if (resp.success && resp.success === true) {
         this.changeStatus();
 
       } else {
-        this.restApi.showMsg(resp.error.error);
+        this.notificationService.showMsg(resp.error.error);
       }
-    }).catch((err) => {
-      this.restApi.showMsg(err);
+    }, (err) => {
+      this.notificationService.showMsg(err);
     });
   }
   close() {
@@ -82,10 +104,10 @@ export class ContactAddModelComponent implements OnInit {
     this.userList = this.searchListCopy;
   };
 
-  search = (search) => {
+  search = (searchTerm) => {
     this.resetChanges();
     this.userList = this.userList.filter((item) => {
-      return item.firstName.toLowerCase().indexOf(search.toLowerCase()) > -1;
+      return item.firstName.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
     })
   };
 }

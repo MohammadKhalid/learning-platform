@@ -1,0 +1,123 @@
+.img-adjustment{
+    width: 20%;
+    height: auto;
+    padding-left: 2%;
+
+}
+
+.font-sizing{
+    width: 50%;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.description-Adjustment{
+    word-wrap: break-word;
+}
+
+.progress-bar-adjustment{
+    width: 92%;
+    height: 17px;
+    border-radius: 31px;
+    margin-top: 11px;
+}
+
+.play-btn-adjustment{
+    padding-top: 0px;
+    padding-right: 8px;
+    font-size: 33px;
+    margin-top: -28px;
+    color: #CCE0F0;
+}
+
+
+.clamp-adjustment{
+    text-overflow: inherit;
+    overflow: inherit;
+    display: -webkit-box;
+    display: -webkit-box;
+    display: -moz-box;
+    -webkit-line-clamp: 3;
+    width: 100%;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    
+}
+
+.for-clamp-adjustment{
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 2px;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.card-heading{
+    font-size: 15px; 
+    text-align: left
+}
+
+.blue-heading{
+    color: #29618c; 
+}
+.grey-heading{
+    color: #838383;
+}
+.bold-heading{
+    font-weight: bolder; 
+}
+
+.thin-heigth{
+    height: 10px;
+    width: 72%;
+}
+
+.fraction-text{
+    padding-bottom: 0;
+    margin-bottom: 0;
+    margin: auto;
+    margin-top: 4px;
+    text-align: right;
+    font-size: 12px;
+    color: grey;
+}
+
+// .card-xp{
+//     background-image: url('../../../../assets/img/xp.svg');
+//     background-repeat: no-repeat;
+//        background-size: contain;
+//     text-align: right;
+//     width: 50%;
+// }
+
+
+.header-progress{
+    font-weight: bold;
+    display: flex;
+}
+
+.header-progress .xp {
+    background-image: url('../../../../assets/img/xp.svg');
+     background-repeat: no-repeat;
+    background-size: contain;
+    text-align: right;
+    width: 50%;
+    height: 16px;
+    background-position: right;
+}
+
+.header-progress .xp h3 {
+    text-align: right;
+    font-size: 10px;
+    padding-top: 1px;
+    padding-right: 20px;
+}
+
+.content-inprogress{
+    min-height: 92px;
+}
+
+.progressbar-width{
+    max-width: 95%;
+}

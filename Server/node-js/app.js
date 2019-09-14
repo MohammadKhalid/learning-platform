@@ -5,7 +5,7 @@ const passport      = require('passport');
 const pe            = require('parse-error');
 const cors          = require('cors');
 
-const v1    = require('./routes/v1');
+const v1    = require('./routes/v1/');
 const app   = express();
 
 const CONFIG = require('./config/config');
@@ -30,10 +30,13 @@ models.sequelize.authenticate().then(() => {
 .catch(err => {
     console.error('Unable to connect to SQL database:',CONFIG.db_name, err);
 });
+
+// db util
 if(CONFIG.app === 'dev') {
   // db sync
-  models.sync();
+  // models.sync();
 }
+
 // CORS
 app.use(cors());
 

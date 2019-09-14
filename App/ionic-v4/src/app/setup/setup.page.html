@@ -1,0 +1,56 @@
+<ion-content color="light">
+  <ion-grid fixed class="fixed-content">
+    <ion-row class="fixed-content ion-justify-content-center ion-align-items-center">
+      <ion-col size="12" size-sm="10" size-md="8" size-lg="6" size-xl="4" style="margin: auto">
+        <ion-card color="clean">
+          <ion-card-header>
+            <ion-card-title>Welcome</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            Just fill in the information below and you'll be on your way to using the most extendable and powerful personal eLearning platform in the world.
+          </ion-card-content>
+
+          <ion-card-header>
+            <ion-card-subtitle>Please provide the following information. Don't worry, you can always change these settings later.</ion-card-subtitle>
+          </ion-card-header>
+
+          <ion-item>
+            <ion-label position="floating">Site Title</ion-label>
+            <ion-input type="text"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Username</ion-label>
+            <ion-input type="text"></ion-input>
+          </ion-item>
+          <ion-item lines="none" class="item-input-note">
+            <ion-note mode="md">Usernames can have only alphanumeric characters, spaces, underscore, hyphens, periods and the @ symbol.</ion-note>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Password</ion-label>
+            <ion-input type="text"></ion-input>
+          </ion-item>
+          <ion-item lines="none" class="item-input-note">
+            <ion-note mode="md"><b>Important:</b> You will need this password to login. Please store it in a secure location.</ion-note>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Email</ion-label>
+            <ion-input type="email"></ion-input>
+          </ion-item>
+          <ion-item lines="none" class="item-input-note">
+            <ion-note mode="md">Double-check your email address before continuing.</ion-note>
+          </ion-item>
+
+          <ion-item class="ion-padding-top">
+            <ion-button (click)="true">
+              Install
+            </ion-button>
+          </ion-item>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

@@ -1,0 +1,71 @@
+<ion-card no-padding>
+    <!-- <ion-list>
+    <ion-item lines="inset">
+      <ion-label position="floating">Title
+        <ion-text color="danger">*</ion-text>
+      </ion-label>
+      <ion-input type="input" [(ngModel)]="title" placeholder="Enter Title"></ion-input>
+    </ion-item>
+  </ion-list> -->
+
+    <div *ngFor="let quize of quizes;let quizIndex=index">
+
+        <ion-card class="card-sizing">
+            <ion-card-content>
+
+                <ion-item lines="none" class="ion-float-right ion-padding-top ques-trash-icon">
+                    <ion-icon name="trash" color="danger" (click)="deleteQuestion(quizIndex)"></ion-icon>
+                    <!-- <ion-button (click)="deleteQuestion(quizIndex)" size="md">Remove</ion-button> -->
+                </ion-item>
+                <ion-item lines="inset">
+                    <!-- <ion-label position="floating">Please enter Question that you want to ask
+        <ion-text color="danger">*</ion-text>
+      </ion-label> -->
+                    <ion-input type="input" [(ngModel)]="quize.question" placeholder="Please enter Question that you want to ask">
+                    </ion-input>
+                </ion-item>
+
+                <div *ngFor="let option of quize.options;let optionIndex=index;">
+                    <ion-item class="option-answer">
+                        <ion-input [(ngModel)]="option.text"></ion-input>
+                        <ion-checkbox class="check-box-icon" slot="start" [(ngModel)]="option.correctOption"></ion-checkbox>
+                    </ion-item>
+                    <ion-item lines="none" class="ion-float-right option-answer-trash-icon">
+                        <ion-icon name="trash" (click)="quize.options.splice(optionIndex,1)"></ion-icon>
+                        <!-- <ion-button (click)="quize.options.splice(optionIndex,1)" size="md">remove option</ion-button> -->
+                    </ion-item>
+                </div>
+                <ion-item lines="none" class="ion-float-left ion-padding-top button-adjustment">
+                    <ion-button (click)="addOption(quize.options)" class="button-color" fill="clear">
+                        <ion-icon name="add"></ion-icon>
+                        Add Option
+                    </ion-button>
+                    <!-- <ion-icon (click)="addOption(quize.options)" name="add">Add Option</ion-icon> -->
+                    <!-- <ion-button (click)="addOption(quize.options)" size="md">Add More</ion-button> -->
+                </ion-item>
+                <ion-item lines="inset" class="exp-adjustment">
+                    <!-- <ion-label position="floating">Experience
+        <ion-text color="danger">*</ion-text>
+      </ion-label> -->
+                    <ion-input type="input" [(ngModel)]="quize.experience" placeholder="Please enter Experience"></ion-input>
+                </ion-item>
+            </ion-card-content>
+        </ion-card>
+
+    </div>
+    <ion-item lines="none" class="ion-float-left ion-padding-top anotherquesbtn">
+        <ion-button (click)="addQuestion()" class="button-color" fill="clear" size="md">
+            <ion-icon name="add"></ion-icon>
+            Add Question
+        </ion-button>
+
+        <!-- <ion-button (click)="addQuestion()" size="md">Add More OPTION</ion-button> -->
+    </ion-item>
+</ion-card>
+<ion-item lines="none" class="ion-float-right ion-padding-top">
+    <ion-button [disabled]="spinner" (click)="saveQuestion()" size="md">
+        <!-- <ion-icon class="save-icon-adjust" name="save"></ion-icon> -->
+        {{btnTxt}}
+        <ion-spinner *ngIf="spinner"></ion-spinner>
+    </ion-button>
+</ion-item>

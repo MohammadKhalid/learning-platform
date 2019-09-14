@@ -7,13 +7,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { RestApiService } from '../../../services/http/rest-api.service';
 import { AuthenticationService } from '../../../services/user/authentication.service';
+import { NotificationService } from '../../../services/notification/notification.service';
 
 import * as moment from 'moment';
 
 @Component({
-  selector: 'app-live-group-training-form',
-  templateUrl: './live-group-training-form.page.html',
-  styleUrls: ['./live-group-training-form.page.scss'],
+	selector: 'app-live-group-training-form',
+	templateUrl: './live-group-training-form.page.html',
+	styleUrls: ['./live-group-training-form.page.scss'],
 })
 export class LiveGroupTrainingFormPage implements OnInit {
 
@@ -26,7 +27,8 @@ export class LiveGroupTrainingFormPage implements OnInit {
 	sessionData: any;
 	participants: any;
 	defaultDate = new Date().toISOString().slice(0, 10);
-	defaultDateTime: string = '09:00';
+	defaultDateTime: string = moment("09:00", "HH:mm").toString();
+	// defaultDateTime: string = "Tue Jul 16 2019 09:00:00"
 	action: string;
 	timeZones: any = [];
 	defaultTimezone: string;
@@ -34,6 +36,7 @@ export class LiveGroupTrainingFormPage implements OnInit {
 	modulePermission: boolean;
 
 	constructor(
+		private notificationService: NotificationService,
 		private restApi: RestApiService,
 		private formBuilder: FormBuilder,
 		private navCtrl: NavController,
@@ -42,16 +45,16 @@ export class LiveGroupTrainingFormPage implements OnInit {
 	) {
 		this.sessionData = this.authService.getSessionData();
 
-		const localTimeZone = moment.tz.guess();
+		//	const localTimeZone = moment.tz.guess();
 		// this.defaultTimezone = "(GMT" + moment.tz(localTimeZone).format('Z') + ")" + localTimeZone;
-		this.defaultTimezone = localTimeZone;
-		console.log('DEFAULT TZ', this.defaultTimezone);
+		//	this.defaultTimezone = localTimeZone;
+		//	console.log('DEFAULT TZ', this.defaultTimezone);
 
 		// init timezone
-		const timeZones = moment.tz.names();
-		this.timeZones = timeZones;
+		// const timeZones = moment.tz.names();
+		// this.timeZones = timeZones;
 
-		console.log('TZ', timeZones);
+		// console.log('TZ', timeZones);
 	}
 
 	ngOnInit() {
@@ -61,15 +64,15 @@ export class LiveGroupTrainingFormPage implements OnInit {
 		this.activatedRoute.params.subscribe((param) => {
 			this.routeParam = param;
 
-			if(this.routeParam.id) {
-				this.restApi.get(this.urlEndPoint + 's/' + this.routeParam.id, {}).then((resp: any) => {
-					if(resp.success === true) {
+			if (this.routeParam.id) {
+				this.restApi.get(this.urlEndPoint + 's/' + this.routeParam.id, {}).subscribe((resp: any) => {
+					if (resp.success === true) {
 						this.item = resp.item;
 
 						// set form
-						if(this.item.speakerId === this.sessionData.user.id) {
+						if (this.item.speakerId === this.sessionData.user.id) {
 							// timezone fix
-							if(!this.item.timezone) this.item.timezone = this.defaultTimezone;
+							if (!this.item.timezone) this.item.timezone = this.defaultTimezone;
 
 							this.form.setValue({
 								title: this.item.title,
@@ -94,13 +97,13 @@ export class LiveGroupTrainingFormPage implements OnInit {
 		});
 
 		// get participants list
-		this.restApi.get('students').then((resp: any) => {
+		this.restApi.get('live-group-trainings/form-input-data').subscribe((resp: any) => {
 			// permission
 			this.modulePermission = resp.success;
 
-			if(this.modulePermission === true) {
+			if (this.modulePermission === true) {
 				// participants list
-				this.participants = resp.items;
+				this.participants = resp.students;
 			}
 		});
 	}
@@ -108,31 +111,38 @@ export class LiveGroupTrainingFormPage implements OnInit {
 	initForm() {
 		// setup form
 		this.form = this.formBuilder.group({
-            title: ['', Validators.required],
-            description: ['', Validators.required],
-            detail: [''],
-            date: [this.defaultDate, Validators.required],
-						time: [this.defaultDateTime, Validators.required],
-						timezone: [this.defaultTimezone, Validators.required],
-            public: [false, Validators.required],
-            participants: []
-        });
+			title: ['', Validators.required],
+			description: ['', Validators.required],
+			detail: [''],
+			date: [this.defaultDate, Validators.required],
+			time: [this.defaultDateTime, Validators.required],
+			timezone: 'Australia/Sydney',
+			public: [false, Validators.required],
+			participants: []
+		});
 	}
 
 	save() {
-		if(this.action === 'new')
-			this.restApi.post(this.urlEndPoint + 's', this.form.value).then((resp: any) => {
+		let time = this.form.get('time').value;
+		time = moment(time).format('HH:mm');
+		this.form.get('time').setValue(time);
+
+		let date = this.form.get('date').value;
+		date = moment(date).format('YYYY-MM-DD');
+		this.form.get('date').setValue(date);
+		if (this.action === 'new')
+			this.restApi.post(this.urlEndPoint + 's', this.form.value).subscribe((resp: any) => {
 				this.saveCallback(resp);
 			});
-		else if(this.action === 'edit')
-			this.restApi.put(this.urlEndPoint + 's/' + this.item.id, this.form.value).then((resp: any) => {
+		else if (this.action === 'edit')
+			this.restApi.put(this.urlEndPoint + 's/' + this.item.id, this.form.value).subscribe((resp: any) => {
 				this.saveCallback(resp);
 			});
 	}
 
 	saveCallback(resp: any) {
 		// show message
-		this.restApi.showMsg(resp.msg).finally(() => {
+		this.notificationService.showMsg(resp.msg).finally(() => {
 			this.navCtrl.navigateRoot('/' + this.urlEndPoint);
 		});
 	}
@@ -142,8 +152,8 @@ export class LiveGroupTrainingFormPage implements OnInit {
 	}
 
 	participantChange(event: {
-	    component: IonicSelectableComponent,
-	    value: any
+		component: IonicSelectableComponent,
+		value: any
 	}) {
 		// this.selectedParticipants = event.value;
 	}
@@ -152,7 +162,7 @@ export class LiveGroupTrainingFormPage implements OnInit {
 		let participants = this.form.controls.participants.value;
 		let selectedParticipantIndex: number = participants.indexOf(selectedParticipant);
 
-		if(selectedParticipantIndex >= 0) {
+		if (selectedParticipantIndex >= 0) {
 			participants.splice(selectedParticipantIndex, 1);
 			this.form.controls.participants.setValue(participants);
 		}

@@ -15,13 +15,11 @@ export const environment = {
  */
 // import 'zone.js/dist/zone-error';  // Included with Angular CLI.
 
-export const SERVER_URL = 'http://104.211.43.154:5000/v1/';
-export const SOCKET_URL = 'http://104.211.43.154:5000/';
-export const PEER_OPTION = {
-  host: 'api.thrive19.local',
-  port: 3000,
-  path: '/peerjs',
-  debug: 0
-};
+export const SERVER_URL = 'http://localhost:3000/v1/';
+export const SOCKET_URL = 'http://localhost:3000/';
+export const RTC_SIGNALLING_SERVER_URL = 'https://thrive19.com:9001/';
+export const IMAGE_URL = 'http://localhost:3000/v1/uploads';
+//export const RTC_SIGNALLING_SERVER_URL = 'https://rtcmulticonnection.herokuapp.com:443/';
+export const ICE_SERVERS = null;
 export const PREFIX_LGT = 'LGT';
 export const DEFAULT_TIMEZONE = 'Australia/Sydney';

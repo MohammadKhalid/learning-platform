@@ -28,7 +28,7 @@ export class UserShowTimePage implements OnInit {
         this.defaultUrl = this.routeData.appUrl + '/detail/' + paramData.id;
 
         // get user info
-        this.restApi.get(this.routeData.apiEndPoint + '/' + paramData.id).then((res: any) => {
+        this.restApi.get(this.routeData.apiEndPoint + '/' + paramData.id).subscribe((res: any) => {
           if(res.success === true) {
             const item = res.item;
 

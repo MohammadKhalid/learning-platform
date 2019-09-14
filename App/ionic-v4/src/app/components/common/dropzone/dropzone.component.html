@@ -1,0 +1,18 @@
+<div (click)="multiFileUpload.click()" allowedSize="15" ng2FileDrop ng2FileSelect [ngClass]="{'nv-file-over': hasBaseDropZoneOver}" (fileOver)="fileOverBase($event)" [uploader]="uploader" class="drop-zone" multiple (onFileDrop)="onFileSelected($event)">
+    Drop files here...
+    <!-- <ion-icon slot="icon-only" name="cloud-upload"></ion-icon>  -->
+</div>
+<input hidden="true" type="file" (onFileSelected)="onFileSelected($event)" #multiFileUpload ng2FileSelect [uploader]="uploader" multiple />
+
+<!-- <h2>Files: {{ uploader?.queue?.length }}</h2> -->
+
+<ion-list *ngIf="uploader?.queue?.length > 0">
+    <ion-item *ngFor="let item of uploader.queue">
+        <ion-label>
+            {{ item?.file?.name }}
+        </ion-label>
+        <ion-button fill="clear" (click)="removeFile(item)">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+        </ion-button>
+    </ion-item>
+</ion-list>

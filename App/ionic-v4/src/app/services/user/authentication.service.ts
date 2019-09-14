@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { BehaviorSubject } from 'rxjs';
-// import { RtcService } from '../rtc/rtc.service';
 
 const SESSION_KEY = 'session';
  
@@ -16,7 +15,6 @@ export class AuthenticationService {
  
   constructor(
     private storage: Storage
-    // private rtcService: RtcService
   ) { 
       this.checkToken();
   }
@@ -27,6 +25,7 @@ export class AuthenticationService {
 
       this.authDidCheck = true;
       if(res) this.setSessionData(res);
+      else this.logout();
     });
   }
  
@@ -39,7 +38,6 @@ export class AuthenticationService {
   logout() {
     return this.storage.remove(SESSION_KEY).then(() => {
       this.sessionData = null;
-      /// this.rtcService.disconnect();
       this.authenticationState.next(false);
     });
   }
@@ -50,14 +48,10 @@ export class AuthenticationService {
 
   setSessionData(data) {
     this.sessionData = data;
-    
-    // this.rtcService.initConnection(data.user).then(() => {
-      this.authenticationState.next(true);
-    // });
+    this.authenticationState.next(true);
   }
 
   getSessionData() {
     return this.sessionData;
   }
- 
 }

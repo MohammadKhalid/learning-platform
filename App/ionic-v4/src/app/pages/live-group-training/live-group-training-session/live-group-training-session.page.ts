@@ -29,6 +29,8 @@ export class LiveGroupTrainingSessionPage implements OnInit {
 		// nav data
 		const navigation = this.router.getCurrentNavigation();
 		this.id = navigation.extras && navigation.extras.state ? navigation.extras.state.id : null;
+
+		console.log('SESSION ID', this.id);
 	}
 
 	ngOnInit() {

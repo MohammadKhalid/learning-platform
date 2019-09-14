@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController, NavController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 import { RtcService } from '../../../services/rtc/rtc.service';
 import { RestApiService } from '../../../services/http/rest-api.service';
@@ -32,37 +33,39 @@ export class LiveGroupTrainingPage implements OnInit {
 
 	constructor(
 		private alertCtrl: AlertController, 
-  		private navCtrl: NavController,
+		private navCtrl: NavController,
+		private router: Router,
   		private restApi: RestApiService,
   		private rtcService: RtcService,
-			private authService: AuthenticationService,
-			private timerService: TimerService
+		private authService: AuthenticationService,
+		private timerService: TimerService
 	) {
 		// set query params
 		this.setQueryParamsDefault();
-
+		// moment.tz.setDefault('Australia/Sydney')
 		// get user data
 		this.sessionData = this.authService.getSessionData();
 	}
 
 	ngOnInit() {
 		// rtc connection
-		this.rtcService.createConnection().then((connection) => {
-			// connect socket
-			connection.connectSocket((socket) => {
+		this.rtcService.getConnection().then((connection) => {
+			// set connection
+			this.connection = connection;
+
+			// get set socket
+			this.connection.getSocket((socket) => {
 				this.socket = socket;
 
 				// connection socket events
 				this.socketEvent();
+
+				// set connection custom event
+				this.connection.setCustomSocketEvent(this.publicRoomIdentifier);
+
+				// load items
+				this.loadData();
 			});
-
-			this.connection = connection;
-
-			// set connection custom event
-			this.connection.setCustomSocketEvent(this.publicRoomIdentifier);
-
-			// load items
-			this.loadData();
 		});
 	}
 
@@ -117,11 +120,12 @@ export class LiveGroupTrainingPage implements OnInit {
 		console.log('LOAD EVENT ', event);
 		console.log('QPARAMS ', this.queryParams);
 
-		this.restApi.get('live-group-trainings', this.queryParams).then((resp: any) => {
+		this.restApi.get('live-group-trainings', this.queryParams).subscribe((resp: any) => {
 			// set time left timer
 			for(let item of resp.items) {
 				// time left counter
-				item['timeLeft'] = this.timerService.timer(new Date(moment(item.date + ' ' + item.time).toISOString()));
+				// item['timeLeft'] = this.timerService.timer(moment(item.date + ' ' + item.time).tz('Australia/Sydney').toISOString());
+				item['timeLeft'] = this.timerService.timer(item.date+" "+item.time,item.timezone);
 			}
 
 			// push items
@@ -206,7 +210,9 @@ export class LiveGroupTrainingPage implements OnInit {
 	}
 
 	gotoSession(id: string) {
-		this.navCtrl.navigateRoot('/live-group-training/session', { state: { id: id } });
+		console.log('SESSION ID', id);
+		this.router.navigate(['live-group-training', 'session'], { state: { id: id } });
+		// this.navCtrl.navigateRoot('/live-group-training/session', { state: { id: id } });
 	}
 
 	canJoin(room: any) {
@@ -312,4 +318,12 @@ export class LiveGroupTrainingPage implements OnInit {
 		return timezone && moment.tz.names().includes(timezone) ? moment(moment.tz(date, 'YYYY-MM-DD HH:mm', timezone).utc().toISOString()).format(format) : moment(date).format(format);
     // return moment(date).tz(DEFAULT_TIMEZONE).format(format);
   }
+  	makeDate(date,format,timezone){
+		// if (timezone == moment.tz.guess()) {
+		// 	return moment(date).format(format)
+		// }else{
+
+		// }
+		return moment(date).format(format)
+	}
 }

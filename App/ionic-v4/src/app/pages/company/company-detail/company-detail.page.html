@@ -1,0 +1,70 @@
+<ion-header no-border>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="company"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title>Company Detail</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="presentActionSheet()"><ion-icon slot="icon-only" name="more"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-list>
+    <ion-item>
+      <ion-label>
+        {{item?.name}}
+        <p>Name</p>
+      </ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>
+        <h3>{{item?.owner?.name}}</h3>
+        <p>Client / Owner</p>
+      </ion-label>
+    </ion-item>
+
+    <ion-item lines="full">
+      <ion-label>
+        <h3>{{item?.description || 'No description'}}</h3>
+        <p>Description</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-list>
+    <ion-list-header>
+      <ion-label color="primary">More Details</ion-label>
+    </ion-list-header>
+
+    <ion-item>
+      <ion-icon slot="start" name="school" mode="ios"></ion-icon>
+      <ion-label>Students</ion-label>
+      <ion-badge color="primary" slot="end">{{item?.students?.length || 0}}</ion-badge>
+    </ion-item>
+
+    <ion-item>
+        <ion-icon slot="start" name="contacts" mode="ios"></ion-icon>
+      <ion-label>Coaches</ion-label>
+      <ion-badge color="primary" slot="end">{{item?.coaches?.length || 0}}</ion-badge>
+    </ion-item>
+
+    <ion-item>
+        <ion-icon slot="start" name="book" mode="ios"></ion-icon>
+      <ion-label>Topics</ion-label>
+      <ion-badge color="primary" slot="end">{{item?.topics?.length || 0}}</ion-badge>
+    </ion-item>
+
+    <ion-item>
+        <ion-icon slot="start" name="navigate" mode="ios"></ion-icon>
+      <ion-label>Departments</ion-label>
+      <ion-badge color="primary" slot="end">{{item?.departments?.length || 0}}</ion-badge>
+    </ion-item>
+
+  </ion-list>
+</ion-content>
